@@ -1,6 +1,6 @@
 <?php
-require_once('core.php');
-require_once('db.php');
+require_once('../core.php');
+require_once('../db.php');
 $id = IsSet($_GET['id']) ? $_GET['id'] : 1;
 
 $link = ConnectDB();
@@ -56,18 +56,18 @@ CloseDB($link);
 <head>
     <title>Редактирование статьи</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="js/jquery.ui.datepicker.rus.js"></script>
-    <script src="js/tinymce.min.js"></script>
+    <script src="../js/jquery-1.10.2.min.js"></script>
+    <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="../js/jquery.ui.datepicker.rus.js"></script>
+    <script src="../js/tinymce.min.js"></script>
 
-    <script src="ref_articles/core.articles.js"></script>
+    <script src="../ref_articles/core.articles.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
     <script type="text/javascript">
-        var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
-        var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
+        var authorsList = preloadOptionsList('../ref_authors/ref.authors.action.getoptionlist.php');
+        var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
         var mode = '<?php echo $the_mode; ?>';
         // loaded values for 'EDIT' mode
         currAuthorsList = <?php echo $the_currAuthList; ?>; // getCurrentAuthorsSelection, используется только для EDIT
@@ -113,7 +113,7 @@ CloseDB($link);
                 showButtonPanel: true,
                 showOn: "both",
                 buttonImageOnly: true,
-                buttonImage: "css/images/calendar.gif"
+                buttonImage: "../css/images/calendar.gif"
             });
             $("#abstract_tabs").tabs();
             $("#keywords_tabs").tabs();
@@ -124,10 +124,10 @@ CloseDB($link);
 
             // логика кнопок
             $("#currfile_show").on('click',function(){ // show current file
-                window.location.href="getpdf.php?id="+$(this).attr('data-fileid');
+                window.location.href="../getpdf.php?id="+$(this).attr('data-fileid');
             });
             $("#currfile_del").on('click',function(){
-                var getting = $.get('ref_articles/articles.action.deletepdf.php', { id: $(this).attr('data-fileid') });
+                var getting = $.get('../ref_articles/articles.action.deletepdf.php', { id: $(this).attr('data-fileid') });
                 getting.done(function(data){
                     result = $.parseJSON(data);
                     if (result['error'] == 0) {
@@ -148,7 +148,7 @@ CloseDB($link);
 
             $("#button-exit").on('click',function(event){
                 event.preventDefault();
-                window.location.href = 'articles.show.php';
+                window.location.href = '../ref.articles.show.php';
             });
 
             $("#form_edit_article").submit(function(){
@@ -165,7 +165,7 @@ CloseDB($link);
             });
             $("#button-delete").on('click',function(){
                 id = $(this).attr('name');
-                window.location.href="ref_articles/articles.action.remove.php?id="+id;
+                window.location.href="../ref_articles/articles.action.remove.php?id="+id;
             });
 
         });
@@ -173,7 +173,7 @@ CloseDB($link);
 </head>
 
 <body>
-<form action="ref_articles/articles.action.update.php" method="post" enctype="multipart/form-data" id="form_edit_article">
+<form action="../ref_articles/articles.action.update.php" method="post" enctype="multipart/form-data" id="form_edit_article">
     <fieldset>
         <input type="hidden" name="article_id" value="<?php echo $id; ?>">
         <input type="hidden" name="MAX_FILE_SIZE" value="10000000">

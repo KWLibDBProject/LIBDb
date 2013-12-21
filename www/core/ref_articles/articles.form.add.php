@@ -2,25 +2,20 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <!-- валидация:
-    запретить переход по сабмиту, если:
-    не указаны авторы, название, не загружена пдфка
-
-    -->
     <title>Добавление новой статьи</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="js/jquery.ui.datepicker.rus.js"></script>
-    <script src="js/tinymce.min.js"></script>
-    <script src="ref_articles/core.articles.js"></script>
+    <script src="../js/jquery-1.10.2.min.js"></script>
+    <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="../js/jquery.ui.datepicker.rus.js"></script>
+    <script src="../js/tinymce.min.js"></script>
+    <script src="../ref_articles/core.articles.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
     <script type="text/javascript">
-        var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
-        var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
+        var authorsList = preloadOptionsList('../ref_authors/ref.authors.action.getoptionlist.php');
+        var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
 
         var mode = 'new';
 
@@ -72,7 +67,7 @@
                 showButtonPanel: true,
                 showOn: "both",
                 buttonImageOnly: true,
-                buttonImage: "css/images/calendar.gif"
+                buttonImage: "../css/images/calendar.gif"
             });
             $("#abstract_tabs").tabs({});
             $("#keywords_tabs").tabs();
@@ -103,7 +98,7 @@
 </head>
 
 <body>
-<form action="ref_articles/articles.action.add.php" method="post" enctype="multipart/form-data" id="form_new_article">
+<form action="articles.action.insert.php" method="post" enctype="multipart/form-data" id="form_new_article">
     <fieldset>
         <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
         <legend>Общие данные</legend>

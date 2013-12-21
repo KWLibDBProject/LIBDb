@@ -1,10 +1,19 @@
 <?php
-require_once('core.php');
-require_once('db.php');
+// список статей по определенному автору (если указан byauthor)
+// файл вызывается черех аякс лоадер
+
+$_author = (IsSet($_GET['author'])) ? $_GET['author'] : -1;
+
+require_once('../core.php');
+require_once('../db.php');
 
 $link = ConnectDB();
 
-$query = "SELECT id,title_rus,title_eng,title_ukr,udc,pdfid,add_date FROM articles WHERE deleted=0";
+$query = ($_author != -1)
+    ? "select articles.id,title_eng,title_rus,title_ukr,udc,pdfid,add_date
+       from articles, cross_aa WHERE cross_aa.author=$_author AND cross_aa.article=articles.id AND articles.deleted=0"
+    : "SELECT articles.id,title_rus,title_eng,title_ukr,udc,pdfid,add_date FROM articles WHERE deleted=0";
+
 // получаем ВСЕ статьи, кроме удаленных @todo: это опция
 $res = mysql_query($query) or die("Death on : $query");
 $articles_count = @mysql_num_rows($res);
@@ -14,6 +23,7 @@ if ($articles_count>0) {
     {
         $id = $an_article['id']; // айди статьи
         $all_articles[$id]['article'] = $an_article; // ВСЯ статья
+        // $all_articles[$id]['article']['id'] = $id;
 
         // получить информацию о связанной ПДФке
         $qp = "SELECT id,username,filesize FROM pdfdata WHERE articleid = $id";
@@ -42,41 +52,6 @@ if ($articles_count>0) {
 }
 CloseDB($link);
 ?>
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>Список статей</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
-    <style>
-        .button-large {
-            height: 60px;
-        }
-    </style>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.edit_button').on('click',function(){
-                location.href = 'articles.edit.php?id='+$(this).attr('name');
-            });
-            $("#button-addnewarticle").on('click',function(){
-                location.href = 'articles.new.php';
-            });
-            $("#button-exittoadminpanel").on('click',function(){
-                location.href = 'admin.html';
-            });
-            $('.download-pdf').on('click',function(){
-                id = $(this).attr('name');
-                window.location.href="getpdf.php?id="+id;
-            });
-        });
-    </script>
-
-</head>
-
-<body>
-<button id="button-exittoadminpanel" class="button-large">Выход в админку </button>
-<button id="button-addnewarticle" class="button-large">Добавить новую статью </button>
 <table border="1" width="100%">
     <tr>
         <th width="3%">id</th>
@@ -92,6 +67,7 @@ CloseDB($link);
         foreach ($all_articles as $a_id => $a_article)
         {
             $row = $a_article;
+        // print_r($row);echo '<hr>';
             echo <<<REF_ANYARTICLE
 <tr>
 <td>{$row['article']['id']}</td>
@@ -101,8 +77,7 @@ CloseDB($link);
 <td>{$row['article']['add_date']}</td>
 <td>{$row['pdffile']['username']} ({$row['pdffile']['filesize']} bytes)</td>
 <td><button class="download-pdf" name="{$row['pdffile']['id']}">Show PDF</button></td>
-<td class="centred_cell">
-<button class="edit_button" name="{$row['article']['id']}">Edit</button>
+<td><button class="edit_button" name="{$row['article']['id']}">Edit</button>
 </td>
 </tr>
 REF_ANYARTICLE;
@@ -116,4 +91,3 @@ REF_NUMROWS_ZERO;
     ?>
 
 </table>
-</body>

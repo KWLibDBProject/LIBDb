@@ -23,8 +23,8 @@ CloseDB($link);
 
 if ($result['error']==0) {
     $result['message'] = <<<FINAL_MESSAGE
-<meta http-equiv="refresh" content="15;URL=../articles.show.php">
-<button onclick="window.location.href='../articles.show.php'">Вернуться к списку статей</button>
+<meta http-equiv="refresh" content="15;URL=../ref.articles.show.php">
+<button onclick="window.location.href='../ref.articles.show.php'">Вернуться к списку статей</button>
 FINAL_MESSAGE;
 }
 
