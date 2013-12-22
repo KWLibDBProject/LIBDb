@@ -8,8 +8,6 @@ if (!IsSet($_POST['ref_name'])) {
 
 $link = ConnectDB();
 
-//@todo переписать под mysqli http://www.php.net/manual/ru/mysqli.real-escape-string.php
-//@todo: вставить проверку, что мы не вставляем дубликат. КАК???
 $q = array(
     'name' => mysql_escape_string($_POST['name']),
     'email' => mysql_escape_string($_POST['email']),

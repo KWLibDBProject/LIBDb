@@ -1,17 +1,4 @@
-﻿<?php
-// calls with parameter 'users'
-require_once('core.php');
-require_once('db.php');
-
-$ref_name = 'users';
-$ref_prompt = IsSet($_GET["prompt"]) ? ($_GET["prompt"]) : 'Добавление пользователя';
-
-//@todo: по хорошему, отбор листинга нужен по каким-то критериям из выпадающего списка
-//@todo: как-то где-то нужно показывать список УДАЛЕННЫХ авторов, как и где?
-
-//@todo: в AddItem и UpdateItem ввести валидацию данных (как минимум емейла) как в http://jqueryui.com/dialog/#modal-form
-?>
-<html>
+﻿<html>
 <head>
     <title>Справочник: Список пользователей</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -24,7 +11,7 @@ $ref_prompt = IsSet($_GET["prompt"]) ? ($_GET["prompt"]) : 'Добавление
     <link rel="stylesheet" href="css/ref.ui.css">
 
     <script type="text/javascript">
-        var ref_name = "<?php echo $ref_name; ?>";
+        var ref_name = "users";
         var button_id = 0;
         $(document).ready(function () {
             function CallAddItem(source)
