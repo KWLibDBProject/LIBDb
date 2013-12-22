@@ -21,6 +21,7 @@ $ref_prompt = 'Добавление автора';
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
     <link rel="stylesheet" type="text/css" href="css/ref.ui.css">
 
+    <script src="js/core.js"></script>
     <script src="ref_authors/ref.authors.js"></script>
 
     <script type="text/javascript">

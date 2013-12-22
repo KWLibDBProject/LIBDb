@@ -10,6 +10,8 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
     <link rel="stylesheet" href="css/ref.ui.css">
 
+
+    <script src="js/core.js"></script>
     <script src="ref_topics/ref.topics.js"></script>
 
     <script type="text/javascript">

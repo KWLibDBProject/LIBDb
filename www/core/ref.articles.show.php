@@ -1,13 +1,11 @@
-<?php
-// отображение списка статей, вызывает в ajax load articles.action.list.php by author
-// если author not defined - показхывает всех
-?>
 <!DOCTYPE HTML>
 <html>
 <head>
     <title>Список статей</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/core.js"></script>
+
     <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
     <style>
         .button-large {
@@ -15,11 +13,19 @@
         }
     </style>
     <script type="text/javascript">
+        var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
+        var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
+        var topicsList = preloadOptionsList('ref_topics/ref.topics.action.getoptionlist.php');
+
         $(document).ready(function () {
-            $("#button-addnewarticle").on('click',function(){
+            BuildSelector('with_author',authorsList,0);
+            BuildSelector('with_book',booksList,0);
+            BuildSelector('with_topic',topicsList,0);
+
+            $("#button-newarticle").on('click',function(){
                 location.href = 'ref_articles/articles.form.add.php';
             });
-            $("#button-exittoadminpanel").on('click',function(){
+            $("#button-exit").on('click',function(){
                 location.href = 'admin.html';
             });
             $('#articles_list')
@@ -30,13 +36,21 @@
                         location.href = 'ref_articles/articles.form.edit.php?id='+$(this).attr('name');
                     });
 
-            $("#button-showarticles-byauthor").on('click',function(){
+            $("#button-show-all").on('click',function(){
+                $("#articles_list").load("ref_articles/articles.action.list.php");
+
+            });
+            $("#button-show-withauthor").on('click',function(){
                 author = -1;
                 $("#articles_list").load("ref_articles/articles.action.list.php?author="+author);
             });
-            $("#button-showarticles-all").on('click',function(){
-                $("#articles_list").load("ref_articles/articles.action.list.php");
-
+            $("#button-show-withbook").on('click',function(){
+                author = -1;
+                $("#articles_list").load("ref_articles/articles.action.list.php?book="+author);
+            });
+            $("#button-show-withtopic").on('click',function(){
+                author = -1;
+                $("#articles_list").load("ref_articles/articles.action.list.php?topic="+author);
             });
 
         });
@@ -44,14 +58,25 @@
 </head>
 
 <body>
-<button id="button-exittoadminpanel" class="button-large">Выход в админку </button>
-<button id="button-addnewarticle" class="button-large">Добавить новую статью </button>
+<button id="button-exit" class="button-large">Выход в админку </button>
+<button id="button-newarticle" class="button-large">Добавить новую статью </button>
 <hr>
-<button type="button" id="button-showarticles-all">Показать все статьи</button>
-Автор: <select><option valie="0">Выбрать автора</option></select><button id="button-showbyauthor" disabled>Показать статьи по автору</button>
+<fieldset>
+    <legend>Критерии отбора</legend>
+    Автор: <select name="with_author"><option value="0">ЛЮБОЙ</option></option></select>
+    Топик: <select name="with_topic"><option value="0">ЛЮБОЙ</option></select>
+    Сборник: <select name="with_book"><option value="0">ЛЮБОЙ</option></select>
+    <button id="button-show-withselection">Показать выбранное</button>
+    <button id="button-reset-selection">Сбросить критерии</button>
+    <button type="button" id="button-show-all">Показать ВСЕ статьи</button>
+</fieldset>
 
 <div id="articles_list">
 </div>
 
 </body>
+<!--
+// отображение списка статей, вызывает в ajax load articles.action.list.php by author
+// если author not defined - показхывает всех
+-->
 </html>

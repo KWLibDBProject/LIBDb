@@ -62,6 +62,7 @@ CloseDB($link);
     <script src="../js/jquery.ui.datepicker.rus.js"></script>
     <script src="../js/tinymce.min.js"></script>
 
+    <script src="../js/core.js"></script>
     <script src="ref.articles.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">

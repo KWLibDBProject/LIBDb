@@ -12,6 +12,8 @@
     <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
+
+    <script src="../js/core.js"></script>
     <script src="ref.articles.js"></script>
     <script type="text/javascript">
         var authorsList = preloadOptionsList('../ref_authors/ref.authors.action.getoptionlist.php');

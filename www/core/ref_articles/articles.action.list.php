@@ -1,7 +1,12 @@
 <?php
-// список статей по определенному автору (если указан byauthor)
-// файл вызывается черех аякс лоадер
+/* файл вызывается черех аякс лоадер
+Варианты аргументов:
 
+author - показать статьи АВТОРА
+topic - показать статьи в топике
+book - показать статьи в сборнике
+? объединение этих вариантов (правка морды и тут)
+*/
 $_author = (IsSet($_GET['author'])) ? $_GET['author'] : -1;
 
 require_once('../core.php');
@@ -59,8 +64,8 @@ CloseDB($link);
         <th>Авторы</th>
         <th>Название</th>
         <th width="10%">Дата</th>
-        <th width="15%">Размер файла PDF</th>
-        <th width="10%" colspan="2">Control</th>
+        <th width="8%">PDF</th>
+        <th width="10%" colspan="1">Control</th>
     </tr>
     <?php
     if ($articles_count > 0) {
@@ -75,16 +80,17 @@ CloseDB($link);
 <td><small>{$row['authors']}</small></td>
 <td><small>Eng: {$row['article']['title_eng']}<br>Рус: {$row['article']['title_rus']}<br>Укр: {$row['article']['title_ukr']}</small></td>
 <td>{$row['article']['add_date']}</td>
-<td>{$row['pdffile']['username']} ({$row['pdffile']['filesize']} bytes)</td>
-<td><button class="download-pdf" name="{$row['pdffile']['id']}">Show PDF</button></td>
-<td><button class="edit_button" name="{$row['article']['id']}">Edit</button>
+<td>{$row['pdffile']['username']}<br><small>({$row['pdffile']['filesize']} bytes)<small></td>
+<td>
+    <button class="download-pdf" name="{$row['pdffile']['id']}">Show PDF</button><br>
+    <button class="edit_button" name="{$row['article']['id']}">Edit</button>
 </td>
 </tr>
 REF_ANYARTICLE;
         }
     } else {
         echo <<<REF_NUMROWS_ZERO
-<tr><td colspan="8">$ref_message</td></tr>
+<tr><td colspan="7">$ref_message</td></tr>
 REF_NUMROWS_ZERO;
     }
 

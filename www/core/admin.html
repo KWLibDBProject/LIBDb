@@ -2,19 +2,25 @@
 <head>
     <title>Админ-панель</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script _src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript">
-        // $(document).ready(function () { });
+        $(document).ready(function () {
+            $(".admin-button").on('click',function(){
+                window.location.href = $(this).attr('data-href');
+            });
+        });
+
+
     </script>
 </head>
 
 <body>
 <ul>
-    <li><a href="ref.authors.show.php"><button>СПРАВОЧНИК: АВТОРЫ</button></a></li>
-    <li><a href="ref.topics.show.php"><button>СПРАВОЧНИК: ТОПИКИ</button></a></li>
-    <li><a href="ref.users.show.php"><button>СПРАВОЧНИК: ПОЛЬЗОВАТЕЛИ</button></a></li>
-    <li><a href="ref.books.show.php"><button>СПРАВОЧНИК: СБОРНИКИ</button></a></li>
-    <li><a href="ref.articles.show.php"><button>СТАТЬИ</button></a></li>
+    <li><button data-href="ref.authors.show.php" class="admin-button">СПРАВОЧНИК: АВТОРЫ</button></li>
+    <li><button data-href="ref.topics.show.php" class="admin-button">СПРАВОЧНИК: ТОПИКИ</button></li>
+    <li><button data-href="ref.users.show.php" class="admin-button">СПРАВОЧНИК: ПОЛЬЗОВАТЕЛИ</button></li>
+    <li><button data-href="ref.books.show.php" class="admin-button">СПРАВОЧНИК: СБОРНИКИ</button></li>
+    <li><button data-href="ref.articles.show.php" class="admin-button">СТАТЬИ</button></li>
 </ul>
 </body>
 </html>
