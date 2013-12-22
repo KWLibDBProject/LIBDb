@@ -35,11 +35,14 @@
                     .on('click','.edit_button',function(){
                         location.href = 'ref_articles/articles.form.edit.php?id='+$(this).attr('name');
                     });
-
             $("#button-show-all").on('click',function(){
                 $("#articles_list").load("ref_articles/articles.action.list.php");
 
             });
+            $("#button-show-withselection").on('click',function(){
+
+            });
+
             $("#button-show-withauthor").on('click',function(){
                 author = -1;
                 $("#articles_list").load("ref_articles/articles.action.list.php?author="+author);
