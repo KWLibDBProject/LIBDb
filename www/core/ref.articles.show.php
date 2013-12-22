@@ -1,5 +1,5 @@
 <?php
-// отображение списка статей, вызывает в ajax load ref.articles.action.list.php by author
+// отображение списка статей, вызывает в ajax load articles.action.list.php by author
 // если author not defined - показхывает всех
 ?>
 <!DOCTYPE HTML>
@@ -32,10 +32,10 @@
 
             $("#button-showarticles-byauthor").on('click',function(){
                 author = -1;
-                $("#articles_list").load("ref_articles/ref.articles.action.list.php?author="+author);
+                $("#articles_list").load("ref_articles/articles.action.list.php?author="+author);
             });
             $("#button-showarticles-all").on('click',function(){
-                $("#articles_list").load("ref_articles/ref.articles.action.list.php");
+                $("#articles_list").load("ref_articles/articles.action.list.php");
 
             });
 

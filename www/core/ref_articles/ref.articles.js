@@ -12,7 +12,9 @@ function preloadOptionsList(url) // Загружает данные (кэшир�
     });
     return ret;
 }
-function BuildBooksSelector(target,data,currentid) // currentid is 1 for NEW
+
+// формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
+function BuildSelector(target,data,currentid) // currentid is 1 for NEW
 {
     $.each(data['data'], function(id, value){
         $("select[name="+target+"]").append('<option value="'+id+'">'+value+'</option>')
@@ -23,8 +25,8 @@ function BuildBooksSelector(target,data,currentid) // currentid is 1 for NEW
     } else {
         $("select[name="+target+"]").attr('disabled','disabled');
     }
-
 }
+
 function InsertAuthorSelector(targetdiv,selectorName) // N - идентификатор (номер) селекта
 {
     // was: $('<li data-li="'+selectorName+'"><label>Автор  № '+selectorName+ '</label>' + ...

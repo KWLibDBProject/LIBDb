@@ -34,6 +34,7 @@ $the_currAuthList.= '}'; // значение для currAuthorsList
 
 $the_mode = 'edit';
 $the_currentBook = $the_article['book'];
+$the_currentTopic = $the_article['topic'];
 
 // получаем ПДФ-файл
 $qp = "SELECT id,username,filesize FROM pdfdata WHERE articleid=$id";
@@ -61,19 +62,22 @@ CloseDB($link);
     <script src="../js/jquery.ui.datepicker.rus.js"></script>
     <script src="../js/tinymce.min.js"></script>
 
-    <script src="../ref_articles/core.articles.js"></script>
+    <script src="ref.articles.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
     <script type="text/javascript">
         var authorsList = preloadOptionsList('../ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
+        var topicsList = preloadOptionsList('../ref_topics/ref.topics.action.getoptionlist.php');
+
         var mode = '<?php echo $the_mode; ?>';
         // loaded values for 'EDIT' mode
         currAuthorsList = <?php echo $the_currAuthList; ?>; // getCurrentAuthorsSelection, используется только для EDIT
         var loadedAuthorsNum = <?php echo $the_loadedAuthorsNum; ?>;
         var lastAuthorNumber = <?php echo $the_loadedAuthorsNum+1; ?>;
         var currentBook = <?php echo $the_currentBook; ?>;
+        var currentTopic = <?php echo $the_currentTopic; ?>
 
         // tinyMCE inits
         tinymce.init({selector:'textarea#abstract_eng',forced_root_block : "",
@@ -101,7 +105,8 @@ CloseDB($link);
             } else if (mode == 'new') {} // ничего не добавляем, у нас просто работает 1 кнопка "добавить"
 
             // load books selector
-            BuildBooksSelector('book',booksList,currentBook);
+            BuildSelector('book',booksList,currentBook);
+            BuildSelector('topic',topicsList,currentTopic);
 
             // WIDGETS
             $("#datepicker").datepicker({
@@ -182,6 +187,8 @@ CloseDB($link);
         <input type="text" name="udc" id="udc" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['udc']; ?>">
         <label for="the_book">Статья входит в сборник: </label>
         <select name="book" id="the_book"></select>
+        <label for="the_topic">Тема (топик) статьи: </label>
+        <select name="topic" id="the_topic"></select>
         <label for="datepicker">Дата:</label>
         <input type="text" id="datepicker" name="add_date" value="<?php echo $the_article['add_date']; ?>">
     </fieldset>

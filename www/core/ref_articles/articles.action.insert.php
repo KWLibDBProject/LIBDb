@@ -25,6 +25,7 @@ $q = array(
     'refs' => mysql_escape_string($_POST['refs']),
     'book' => mysql_escape_string($_POST['book']),
     'add_date' => mysql_escape_string($_POST['add_date']),
+    'topic' => mysql_escape_string($_POST['topic'])
 );
 
 // теперь нам нужно вставить данные в БАЗУ (пока что с учетом вставки файла в БЛОБ)

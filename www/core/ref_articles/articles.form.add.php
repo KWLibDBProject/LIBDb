@@ -8,14 +8,15 @@
     <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="../js/jquery.ui.datepicker.rus.js"></script>
     <script src="../js/tinymce.min.js"></script>
-    <script src="../ref_articles/core.articles.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
+    <script src="ref.articles.js"></script>
     <script type="text/javascript">
         var authorsList = preloadOptionsList('../ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
+        var topicsList = preloadOptionsList('../ref_topics/ref.topics.action.getoptionlist.php');
 
         var mode = 'new';
 
@@ -24,6 +25,7 @@
         var loadedAuthorsNum = 0;
         var lastAuthorNumber = 1;
         var currentBook = 1;
+        var currentTopic = 1;
 
 
         // tinyMCE inits
@@ -55,8 +57,11 @@
                     $("#button-save").attr('disabled','disabled');
                 }
             } // ничего не добавляем, у нас просто работает 1 кнопка "добавить"
-            // load books selector
-            BuildBooksSelector('book',booksList,currentBook);
+
+            // load selectors
+            BuildSelector('book',booksList,currentBook);
+            BuildSelector('topic',topicsList,currentTopic);
+
             // WIDGETS
             $("#datepicker").datepicker({
                 changeMonth: true,
@@ -106,6 +111,8 @@
         <input type="text" name="udc" id="udc" class="text ui-widget-content ui-corner-all">
         <label for="the_book">Статья входит в сборник: </label>
         <select name="book" id="the_book"></select>
+        <label for="the_topic">Тема (топик) статьи: </label>
+        <select name="topic" id="the_topic"></select>
         <label for="datepicker">Дата:</label>
         <input type="text" id="datepicker" name="add_date">
     </fieldset>

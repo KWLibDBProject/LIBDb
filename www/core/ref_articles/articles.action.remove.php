@@ -7,6 +7,7 @@ $id = IsSet($_GET['id']) ? $_GET['id'] : Die("No id!");
 
 $link = ConnectDB();
 
+// @todo: проверки возможности удаления
 // удалить статью из артиклез
 $q = "DELETE FROM articles WHERE id=$id";
 mysql_query($q,$link) or Die("Death at $q");

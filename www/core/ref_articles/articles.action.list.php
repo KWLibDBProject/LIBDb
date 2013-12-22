@@ -10,9 +10,9 @@ require_once('../db.php');
 $link = ConnectDB();
 
 $query = ($_author != -1)
-    ? "select articles.id,title_eng,title_rus,title_ukr,udc,pdfid,add_date
-       from articles, cross_aa WHERE cross_aa.author=$_author AND cross_aa.article=articles.id AND articles.deleted=0"
-    : "SELECT articles.id,title_rus,title_eng,title_ukr,udc,pdfid,add_date FROM articles WHERE deleted=0";
+    ? "select articles.id,title_eng,title_rus,title_ukr,udc,pdfid,add_date,topics.title
+       from articles, cross_aa,topics WHERE cross_aa.author=$_author AND cross_aa.article=articles.id AND articles.deleted=0 AND topics.id=articles.topic"
+    : "SELECT articles.id,title_rus,title_eng,title_ukr,udc,pdfid,add_date,topics.title FROM articles,topics WHERE articles.deleted=0 AND topics.id=articles.topic";
 
 // получаем ВСЕ статьи, кроме удаленных @todo: это опция
 $res = mysql_query($query) or die("Death on : $query");
