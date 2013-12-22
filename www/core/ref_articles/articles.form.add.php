@@ -85,7 +85,7 @@
 
             $("#button-exit").on('click',function(event){
                 event.preventDefault();
-                window.location.href = 'articles.show.php';
+                window.location.href = '../ref.articles.show.php';
                 return false;
             });
 
@@ -155,13 +155,13 @@
                 <li><a href="#abstract-ukr">На украинском</a></li>
             </ul>
             <div id="abstract-eng">
-                <textarea id="abstract_eng" name="abstract_eng">Аннотация на английском</textarea>
+                <textarea id="abstract_eng" name="abstract_eng"></textarea>
             </div>
             <div id="abstract-rus">
-                <textarea id="abstract_rus" name="abstract_rus">Аннотация на русском</textarea>
+                <textarea id="abstract_rus" name="abstract_rus"></textarea>
             </div>
             <div id="abstract-ukr">
-                <textarea id="abstract_ukr" name="abstract_ukr">Аннотация на украинском</textarea>
+                <textarea id="abstract_ukr" name="abstract_ukr"></textarea>
             </div>
         </div>
     </fieldset>

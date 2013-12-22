@@ -7,11 +7,6 @@
     <script src="js/core.js"></script>
 
     <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
-    <style>
-        .button-large {
-            height: 60px;
-        }
-    </style>
     <script type="text/javascript">
         var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
@@ -21,6 +16,8 @@
             BuildSelector('with_author',authorsList,0);
             BuildSelector('with_book',booksList,0);
             BuildSelector('with_topic',topicsList,0);
+
+            $("#articles_list").empty().load("ref_articles/articles.action.list.php");
 
             $("#button-newarticle").on('click',function(){
                 location.href = 'ref_articles/articles.form.add.php';
@@ -35,25 +32,26 @@
                     .on('click','.edit_button',function(){
                         location.href = 'ref_articles/articles.form.edit.php?id='+$(this).attr('name');
                     });
-            $("#button-show-all").on('click',function(){
-                $("#articles_list").load("ref_articles/articles.action.list.php");
 
-            });
             $("#button-show-withselection").on('click',function(){
-
+                query = "?";
+                /* if ($('select[name="with_author"]').val() != 0 ) query+="author="+$('select[name="with_author"]').val();
+                if ($('select[name="with_topic"]').val() != 0 ) query+="&topic="+$('select[name="with_topic"]').val();
+                if ($('select[name="with_book"]').val() != 0 ) query+="&book="+$('select[name="with_book"]').val(); */
+                query+="author="+$('select[name="with_author"]').val();
+                query+="&topic="+$('select[name="with_topic"]').val();
+                query+="&book="+$('select[name="with_book"]').val();
+                // alert(query);
+                $("#articles_list").empty().load("ref_articles/articles.action.list.php"+query);
             });
-
-            $("#button-show-withauthor").on('click',function(){
-                author = -1;
-                $("#articles_list").load("ref_articles/articles.action.list.php?author="+author);
+            $("#button-reset-selection").on('click',function(){
+                console.log();
+                $('select[name="with_author"]').val(0);
+                $('select[name="with_topic"]').val(0);
+                $('select[name="with_book"]').val(0);
             });
-            $("#button-show-withbook").on('click',function(){
-                author = -1;
-                $("#articles_list").load("ref_articles/articles.action.list.php?book="+author);
-            });
-            $("#button-show-withtopic").on('click',function(){
-                author = -1;
-                $("#articles_list").load("ref_articles/articles.action.list.php?topic="+author);
+            $("#button-show-all").on('click',function(){
+                $("#articles_list").empty().load("ref_articles/articles.action.list.php");
             });
 
         });

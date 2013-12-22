@@ -1,6 +1,3 @@
-.legend {
-    border: 1px dotted green;
-}
 .authorslist {
     list-style-type: none;
     list-style-position: inside;
@@ -12,4 +9,17 @@
 legend {
     color: navy;
     font-weight: bold;
+}
+.button-large {
+    height: 60px;
+}
+.download-pdf {
+    background-image:url('../css/pdf48x48.png');
+    width:50px;
+    height:50px;
+}
+.edit_button {
+    background-image: url('../css/edit48x48.png');
+    width:50px;
+    height:50px;
 }
