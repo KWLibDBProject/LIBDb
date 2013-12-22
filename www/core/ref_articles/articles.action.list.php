@@ -5,7 +5,6 @@
 author - показать статьи АВТОРА
 topic - показать статьи в топике
 book - показать статьи в сборнике
-? объединение этих вариантов (правка морды и тут)
 */
 $_author = (IsSet($_GET['author'])) ? $_GET['author'] : -1;
 
@@ -15,7 +14,7 @@ require_once('../db.php');
 $link = ConnectDB();
 
 $query = "
-select distinct articles.id,title_eng,topics.title as ttitle,books.title as btitle
+select distinct articles.id,title_eng,title_rus,title_ukr,udc,pdfid,add_date,topics.title as ttitle,books.title as btitle
 from articles, cross_aa,topics,books
 WHERE
 cross_aa.article=articles.id
@@ -30,31 +29,6 @@ $query .= (IsSet($_GET['author'])   && $_GET['author']!=0)  ? " AND cross_aa.aut
 $query .= (IsSet($_GET['book'])     && $_GET['book']!=0 )   ? " AND articles.book = $_GET[book] "       : "";
 $query .= (IsSet($_GET['topic'])    && $_GET['topic'] !=0 ) ? " AND articles.topic = $_GET[topic] "     : "";
 
-/*
- * new request is:
-select articles.id,title_eng,title_rus,title_ukr,udc,pdfid,add_date,topics.title
-from articles, cross_aa,topics,books
-WHERE
-cross_aa.article=articles.id AND
-articles.deleted=0 AND
-topics.id=articles.topic AND
-books.id=articles.book
-[ AND
-cross_aa.author=$_author ]
-[ AND
-articles.book = $_book ]
-[ AND
-articles.topic = $_topic ]
-*/
-/*
-$query = ($_author != -1)
-    ? "select articles.id,title_eng,title_rus,title_ukr,udc,pdfid,add_date,topics.title
-       from articles, cross_aa,topics WHERE cross_aa.author=$_author AND cross_aa.article=articles.id AND articles.deleted=0 AND topics.id=articles.topic"
-    : "SELECT articles.id,title_rus,title_eng,title_ukr,udc,pdfid,add_date,topics.title as ttitle,books.title as btitle
-FROM articles,topics,books
-WHERE articles.deleted=0 AND topics.id=articles.topic AND books.id=articles.book";
-*/
-// получаем ВСЕ статьи, кроме удаленных @todo: это опция
 $res = mysql_query($query) or die("Death on : $query");
 $articles_count = @mysql_num_rows($res);
 
