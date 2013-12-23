@@ -16,6 +16,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            $.ajaxSetup({cache: false});
             $("#ref_list").load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
 
             /* вызов и обработчик диалога ADD-ITEM */

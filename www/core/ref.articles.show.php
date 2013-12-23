@@ -13,6 +13,7 @@
         var topicsList = preloadOptionsList('ref_topics/ref.topics.action.getoptionlist.php');
 
         $(document).ready(function () {
+            $.ajaxSetup({cache: false});
             BuildSelector('with_author',authorsList,0);
             BuildSelector('with_book',booksList,0);
             BuildSelector('with_topic',topicsList,0);

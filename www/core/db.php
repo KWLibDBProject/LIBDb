@@ -5,7 +5,7 @@ require_once('config.php');
 function ConnectDB()
 {
     global $CONFIG;
-    $hostname = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['host_local'] : $CONFIG['host_remote'];
+    $hostname = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['host_local']     : $CONFIG['host_remote'];
     $username = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['username_local'] : $CONFIG['username_remote'];
     $password = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['password_local'] : $CONFIG['password_remote'];
     $database = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['database_local'] : $CONFIG['database_remote'];
