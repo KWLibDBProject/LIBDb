@@ -1,6 +1,6 @@
 <?php
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 // print_r($_POST);
 $result['message'] = '';
 $result['error'] = 0;
@@ -23,7 +23,8 @@ $q = array(
     'refs' => mysql_escape_string($_POST['refs']),
     'book' => mysql_escape_string($_POST['book']),
     'add_date' => mysql_escape_string($_POST['add_date']),
-    'topic' => mysql_escape_string($_POST['topic'])
+    'topic' => mysql_escape_string($_POST['topic']),
+    'pages' => mysql_escape_string($_POST['pages'])
 );
 
 // теперь нам нужно вставить данные в БАЗУ (пока что с учетом вставки файла в БЛОБ)
@@ -39,7 +40,10 @@ if ($is_newfile == 1) {
         $pdf_filesize = $_FILES['pdffile']['size'];
         $tmp_name = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\',$_FILES['pdffile']['tmp_name']) : $_FILES['pdffile']['tmp_name'];
 
-        $q = "INSERT INTO pdfdata (content,username,tempname,filesize,articleid) VALUES (LOAD_FILE('$tmp_name'),'$pdf_username','pdf_internalname',$pdf_filesize,$id)";
+        $blobdata = mysql_escape_string(floadpdf($tmp_name));
+
+        $q = "INSERT INTO pdfdata (content,username,tempname,filesize,articleid)
+        VALUES ('$blobdata','$pdf_username','$tmp_name','$pdf_filesize','$id')";
         mysql_query($q, $link) or Die("Death on $q");
 
         $pdf_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");

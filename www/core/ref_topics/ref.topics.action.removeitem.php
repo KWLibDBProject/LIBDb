@@ -1,6 +1,6 @@
 <?php
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 
 if (!IsSet($_GET['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();

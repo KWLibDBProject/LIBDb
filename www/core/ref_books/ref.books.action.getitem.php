@@ -1,11 +1,11 @@
 <?php
 // выводит в виде таблицы содержимое справочника (в данном случае неуниверсально, работаем со справочником авторов)
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 
 $link = ConnectDB();
 
-$ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'users';
+$ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'books';
 $item_id = IsSet($_GET['id']) ? $_GET['id'] : 1;
 
 $query = "SELECT * FROM $ref_name WHERE id=$item_id";

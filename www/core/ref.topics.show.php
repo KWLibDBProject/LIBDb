@@ -1,6 +1,6 @@
 ﻿<html>
 <head>
-    <title>Справочник: Список тем (топиков)</title>
+    <title>Справочник: Тематические разделы</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <script src="js/jquery-1.10.2.min.js"></script>
@@ -32,7 +32,7 @@
                 modal: true,
                 buttons:[
                     {
-                        text: "Добавить топик (тему)",
+                        text: "Добавить",
                         click: function() {
                             Topics_CallAddItem(this);
                             $(this).find('form').trigger('reset');
@@ -108,7 +108,7 @@
 <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ В АДМИНКУ</strong></button>
 <button id="add_item"  class="button-large">Добавить тему (топик)</button><br>
 
-<div id="add_form" title="Добавить топик (тему)">
+<div id="add_form" title="Добавить тематический раздел">
     <form action="ref_topics/ref.topics.action.insert.php">
         <fieldset>
             <label for="add_title">Название:</label>
@@ -118,7 +118,7 @@
         </fieldset>
     </form>
 </div>
-<div id="edit_form" title="Изменить топик (тему)">
+<div id="edit_form" title="Изменить тематический раздел">
     <form action="ref_topics/ref.topics.action.update.php">
         <fieldset>
             <label for="edit_title">Название:</label>

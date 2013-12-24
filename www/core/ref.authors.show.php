@@ -1,13 +1,15 @@
 ﻿<?php
 // calls with parameter 'authors'
 require_once('core.php');
-require_once('db.php');
+require_once('core.db.php');
 
 $ref_prompt = 'Добавление автора';
 
 //@todo: отбор списка авторов, валидация данных:
 // по хорошему, отбор листинга нужен по каким-то критериям из выпадающего списка
 // в AddItem и UpdateItem ввести валидацию данных (как минимум емейла) как в http://jqueryui.com/dialog/#modal-form
+
+//@todo: отбор по полю "члены редколлегии" - имеется ли смысл? вообще по каким полям мы отбираем авторов
 ?>
 <html>
 <head>
@@ -35,7 +37,7 @@ $ref_prompt = 'Добавление автора';
             });
             $( "#add_form" ).dialog({
                 autoOpen: false,
-                height: 600,
+                height: 700,
                 width: 500,
                 y: 100,
                 modal: true,
@@ -45,8 +47,7 @@ $ref_prompt = 'Добавление автора';
                         click: function() {
                             Authors_CallAddItem(this);
                             $(this).find('form').trigger('reset');
-                            // логика добавления
-                            $( this ).dialog( "close" );
+                            $(this).dialog( "close" );
                         }
                     },
                     {
@@ -54,15 +55,9 @@ $ref_prompt = 'Добавление автора';
                         click: function() {
                             $(this).find('form').trigger('reset');
                             // просто отмена
-                            $( this ).dialog( "close" );
+                            $(this).dialog( "close" );
                         }
 
-                    },
-                    {
-                        text: "Сброс",
-                        click: function() {
-                            $(this).find('form').trigger('reset');
-                        }
                     }
                 ],
                 close: function() {
@@ -79,7 +74,7 @@ $ref_prompt = 'Добавление автора';
 
             $( "#edit_form" ).dialog({
                 autoOpen: false,
-                height: 600,
+                height: 700,
                 width: 500,
                 y: 100,
                 modal: true,
@@ -89,17 +84,16 @@ $ref_prompt = 'Добавление автора';
                         click: function() {
                             Authors_CallUpdateItem(this, button_id);
                             $(this).find('form').trigger('reset');
-                            $( this ).dialog("close");
+                            $(this).dialog("close");
                         }
                     },
                     {
                         text: "Удалить автора из базы",
                         click: function() {
-                            //@todo: логика УДАЛЕНИЯ с конфирмом
-
+<?php //@todo: логика УДАЛЕНИЯ с конфирмом ?>
                             Authors_CallRemoveItem(this, button_id);
                             $(this).find('form').trigger('reset');
-                            $( this ).dialog("close");
+                            $(this).dialog("close");
                         }
                     }
                 ],
@@ -108,7 +102,6 @@ $ref_prompt = 'Добавление автора';
                 }
             });
             $("#button-exit").on('click',function(event){
-                event.preventDefault();
                 window.location.href = 'admin.html';
             });
 
@@ -124,20 +117,35 @@ $ref_prompt = 'Добавление автора';
         <fieldset>
             <label for="add_name_rus">Ф.И.О. (русский)</label>
             <input type="text" name="add_name_rus" id="add_name_rus" class="text ui-widget-content ui-corner-all">
+
             <label for="add_name_eng">Ф.И.О. (английский)</label>
             <input type="text" name="add_name_eng" id="add_name_eng" class="text ui-widget-content ui-corner-all">
+
             <label for="add_name_ukr">Ф.И.О. (украинский)</label>
             <input type="text" name="add_name_ukr" id="add_name_ukr" class="text ui-widget-content ui-corner-all">
-            <label for="add_email">Email</label>
+
+            <label for="add_email">E-Mail</label>
             <input type="text" name="add_email" id="add_email" value="" class="text ui-widget-content ui-corner-all">
-            <label for="add_title_eng">Title (eng)</label>
+
+            <label for="add_phone">Телефон для связи</label>
+            <input type="text" name="add_phone" id="add_phone" value="" class="text ui-widget-content ui-corner-all">
+
+            <label for="add_title_eng">Звание, ученая степень, должность (eng)</label>
             <input type="text" name="add_title_eng" id="add_title_eng" value="" class="text ui-widget-content ui-corner-all">
-            <label for="add_title_rus">Титул (рус)</label>
+
+            <label for="add_title_rus">Звание, ученая степень, должность</label>
             <input type="text" name="add_title_rus" id="add_title_rus" value="" class="text ui-widget-content ui-corner-all">
-            <label for="add_title_ukr">Титул (укр)</label>
+
+            <label for="add_title_ukr">Званна, вчена ступiнь, посада</label>
             <input type="text" name="add_title_ukr" id="add_title_ukr" value="" class="text ui-widget-content ui-corner-all">
+
             <label for="add_workplace">Место работы</label>
             <textarea name="add_workplace" id="add_workplace" class="text ui-widget-content ui-corner-all" cols="50" rows="5"></textarea>
+
+            <label>Участие в редакционной коллегии:<input type="checkbox" name="add_is_es" id="add_is_es">
+            <!-- <select name="add_is_es_selector"><option value="0">Нет</option><option value="1">Да</option></select> -->
+            </label>
+
         </fieldset>
     </form>
 </div>
@@ -146,20 +154,35 @@ $ref_prompt = 'Добавление автора';
         <fieldset>
             <label for="edit_name_rus">Ф.И.О. (русский)</label>
             <input type="text" name="edit_name_rus" id="edit_name_rus" class="text ui-widget-content ui-corner-all">
+
             <label for="edit_name_eng">Ф.И.О. (английский)</label>
             <input type="text" name="edit_name_eng" id="edit_name_eng" class="text ui-widget-content ui-corner-all">
+
             <label for="edit_name_ukr">Ф.И.О. (украинский)</label>
             <input type="text" name="edit_name_ukr" id="edit_name_ukr" class="text ui-widget-content ui-corner-all">
+
             <label for="edit_email">Email</label>
             <input type="text" name="edit_email" id="edit_email" value="" class="text ui-widget-content ui-corner-all">
-            <label for="edit_title_eng">Title (eng)</label>
+
+            <label for="edit_phone">Телефон для связи</label>
+            <input type="text" name="edit_phone" id="edit_phone" value="" class="text ui-widget-content ui-corner-all">
+
+            <label for="edit_title_eng">Звание, ученая степень, должность (eng)</label>
             <input type="text" name="edit_title_eng" id="edit_title_eng" value="" class="text ui-widget-content ui-corner-all">
-            <label for="edit_title_rus">Титул (рус)</label>
+
+            <label for="edit_title_rus">Звание, ученая степень, должность</label>
             <input type="text" name="edit_title_rus" id="edit_title_rus" value="" class="text ui-widget-content ui-corner-all">
-            <label for="edit_title_ukr">Титул (укр)</label>
+
+            <label for="edit_title_ukr">Званна, вчена ступiнь, посада</label>
             <input type="text" name="edit_title_ukr" id="edit_title_ukr" value="" class="text ui-widget-content ui-corner-all">
+
             <label for="edit_workplace">Место работы</label>
             <textarea name="edit_workplace" id="edit_workplace" class="text ui-widget-content ui-corner-all" cols="50" rows="5"></textarea>
+
+            <label>Участие в редакционной коллегии:<input type="checkbox" name="edit_is_es" id="edit_is_es">
+                <!-- <select name="edit_is_es_selector"><option value="0">Нет</option><option value="1">Да</option></select> -->
+
+            </label>
         </fieldset>
     </form>
 </div>

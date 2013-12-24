@@ -107,19 +107,24 @@
 <body>
 <form action="articles.action.insert.php" method="post" enctype="multipart/form-data" id="form_new_article">
     <fieldset>
-        <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
-        <legend>Общие данные</legend>
+        <legend>Выпускные данные:</legend>
+        <label for="the_topic">Тематический раздел (рубрика): </label>
+        <select name="topic" id="the_topic"></select>
         <label for="udc">УДК:</label>
         <input type="text" name="udc" id="udc" class="text ui-widget-content ui-corner-all">
-        <label for="the_book">Статья входит в сборник: </label>
+    </fieldset>
+    <fieldset>
+        <legend>Сборник</legend>
+        <label for="pages">Статья опубликована на страницах</label>
+        <input type="text" id="pages" name="pages">
+        <label for="the_book">... сборника: </label>
         <select name="book" id="the_book"></select>
-        <label for="the_topic">Тема (топик) статьи: </label>
-        <select name="topic" id="the_topic"></select>
-        <label for="datepicker">Дата:</label>
+        <label for="datepicker">Дата приема на публикацию:</label>
         <input type="text" id="datepicker" name="add_date">
     </fieldset>
     <fieldset>
         <legend>PDF-file</legend>
+        <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
         <label for="pdf">Прикрепить PDF-файл:</label>
         <input type="file" name="pdffile" id="pdf">
     </fieldset>
@@ -147,7 +152,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>Аннотация</legend>
+        <legend>Аннотация на разных языках</legend>
         <div id="abstract_tabs">
             <ul>
                 <li><a href="#abstract-eng">На английском</a></li>
@@ -166,7 +171,7 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>Ключевые слова (keywords)</legend>
+        <legend>Ключевые слова на разных языках</legend>
         <div id="keywords_tabs">
             <ul>
                 <li><a href="#keywords-eng">На английском</a></li>

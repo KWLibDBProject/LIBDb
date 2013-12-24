@@ -1,6 +1,6 @@
 <?php
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 $id = IsSet($_GET['id']) ? $_GET['id'] : 1;
 
 $link = ConnectDB();
@@ -44,13 +44,7 @@ if ($np > 0) {
     $the_file = mysql_fetch_assoc($rp);
 }
 
-// print_r($the_article);
-// echo '<hr>';
-// print_r($the_currAuthList);
-
 CloseDB($link);
-// print_r($the_article);
-// print_r($the_currAuthList);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -72,7 +66,7 @@ CloseDB($link);
         var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
         var topicsList = preloadOptionsList('../ref_topics/ref.topics.action.getoptionlist.php');
 
-        var mode = '<?php echo $the_mode; ?>';
+        var mode = 'edit';
         // loaded values for 'EDIT' mode
         currAuthorsList = <?php echo $the_currAuthList; ?>; // getCurrentAuthorsSelection, используется только для EDIT
         var loadedAuthorsNum = <?php echo $the_loadedAuthorsNum; ?>;
@@ -140,7 +134,7 @@ CloseDB($link);
                         $("#newfile_input").removeProp("disabled");
                         $("#currfile_changed").attr("value","1");
                         $("#currfile_old").hide();
-                        /*
+                        /* not used since #4 commit,
                         $("#currfile_show").attr('data-fileid','').attr('disabled','disabled');
                         $("#currfile_text").val("*** ВНИМАНИЕ, ФАЙЛ УДАЛЕН ***");
                         $("#newfile_input").removeProp("disabled");
@@ -180,22 +174,34 @@ CloseDB($link);
 
 <body>
 <form action="../ref_articles/articles.action.update.php" method="post" enctype="multipart/form-data" id="form_edit_article">
+    <input type="hidden" name="article_id" value="<?php echo $id; ?>">
+
     <fieldset>
-        <input type="hidden" name="article_id" value="<?php echo $id; ?>">
-        <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
-        <legend>Общие данные</legend>
+        <legend>Выпускные данные:</legend>
+
+        <label for="the_topic">Тематический раздел (рубрика): </label>
+        <select name="topic" id="the_topic"></select>
+
         <label for="udc">УДК:</label>
         <input type="text" name="udc" id="udc" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['udc']; ?>">
-        <label for="the_book">Статья входит в сборник: </label>
+    </fieldset>
+    <fieldset>
+        <legend>Сборник</legend>
+
+        <label for="pages">Статья опубликована на страницах</label>
+        <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>">
+
+        <label for="the_book">... сборника: </label>
         <select name="book" id="the_book"></select>
-        <label for="the_topic">Тема (топик) статьи: </label>
-        <select name="topic" id="the_topic"></select>
+
         <label for="datepicker">Дата:</label>
         <input type="text" id="datepicker" name="add_date" value="<?php echo $the_article['add_date']; ?>">
     </fieldset>
+
     <fieldset>
-        <!-- @todo: PDF table -->
         <legend>PDF-file</legend>
+        <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
+
         <span id="currfile_old">
         <button type="button" id="currfile_show" data-fileid="<?php echo $the_file['id'];?>">Посмотреть</button>
         <label for="currfile_text">Текущий файл:</label>
@@ -230,7 +236,7 @@ CloseDB($link);
     </fieldset>
 
     <fieldset>
-        <legend>Аннотация</legend>
+        <legend>Аннотация на разных языках</legend>
         <div id="abstract_tabs">
             <ul>
                 <li><a href="#abstract-eng">На английском</a></li>
@@ -249,7 +255,7 @@ CloseDB($link);
         </div>
     </fieldset>
     <fieldset>
-        <legend>Ключевые слова (keywords)</legend>
+        <legend>Ключевые слова на разных языках</legend>
         <div id="keywords_tabs">
             <ul>
                 <li><a href="#keywords-eng">На английском</a></li>

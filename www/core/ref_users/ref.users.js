@@ -5,19 +5,14 @@ function Users_CallAddItem(source)
     bValid = true;
     var $form = $(source).find('form');
     url = $form.attr("action");
-    //@todo: validate user information!
-    f_name = $form.find("input[name='add_name']").val();
-    f_email = $form.find("input[name='add_email']").val();
-    f_permissions = $form.find("input[name='add_permissions']").val();
-    f_login = $form.find("input[name='add_login']").val();
-    f_password = $form.find("input[name='add_password']").val();
+    //@todo: validate user information! - вопрос только, что именно нужно валидировать? Емейл?
     var posting = $.post(url, {
-        name: f_name,
+        name: $form.find("input[name='add_name']").val(),
         ref_name: ref_name,
-        email: f_email,
-        permissions: f_permissions,
-        login: f_login,
-        password: f_password
+        email: $form.find("input[name='add_email']").val(),
+        permissions: $form.find("input[name='add_permissions']").val(),
+        login: $form.find("input[name='add_login']").val(),
+        password: $form.find("input[name='add_password']").val()
     } );
     posting.done(function(data){
 
@@ -60,18 +55,13 @@ function Users_CallUpdateItem(source, id)
 {
     var $form = $(source).find('form');
     url = $form.attr("action");
-    f_name = $form.find("input[name='edit_name']").val();
-    f_email = $form.find("input[name='edit_email']").val();
-    f_permissions = $form.find("input[name='edit_permissions']").val();
-    f_login = $form.find("input[name='edit_login']").val();
-    f_password = $form.find("input[name='edit_password']").val();
     var posting = $.post(url, {
-        name: f_name,
+        name: $form.find("input[name='edit_name']").val(),
         ref_name: ref_name,
-        email: f_email,
-        permissions: f_permissions,
-        login: f_login,
-        password: f_password,
+        email: $form.find("input[name='edit_email']").val(),
+        permissions: $form.find("input[name='edit_permissions']").val(),
+        login: $form.find("input[name='edit_login']").val(),
+        password: $form.find("input[name='edit_password']").val(),
         id: id
     } );
     posting.done(function(data){

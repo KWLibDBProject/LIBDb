@@ -5,12 +5,11 @@ function Books_CallAddItem(source)
 {
     var $form = $(source).find('form');
     url = $form.attr("action");
-    f_title = $form.find("input[name='add_title']").val();
-    f_date = $form.find("input[name='add_date']").val();
     var posting = $.post(url, {
-        title: f_title,
         ref_name: ref_name,
-        date: f_date
+        title: $form.find("input[name='add_title']").val(),
+        date: $form.find("input[name='add_date']").val(),
+        contentpages: $form.find("input[name='add_contentpages']").val()
     } );
     posting.done(function(data){
 
@@ -39,6 +38,7 @@ function Books_CallLoadItem(destination, id) // номер записи, цел�
         if (result['error'] == 0) {
             $form.find("input[name='edit_title']").val( result['data']['title'] );
             $form.find("input[name='edit_date']").val( result ['data']['date'] );
+            $form.find("input[name='edit_contentpages']").val( result ['data']['contentpages'] );
         } else {
             // ошибка загрузки
         }
@@ -49,13 +49,12 @@ function Books_CallUpdateItem(source, id)
 {
     var $form = $(source).find('form');
     url = $form.attr("action");
-    f_title = $form.find("input[name='edit_title']").val();
-    f_date = $form.find("input[name='edit_date']").val();
     var posting = $.post(url, {
-        title: f_title,
         ref_name: ref_name,
-        date: f_date,
-        id: id
+        id: id,
+        title: $form.find("input[name='edit_title']").val(),
+        date: $form.find("input[name='edit_date']").val(),
+        contentpages: $form.find("input[name='edit_contentpages']").val()
     } );
     posting.done(function(data){
         result = $.parseJSON(data);

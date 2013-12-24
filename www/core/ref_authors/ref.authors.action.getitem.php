@@ -1,7 +1,7 @@
 <?php
 // выводит в виде таблицы содержимое справочника (в данном случае неуниверсально, работаем со справочником авторов)
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 
 $link = ConnectDB();
 
@@ -18,7 +18,7 @@ if ($ref_numrows != 0) {
     $data['message'] = '';
 } else {
     $data['error'] = 1;
-    $data['message'] = 'Автор не найден, возможно ошибка базы';
+    $data['message'] = 'Авторы в базе данных не найдены, добавьте хотя бы одного!';
 }
 
 CloseDB($link);

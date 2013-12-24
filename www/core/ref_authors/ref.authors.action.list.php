@@ -1,7 +1,7 @@
 <?php
 // выводит в виде таблицы содержимое справочника (в данном случае неуниверсально, работаем со справочником авторов)
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 
 $link = ConnectDB();
 
@@ -13,56 +13,66 @@ $res = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($res) ;
 
 if ($ref_numrows > 0) {
-    for ($i=0; $i < $ref_numrows; $i++)
+    while ($ref_record = mysql_fetch_assoc($res)) {
+        $ref_list[$ref_record['id']] = $ref_record;
+    }
+
+/*     for ($i=0; $i < $ref_numrows; $i++)
     {
         $ref_record = mysql_fetch_assoc($res);
         $ref_list[$ref_record['id']] = $ref_record;
-    }
+    } */
 } else {
     $ref_message = 'Пока не ввели ни одного автора!';
 }
 
 CloseDB($link);
 ?>
+
 <table border="1" width="100%">
-<tr>
-    <th width="5%">№</th>
-    <th>Ф.И.О. (рус)</th>
-    <th>Ф.И.О. (англ)</th>
-    <th>Ф.И.О. (укр)</th>
-    <th>Титул (рус)</th>
-    <th>Титул (англ)</th>
-    <th>Титул (укр)</th>
-    <th>E-Mail</th>
-    <th>Место работы</th>
-    <th width="10%">Управление</th>
-</tr>
-    <?php
-    if ($ref_numrows > 0) {
-    foreach ($ref_list as $r_id => $r_value)
-    {
-        $row = $r_value;
-        echo <<<REF_ANYROW
-<tr>
-<td>{$row['id']}</td>
-<td>{$row['name_rus']}</td>
-<td>{$row['name_eng']}</td>
-<td>{$row['name_ukr']}</td>
-<td>{$row['title_rus']}</td>
-<td>{$row['title_eng']}</td>
-<td>{$row['title_ukr']}</td>
-<td>{$row['email']}</td>
-<td>{$row['workplace']}</td>
-<td class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
-</tr>
-REF_ANYROW;
-        }
+    <tr>
+        <th width="3%"> ID </th>
+        <th width="30%" colspan="2"> Ф.И.О. </th>
+        <th width="25%"> Звание, ученая степень, должность </th>
+        <th width="15%" colspan="2">Контактные данные </th>
+        <th width="22%"> Место работы </th>
+        <th width="5%">&nbsp;</th>
+    </tr>
+    <!-- single table row -->
+<?php
+    if ($ref_numrows>0) {
+        foreach ($ref_list as $row) {
+echo <<<REF_ONEROW
+    <tr>
+        <td rowspan="3"> {$row['id']} </td>
+        <td width="4%"><strong>Eng:</strong></td>
+        <td> {$row['name_eng']} </td>
+        <td> {$row['title_eng']} </td>
+        <td width="5%">E-Mail: </td>
+        <td> {$row['email']} </td>
+        <td rowspan="3"> {$row['workplace']} </td>
+        <td rowspan="3"class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
+    </tr>
+    <tr>
+        <td><strong>Рус:</strong></td>
+        <td> {$row['name_rus']} </td>
+        <td> {$row['title_rus']} </td>
+        <td> Phone: </td>
+        <td> {$row['phone']} </td>
+    </tr>
+    <tr>
+        <td><strong>Укр:</strong></td>
+        <td> {$row['name_ukr']} </td>
+        <td> {$row['title_ukr']} </td>
+        <td> &nbsp; </td>
+        <td> &nbsp; </td>
+    </tr>
+REF_ONEROW;
+        } //foreach
+        echo '</table>';
     } else {
-        echo <<<REF_NUMROWS_ZERO
+echo <<<REF_NUMROWS_ZERO
 <tr><td colspan="11">$ref_message</td></tr>
 REF_NUMROWS_ZERO;
-    }
-
-    ?>
-
-</table>
+    } // else
+?>

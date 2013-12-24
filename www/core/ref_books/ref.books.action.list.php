@@ -1,7 +1,7 @@
 ﻿<?php
 // выводит в виде таблицы содержимое справочника (в данном случае неуниверсально, работаем со справочником авторов)
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 
 $link = ConnectDB();
 $ref_name = 'books';
@@ -27,8 +27,9 @@ CloseDB($link);
 <table border="1" width="100%">
 <tr>
     <th width="5%">№</th>
-    <th>Название</th>
-    <th>Дата выпуска</th>
+    <th>Название или номер сборника</th>
+    <th>Дата(год) выпуска</th>
+    <th>Страницы со статьями</th>
     <th width="10%">Управление</th>
 </tr>
     <?php
@@ -41,13 +42,15 @@ CloseDB($link);
 <td>{$row['id']}</td>
 <td>{$row['title']}</td>
 <td>{$row['date']}</td>
+<td>{$row['contentpages']}</td>
 <td class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
 </tr>
 REF_ANYROW;
         }
+        echo "</table>";
     } else {
         echo <<<REF_NUMROWS_ZERO
-<tr><td colspan="4">$ref_message</td></tr>
+<tr><td colspan="5">$ref_message</td></tr>
 REF_NUMROWS_ZERO;
     }
 

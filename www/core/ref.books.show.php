@@ -107,7 +107,8 @@
                 showButtonPanel: true,
                 showOn: "both",
                 buttonImageOnly: true,
-                buttonImage: "css/images/calendar.gif"
+                buttonImage: "css/images/calendar.gif",
+                duration: ''
             });
             $("#button-exit").on('click',function(event){
                 window.location.href = 'admin.html';
@@ -125,8 +126,12 @@
         <fieldset>
             <label for="add_title">Название:</label>
             <input type="text" name="add_title" id="add_title" class="text ui-widget-content ui-corner-all">
-            <label for="add_datepicker">Дата:</label>
+
+            <label for="add_datepicker">Дата (год) выпуска:</label>
             <input type="text" class="datepicker" id="add_datepicker" name="add_date">
+
+            <label for="add_contentpages">Страницы со статьями:</label>
+            <input type="text" name="add_contentpages" id="add_contentpages" class="text ui-widget-content ui-corner-all">
         </fieldset>
     </form>
 </div>
@@ -135,8 +140,12 @@
         <fieldset>
             <label for="edit_title">Название:</label>
             <input type="text" name="edit_title" id="edit_title" class="text ui-widget-content ui-corner-all">
-            <label for="edit_datepicker">Дата:</label>
+
+            <label for="edit_datepicker">Дата (год) выпуска:</label>
             <input type="text" class="datepicker ui-widget-content ui-corner-all" id="edit_datepicker" name="edit_date">
+
+            <label for="edit_contentpages">Страницы со статьями:</label>
+            <input type="text" name="edit_contentpages" id="edit_contentpages" class="text ui-widget-content ui-corner-all">
         </fieldset>
      </form>
 </div>

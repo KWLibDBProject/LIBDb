@@ -27,3 +27,6 @@ max-height:150px; */
     height: 60px;
 }
 
+.span_is_es {
+    white-space: nowrap;
+}

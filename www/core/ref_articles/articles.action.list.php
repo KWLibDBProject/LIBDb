@@ -9,12 +9,12 @@ book - показать статьи в сборнике
 $_author = (IsSet($_GET['author'])) ? $_GET['author'] : -1;
 
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 
 $link = ConnectDB();
 
 $query = "
-select distinct articles.id,title_eng,title_rus,title_ukr,udc,pdfid,add_date,topics.title as ttitle,books.title as btitle
+select distinct articles.id,title_eng,title_rus,title_ukr,udc,pdfid,add_date,pages,topics.title as ttitle,books.title as btitle
 from articles, cross_aa,topics,books
 WHERE
 cross_aa.article=articles.id
@@ -37,7 +37,6 @@ if ($articles_count>0) {
     {
         $id = $an_article['id']; // айди статьи
         $all_articles[$id]['article'] = $an_article; // ВСЯ статья
-        // $all_articles[$id]['article']['id'] = $id;
 
         // получить информацию о связанной ПДФке
         $qp = "SELECT id,username,filesize FROM pdfdata WHERE articleid = $id";

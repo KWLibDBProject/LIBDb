@@ -1,6 +1,6 @@
 ﻿<?php
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 
 if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
@@ -12,7 +12,8 @@ $link = ConnectDB();
 
 $q = array(
     'title' => mysql_escape_string($_POST['title']),
-    'date' => mysql_escape_string($_POST['date'])
+    'date' => mysql_escape_string($_POST['date']),
+    'contentpages' => mysql_escape_string($_POST['contentpages'])
 );
 
 $qstr = MakeUpdate($q, $_POST['ref_name'], "WHERE id=$id");

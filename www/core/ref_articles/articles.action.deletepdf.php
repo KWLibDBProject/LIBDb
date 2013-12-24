@@ -1,6 +1,6 @@
 <?php
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 $id = IsSet($_GET['id']) ? $_GET['id'] : Die();
 
 // удалить из таблицы pdfdata

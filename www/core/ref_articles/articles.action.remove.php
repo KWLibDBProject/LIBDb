@@ -1,13 +1,15 @@
 <?php
 require_once('../core.php');
-require_once('../db.php');
+require_once('../core.db.php');
 $result['message'] = '';
 $result['error'] = 0;
 $id = IsSet($_GET['id']) ? $_GET['id'] : Die("No id!");
 
 $link = ConnectDB();
 
-// @todo: проверки возможности удаления
+// @todo: проверка возможности удаления -- статью нельзя удалить, если ?
+
+
 // удалить статью из артиклез
 $q = "DELETE FROM articles WHERE id=$id";
 mysql_query($q,$link) or Die("Death at $q");
