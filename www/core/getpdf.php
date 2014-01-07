@@ -6,7 +6,7 @@ $id = IsSet($_GET['id']) ? $_GET['id'] : Die();
 
 $link = ConnectDB();
 
-$q = "SELECT content,filesize,username FROM pdfdata WHERE id=$id";
+$q = "SELECT `content`, `filesize`, `username` FROM `pdfdata` WHERE `id`='$id'";
 $result = mysql_query($q, $link) or Die("On $q");
 $file = mysql_fetch_assoc($result);
 

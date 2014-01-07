@@ -21,7 +21,8 @@ function BuildSelector(target,data,currentid) // currentid is 1 for NEW
     });
     if (data['error'] == 0) {
         currentid = (typeof currentid != 'undefined') ? currentid : 1;
-        $("select[name="+target+"] option[value="+ currentid +"]").attr("selected","selected");
+        // $("select[name="+target+"] option[value="+ currentid +"]").attr("selected","selected");
+        $("select[name="+target+"] option[value="+ currentid +"]").prop("selected",true);
     } else {
         $("select[name="+target+"]").attr('disabled','disabled');
     }

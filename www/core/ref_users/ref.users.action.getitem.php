@@ -3,6 +3,8 @@
 require_once('../core.php');
 require_once('../core.db.php');
 
+if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
+
 $link = ConnectDB();
 
 $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'users';

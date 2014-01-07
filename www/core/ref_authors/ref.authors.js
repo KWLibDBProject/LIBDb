@@ -14,8 +14,12 @@ function Authors_CallAddItem(source)
         title_ukr : $form.find("input[name='add_title_ukr']").val(),
         workplace: $form.find("textarea[name='add_workplace']").val(),
         ref_name: ref_name,
-        email: $form.find("input[name='add_email']").val()
+        email: $form.find("input[name='add_email']").val(),
+        phone: $form.find("input[name='add_phone']").val(),
+        is_es: ($form.find("input[name='add_is_es']").prop("checked")) ? 1 : 0
+        // is_es: $form.find('select[name=add_is_es_selector] option:selected').val()
     } );
+
     posting.done(function(data){
 
         result = $.parseJSON(data);
@@ -35,9 +39,7 @@ function Authors_CallLoadItem(destination, id) // номер записи, це�
         id: id,
         ref: ref_name
     });
-
     var $form = $(destination).find('form');
-
     getting.done(function(data){
         result = $.parseJSON(data);
         if (result['error'] == 0) {
@@ -49,7 +51,15 @@ function Authors_CallLoadItem(destination, id) // номер записи, це�
             $form.find("input[name='edit_title_eng']").val( result['data']['title_eng'] );
             $form.find("input[name='edit_title_ukr']").val( result['data']['title_ukr'] );
             $form.find("input[name='edit_email']").val( result['data']['email'] );
+            $form.find("input[name='edit_phone']").val( result['data']['phone'] );
             $form.find("textarea[name='edit_workplace']").val(result['data']['workplace']);
+
+            $form.find("input[name='edit_is_es']").prop("checked", !!(result['data']['is_es'] != 0)); // simplified ternar form
+            // simplifier ternar form like this:
+            // x = result['data']['is_es'] != 0 ? 1 : 0;
+            // $form.find("input[name='edit_is_es']").prop("checked", x);
+            // selection is NOT working correctly :(
+            // $form.find("select[name=edit_is_es_selector] option[value='"+result['data']['is_es']+"']").attr("selected","selected")
         } else {
             // ошибка загрузки
         }
@@ -70,7 +80,9 @@ function Authors_CallUpdateItem(source, id)
         workplace: $form.find("textarea[name='edit_workplace']").val(),
         ref_name: ref_name,
         email: $form.find("input[name='edit_email']").val(),
-        id: id
+        id: id,
+        is_es: ($form.find("input[name='edit_is_es']").prop("checked")) ? 1 : 0
+        // is_es: $form.find('select[name=edit_is_es_selector] option:selected').val()
     } );
     posting.done(function(data){
         result = $.parseJSON(data);

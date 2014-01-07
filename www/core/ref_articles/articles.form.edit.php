@@ -93,7 +93,8 @@ CloseDB($link);
                 {
                     InsertAuthorSelector("#authors_list",i);
                     if (typeof currAuthorsList[i] != 'undefined') {
-                        $("select[data-alselector="+i+"] option[value="+currAuthorsList[i]+"]").attr("selected","selected");
+                        // $("select[data-alselector="+i+"] option[value="+currAuthorsList[i]+"]").attr("selected","selected");
+                        $("select[data-alselector="+i+"] option[value="+currAuthorsList[i]+"]").prop("selected",true);
                     }
                     lastAuthorNumber++;
                 }

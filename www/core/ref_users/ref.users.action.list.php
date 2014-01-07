@@ -39,6 +39,7 @@ CloseDB($link);
     foreach ($ref_list as $r_id => $r_value)
     {
         $row = $r_value;
+        $is_disabled = ($row['permissions'] == 255) ? ' disabled' : '';
         echo <<<REF_ANYROW
 <tr>
 <td>{$row['id']}</td>
@@ -47,7 +48,7 @@ CloseDB($link);
 <td>{$row['permissions']}</td>
 <td>{$row['login']}</td>
 <td>{$row['password']}</td>
-<td class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
+<td class="centred_cell"><button class="edit_button" name="{$row['id']}" $is_disabled>Edit</button></td>
 </tr>
 REF_ANYROW;
         }

@@ -88,6 +88,7 @@ function Users_CallRemoveItem(target, id)
             $('#ref_list').empty().load("ref_users/ref.users.action.list.php?ref="+ref_name);
             $( target ).dialog( "close" );
         } else {
+            // alert about error (try delete admin)
             $( target ).dialog( "close" );
         }
     });
