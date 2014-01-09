@@ -7,8 +7,12 @@
 ищем строку <%key%> и тупо меняем на содержимое ключа
 
 */
+/* @todo: инструкция по пользованию */
 class KWT
 {
+    private $tag_open = '{%';
+    private $tag_close = '%}';
+
     private $file;
     private $overrides = array();
     public function __construct($file)
@@ -26,6 +30,8 @@ class KWT
     }
     public function contentend($target,$clear=true)
     {
+        if (!isset($clear)) $clear = true;
+        $target = strtolower($target);
         $this->overrides["$target"] = ob_get_contents();
         if ($clear) ob_end_clean();
     }
@@ -36,9 +42,10 @@ class KWT
     }
     public function callback($buffer)
     {
+        // @todo: исправить регистрозависимость в замене!!!!!!!!!
         $buf = $buffer;
         foreach ($this->overrides as $key => $value) {
-            $skey = "{%".$key."%}";
+            $skey = $this->tag_open.$key.$this->tag_close;
             $buf = str_replace($skey,$value,$buf);
         }
         return $buf;

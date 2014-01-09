@@ -6,6 +6,9 @@ ConnectDB();
 $q_root = "SELECT id FROM users WHERE login='root'";
 $r_root = mysql_query($q_root);
 
+$tpl = new kwt('install.tpl');
+$tpl->contentstart();
+
 if (mysql_errno()>0)
 {
     // root not found
@@ -23,5 +26,7 @@ if (mysql_errno()>0)
 } else {
     echo 'Root user found.';
 }
+$tpl->contentend('message'); // при использовании шаблона и выводе инфомрации еще в скрипте вызываем обязательно!!!
+$tpl->out();
+
 ?>
-<a href="/core/">Переход в админку</a>
