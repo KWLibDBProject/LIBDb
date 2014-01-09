@@ -1,7 +1,4 @@
 <?php
-require_once('core.php');
-require_once('core.db.php');
-require_once('core.kwt.php');
 
 /* Таблицы пока не создаем */
 
@@ -27,3 +24,4 @@ if (mysql_errno()>0)
     echo 'Root user found.';
 }
 ?>
+<a href="/core/">Переход в админку</a>
