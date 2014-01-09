@@ -125,10 +125,10 @@ $ref_prompt = 'Добавление автора';
             <input type="text" name="add_name_ukr" id="add_name_ukr" class="text ui-widget-content ui-corner-all">
 
             <label for="add_email">E-Mail</label>
-            <input type="text" name="add_email" id="add_email" value="" class="text ui-widget-content ui-corner-all">
+            <input type="text" name="add_email" id="add_email" class="text ui-widget-content ui-corner-all">
 
             <label for="add_phone">Телефон для связи</label>
-            <input type="text" name="add_phone" id="add_phone" value="" class="text ui-widget-content ui-corner-all">
+            <input type="text" name="add_phone" id="add_phone" class="text ui-widget-content ui-corner-all">
 
             <label for="add_title_eng">Звание, ученая степень, должность (eng)</label>
             <input type="text" name="add_title_eng" id="add_title_eng" value="" class="text ui-widget-content ui-corner-all">
@@ -162,10 +162,10 @@ $ref_prompt = 'Добавление автора';
             <input type="text" name="edit_name_ukr" id="edit_name_ukr" class="text ui-widget-content ui-corner-all">
 
             <label for="edit_email">Email</label>
-            <input type="text" name="edit_email" id="edit_email" value="" class="text ui-widget-content ui-corner-all">
+            <input type="text" name="edit_email" id="edit_email" class="text ui-widget-content ui-corner-all">
 
             <label for="edit_phone">Телефон для связи</label>
-            <input type="text" name="edit_phone" id="edit_phone" value="" class="text ui-widget-content ui-corner-all">
+            <input type="text" name="edit_phone" id="edit_phone" class="text ui-widget-content ui-corner-all">
 
             <label for="edit_title_eng">Звание, ученая степень, должность (eng)</label>
             <input type="text" name="edit_title_eng" id="edit_title_eng" value="" class="text ui-widget-content ui-corner-all">

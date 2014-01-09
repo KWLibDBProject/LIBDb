@@ -73,9 +73,8 @@ CloseDB($link);
         <th width="7%">УДК</th>
         <th>Авторы</th>
         <th>Название</th>
-        <th width="10%">Дата</th>
-        <th width="8%">PDF</th>
-        <th width="10%" colspan="1">Control</th>
+        <th width="7%">Дата</th>
+        <th width="105" colspan="1">Control<br><small>PDF info</small></th>
     </tr>
     <?php
     if ($articles_count > 0) {
@@ -91,8 +90,8 @@ CloseDB($link);
 <td><small>{$row['authors']}</small></td>
 <td><small>Eng: {$row['article']['title_eng']}<br>Рус: {$row['article']['title_rus']}<br>Укр: {$row['article']['title_ukr']}</small></td>
 <td>{$row['article']['add_date']}</td>
-<td>{$row['pdffile']['username']}<br><small>({$row['pdffile']['filesize']} bytes)<small></td>
 <td>
+<!-- <small>{$row['pdffile']['username']} ({$row['pdffile']['filesize']} bytes)</small><br> -->
     <button class="download-pdf" name="{$row['pdffile']['id']}" data-text="Show PDF"></button>
     <button class="edit_button" name="{$row['article']['id']}" data-text="Edit"></button>
 </td>

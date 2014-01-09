@@ -7,7 +7,7 @@
 
 <div id="message">{%message%}</div>
 <hr>
-<a href="/core/">Переход в админку</a>
+<a href="../">Переход в админку</a>
 
 </body>
 </html>

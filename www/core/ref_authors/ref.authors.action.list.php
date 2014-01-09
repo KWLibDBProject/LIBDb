@@ -16,12 +16,6 @@ if ($ref_numrows > 0) {
     while ($ref_record = mysql_fetch_assoc($res)) {
         $ref_list[$ref_record['id']] = $ref_record;
     }
-
-/*     for ($i=0; $i < $ref_numrows; $i++)
-    {
-        $ref_record = mysql_fetch_assoc($res);
-        $ref_list[$ref_record['id']] = $ref_record;
-    } */
 } else {
     $ref_message = 'Пока не ввели ни одного автора!';
 }

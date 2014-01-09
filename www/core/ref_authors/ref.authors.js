@@ -55,11 +55,6 @@ function Authors_CallLoadItem(destination, id) // номер записи, це�
             $form.find("textarea[name='edit_workplace']").val(result['data']['workplace']);
 
             $form.find("input[name='edit_is_es']").prop("checked", !!(result['data']['is_es'] != 0)); // simplified ternar form
-            // simplifier ternar form like this:
-            // x = result['data']['is_es'] != 0 ? 1 : 0;
-            // $form.find("input[name='edit_is_es']").prop("checked", x);
-            // selection is NOT working correctly :(
-            // $form.find("select[name=edit_is_es_selector] option[value='"+result['data']['is_es']+"']").attr("selected","selected")
         } else {
             // ошибка загрузки
         }
@@ -80,6 +75,7 @@ function Authors_CallUpdateItem(source, id)
         workplace: $form.find("textarea[name='edit_workplace']").val(),
         ref_name: ref_name,
         email: $form.find("input[name='edit_email']").val(),
+        phone: $form.find("input[name='edit_phone']").val(),
         id: id,
         is_es: ($form.find("input[name='edit_is_es']").prop("checked")) ? 1 : 0
         // is_es: $form.find('select[name=edit_is_es_selector] option:selected').val()
