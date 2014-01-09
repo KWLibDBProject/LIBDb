@@ -5,22 +5,15 @@ require_once('config/config.php');
 function ConnectDB()
 {
     global $CONFIG;
-    $hostname = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['host_local']     : $CONFIG['host_remote'];
-    $username = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['username_local'] : $CONFIG['username_remote'];
-    $password = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['password_local'] : $CONFIG['password_remote'];
-    $database = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CONFIG['database_local'] : $CONFIG['database_remote'];
-    $link = mysql_connect($hostname,$username,$password);
-    $CONFIG['flag_dbconnected'] = true;
-    mysql_select_db($database, $link) or die("Could not select db: " . mysql_error());
+    $link = mysql_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password']);
+    mysql_select_db($CONFIG['database'], $link) or die("Could not select db: " . mysql_error());
     mysql_query("SET NAMES utf8", $link);
     return $link;
 }
 
 function CloseDB($link) // useless
 {
-    global $CONFIG;
     mysql_close($link) or Die("Не удается закрыть соединение с базой данных.");
-    $CONFIG['flag_dbconnected'] = false;
 }
 
 function isConnectedDB()
@@ -67,7 +60,6 @@ function DBLoginCheck($login, $password)
     $userlogin = mysql_real_escape_string(mb_strtolower($login));
     $q_login = "SELECT `md5password`,`permissions`,`id` FROM users WHERE login = '$userlogin'";
     if (!$r_login = mysql_query($q_login)) { /* error catch */ }
-    $err = mysql_errno($link);
 
     if (mysql_num_rows($r_login)==1) {
         // логин существует
@@ -97,4 +89,8 @@ function DBLoginCheck($login, $password)
     return $return;
 }
 
+function DBIsTableExists($table)
+{
+    return (mysql_query("SELECT 1 FROM $table WHERE 0")) ? true : false;
+}
 ?>

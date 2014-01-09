@@ -1,22 +1,31 @@
 <?php
 // здесь задаются ключевые переменные конфигурации (в частности, доступ к базе)
-$GLOBALS['debugmode'] = true; // установить в true для возможности вызова аякс-вызываемых экторов в обычном режиме
 
-$CONFIG['username_local'] 	= 'root';
-$CONFIG['username_remote']	= 'root';
+$CFG = array(
+    'hostname' => array(
+        'local' => 'localhost',
+        'remote' => 'localhost'
+    ),
+    'username' => array(
+        'local' => 'root',
+        'remote' => 'root'
+    ),
+    'password' => array(
+        'local' => '',
+        'remote' => 'JTofv6iB'
+    ),
+    'database' => array(
+        'local' => 'libdb',
+        'remote' => 'libdb'
+    )
+);
 
-$CONFIG['host_local']    	= 'localhost';
-$CONFIG['host_remote']   	= 'localhost';
+$CONFIG['hostname'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['hostname']['local']     : $CFG['hostname']['remote'];
+$CONFIG['username'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['username']['local']     : $CFG['username']['remote'];
+$CONFIG['password'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['password']['local']     : $CFG['password']['remote'];
+$CONFIG['database'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['database']['local']     : $CFG['database']['remote'];
 
-$CONFIG['password_local']	= '';
-$CONFIG['password_remote']	= 'JTofv6iB';
 
-$CONFIG['database_local']       = 'libdb';
-$CONFIG['database_remote']       = 'libdb';
-
-$CONFIG['table'] = array(
-    'users' => 'users'
-); // смысл в этой таблице?
 $CONFIG['flag_dbconnected'] = false;
-
+global $CONFIG;
 ?>

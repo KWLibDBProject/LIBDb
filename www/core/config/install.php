@@ -1,33 +1,148 @@
 <?php
 
+/* для выгрузки скриптов создания сайтов надо использовать:
+SHOW CREATE TABLE `anytable`
+*/
+
+$all_tables = array(
+    'articles' =>
+
+"CREATE TABLE `articles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `udc` char(30) DEFAULT NULL,
+  `title_eng` char(100) DEFAULT NULL,
+  `title_rus` char(100) DEFAULT NULL,
+  `title_ukr` char(100) DEFAULT NULL,
+  `abstract_eng` text,
+  `abstract_rus` text,
+  `abstract_ukr` text,
+  `keywords_eng` text,
+  `keywords_rus` text,
+  `keywords_ukr` text,
+  `refs` text,
+  `book` int(11) DEFAULT NULL,
+  `add_date` char(60) DEFAULT NULL,
+  `deleted` int(11) DEFAULT '0',
+  `pdfid` int(11) DEFAULT NULL,
+  `topic` int(11) DEFAULT NULL,
+  `pages` char(60) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+    'authors' =>
+"CREATE TABLE `authors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name_rus` char(100) DEFAULT NULL,
+  `name_eng` char(100) DEFAULT NULL,
+  `name_ukr` char(100) DEFAULT NULL,
+  `workplace` char(200) DEFAULT NULL,
+  `email` char(100) DEFAULT NULL,
+  `deleted` int(11) DEFAULT '0',
+  `title_eng` char(100) DEFAULT NULL,
+  `title_rus` char(100) DEFAULT NULL,
+  `title_ukr` char(100) DEFAULT NULL,
+  `phone` char(40) DEFAULT NULL,
+  `is_es` int(11) DEFAULT '0',
+  `description` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+    'books' =>
+    "CREATE TABLE `books` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` char(60) DEFAULT NULL,
+  `date` char(30) DEFAULT NULL,
+  `deleted` int(11) DEFAULT '0',
+  `published` int(11) DEFAULT '0',
+  `contentpages` char(60) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+    'topics' =>
+    "CREATE TABLE `topics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` char(80) DEFAULT NULL,
+  `shortname` char(80) DEFAULT NULL,
+  `deleted` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+    'cross_aa' =>
+    "CREATE TABLE `cross_aa` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `author` int(11) DEFAULT NULL,
+  `article` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+    'pdfdata' =>
+    "CREATE TABLE `pdfdata` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` longblob,
+  `username` char(200) DEFAULT NULL,
+  `tempname` char(200) DEFAULT NULL,
+  `filesize` int(11) DEFAULT NULL,
+  `articleid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+    'users' => "CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(100) DEFAULT NULL,
+  `email` char(100) DEFAULT NULL,
+  `permissions` int(11) DEFAULT NULL,
+  `deleted` int(11) DEFAULT '0',
+  `login` char(100) DEFAULT NULL,
+  `password` char(100) DEFAULT NULL,
+  `phone` varchar(40) DEFAULT NULL,
+  `md5password` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+$root_user = array(
+    'name' => 'Root administator',
+    'email' => mysql_real_escape_string('karel.wintersky@gmail.com'),
+    'permissions' => '255',
+    'login' => 'root',
+    'password' => 'root',
+    'phone' => '-',
+    'md5password' => md5('root')
+);
+
 /* Таблицы пока не создаем */
 
 ConnectDB();
-$q_root = "SELECT id FROM users WHERE login='root'";
-$r_root = mysql_query($q_root);
 
 $tpl = new kwt('install.tpl');
-$tpl->contentstart();
+$tpl -> contentstart();
 
+foreach ($all_tables as $table => $table_script)
+{
+    if (!DBIsTableExists($table)) {
+        if (!mysql_query($table_script)) {
+            echo "<span class='error'>ERROR:</span> unable to create table `$table` ! <br>";
+        } else {
+            echo "<span class='ok'>OK:</span> table `$table` created! <br>";
+        }
+    } else {
+        echo "<span class='ok'>OK:</span> `$table` exists! <br>";
+    }
+}
+
+echo '<hr>';
+echo 'Test for root: <br>';
+$r_root = mysql_query("SELECT `id` FROM users WHERE login='root'");
 if (mysql_num_rows($r_root)==0)
 {
-    // root not found
-    $root = array(
-        'name' => 'Root administator',
-        'email' => mysql_real_escape_string('karel.wintersky@gmail.com'),
-        'permissions' => '255',
-        'login' => 'root',
-        'password' => 'root',
-        'phone' => '',
-        'md5password' => md5('root')
-    );
-    $q = MakeInsert($root,'users');
-    $r = mysql_query($q) or Die("Unable to insert data to DB!   ".$q);
-    echo 'Root user created!';
+    if (!mysql_query(MakeInsert($root_user,'users'))) {
+        echo "<span class='error'>ERROR:</span> unable to create *root* user! <br>";
+    } else {
+        echo "<span class='ok'>OK:</span>*Root* user created!  <br>";
+    }
 } else {
-    echo 'Root user found.';
+    echo "<span class='ok'>OK:</span>*Root* user found.  <br>";
 }
+
 $tpl->contentend('message'); // при использовании шаблона и выводе инфомрации еще в скрипте вызываем обязательно!!!
 $tpl->out();
-
 ?>
