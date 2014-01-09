@@ -1,0 +1,6 @@
+DirectoryIndex admin.login.php
+php_value include_path /home/libdb/core
+php_value include_path \\home\\localhost\\www\\core\\
+php_value auto_prepend_file core.prepend.tpl
+#php_value auto_prepend_file /home/libdb/core/core.prepend.tpl
+#php_value auto_prepend_file Z:\home\localhost\www\core\core.prepend.tpl

@@ -16,7 +16,8 @@ $q = array(
     'email' => mysql_escape_string($_POST['email']),
     'permissions' => mysql_escape_string($_POST['permissions']),
     'login' => mysql_escape_string($_POST['login']),
-    'password' => mysql_escape_string($_POST['password'])
+    'password' => mysql_escape_string($_POST['password']),
+    'phone' => mysql_escape_string($_POST['phone'])
 );
 
 $qstr = MakeUpdate($q, $_POST['ref_name'], "WHERE id=$id");

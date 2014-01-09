@@ -10,13 +10,13 @@
 class KWT
 {
     private $file;
-    private $overrides;
+    private $overrides = array();
     public function __construct($file)
     {
         $this->file = dirname($_SERVER['SCRIPT_FILENAME']).'/'.$file;
         ob_start(array(&$this,'callback'));
     }
-    public function start()
+    public function contentstart()
     {
         ob_start(array(&$this,'callback'));
     }
@@ -24,12 +24,12 @@ class KWT
     {
         $this->overrides = array_merge($this->overrides,$arr);
     }
-    public function content($target,$clear=true)
+    public function contentend($target,$clear=true)
     {
         $this->overrides["$target"] = ob_get_contents();
         if ($clear) ob_end_clean();
     }
-    public function end()
+    public function out()
     {
         include($this->file);
         ob_end_flush();

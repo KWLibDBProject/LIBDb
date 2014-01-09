@@ -14,5 +14,9 @@ $CONFIG['password_remote']	= 'JTofv6iB';
 $CONFIG['database_local']       = 'libdb';
 $CONFIG['database_remote']       = 'libdb';
 
+$CONFIG['table'] = array(
+    'users' => 'users'
+); // смысл в этой таблице?
+$CONFIG['flag_dbconnected'] = false;
 
 ?>

@@ -1,5 +1,6 @@
 var ref_name = "users";
 var button_id = 0;
+
 function Users_CallAddItem(source)
 {
     bValid = true;
@@ -12,6 +13,7 @@ function Users_CallAddItem(source)
         email: $form.find("input[name='add_email']").val(),
         permissions: $form.find("input[name='add_permissions']").val(),
         login: $form.find("input[name='add_login']").val(),
+        phone: $form.find("input[name='add_phone']").val(),
         password: $form.find("input[name='add_password']").val()
     } );
     posting.done(function(data){
@@ -44,6 +46,7 @@ function Users_CallLoadItem(destination, id) // номер записи, цел�
             $form.find("input[name='edit_email']").val( result['data']['email'] );
             $form.find("input[name='edit_permissions']").val( result['data']['permissions'] );
             $form.find("input[name='edit_login']").val( result ['data']['login'] );
+            $form.find("input[name='edit_phone']").val( result ['data']['phone'] );
             $form.find("input[name='edit_password']").val( result ['data']['password'] );
         } else {
             // ошибка загрузки
@@ -60,6 +63,7 @@ function Users_CallUpdateItem(source, id)
         ref_name: ref_name,
         email: $form.find("input[name='edit_email']").val(),
         permissions: $form.find("input[name='edit_permissions']").val(),
+        phone: $form.find("input[name='edit_phone']").val(),
         login: $form.find("input[name='edit_login']").val(),
         password: $form.find("input[name='edit_password']").val(),
         id: id

@@ -32,9 +32,20 @@ function floadpdf($filename)
     return $blobdata;
 }
 
-function isAjaxCall()
+function isAjaxCall($debugmode=false)
 {
-    return ((!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) || ($GLOBALS['debugmode']);
+    $debug = (isset($debugmode)) ? $debugmode : false;
+    return ((!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) || ($debug);
+}
+function Redirect($url)
+{
+    if (headers_sent() === false) header('Location: '.$url);
+}
+
+function isLogged()
+{
+    // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
+    return ( !empty($_SESSION) && isset($_SESSION['u_id']) && $_SESSION['u_id'] !== -1 );
 }
 
 ?>

@@ -1,5 +1,4 @@
 ﻿<?php
-// выводит в виде таблицы содержимое справочника (в данном случае неуниверсально, работаем со справочником авторов)
 require_once('../core.php');
 require_once('../core.db.php');
 
@@ -29,9 +28,9 @@ CloseDB($link);
     <th width="5%">№</th>
     <th>Ф.И.О.</th>
     <th>E-Mail</th>
-    <th>Права</th>
-    <th>Имя пользователя</th>
-    <th>Пароль</th>
+    <th>Телефон</th>
+    <th>Уровень<br>доступа</th>
+    <th>Login</th>
     <th width="10%">Управление</th>
 </tr>
     <?php
@@ -45,9 +44,9 @@ CloseDB($link);
 <td>{$row['id']}</td>
 <td>{$row['name']}</td>
 <td>{$row['email']}</td>
+<td>{$row['phone']}</td>
 <td>{$row['permissions']}</td>
 <td>{$row['login']}</td>
-<td>{$row['password']}</td>
 <td class="centred_cell"><button class="edit_button" name="{$row['id']}" $is_disabled>Edit</button></td>
 </tr>
 REF_ANYROW;

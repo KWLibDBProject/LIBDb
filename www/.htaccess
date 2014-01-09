@@ -1,0 +1,3 @@
+AddHandler php-script .tpl
+#php_value session.bug_compat_42 0
+#php_value session.bug_compat_warn 0

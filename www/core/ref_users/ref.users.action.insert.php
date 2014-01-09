@@ -16,7 +16,9 @@ $post = array(
     'email' => mysql_escape_string($_POST['email']),
     'permissions' => mysql_escape_string($_POST['permissions']),
     'login' => mysql_escape_string($_POST['login']),
-    'password' => mysql_escape_string($_POST['password'])
+    'password' => mysql_escape_string($_POST['password']),
+    'phone' => mysql_escape_string($_POST['phone']),
+    'md5password' => md5(mysql_escape_string($_POST['password']))
 );
 
 $q = "SELECT `id` FROM $table WHERE `login` LIKE '$post[login]'";

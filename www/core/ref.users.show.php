@@ -111,13 +111,15 @@
         <fieldset>
             <label for="add_name">Ф.И.О. (полностью)</label>
             <input type="text" name="add_name" id="add_name" class="text ui-widget-content ui-corner-all">
-            <label for="add_email">Email</label>
+            <label for="add_email">E-Mail:</label>
             <input type="text" name="add_email" id="add_email" value="" class="text ui-widget-content ui-corner-all">
-            <label for="add_permissions">Права</label>
+            <label for="add_phone">Телефон для связи:</label>
+            <input type="text" name="add_phone" id="add_phone" value="" class="text ui-widget-content ui-corner-all">
+            <label for="add_permissions">Уровень доступа (0-255):</label>
             <input type="text" name="add_permissions" id="add_permissions" value="" class="text ui-widget-content ui-corner-all">
-            <label for="add_login">Имя пользователя</label>
+            <label for="add_login">Имя пользователя (login):</label>
             <input type="text" name="add_login" id="add_login" value ="" class="text ui-widget-content ui-corner-all">
-            <label for="add_password">Пароль</label>
+            <label for="add_password">Пароль:</label>
             <input type="text" name="add_password" id="add_password" value ="" class="text ui-widget-content ui-corner-all">
         </fieldset>
     </form>
@@ -127,13 +129,15 @@
         <fieldset>
             <label for="edit_name">Ф.И.О. (полностью)</label>
             <input type="text" name="edit_name" id="edit_name" class="text ui-widget-content ui-corner-all">
-            <label for="edit_email">Email</label>
+            <label for="edit_email">E-Mail:</label>
             <input type="text" name="edit_email" id="edit_email" value="" class="text ui-widget-content ui-corner-all">
-            <label for="edit_permissions">Права</label>
+            <label for="edit_phone">Телефон для связи:</label>
+            <input type="text" name="edit_phone" id="edit_phone" value="" class="text ui-widget-content ui-corner-all">
+            <label for="edit_permissions">Уровень доступа (0-255)</label>
             <input type="text" name="edit_permissions" id="edit_permissions" value="" class="text ui-widget-content ui-corner-all">
-            <label for="edit_login">Имя пользователя</label>
+            <label for="edit_login">Имя пользователя (login):</label>
             <input type="text" name="edit_login" id="edit_login" value="" class="text ui-widget-content ui-corner-all">
-            <label for="edit_password">Пароль</label>
+            <label for="edit_password">Пароль:</label>
             <input type="text" name="edit_password" id="edit_password" value="" class="text ui-widget-content ui-corner-all">
         </fieldset>
     </form>
