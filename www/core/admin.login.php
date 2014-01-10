@@ -15,7 +15,7 @@ if (isLogged()) {
             // повторная проверка "логин/пароль" по базе
             $return = DBLoginCheck($_POST['login'], $_POST['password']);
             if ($return['error']==0) {
-                /* ----------------------    @todo: ВХОД В СИСТЕМУ    ----------------- */
+                /* ----------------------    @todo: ПРОАПГРЕЙДИТЬ ВХОД В СИСТЕМУ    ----------------- */
                 $_SESSION['u_id'] = $return['id'];
                 $_SESSION['u_permissions'] = $return['permissions'];
                 setcookie('u_libdb_logged',$return['id']);
