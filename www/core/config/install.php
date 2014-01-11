@@ -44,8 +44,9 @@ $all_tables = array(
   `phone` char(40) DEFAULT NULL,
   `is_es` int(11) DEFAULT '0',
   `description` longtext,
+  `bio` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8",
 
     'books' =>
     "CREATE TABLE `books` (
@@ -108,8 +109,6 @@ $root_user = array(
     'phone' => '-',
     'md5password' => md5('root')
 );
-
-/* Таблицы пока не создаем */
 
 ConnectDB();
 

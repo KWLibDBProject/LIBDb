@@ -1,6 +1,5 @@
 <?php
 
-// print_r($_POST);
 $result['message'] = '';
 $result['error'] = 0;
 

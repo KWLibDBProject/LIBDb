@@ -1,7 +1,4 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-
 $result['message'] = '';
 $result['error'] = 0;
 
