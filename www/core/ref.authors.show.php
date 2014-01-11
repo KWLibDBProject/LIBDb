@@ -1,7 +1,7 @@
 ﻿<?php
 // calls with parameter 'authors'
-require_once('core.php');
-require_once('core.db.php');
+/* require_once('core.php');
+require_once('core.db.php'); */
 
 $ref_prompt = 'Добавление автора';
 
