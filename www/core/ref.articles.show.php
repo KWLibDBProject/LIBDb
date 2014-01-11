@@ -36,13 +36,9 @@
 
             $("#button-show-withselection").on('click',function(){
                 query = "?";
-                /* if ($('select[name="with_author"]').val() != 0 ) query+="author="+$('select[name="with_author"]').val();
-                if ($('select[name="with_topic"]').val() != 0 ) query+="&topic="+$('select[name="with_topic"]').val();
-                if ($('select[name="with_book"]').val() != 0 ) query+="&book="+$('select[name="with_book"]').val(); */
                 query+="author="+$('select[name="with_author"]').val();
                 query+="&topic="+$('select[name="with_topic"]').val();
                 query+="&book="+$('select[name="with_book"]').val();
-                // alert(query);
                 $("#articles_list").empty().load("ref_articles/articles.action.list.php"+query);
             });
             $("#button-reset-selection").on('click',function(){
@@ -77,8 +73,4 @@
 </div>
 
 </body>
-<!--
-// отображение списка статей, вызывает в ajax load articles.action.list.php by author
-// если author not defined - показхывает всех
--->
 </html>
