@@ -25,7 +25,7 @@ if (isAjaxCall()) {
             'buttonmessage' => 'Вернуться к списку авторов',
             'message' => 'Автор удален из базы данных'
         );
-        $tpl = new kwt('ref.authors.callback.tpl');
+        $tpl = new kwt('../ref.all.timed.callback.tpl');
         $tpl->override($override);
         $tpl->out();
     }

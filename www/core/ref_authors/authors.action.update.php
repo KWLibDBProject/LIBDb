@@ -16,15 +16,21 @@ $q = array(
     'email' => mysql_escape_string($_POST['email']),
     'workplace' => mysql_escape_string($_POST['workplace']),
     'is_es' => (strtolower(mysql_escape_string($_POST['is_es']))=='on' ? 1 : 0),
-    'phone' => mysql_escape_string($_POST['phone'])
+    'phone' => mysql_escape_string($_POST['phone']),
+    'bio' => mysql_escape_string($_POST['bio']),
 );
 
 $qstr = MakeUpdate($q, $ref_name, "WHERE id=$id");
-$res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
-CloseDB($link);
 
-$result['message'] = $qstr;
-$result['error'] = 0;
+if ($res = mysql_query($qstr, $link)) {
+    $result['message'] = $qstr;
+    $result['error'] = 0;
+}
+else {
+    Die("Unable to insert data to DB!  ".$qstr);
+}
+
+CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));
@@ -37,7 +43,7 @@ if (isAjaxCall()) {
             'buttonmessage' => 'Вернуться к списку авторов',
             'message' => 'Информация об авторе обновлена'
         );
-        $tpl = new kwt('ref.authors.callback.tpl');
+        $tpl = new kwt('../ref.all.timed.callback.tpl');
         $tpl->override($override);
         $tpl->out();
     }

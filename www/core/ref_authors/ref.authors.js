@@ -1,5 +1,5 @@
 var ref_name = 'authors';
-function Authors_LoadRecord(destination, id) // номер записи, целевая форма
+function Authors_LoadRecord(destination, id, tinyarea_target) // номер записи, целевая форма
 {
     url = 'authors.action.getitem.php';
     var getting = $.get(url, {
@@ -21,7 +21,12 @@ function Authors_LoadRecord(destination, id) // номер записи, цел�
             $form.find("input[name='email']").val( result['data']['email'] );
             $form.find("input[name='phone']").val( result['data']['phone'] );
             $form.find("textarea[name='workplace']").val(result['data']['workplace']);
-            $form.find("input[name='is_es']").prop("checked", !!(result['data']['is_es'] != 0)); // simplified ternar form
+            $form.find("input[name='is_es']").prop("checked", !!(result['data']['is_es'] != 0));
+            /* Если у нас is_es == 1 - нам надо показать филдсет '' */
+            result['data']['is_es'] == 0 ? $("#es_fieldset").hide() : $("#es_fieldset").show();
+
+            tinyMCE.get(tinyarea_target).setContent(result['data']['bio']); // вместо $form.find("textarea[name='bio']").val(result['data']['bio']);
+
         } else {
             // ошибка загрузки
         }

@@ -1,7 +1,8 @@
 .authorslist {
     list-style-type: none;
     list-style-position: inside;
-    padding: 0;margin:0;
+    padding: 0;
+    margin:0;
 }
 .authorslist > li > label {
     padding-right: 1em;

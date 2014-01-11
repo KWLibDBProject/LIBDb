@@ -4,15 +4,7 @@
 #button-remove { /* класс по умолчанию для скрытой кнопки удаления */
     display: none;
 }
-#wait {  /* класс для области вывода таймера */
-    color: red;
-    font-weight: bold;
+#es_fieldset {
+    display: none;
 }
-.button-huge { /* огромная кнопка для таймера*/
-    height: 120px;
-    width:400px;
-}
-.info { /* класс для информационного сообщения */
-    color: #7b68ee;
-    font-weight: bold;
-}
+

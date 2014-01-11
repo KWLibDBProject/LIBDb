@@ -1,22 +1,29 @@
 <html>
 <head>
+    <title>{%page_title%}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="../js/tinymce.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="authors.css">
-
+    <style type="text/css"></style>
 
     <script src="../js/core.js"></script>
     <script src="ref.authors.js"></script>
 
     <script type="text/javascript">
+        // tinyMCE inits
+        tinymce.init({
+            selector:'textarea#bio',forced_root_block : "",
+            force_br_newlines : true,
+            force_p_newlines : false
+        });
+
         $(document).ready(function () {
             author_id = {%author_id%};
 
             if (author_id != -1) {
-                Authors_LoadRecord("#form_edit_author", author_id);
+                Authors_LoadRecord("#form_edit_author", author_id, 'bio');
                 $("#button-remove").show();
             }
 
@@ -25,6 +32,9 @@
             });
             $("#button-remove").on('click',function(event){
                 window.location.href = 'authors.action.remove.php?id='+author_id;
+            });
+            $("#is_es").on('change',function(event){
+                $("#es_fieldset").toggle();
             });
 
         });
@@ -37,7 +47,6 @@
     <button type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ АВТОРА</strong></button>
     <button type="submit" class="button-large" ><strong>{%submit_button_text%}</strong></button>
     <hr>
-    <!-- <input type="hidden" name="id" value="{%input_id%}"> -->
     <input type="hidden" name="id">
     <fieldset>
         <label for="name_rus">Ф.И.О. (русский)</label><br>
@@ -80,10 +89,23 @@
         <label for="workplace">Место работы</label><br>
         <textarea name="workplace" id="workplace" cols="90" rows="5"></textarea>
     </fieldset>
-    <label>Участие в редакционной коллегии:<input type="checkbox" name="is_es" id="is_es"></label>
     <hr>
-    Поля редколлегии
-    Поле фотографии
+
+        <fieldset id="es_fieldset_">
+        <legend>Автор как участник редколлегии</legend>
+    </fieldset>
+
+    <fieldset>
+        <legend><label>Участие в редакционной коллегии:<input type="checkbox" name="is_es" id="is_es"></label>  </legend>
+        <div id="es_fieldset">
+            <label for="bio">Биография и публикации в других изданиях:</label><br>
+            <textarea name="bio" id="bio" cols="90" rows="7"></textarea>
+
+            Поля редколлегии
+            Поле фотографии
+        </div>
+    </fieldset>
+
     <hr>
 
     <button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>

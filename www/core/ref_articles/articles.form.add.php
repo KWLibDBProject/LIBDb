@@ -23,7 +23,7 @@
         var mode = 'new';
 
         // loaded values
-        currAuthorsList = { 1: 1, 2: 1, 3: 1 }; // getCurrentAuthorsSelection, используется только для EDIT
+        currAuthorsList = { }; // getCurrentAuthorsSelection, используется только для EDIT
         var loadedAuthorsNum = 0;
         var lastAuthorNumber = 1;
         var currentBook = 1;
@@ -45,11 +45,10 @@
             // onload
             // load authors
             if (mode == 'edit') {
-                for (i=1; i<=loadedAuthorsNum; i++)
+                for (i = 1; i <= loadedAuthorsNum; i++)
                 {
                     InsertAuthorSelector("#authors_list",i);
                     if (typeof currAuthorsList[i] != 'undefined') {
-                        // $("select[data-alselector="+i+"] option[value="+currAuthorsList[i]+"]").attr("selected","selected");
                         $("select[data-alselector="+i+"] option[value="+currAuthorsList[i]+"]").prop("selected",true);
                     }
                     lastAuthorNumber++;

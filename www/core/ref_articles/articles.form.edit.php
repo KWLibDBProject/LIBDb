@@ -1,6 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
+
 $id = IsSet($_GET['id']) ? $_GET['id'] : 1;
 
 $link = ConnectDB();

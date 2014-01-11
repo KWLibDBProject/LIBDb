@@ -68,14 +68,25 @@ if (IsSet($_POST['authors'])) {
     $result['message'] .= "Не указаны авторы!<br>\r\n";
 }
 
-if ($result['error']==0) {
-    $result['message'] = <<<FINAL_MESSAGE
-<meta http-equiv="refresh" content="30;URL=../ref.articles.show.php">
-<button onclick="window.location.href='../ref.articles.show.php'">Вернуться к списку статей</button>
-FINAL_MESSAGE;
-}
-
-// print_r($_POST);
 CloseDB($link);
-echo $result['message'];
+
+if ($result['error'] == 0) {
+    $override = array(
+        'time' => 10,
+        'target' => '../ref.articles.show.php',
+        'buttonmessage' => 'Вернуться к списку статей',
+        'message' => 'Статья добавлена'
+    );
+} else {
+    $override = array(
+        'time' => 10,
+        'target' => '../ref.articles.show.php',
+        'buttonmessage' => 'Вернуться к списку статей',
+        'message' => $result['message']
+    );
+}
+$tpl = new kwt('../ref.all.timed.callback.tpl');
+$tpl->override($override);
+$tpl->out();
+
 ?>

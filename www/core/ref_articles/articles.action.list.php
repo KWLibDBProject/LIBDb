@@ -8,9 +8,6 @@ book - показать статьи в сборнике
 */
 $_author = (IsSet($_GET['author'])) ? $_GET['author'] : -1;
 
-require_once('../core.php');
-require_once('../core.db.php');
-
 $link = ConnectDB();
 
 $query = "

@@ -1,6 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
+
 $result['message'] = '';
 $result['error'] = 0;
 $id = IsSet($_GET['id']) ? $_GET['id'] : Die("No id!");
@@ -24,12 +23,22 @@ mysql_query($q,$link) or Die("Death at $q");
 
 CloseDB($link);
 
-if ($result['error']==0) {
-    $result['message'] = <<<FINAL_MESSAGE
-<meta http-equiv="refresh" content="15;URL=../ref.articles.show.php">
-<button onclick="window.location.href='../ref.articles.show.php'">Вернуться к списку статей</button>
-FINAL_MESSAGE;
+if ($result['error'] == 0) {
+    $override = array(
+        'time' => 10,
+        'target' => '../ref.articles.show.php',
+        'buttonmessage' => 'Вернуться к списку статей',
+        'message' => 'Информация о статье в базе обновлена'
+    );
+} else {
+    $override = array(
+        'time' => 10,
+        'target' => '../ref.articles.show.php',
+        'buttonmessage' => 'Вернуться к списку статей',
+        'message' => $result['message']
+    );
 }
-
-echo $result['message'];
+$tpl = new kwt('../ref.all.timed.callback.tpl');
+$tpl->override($override);
+$tpl->out();
 ?>
