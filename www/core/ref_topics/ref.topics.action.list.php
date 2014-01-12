@@ -28,7 +28,7 @@ CloseDB($link);
         <th width="5%">№</th>
         <th>Название топика</th>
         <th>Короткое имя (алиас)</th>
-        <th width="10%">Управление</th>
+        <th width="7%">Управление</th>
     </tr>
 <?php
     if ($ref_numrows > 0) {
@@ -40,7 +40,7 @@ CloseDB($link);
 <td>{$row['id']}</td>
 <td>{$row['title']}</td>
 <td>{$row['shortname']}</td>
-<td><button class="edit_button" name="{$row['id']}">Edit</button></td>
+<td class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
 </tr>
 REF_ANYROW;
         }

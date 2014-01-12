@@ -30,19 +30,22 @@ CloseDB($link);
     <th>Название или номер сборника</th>
     <th>Дата(год) выпуска</th>
     <th>Страницы со статьями</th>
-    <th width="10%">Управление</th>
+    <th>Сборник готов? </th>
+    <th width="7%">Управление</th>
 </tr>
     <?php
     if ($ref_numrows > 0) {
     foreach ($ref_list as $r_id => $r_value)
     {
         $row = $r_value;
+        $book_ready = ($row['published']!=0) ? "Да<br><small>(опубликован)</small>" : "Нет<br><small>(в работе)</small>";
         echo <<<REF_ANYROW
 <tr>
-<td>{$row['id']}</td>
+<td class="centred_cell">{$row['id']}</td>
 <td>{$row['title']}</td>
-<td>{$row['date']}</td>
+<td class="centred_cell">{$row['date']}</td>
 <td>{$row['contentpages']}</td>
+<td class="centred_cell">{$book_ready}</td>
 <td class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
 </tr>
 REF_ANYROW;

@@ -1,9 +1,11 @@
 var ref_name = "topics";
 var button_id = 0;
-function CallErrorMessage(message)
+
+function ShowErrorMessage(message)
 {
     alert(message);
 }
+
 function Topics_CallAddItem(source)
 {
     var $form = $(source).find('form');
@@ -25,6 +27,7 @@ function Topics_CallAddItem(source)
         }
     });
 }
+
 function Topics_CallLoadItem(destination, id) // номер записи, целевая форма
 {
     url = 'ref_topics/ref.topics.action.getitem.php';
@@ -46,6 +49,7 @@ function Topics_CallLoadItem(destination, id) // номер записи, цел
         }
     });
 }
+
 function Topics_CallUpdateItem(source, id)
 {
     var $form = $(source).find('form');
@@ -67,6 +71,7 @@ function Topics_CallUpdateItem(source, id)
         }
     });
 }
+
 function Topics_CallRemoveItem(target, id)
 {
     url = 'ref_topics/ref.topics.action.removeitem.php?ref='+ref_name;
@@ -80,7 +85,9 @@ function Topics_CallRemoveItem(target, id)
             $('#ref_list').empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
             $( target ).dialog( "close" );
         } else {
-            CallErrorMessage("Невозможно удалить топик, вероятно в нем есть статьи!");
+            // удаление невозможно
+            //@todo: JS message error
+            ShowErrorMessage(result['message']); // Невозможно удалить топик, вероятно в нем есть статьи!
             $( target ).dialog( "close" );
         }
     });

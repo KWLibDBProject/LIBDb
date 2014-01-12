@@ -10,16 +10,68 @@
             });
         });
     </script>
+    <style>
+        table {
+            border: 1px dotted blue;
+        }
+        ul{
+            margin-left: 0;
+            padding-left: 0;
+            margin-bottom: 0; margin-top: 0;
+        }
+        ul li {
+            list-style-type: none;
+            padding: 2px;
+        }
+        button {
+            height: 40px;
+            width: 150px;
+        }
+        div {
+            margin:0;
+        }
+        /* */
+        #footer {
+            color: gray;
+            background-color: #d3d3d3;
+        }
+    </style>
 </head>
 
 <body>
-<ul>
-    <li><button data-href="ref.authors.show.php" class="admin-button">СПРАВОЧНИК: АВТОРЫ</button></li>
-    <li><button data-href="ref.topics.show.php" class="admin-button">СПРАВОЧНИК: ТЕМАТИЧЕСКИЕ РАЗДЕЛЫ</button></li>
-    <li><button data-href="ref.users.show.php" class="admin-button">СПРАВОЧНИК: ПОЛЬЗОВАТЕЛИ</button></li>
-    <li><button data-href="ref.books.show.php" class="admin-button">СПРАВОЧНИК: СБОРНИКИ</button></li>
-    <li><button data-href="ref.articles.show.php" class="admin-button">СТАТЬИ</button></li>
-    <li><button data-href="admin.logout.php" class="admin-button">Logout</button></li>
-</ul>
+<table width="100%">
+    <tr>
+        <td>
+            <!-- типа меню -->
+            <div>СПРАВОЧНИКИ: </div>
+            <ul>
+                <li><button data-href="ref.topics.show.php" class="admin-button">ТЕМАТИЧЕСКИЕ РАЗДЕЛЫ</button></li>
+                <li><button data-href="ref.books.show.php" class="admin-button">СБОРНИКИ (КНИГИ)</button></li>
+                <li></li>
+            </ul>
+            <div>&nbsp;</div>
+            <button data-href="ref.authors.show.php" class="admin-button">АВТОРЫ</button>
+            <div>&nbsp;</div>
+            <button data-href="ref.articles.show.php" class="admin-button">СТАТЬИ</button>
+            <hr>
+            <div>Администратору:</div>
+            <button data-href="ref.users.show.php" class="admin-button">СПРАВОЧНИК: ПОЛЬЗОВАТЕЛИ</button>
+            <br><br>
+            <button data-href="admin.logout.php" class="admin-button">Logout</button>
+        </td>
+        <td>
+            <!-- типа контент -->
+
+        </td>
+    </tr>
+
+
+
+
+
+</table>
+
+<div id="footer">© Karel Wintersky, 2014.</div>
+
 </body>
 </html>

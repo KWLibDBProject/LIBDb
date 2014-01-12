@@ -28,3 +28,7 @@ max-height:150px; */
 .span_is_es { /* класс для галочки "редколлегия" */
     white-space: nowrap;
 }
+
+.button-large {
+    height: 60px;
+}

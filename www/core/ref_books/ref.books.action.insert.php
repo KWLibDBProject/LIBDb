@@ -11,7 +11,8 @@ $link = ConnectDB();
 $q = array(
     'title' => mysql_escape_string($_POST['title']),
     'date' => mysql_escape_string($_POST['date']),
-    'contentpages' => mysql_escape_string($_POST['contentpages'])
+    'contentpages' => mysql_escape_string($_POST['contentpages']),
+    'published' => mysql_escape_string($_POST['published'])
 );
 $qstr = MakeInsert($q,$_POST['ref_name']);
 $res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);

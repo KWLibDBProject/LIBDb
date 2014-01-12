@@ -134,12 +134,6 @@ CloseDB($link);
                         $("#newfile_input").removeProp("disabled");
                         $("#currfile_changed").attr("value","1");
                         $("#currfile_old").hide();
-                        /* not used since #4 commit,
-                        $("#currfile_show").attr('data-fileid','').attr('disabled','disabled');
-                        $("#currfile_text").val("*** ВНИМАНИЕ, ФАЙЛ УДАЛЕН ***");
-                        $("#newfile_input").removeProp("disabled");
-                        $(this).attr("disabled","disabled");
-                        */
                     } else {
                         alert('Ошибка удаления файла!');
                     }

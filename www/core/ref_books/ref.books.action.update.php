@@ -13,7 +13,8 @@ $link = ConnectDB();
 $q = array(
     'title' => mysql_escape_string($_POST['title']),
     'date' => mysql_escape_string($_POST['date']),
-    'contentpages' => mysql_escape_string($_POST['contentpages'])
+    'contentpages' => mysql_escape_string($_POST['contentpages']),
+    'published' => mysql_escape_string($_POST['published'])
 );
 
 $qstr = MakeUpdate($q, $_POST['ref_name'], "WHERE id=$id");

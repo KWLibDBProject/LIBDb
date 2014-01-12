@@ -86,7 +86,6 @@
                         text: "Удалить сборник из базы",
                         click: function() {
                             //@todo: логика УДАЛЕНИЯ с конфирмом
-
                             Books_CallRemoveItem(this, button_id);
                             $(this).find('form').trigger('reset');
                             $( this ).dialog("close");
@@ -132,6 +131,12 @@
 
             <label for="add_contentpages">Страницы со статьями:</label>
             <input type="text" name="add_contentpages" id="add_contentpages" class="text ui-widget-content ui-corner-all">
+
+            <label>
+                Выпущен ли сборник:
+                <select name="add_is_book_ready"><option value="0">Нет (в работе)</option><option value="1">Да (опубликован)</option></select>
+            </label>
+
         </fieldset>
     </form>
 </div>
@@ -146,6 +151,11 @@
 
             <label for="edit_contentpages">Страницы со статьями:</label>
             <input type="text" name="edit_contentpages" id="edit_contentpages" class="text ui-widget-content ui-corner-all">
+
+            <label>
+                Выпущен ли сборник:
+                <select name="edit_is_book_ready"><option value="0">Нет (в работе)</option><option value="1">Да (опубликован)</option></select>
+            </label>
         </fieldset>
      </form>
 </div>
