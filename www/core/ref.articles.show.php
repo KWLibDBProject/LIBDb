@@ -7,6 +7,11 @@
     <script src="js/core.js"></script>
 
     <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
+    <style>
+        button {
+            height: 30px;
+        }
+    </style>
     <script type="text/javascript">
         var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
@@ -62,11 +67,11 @@
 <fieldset>
     <legend>Критерии отбора</legend>
     Автор: <select name="with_author"><option value="0">ЛЮБОЙ</option></option></select>
-    Топик: <select name="with_topic"><option value="0">ЛЮБОЙ</option></select>
+    Тематический сборник: <select name="with_topic"><option value="0">ЛЮБОЙ</option></select>
     Сборник: <select name="with_book"><option value="0">ЛЮБОЙ</option></select>
     <button id="button-show-withselection">Показать выбранное</button>
     <button id="button-reset-selection">Сбросить критерии</button>
-    <button type="button" id="button-show-all">Показать ВСЕ статьи</button>
+    <button id="button-show-all">Показать ВСЕ статьи</button>
 </fieldset>
 
 <div id="articles_list">
