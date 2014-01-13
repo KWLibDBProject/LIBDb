@@ -12,8 +12,10 @@ $q = array(
     'title' => mysql_escape_string($_POST['title']),
     'date' => mysql_escape_string($_POST['date']),
     'contentpages' => mysql_escape_string($_POST['contentpages']),
-    'published' => mysql_escape_string($_POST['published'])
+    'published' => mysql_escape_string($_POST['published']),
 );
+$q['year'] = substr($q['date'],6,4);
+
 $qstr = MakeInsert($q,$_POST['ref_name']);
 $res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
 $new_id = mysql_insert_id() or Die("Unable to get last insert id!");

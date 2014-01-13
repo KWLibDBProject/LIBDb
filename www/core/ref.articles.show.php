@@ -47,7 +47,6 @@
                 $("#articles_list").empty().load("ref_articles/articles.action.list.php"+query);
             });
             $("#button-reset-selection").on('click',function(){
-                console.log();
                 $('select[name="with_author"]').val(0);
                 $('select[name="with_topic"]').val(0);
                 $('select[name="with_book"]').val(0);

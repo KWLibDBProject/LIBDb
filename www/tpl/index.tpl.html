@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>LibDB </title>
+    <meta charset='UTF-8'>
+    <script src="core/js/jquery-1.10.2.min.js"></script>
+    <script src="core/js/core.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajaxSetup({cache: false});
+            <!--{content_jquery}-->
+        });
+    </script>
+</head>
+
+<body>
+<div id="header"></div>
+<table border="1" width="100%">
+    <tr>
+        <td colspan="2">
+            [ <a href="?fetch=authors&with=list">Поиск по автору</a> ]
+            [ <a href="?fetch=articles&with=all">Расширенный поиск статей</a> ]
+        </td>
+    </tr>
+    <tr>
+        <td width="200">
+            [ Тематические разделы ]
+            <!--{topics}-->
+            [ По сборникам: ]
+            <!--{books}-->
+            [ <a href="?fetch=news">Новости</a> ]
+            <br>
+            [ <a href="?fetch=estuff">Редколлегия</a> ]
+        </td>
+        <td valign="top">
+            <!--{content}-->
+        </td>
+    </tr>
+</table>
+<div id="footer">
+    <small><a href="/core/">Переход в админку</a></small>
+
+
+</div>
+</body>
+</html>

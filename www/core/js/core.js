@@ -14,10 +14,11 @@ function preloadOptionsList(url) // Загружает данные (кэшир�
 }
 
 // формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
-function BuildSelector(target,data,currentid) // currentid is 1 for NEW
+// target - ИМЯ селектора
+function BuildSelector(target, data, currentid) // currentid is 1 for NEW
 {
     $.each(data['data'], function(id, value){
-        $("select[name="+target+"]").append('<option value="'+id+'">'+value+'</option>')
+        $("select[name="+target+"]").append('<option value="'+id+'">'+value+'</option>');
     });
     if (data['error'] == 0) {
         currentid = (typeof currentid != 'undefined') ? currentid : 1;

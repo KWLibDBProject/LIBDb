@@ -16,7 +16,7 @@ $q = array(
     'contentpages' => mysql_escape_string($_POST['contentpages']),
     'published' => mysql_escape_string($_POST['published'])
 );
-
+$q['year'] = substr($q['date'],6,4);
 $qstr = MakeUpdate($q, $_POST['ref_name'], "WHERE id=$id");
 $res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
 

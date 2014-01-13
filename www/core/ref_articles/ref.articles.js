@@ -1,6 +1,5 @@
 function InsertAuthorSelector(targetdiv,selectorName) // N - идентификатор (номер) селекта
 {
-    // was: $('<li data-li="'+selectorName+'"><label>Автор  № '+selectorName+ '</label>' + ...
     $('<li data-li="'+selectorName+'"><label>Автор </label>' +
         '<select class="an_authors" name="authors['+selectorName+']" data-alselector="'+selectorName+'"></select>' +
         '<input value="X" type="button" class="al-delete" data-al="'+selectorName+'"></li>').appendTo(targetdiv);

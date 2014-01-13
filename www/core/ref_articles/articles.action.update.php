@@ -1,5 +1,4 @@
 <?php
-
 $result['message'] = '';
 $result['error'] = 0;
 

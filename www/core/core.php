@@ -44,8 +44,16 @@ function Redirect($url)
 
 function isLogged()
 {
+    $we_are_logged = !empty($_SESSION);
+    $we_are_logged = $we_are_logged && isset($_SESSION['u_id']);
+    $we_are_logged = $we_are_logged && $_SESSION['u_id'] !== -1;
     // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
-    return ( !empty($_SESSION) && isset($_SESSION['u_id']) && $_SESSION['u_id'] !== -1 );
+    // return $we_are_logged ? 1 : 0;
+    return (int) $we_are_logged ;
 }
 
+function printr($str)
+{
+    echo '<pre>'.print_r($str,true).'</pre>';
+}
 ?>

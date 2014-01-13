@@ -55,6 +55,7 @@ $all_tables = array(
   `date` char(30) DEFAULT NULL,
   `deleted` int(11) DEFAULT '0',
   `published` int(11) DEFAULT '0',
+  `year` int(11) DEFAULT NULL,
   `contentpages` char(60) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8",

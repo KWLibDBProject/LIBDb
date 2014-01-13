@@ -1,3 +1,5 @@
+DirectoryIndex index.php
 AddHandler php-script .tpl
-#php_value session.bug_compat_42 0
-#php_value session.bug_compat_warn 0
+#RewriteEngine On
+#RewriteBase /
+#RewriteRule ^([^/]*)/([^/]*)/([^/]*)(\%23([^\%23]*))?$ ?fetch=$1&with=$2&id=$3\%23$4
