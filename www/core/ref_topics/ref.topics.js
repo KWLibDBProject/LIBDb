@@ -1,5 +1,6 @@
 var ref_name = "topics";
 var button_id = 0;
+//@todo: многоязычные топики
 
 function ShowErrorMessage(message)
 {
@@ -11,9 +12,10 @@ function Topics_CallAddItem(source)
     var $form = $(source).find('form');
     url = $form.attr("action");
     var posting = $.post(url, {
-        title: $form.find("input[name='add_title']").val(),
-        ref_name: ref_name,
-        shortname: $form.find("input[name='add_shortname']").val()
+        title_en: $form.find("input[name='add_title_en']").val(),
+        title_ru: $form.find("input[name='add_title_ru']").val(),
+        title_uk: $form.find("input[name='add_title_uk']").val(),
+        ref_name: ref_name
     } );
     posting.done(function(data){
 
@@ -42,8 +44,9 @@ function Topics_CallLoadItem(destination, id) // номер записи, цел
         result = $.parseJSON(data);
         if (result['error'] == 0) {
             // загружаем данные в поля формы
-            $form.find("input[name='edit_title']").val( result['data']['title'] );
-            $form.find("input[name='edit_shortname']").val( result ['data']['shortname'] );
+            $form.find("input[name='edit_title_en']").val( result['data']['title_en'] );
+            $form.find("input[name='edit_title_ru']").val( result['data']['title_en'] );
+            $form.find("input[name='edit_title_uk']").val( result['data']['title_uk'] );
         } else {
             // ошибка загрузки
         }
@@ -55,9 +58,10 @@ function Topics_CallUpdateItem(source, id)
     var $form = $(source).find('form');
     url = $form.attr("action");
     var posting = $.post(url, {
-        title: $form.find("input[name='edit_title']").val(),
+        title_en: $form.find("input[name='edit_title_en']").val(),
+        title_ru: $form.find("input[name='edit_title_ru']").val(),
+        title_uk: $form.find("input[name='edit_title_uk']").val(),
         ref_name: ref_name,
-        shortname: $form.find("input[name='edit_shortname']").val(),
         id: id
     } );
     posting.done(function(data){

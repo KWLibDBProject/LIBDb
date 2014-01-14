@@ -50,10 +50,15 @@ class KWT
     // использовать можно в любое время
     public function override($arr)
     {
-        // $this->overrides = array_merge($this->overrides,$arr);
-        foreach ($arr as $ki => $kv) {
-            if (!array_key_exists(strtolower($ki), $this->overrides)) $this->overrides[strtolower($ki)] = $kv;
+        if (!empty($arr)) {
+            foreach ($arr as $ki => $kv) {
+                if (!array_key_exists(strtolower($ki), $this->overrides)) $this->overrides[strtolower($ki)] = $kv;
+            }
+        } else {
+
+            $this->overrides = array_merge($this->overrides,$arr);
         }
+
     }
 
     // функция-обработчик. выполняет всю работу
@@ -69,7 +74,7 @@ class KWT
 
     // функция записывает весь вывод в переменную и её возвразает. Использовать для вложенных шаблонов так:
     // new, override(), потом
-    // $t2 -> contentstart(); <--- вызывать обязательно, если мы делаем какие-то оверрайды в шаблоне!!!!
+    // $t2 -> contentstart(); <--- вызывать обязательно, если мы делаем какие-то оверрайды во вложенном шаблоне !!!!
     // $message = $t2->apply(); и используем как хотим :)
     public function getcontent($clear=true)
     {

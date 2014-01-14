@@ -74,13 +74,13 @@ CloseDB($link);
         var currentTopic = <?php echo $the_currentTopic; ?>
 
         // tinyMCE inits
-        tinymce.init({selector:'textarea#abstract_eng',forced_root_block : "",
+        tinymce.init({selector:'textarea#abstract_en',forced_root_block : "",
             force_br_newlines : true,
             force_p_newlines : false});
-        tinymce.init({selector:'textarea#abstract_rus',forced_root_block : "",
+        tinymce.init({selector:'textarea#abstract_ru',forced_root_block : "",
             force_br_newlines : true,
             force_p_newlines : false});
-        tinymce.init({selector:'textarea#abstract_ukr',forced_root_block : "",
+        tinymce.init({selector:'textarea#abstract_uk',forced_root_block : "",
             force_br_newlines : true,
             force_p_newlines : false});
 
@@ -92,7 +92,6 @@ CloseDB($link);
                 {
                     InsertAuthorSelector("#authors_list",i);
                     if (typeof currAuthorsList[i] != 'undefined') {
-                        // $("select[data-alselector="+i+"] option[value="+currAuthorsList[i]+"]").attr("selected","selected");
                         $("select[data-alselector="+i+"] option[value="+currAuthorsList[i]+"]").prop("selected",true);
                     }
                     lastAuthorNumber++;
@@ -157,6 +156,7 @@ CloseDB($link);
                     return false;
                 }
             });
+
             $("#button-delete").on('click',function(){
                 id = $(this).attr('name');
                 window.location.href="../ref_articles/articles.action.remove.php?id="+id;
@@ -215,16 +215,16 @@ CloseDB($link);
         <legend>Название статьи на разных языках</legend>
         <table>
             <tr>
-                <td><label for="title_eng">Article title</label></td>
-                <td><input type="text" name="title_eng" id="title_eng" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_eng'] ;?>"></td>
+                <td><label for="title_en">Article title</label></td>
+                <td><input type="text" name="title_en" id="title_en" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_en'] ;?>"></td>
             </tr>
             <tr>
-                <td><label for="title_rus">Название статьи:</label></td>
-                <td><input type="text" name="title_rus" id="title_rus" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_rus'] ;?>"></td>
+                <td><label for="title_ru">Название статьи:</label></td>
+                <td><input type="text" name="title_ru" id="title_ru" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_ru'] ;?>"></td>
             </tr>
             <tr>
-                <td><label for="title_ukr">Назва статті:</label></td>
-                <td><input type="text" name="title_ukr" id="title_ukr" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_ukr'] ;?>"></td>
+                <td><label for="title_uk">Назва статті:</label></td>
+                <td><input type="text" name="title_uk" id="title_uk" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_uk'] ;?>"></td>
             </tr>
         </table>
     </fieldset>
@@ -233,18 +233,18 @@ CloseDB($link);
         <legend>Аннотация на разных языках</legend>
         <div id="abstract_tabs">
             <ul>
-                <li><a href="#abstract-eng">На английском</a></li>
-                <li><a href="#abstract-rus">На русском</a></li>
-                <li><a href="#abstract-ukr">На украинском</a></li>
+                <li><a href="#abstract-en">На английском</a></li>
+                <li><a href="#abstract-ru">На русском</a></li>
+                <li><a href="#abstract-uk">На украинском</a></li>
             </ul>
-            <div id="abstract-eng">
-                <textarea id="abstract_eng" name="abstract_eng"><?php echo $the_article['abstract_eng'] ;?></textarea>
+            <div id="abstract-en">
+                <textarea id="abstract_en" name="abstract_en"><?php echo $the_article['abstract_en'] ;?></textarea>
             </div>
-            <div id="abstract-rus">
-                <textarea id="abstract_rus" name="abstract_rus"><?php echo $the_article['abstract_rus'] ;?></textarea>
+            <div id="abstract-ru">
+                <textarea id="abstract_ru" name="abstract_ru"><?php echo $the_article['abstract_ru'] ;?></textarea>
             </div>
-            <div id="abstract-ukr">
-                <textarea id="abstract_ukr" name="abstract_ukr"><?php echo $the_article['abstract_ukr'] ;?></textarea>
+            <div id="abstract-uk">
+                <textarea id="abstract_uk" name="abstract_uk"><?php echo $the_article['abstract_uk'] ;?></textarea>
             </div>
         </div>
     </fieldset>
@@ -252,18 +252,18 @@ CloseDB($link);
         <legend>Ключевые слова на разных языках</legend>
         <div id="keywords_tabs">
             <ul>
-                <li><a href="#keywords-eng">На английском</a></li>
-                <li><a href="#keywords-rus">На русском</a></li>
-                <li><a href="#keywords-ukr">На украинском</a></li>
+                <li><a href="#keywords-en">На английском</a></li>
+                <li><a href="#keywords-ru">На русском</a></li>
+                <li><a href="#keywords-uk">На украинском</a></li>
             </ul>
             <div id="keywords-eng">
-                <textarea id="keywords_eng" name="keywords_eng" cols="80" rows="6"><?php echo $the_article['keywords_eng'] ;?></textarea>
+                <textarea id="keywords_en" name="keywords_en" cols="80" rows="6"><?php echo $the_article['keywords_en'] ;?></textarea>
             </div>
             <div id="keywords-rus">
-                <textarea id="keywords_rus" name="keywords_rus" cols="80" rows="6"><?php echo $the_article['keywords_rus'] ;?></textarea>
+                <textarea id="keywords_ru" name="keywords_ru" cols="80" rows="6"><?php echo $the_article['keywords_ru'] ;?></textarea>
             </div>
             <div id="keywords-ukr">
-                <textarea id="keywords_ukr" name="keywords_ukr" cols="80" rows="6"><?php echo $the_article['keywords_ukr'] ;?></textarea>
+                <textarea id="keywords_uk" name="keywords_uk" cols="80" rows="6"><?php echo $the_article['keywords_uk'] ;?></textarea>
             </div>
         </div>
     </fieldset>

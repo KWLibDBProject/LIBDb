@@ -1,5 +1,10 @@
 <?php
-// отдает JSON объект для селектора
+// отдает JSON объект для селектора "авторы"
+
+
+$lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
+$withoutid = isset($_GET['withoutid']) ? 1 : 0;
+
 
 $link = ConnectDB();
 
@@ -12,8 +17,7 @@ if ($result = mysql_query($query)) {
         $data['error'] = 0;
         while ($row = mysql_fetch_assoc($result))
         {
-            $data['data'][ $row['id'] ] = "[$row[id]] $row[name_rus]  ($row[title_rus])";
-            // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ
+            $data['data'][$row['id']] = returnAuthorsOptionString($row, $lang, $withoutid); // see CORE.PHP
         }
     } else {
         $data['data']['-1'] = 'Добавьте авторов в базу!!!';

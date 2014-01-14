@@ -4,26 +4,31 @@
 $CFG = array(
     'hostname' => array(
         'local' => 'localhost',
-        'remote' => 'localhost'
+        'sweb' => 'localhost',
+        'pony' => 'localhost'
     ),
     'username' => array(
         'local' => 'root',
-        'remote' => 'root'
+        'sweb' => 'opuru',
+        'pony' => 'root'
     ),
     'password' => array(
         'local' => '',
-        'remote' => 'JTofv6iB'
+        'sweb' => 'opurumysqnopassword',
+        'pony' => 'JTofv6iB'
     ),
     'database' => array(
         'local' => 'libdb',
-        'remote' => 'libdb'
+        'sweb' => 'opuru',
+        'pony' => 'libdb'
     )
 );
+$remote_hosting_keyname = 'sweb';
 
-$CONFIG['hostname'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['hostname']['local']     : $CFG['hostname']['remote'];
-$CONFIG['username'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['username']['local']     : $CFG['username']['remote'];
-$CONFIG['password'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['password']['local']     : $CFG['password']['remote'];
-$CONFIG['database'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['database']['local']     : $CFG['database']['remote'];
+$CONFIG['hostname'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['hostname']['local']     : $CFG['hostname'][$remote_hosting_keyname];
+$CONFIG['username'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['username']['local']     : $CFG['username'][$remote_hosting_keyname];
+$CONFIG['password'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['password']['local']     : $CFG['password'][$remote_hosting_keyname];
+$CONFIG['database'] = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? $CFG['database']['local']     : $CFG['database'][$remote_hosting_keyname];
 
 
 $CONFIG['flag_dbconnected'] = false;

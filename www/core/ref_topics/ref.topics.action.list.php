@@ -26,8 +26,9 @@ CloseDB($link);
 <table border="1" width="100%">
     <tr>
         <th width="5%">№</th>
-        <th>Название топика</th>
-        <th>Короткое имя (алиас)</th>
+        <th>Thematic section</th>
+        <th>Тематический раздел</th>
+        <th>Тематичний розділ</th>
         <th width="7%">Управление</th>
     </tr>
 <?php
@@ -38,8 +39,9 @@ CloseDB($link);
             echo <<<REF_ANYROW
 <tr>
 <td>{$row['id']}</td>
-<td>{$row['title']}</td>
-<td>{$row['shortname']}</td>
+<td>{$row['title_en']}</td>
+<td>{$row['title_ru']}</td>
+<td>{$row['title_uk']}</td>
 <td class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
 </tr>
 REF_ANYROW;

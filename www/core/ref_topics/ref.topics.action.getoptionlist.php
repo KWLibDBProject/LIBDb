@@ -1,7 +1,8 @@
 <?php
-// отдает JSON объект для селектора
-require_once('../core.php');
-require_once('../core.db.php');
+// отдает JSON объект для селектора "топики"
+
+$lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
+$withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
 $link = ConnectDB();
 
@@ -14,8 +15,7 @@ if ($ref_numrows>0)
     $data['error'] = 0;
     while ($row = mysql_fetch_assoc($result))
     {
-        $title = ($row['title'] != '') ? $row['title'] : '<NONAME>';
-        $data['data'][ $row['id'] ] = "[$row[id]] $title ($row[date])";
+        $data['data'][ $row['id'] ] = returnTopicsOptionString($row,$lang,$withoutid); // see CORE.PHP
     }
 } else {
     $data['data'][1] = "Добавьте темы (топики) в базу!!!";

@@ -15,7 +15,7 @@ function Books_CallAddItem(source)
         title: $form.find("input[name='add_title']").val(),
         date: $form.find("input[name='add_date']").val(),
         contentpages: $form.find("input[name='add_contentpages']").val(),
-        published: $form.find("select[name='edit_is_book_ready'] :selected").val()
+        published: $form.find("select[name='add_is_book_ready'] :selected").val()
     } );
     posting.done(function(data){
         result = $.parseJSON(data);

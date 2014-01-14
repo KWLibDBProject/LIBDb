@@ -111,20 +111,25 @@
 <div id="add_form" title="Добавить тематический раздел">
     <form action="ref_topics/ref.topics.action.insert.php">
         <fieldset>
-            <label for="add_title">Название:</label>
-            <input type="text" name="add_title" id="add_title" class="text ui-widget-content ui-corner-all">
-            <label for="add_shortname">Алиас (короткое имя):</label>
-            <input type="text" class="text ui-widget-content ui-corner-all" id="add_shortname" name="add_shortname">
+            <label for="add_title_en">Topic: </label>
+            <input type="text" name="add_title_en" id="add_title_en" class="text ui-widget-content ui-corner-all">
+            <label for="add_title_ru">Тематический раздел:</label>
+            <input type="text" name="add_title_ru" id="add_title_ru" class="text ui-widget-content ui-corner-all">
+            <label for="add_title_uk">Тематичний розділ:</label>
+            <input type="text" name="add_title_uk" id="add_title_uk" class="text ui-widget-content ui-corner-all">
         </fieldset>
     </form>
 </div>
 <div id="edit_form" title="Изменить тематический раздел">
     <form action="ref_topics/ref.topics.action.update.php">
         <fieldset>
-            <label for="edit_title">Название:</label>
-            <input type="text" name="edit_title" id="edit_title" class="text ui-widget-content ui-corner-all">
-            <label for="edit_shortname">Алиас (короткое имя):</label>
-            <input type="text" class="text ui-widget-content ui-corner-all" id="edit_shortname" name="edit_shortname">
+            <label for="edit_title_en">Topic: </label>
+            <input type="text" name="edit_title_en" id="edit_title_en" class="text ui-widget-content ui-corner-all">
+            <label for="edit_title_ru">Тематический раздел:</label>
+            <input type="text" name="edit_title_ru" id="edit_title_ru" class="text ui-widget-content ui-corner-all">
+            <label for="edit_title_uk">Тематичний розділ:</label>
+            <input type="text" name="edit_title_uk" id="edit_title_uk" class="text ui-widget-content ui-corner-all">
+
         </fieldset>
      </form>
 </div>

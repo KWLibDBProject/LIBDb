@@ -1,27 +1,5 @@
 <?php
 // функции ядра
-// аналог plural
-function GetHumanFriendlyCounter($num,$str1,$str2,$str3)
-{
-    $ret = '';
-    if ($num==0) $ret = $str3;
-    if ($num==1) $ret = $str1;
-    if ($num<21)
-    {
-        if ($num == 1) $ret = $str1;
-        if (($num>1)&&($num<5)) $ret = $str2;
-        if (($num>4)&&($num<21)) $ret = $str3;
-    }
-    else
-    {
-        $residue = ($num%10);
-        if ($residue == 1) $ret = $str1;
-        if (($residue>1)&&($residue<5)) $ret = $str2;
-        if (($residue>4)&&($residue<=9)) $ret = $str3;
-        if ($residue == 0) $ret = $str3;
-    }
-    return $ret;
-}
 
 function floadpdf($filename)
 {
@@ -56,4 +34,86 @@ function printr($str)
 {
     echo '<pre>'.print_r($str,true).'</pre>';
 }
+
+/* Три функции возврата данных в option соотв. селекта */
+function returnBooksOptionString($row, $lang, $withoutid)
+{
+    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
+    // по идее можно и с шаблоном, но ну нафиг
+    /*     switch ($lang) {
+            case 'en': {
+                $name = $row['name_en'];
+                $title = $row['title_en'];
+                break;
+            }
+            case 'ru': {
+                $name = $row['name_ru'];
+                $title = $row['title_ru'];
+                break;
+            }
+            case 'uk': {
+                $name = $row['name_uk'];
+                $title = $row['title_uk'];
+                break;
+            }
+        } */
+    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+    $title = ($row['title'] != '') ? $row['title'] : 'Unnamed';
+
+    return $id."\"$title\"";
+}
+
+function returnAuthorsOptionString($row, $lang, $withoutid)
+{
+    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
+    // по идее можно и с шаблоном, но ну нафиг
+    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+    switch ($lang) {
+        case 'en': {
+            $name = $row['name_en'];
+            $title = $row['title_en'];
+            break;
+        }
+        case 'ru': {
+            $name = $row['name_ru'];
+            $title = $row['title_ru'];
+            break;
+        }
+        case 'uk': {
+            $name = $row['name_uk'];
+            $title = $row['title_uk'];
+            break;
+        }
+    }
+    return $id."$name $title";
+
+}
+
+function returnTopicsOptionString($row, $lang, $withoutid)
+{
+    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
+    // по идее можно и с шаблоном, но ну нафиг
+    switch ($lang) {
+        case 'en': {
+            // $name = $row['name_en'];
+            $title = $row['title_en'];
+            break;
+        }
+        case 'ru': {
+            // $name = $row['name_ru'];
+            $title = $row['title_ru'];
+            break;
+        }
+        case 'uk': {
+            // $name = $row['name_uk'];
+            $title = $row['title_uk'];
+            break;
+        }
+    }
+    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+    $title = ($title != '') ? $title : '<NONAME>';
+
+    return $id.$title;
+}
+
 ?>

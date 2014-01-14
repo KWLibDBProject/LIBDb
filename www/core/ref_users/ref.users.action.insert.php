@@ -1,6 +1,4 @@
 ﻿<?php
-require_once('../core.php');
-require_once('../core.db.php');
 
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 

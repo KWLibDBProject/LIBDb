@@ -34,12 +34,13 @@ CloseDB($link);
 <?php
     if ($ref_numrows>0) {
         foreach ($ref_list as $row) {
+            //@todo: TEMPLATE ?
 echo <<<REF_ONEROW
     <tr>
         <td rowspan="3"> {$row['id']} </td>
         <td width="4%"><strong>Eng:</strong></td>
-        <td> {$row['name_eng']} </td>
-        <td> {$row['title_eng']} </td>
+        <td> {$row['name_en']} </td>
+        <td> {$row['title_en']} </td>
         <td width="5%">E-Mail: </td>
         <td> {$row['email']} </td>
         <td rowspan="3"> {$row['workplace']} </td>
@@ -47,15 +48,15 @@ echo <<<REF_ONEROW
     </tr>
     <tr>
         <td><strong>Рус:</strong></td>
-        <td> {$row['name_rus']} </td>
-        <td> {$row['title_rus']} </td>
+        <td> {$row['name_ru']} </td>
+        <td> {$row['title_ru']} </td>
         <td> Phone: </td>
         <td> {$row['phone']} </td>
     </tr>
     <tr>
         <td><strong>Укр:</strong></td>
-        <td> {$row['name_ukr']} </td>
-        <td> {$row['title_ukr']} </td>
+        <td> {$row['name_uk']} </td>
+        <td> {$row['title_uk']} </td>
         <td> &nbsp; </td>
         <td> &nbsp; </td>
     </tr>

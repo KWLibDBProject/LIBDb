@@ -6,20 +6,19 @@ SHOW CREATE TABLE `anytable`
 
 $all_tables = array(
     'articles' =>
-
 "CREATE TABLE `articles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `udc` char(30) DEFAULT NULL,
-  `title_eng` char(100) DEFAULT NULL,
-  `title_rus` char(100) DEFAULT NULL,
-  `title_ukr` char(100) DEFAULT NULL,
-  `abstract_eng` text,
-  `abstract_rus` text,
-  `abstract_ukr` text,
-  `keywords_eng` text,
-  `keywords_rus` text,
-  `keywords_ukr` text,
-  `refs` text,
+  `title_en` char(100) DEFAULT NULL,
+  `title_ru` char(100) DEFAULT NULL,
+  `title_uk` char(100) DEFAULT NULL,
+  `abstract_en` longtext,
+  `abstract_ru` longtext,
+  `abstract_uk` longtext,
+  `keywords_en` longtext,
+  `keywords_ru` longtext,
+  `keywords_uk` longtext,
+  `refs` longtext,
   `book` int(11) DEFAULT NULL,
   `add_date` char(60) DEFAULT NULL,
   `deleted` int(11) DEFAULT '0',
@@ -32,40 +31,40 @@ $all_tables = array(
     'authors' =>
 "CREATE TABLE `authors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name_rus` char(100) DEFAULT NULL,
-  `name_eng` char(100) DEFAULT NULL,
-  `name_ukr` char(100) DEFAULT NULL,
+  `name_ru` char(100) DEFAULT NULL,
+  `name_en` char(100) DEFAULT NULL,
+  `name_uk` char(100) DEFAULT NULL,
   `workplace` char(200) DEFAULT NULL,
   `email` char(100) DEFAULT NULL,
   `deleted` int(11) DEFAULT '0',
-  `title_eng` char(100) DEFAULT NULL,
-  `title_rus` char(100) DEFAULT NULL,
-  `title_ukr` char(100) DEFAULT NULL,
-  `phone` char(40) DEFAULT NULL,
+  `title_en` char(100) DEFAULT NULL,
+  `title_ru` char(100) DEFAULT NULL,
+  `title_uk` char(100) DEFAULT NULL,
+  `phone` char(60) DEFAULT NULL,
   `is_es` int(11) DEFAULT '0',
-  `description` longtext,
   `bio` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8",
+) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
     'books' =>
     "CREATE TABLE `books` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` char(60) DEFAULT NULL,
+  `title` char(80) DEFAULT NULL,
   `date` char(30) DEFAULT NULL,
   `deleted` int(11) DEFAULT '0',
   `published` int(11) DEFAULT '0',
-  `year` int(11) DEFAULT NULL,
   `contentpages` char(60) DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
     'topics' =>
     "CREATE TABLE `topics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` char(80) DEFAULT NULL,
-  `shortname` char(80) DEFAULT NULL,
   `deleted` int(11) DEFAULT '0',
+  `title_ru` char(80) DEFAULT NULL,
+  `title_en` char(80) DEFAULT NULL,
+  `title_uk` char(80) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
@@ -88,7 +87,8 @@ $all_tables = array(
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
-    'users' => "CREATE TABLE `users` (
+    'users' =>
+    "CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(100) DEFAULT NULL,
   `email` char(100) DEFAULT NULL,
@@ -96,8 +96,8 @@ $all_tables = array(
   `deleted` int(11) DEFAULT '0',
   `login` char(100) DEFAULT NULL,
   `password` char(100) DEFAULT NULL,
-  `phone` varchar(40) DEFAULT NULL,
-  `md5password` varchar(32) DEFAULT NULL,
+  `phone` varchar(60) DEFAULT NULL,
+  `md5password` char(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 );

@@ -49,28 +49,28 @@
     <hr>
     <input type="hidden" name="id">
     <fieldset>
-        <label for="name_rus">Ф.И.О. (русский)</label><br>
-        <input type="text" name="name_rus" id="name_rus" size="40" value="">
+        <label for="name_en">Name, surname</label><br>
+        <input type="text" name="name_en" id="name_en" size="40" value="">
         <br>
 
-        <label for="name_eng">Ф.И.О. (английский)</label><br>
-        <input type="text" name="name_eng" id="name_eng" size="40" value="">
+        <label for="name_ru">Ф.И.О. (русский)</label><br>
+        <input type="text" name="name_ru" id="name_ru" size="40" value="">
         <br>
 
-        <label for="name_ukr">Ф.И.О. (украинский)</label><br>
-        <input type="text" name="name_ukr" id="name_ukr" size="40" value="">
+        <label for="name_uk">Ф.И.О. (украинский)</label><br>
+        <input type="text" name="name_uk" id="name_uk" size="40" value="">
     </fieldset>
     <fieldset>
-        <label for="title_eng">Звание, ученая степень, должность (eng)</label><br>
-        <input type="text" name="title_eng" id="title_eng" size="40" value="">
+        <label for="title_en">Звание, ученая степень, должность (на английском)</label><br>
+        <input type="text" name="title_en" id="title_en" size="40" value="">
         <br>
 
-        <label for="title_rus">Звание, ученая степень, должность</label><br>
-        <input type="text" name="title_rus" id="title_rus" size="40" value="">
+        <label for="title_ru">Звание, ученая степень, должность</label><br>
+        <input type="text" name="title_ru" id="title_ru" size="40" value="">
         <br>
 
-        <label for="title_ukr">Званна, вчена ступiнь, посада</label><br>
-        <input type="text" name="title_ukr" id="title_ukr" size="40" value="">
+        <label for="title_uk">Званна, вчена ступiнь, посада</label><br>
+        <input type="text" name="title_uk" id="title_uk" size="40" value="">
 
     </fieldset>
     <fieldset>

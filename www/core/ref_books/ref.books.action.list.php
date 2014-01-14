@@ -1,7 +1,5 @@
 ﻿<?php
-// выводит в виде таблицы содержимое справочника (в данном случае неуниверсально, работаем со справочником авторов)
-require_once('../core.php');
-require_once('../core.db.php');
+// выводит в виде таблицы содержимое справочника 'books'
 
 $link = ConnectDB();
 $ref_name = 'books';
@@ -37,6 +35,7 @@ CloseDB($link);
     if ($ref_numrows > 0) {
     foreach ($ref_list as $r_id => $r_value)
     {
+        //@todo: TEMPLATE
         $row = $r_value;
         $book_ready = ($row['published']!=0) ? "Да<br><small>(опубликован)</small>" : "Нет<br><small>(в работе)</small>";
         echo <<<REF_ANYROW

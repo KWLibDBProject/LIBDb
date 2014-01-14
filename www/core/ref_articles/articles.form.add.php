@@ -30,13 +30,13 @@
 
 
         // tinyMCE inits
-        tinymce.init({selector:'textarea#abstract_eng',forced_root_block : "",
+        tinymce.init({selector:'textarea#abstract_en',forced_root_block : "",
             force_br_newlines : true,
             force_p_newlines : false});
-        tinymce.init({selector:'textarea#abstract_rus',forced_root_block : "",
+        tinymce.init({selector:'textarea#abstract_ru',forced_root_block : "",
             force_br_newlines : true,
             force_p_newlines : false});
-        tinymce.init({selector:'textarea#abstract_ukr',forced_root_block : "",
+        tinymce.init({selector:'textarea#abstract_uk',forced_root_block : "",
             force_br_newlines : true,
             force_p_newlines : false});
 
@@ -136,16 +136,16 @@
         <legend>Название статьи на разных языках</legend>
         <table>
             <tr>
-                <td><label for="title_eng">Article title</label></td>
-                <td><input type="text" name="title_eng" id="title_eng" size="60" class="text ui-widget-content ui-corner-all"></td>
+                <td><label for="title_en">Article title</label></td>
+                <td><input type="text" name="title_en" id="title_en" size="60" class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
-                <td><label for="title_rus">Название статьи:</label></td>
-                <td><input type="text" name="title_rus" id="title_rus" size="60" class="text ui-widget-content ui-corner-all"></td>
+                <td><label for="title_ru">Название статьи:</label></td>
+                <td><input type="text" name="title_ru" id="title_ru" size="60" class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
-                <td><label for="title_ukr">Назва статті:</label></td>
-                <td><input type="text" name="title_ukr" id="title_ukr" size="60" class="text ui-widget-content ui-corner-all"></td>
+                <td><label for="title_uk">Назва статті:</label></td>
+                <td><input type="text" name="title_uk" id="title_uk" size="60" class="text ui-widget-content ui-corner-all"></td>
             </tr>
         </table>
     </fieldset>
@@ -154,18 +154,18 @@
         <legend>Аннотация на разных языках</legend>
         <div id="abstract_tabs">
             <ul>
-                <li><a href="#abstract-eng">На английском</a></li>
-                <li><a href="#abstract-rus">На русском</a></li>
-                <li><a href="#abstract-ukr">На украинском</a></li>
+                <li><a href="#abstract-en">На английском</a></li>
+                <li><a href="#abstract-ru">На русском</a></li>
+                <li><a href="#abstract-uk">На украинском</a></li>
             </ul>
-            <div id="abstract-eng">
-                <textarea id="abstract_eng" name="abstract_eng"></textarea>
+            <div id="abstract-en">
+                <textarea id="abstract_en" name="abstract_en"></textarea>
             </div>
-            <div id="abstract-rus">
-                <textarea id="abstract_rus" name="abstract_rus"></textarea>
+            <div id="abstract-ru">
+                <textarea id="abstract_ru" name="abstract_ru"></textarea>
             </div>
-            <div id="abstract-ukr">
-                <textarea id="abstract_ukr" name="abstract_ukr"></textarea>
+            <div id="abstract-uk">
+                <textarea id="abstract_uk" name="abstract_uk"></textarea>
             </div>
         </div>
     </fieldset>
@@ -173,18 +173,18 @@
         <legend>Ключевые слова на разных языках</legend>
         <div id="keywords_tabs">
             <ul>
-                <li><a href="#keywords-eng">На английском</a></li>
-                <li><a href="#keywords-rus">На русском</a></li>
-                <li><a href="#keywords-ukr">На украинском</a></li>
+                <li><a href="#keywords-en">На английском</a></li>
+                <li><a href="#keywords-ru">На русском</a></li>
+                <li><a href="#keywords-uk">На украинском</a></li>
             </ul>
-            <div id="keywords-eng">
-                <textarea id="keywords_eng" name="keywords_eng" cols="80" rows="6"></textarea>
+            <div id="keywords-en">
+                <textarea id="keywords_en" name="keywords_en" cols="80" rows="6"></textarea>
             </div>
-            <div id="keywords-rus">
-                <textarea id="keywords_rus" name="keywords_rus" cols="80" rows="6"></textarea>
+            <div id="keywords-ru">
+                <textarea id="keywords_ru" name="keywords_ru" cols="80" rows="6"></textarea>
             </div>
-            <div id="keywords-ukr">
-                <textarea id="keywords_ukr" name="keywords_ukr" cols="80" rows="6"></textarea>
+            <div id="keywords-uk">
+                <textarea id="keywords_uk" name="keywords_uk" cols="80" rows="6"></textarea>
             </div>
         </div>
     </fieldset>

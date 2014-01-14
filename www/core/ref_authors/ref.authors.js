@@ -12,12 +12,12 @@ function Authors_LoadRecord(destination, id, tinyarea_target) // номер за
         if (result['error'] == 0) {
             // загружаем данные в поля формы
             $form.find("input[name='id']").val( result['data']['id'] );
-            $form.find("input[name='name_rus']").val( result['data']['name_rus'] );
-            $form.find("input[name='name_eng']").val( result['data']['name_eng'] );
-            $form.find("input[name='name_ukr']").val( result['data']['name_ukr'] );
-            $form.find("input[name='title_rus']").val( result['data']['title_rus'] );
-            $form.find("input[name='title_eng']").val( result['data']['title_eng'] );
-            $form.find("input[name='title_ukr']").val( result['data']['title_ukr'] );
+            $form.find("input[name='name_ru']").val( result['data']['name_ru'] );
+            $form.find("input[name='name_en']").val( result['data']['name_en'] );
+            $form.find("input[name='name_uk']").val( result['data']['name_uk'] );
+            $form.find("input[name='title_ru']").val( result['data']['title_ru'] );
+            $form.find("input[name='title_en']").val( result['data']['title_en'] );
+            $form.find("input[name='title_uk']").val( result['data']['title_uk'] );
             $form.find("input[name='email']").val( result['data']['email'] );
             $form.find("input[name='phone']").val( result['data']['phone'] );
             $form.find("textarea[name='workplace']").val(result['data']['workplace']);

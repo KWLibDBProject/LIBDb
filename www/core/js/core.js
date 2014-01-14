@@ -24,7 +24,7 @@ function BuildSelector(target, data, currentid) // currentid is 1 for NEW
         currentid = (typeof currentid != 'undefined') ? currentid : 1;
         $("select[name="+target+"] option[value="+ currentid +"]").prop("selected",true);
     } else {
-        $("select[name="+target+"]").attr('disabled','disabled');
+        $("select[name="+target+"]").prop('disabled',true); //.attr('disabled','disabled')
     }
 }
 

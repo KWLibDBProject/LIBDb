@@ -1,7 +1,9 @@
 <?php
-// отдает JSON объект для селектора
-require_once('../core.php');
-require_once('../core.db.php');
+// отдает JSON объект для селектора 'books'
+
+$lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
+$withoutid = isset($_GET['withoutid']) ? 1 : 0;
+
 
 $link = ConnectDB();
 
@@ -14,8 +16,7 @@ if ($ref_numrows>0)
     $data['error'] = 0;
     while ($row = mysql_fetch_assoc($result))
     {
-        $title = ($row['title'] != '') ? $row['title'] : 'Unnamed';
-        $data['data'][ $row['id'] ] = "[$row[id]] \"$title\" ($row[date])";
+        $data['data'][ $row['id'] ] = returnBooksOptionString($row,$lang,$withoutid); // see core.php
     }
 } else {
     $data['data'][1] = "Добавьте книги (сборники) в базу!!!";
