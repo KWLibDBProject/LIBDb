@@ -16,12 +16,42 @@ $MESSAGES = array(
     'en' => 'Статей в сборнике нет',
     'uk' => 'Статей в сборнике нет',
     ),
-    '__' => array(
-    'ru' => '',
-    'en' => '',
-    'uk' => '',
-)
+    'LoadAuthorPublications_EachRecord' => array(
+        'ru' => '<li><a href="?fetch=articles&with=info&id=%1$s">%2$s</a></li>',
+        'en' => '<li><a href="?fetch=articles&with=info&id=%1$s">%2$s</a></li>',
+        'uk' => '<li><a href="?fetch=articles&with=info&id=%1$s">%2$s</a></li>',
+    ),
+    'LoadAuthorPublications_Start' => array(
+        'ru' => '<ul>',
+        'en' => '<ul>',
+        'uk' => '<ul>',
+    ),
+    'LoadAuthorPublications_End' => array(
+        'ru' => '</ul>',
+        'en' => '</ul>',
+        'uk' => '</ul>',
+    ),
+    'LoadTopics_Start' => array(
+        'ru' => '<ul>',
+        'en' => '<ul>',
+        'uk' => '<ul>',
+    ),
+    'LoadTopics_Each' => array(
+        'ru' => '<li><a href="?fetch=articles&with=topic&id=%1$s">%2$s</a></li>',
+        'en' => '<li><a href="?fetch=articles&with=topic&id=%1$s">%2$s</a></li>',
+        'uk' => '<li><a href="?fetch=articles&with=topic&id=%1$s">%2$s</a></li>',
+    ),
+    'LoadTopics_End' => array(
+        'ru' => '</ul>',
+        'en' => '</ul>',
+        'uk' => '</ul>',
+    ),
 
+    '2' => array(
+        'ru' => '',
+        'en' => '',
+        'uk' => '',
+    ),
 
 
 );

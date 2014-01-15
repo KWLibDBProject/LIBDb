@@ -1,4 +1,5 @@
 <?php
+require_once('core/core.kwt.php');
 
 // функции, к которым обращается фронтэнд (сам сайт)
 
@@ -6,25 +7,25 @@
 // "повторить следующий блок N раз, заменяя какие-то переменные следующими:"
 function DBLoadTopics($lang)
 {
+    global $MESSAGES;
     $q = "SELECT `id`, `title_{$lang}` AS title FROM topics WHERE `deleted`=0";
     $r = mysql_query($q);
     $ret = '';
-    $ret .= <<<DBLoadTopicsStart
-<ul>
-DBLoadTopicsStart;
-    while ($topic = mysql_fetch_assoc($r)) {
-        $ret.= <<<DBLoadTopicsItem
-        <li><a href="?fetch=articles&with=topic&id={$topic['id']}">{$topic['title']}</a></li>
-DBLoadTopicsItem;
+
+    $ret .= $MESSAGES['LoadTopics_Start'][$lang];
+
+    while ($topic = mysql_fetch_assoc($r))
+    {
+        $ret .= sprintf($MESSAGES['LoadTopics_Each'][$lang], $topic['id'], $topic['title']);
     }
-   $ret .= <<<DBLoadTopicsEnd
-</ul>
-DBLoadTopicsEnd;
+    $ret .= $MESSAGES['LoadTopics_End'][$lang];
     return $ret;
 }
 
-function DBLoadBooks()
+function DBLoadBooks($lang)
 {
+    global $MESSAGES;
+    $ret = '';
     $yq = "SELECT DISTINCT `year` FROM books WHERE `published`=1 AND `deleted`=0 ORDER BY `year` ";
     $yr = mysql_query($yq);
     $all_books = array();
@@ -40,11 +41,15 @@ function DBLoadBooks()
         }
 
     }
-    $ret = <<<LB_Start
+    $ret .= <<<LB_Start
     <ul>
 LB_Start;
+
+    // $ret .= $MESSAGES['LoadBooks_Start'][$lang];
     foreach ($all_books as $key => $year_books)
     {
+        // $ret .= $MESSAGES['LoadBooks_ItemStart'][$lang];
+
         $ret.= <<<LB_Item_Start
     <li>
         <div>$key</div>
@@ -72,28 +77,32 @@ function DBLoadAuthorInformation($id, $lang) // @todo: this + language!!! + temp
 {
     $ret = "Базовая информация об авторе с айди = ".$id;
     return $ret;
+
+
+
+
+
+
+
 }
 
-function DBLoadAuthorPublications($id, $lang) // @todo: this+ language
+function DBLoadAuthorPublications($id, $lang) // @todo: темплейт заменен на переводной файл
 {
     global $MESSAGES;
     $ret = '';
     $q = "SELECT articles.* FROM articles, cross_aa WHERE cross_aa.article = articles.id AND cross_aa.author=$id";
     $r = mysql_query($q);
     if (@mysql_num_rows($r)>0) {
-        $ret .= <<<LAP_START
-<ul>
-LAP_START;
 
-        while ($i = @mysql_fetch_assoc($r)) {
-            $ret .= <<<LAP_ITEM
-<li><a href="?fetch=articles&with=info&id={$i['id']}">{$i['title_'.$lang]}</a></li>
-LAP_ITEM;
+        $ret .= sprintf($MESSAGES['LoadAuthorPublications_Start'][$lang]);
+
+        while ($i = @mysql_fetch_assoc($r))
+        {
+            $ret .= sprintf($MESSAGES['LoadAuthorPublications_EachRecord'][$lang],$i['id'],$i['title_'.$lang]);
         }
 
-        $ret .= <<<LAP_END
-</ul>
-LAP_END;
+        $ret .= sprintf($MESSAGES['LoadAuthorPublications_End'][$lang]);
+
     } else {
         $ret .= $MESSAGES['LoadAuthorPublications_NoArticles'][$lang];
     }
