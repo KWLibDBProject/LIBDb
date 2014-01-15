@@ -13,7 +13,7 @@ $MESSAGES = array(
     ),
     'LoadArticlesList_OnloadNoArticles' => array(
     'ru' => 'Статей в сборнике нет',
-    'en' => 'Статей в сборнике нет',
+    'en' => 'Articles not found!',
     'uk' => 'Статей в сборнике нет',
     ),
     'LoadAuthorPublications_EachRecord' => array(
@@ -114,6 +114,41 @@ $MESSAGES = array(
         'ru' => '</table>',
         'en' => '</table>',
         'uk' => '</table>',
+    ),
+    'LoadAuthorsSelectedByLetter_Start' => array(
+        'ru' => '<ul>',
+        'en' => '<ul>',
+        'uk' => '<ul>',
+    ),
+    'LoadAuthorsSelectedByLetter_Each' => array(
+        'ru' => '<li>
+<label>
+<a href="?fetch=authors&with=info&id=%1$s">%2$s , %3$s, %4$s</a>
+</label>
+</li>
+',
+        'en' => '<li>
+<label>
+<a href="?fetch=authors&with=info&id=%1$s">%2$s , %3$s, %4$s</a>
+</label>
+</li>
+',
+        'uk' => '<li>
+<label>
+<a href="?fetch=authors&with=info&id=%1$s">%2$s , %3$s, %4$s</a>
+</label>
+</li>
+',
+    ),
+    'LoadAuthorsSelectedByLetter_End' => array(
+        'ru' => '</ul>',
+        'en' => '</ul>',
+        'uk' => '</ul>',
+    ),
+    'LoadAuthorsSelectedByLetter_Nothing' => array(
+        'ru' => 'Таких авторов нет',
+        'en' => 'Таких авторов нет',
+        'uk' => 'Таких авторов нет',
     ),
     '...' => array(
         'ru' => '',

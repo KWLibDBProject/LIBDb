@@ -305,12 +305,12 @@ AND articles.deleted=0 AND topics.deleted=0 AND books.published=1 ";
     return $return;
 } // function
 
-
-
 // Загружает список авторов с отбором по первой букве, буква и язык передаются параметрами
 // вызывает нас ajax.php @ load_authors_selected_by_letter
 function DBLoadAuthorsSelectedByLetter($letter, $lang)
 {
+    global $MESSAGES;
+    $return = '';
     if ($letter != '0') {
         $like = " AND authors.name_{$lang} LIKE "."'".strtolower($letter)."%'";
     } else {
@@ -319,33 +319,24 @@ function DBLoadAuthorsSelectedByLetter($letter, $lang)
 
     $q = "SELECT * FROM authors WHERE `deleted`=0 ".$like;
     $r = mysql_query($q) or Die(0);
-    $n = mysql_num_rows($r);
     // ФИО, научное звание/ученая степень
-    //@todo: MESSAGE форматная строка вывода @ load_authors_selected_by_letter
-    // LASBL_* лишние, если авторов нет.
-    $return = <<<LASBL_START
-        <ul>
-LASBL_START;
-    if ($n > 0) {
+    $return .= $MESSAGES['LoadAuthorsSelectedByLetter_Start'][$lang];
+
+    if ( @mysql_num_rows($r) > 0) {
         while ($i = mysql_fetch_assoc($r)){
             //@this: эктор-ссылка на /authors/info/(id) - работает, якорь для замены в модреврайт
+            $id = $i['id'];
             $name = $i['name_'.$lang];
             $title = $i['title_'.$lang];
-
-            $return .= <<<LASBL_EACH
-<li>
-<label>
-<a href="?fetch=authors&with=info&id={$i['id']}">{$name} , {$title}, {$i['email']}</a>
-</label>
-</li>
-LASBL_EACH;
+            $email = $i['email'];
+            $return .= sprintf($MESSAGES['LoadAuthorsSelectedByLetter_Start'][$lang], $id, $name, $title, $email);
         } // while
-    } // if
-    $return .= <<<LASBL_EMPTY
-</ul>
-LASBL_EMPTY;
+    } else {
+        $return .= $MESSAGES['LoadAuthorsSelectedByLetter_Nothing'][$lang];
+    }
 
-return $return;
+    $return .= $MESSAGES['LoadAuthorsSelectedByLetter_End'][$lang];
+    return $return;
 }
 
 /*
