@@ -9,17 +9,19 @@
     #info > div {
         padding-bottom: 15px;
     }
-    .author-name {
+    .author_name {
         font-size: 300%; font-weight: bold;
     }
-    .author-title {
+    .author_title {
         font-size: 150%; font-weight: bold;
     }
-    .author-email {
+    .author_email {
         font-weight: bold;
     }
-    .author-workplace {
+    .author_workplace {
         font-style: italic;
+    }
+    .author_bio {
     }
 </style>
 <fieldset class="author-about">
@@ -27,10 +29,11 @@
     <legend>About</legend>
 
     <div id="info">
-        <div class="author-name">{%author_name%}</div>
-        <div class="author-title">{%author_title%}</div>
-        <div><span class="author-email">E-Mail:</span>{%author_email%}</div>
-        <div class="author-workplace">{%author_workplace%}</div>
+        <div class="author_name">{%author_name%}</div>
+        <div class="author_title">{%author_title%}</div>
+        <div><span class="author_email">E-Mail: </span>{%author_email%}</div>
+        <div class="author_workplace">{%author_workplace%}</div>
+        <div class="author_bio">{%author_bio%}!!!</div>
     </div>
 
 </fieldset>

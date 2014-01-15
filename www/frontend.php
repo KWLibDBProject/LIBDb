@@ -72,6 +72,8 @@ function DBLoadAuthorInformation($id, $lang) // see template
         $ret['author_title'] = $author['title_'.$lang];
         $ret['author_email'] = $author['email'];
         $ret['author_workplace'] = $author['workplace'];
+        $ret['author_bio'] = $author['bio'];
+        $ret['author_is_es'] = $author['is_es'];
     }
     return $ret;
 }
@@ -329,7 +331,7 @@ function DBLoadAuthorsSelectedByLetter($letter, $lang)
             $name = $i['name_'.$lang];
             $title = $i['title_'.$lang];
             $email = $i['email'];
-            $return .= sprintf($MESSAGES['LoadAuthorsSelectedByLetter_Start'][$lang], $id, $name, $title, $email);
+            $return .= sprintf($MESSAGES['LoadAuthorsSelectedByLetter_Each'][$lang], $id, $name, $title, $email);
         } // while
     } else {
         $return .= $MESSAGES['LoadAuthorsSelectedByLetter_Nothing'][$lang];

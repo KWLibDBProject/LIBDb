@@ -54,6 +54,7 @@ switch ($fetch) {
                     'author_title' => $air['author_title'],
                     'author_email' => $air['author_email'],
                     'author_workplace' => $air['author_workplace'],
+                    'author_bio' => $air['author_bio']
                 );
 
                 $tpl_content->override($tpl_content_over);
@@ -61,7 +62,7 @@ switch ($fetch) {
                 $content = $tpl_content->getcontent();
 
                 $tpl_js = new kwt($path.'f_auth+w_info.tpl[en].js');
-                $tpl_js->override( array( "author_id" => $id ) );
+                $tpl_js->override( array( "author_is_es" => ($air['author_is_es'])==1 ? 'block' : 'none' ) );
                 $tpl_js->contentstart();
                 $jscripts = $tpl_js->getcontent();
 
@@ -71,7 +72,9 @@ switch ($fetch) {
                 // список ВСЕХ авторов - для поисковых систем
                 // И без кнопки перехода на автора, только ссылкой!
                 $content = 'ПОЛНЫЙ список авторов без всяких селектов - для поисковых систем';
-                $path = 'tpl/fetch=authors/with=extended/';
+                $path = 'tpl/fetch=authors/with=all/';
+
+
             }
         } // switch with authors
         break;
