@@ -224,31 +224,31 @@ function DBLoadArticlesListWithLetter($getarray, $lang, $loadmode='search') // $
     global $MESSAGES;
 
     $return = '';
-    // название, авторы, сборник, в котором она опубликована
-    $query = "
-SELECT DISTINCT authors.name_{$lang}, articles.id, articles.title_{$lang} AS atitle,
-topics.title_{$lang} AS ttitle,
-books.title AS btitle,
-`add_date`
-from articles, cross_aa, topics, books, authors
+    // сложный запрос.
+    $query = "SELECT DISTINCT
+articles.title_{$lang} AS article_title,
+articles.id AS article_id,
+articles.add_date,
+topics.title_{$lang} AS topic_title ,
+topics.id AS topic_id,
+books.title AS book_title,
+books.id AS books_id,
+authors.name_{$lang}
+FROM
+articles, cross_aa, books, topics, authors
 WHERE
-cross_aa.article=articles.id
-AND
-articles.deleted=0
-AND
-topics.id=articles.topic
-AND
-books.id=articles.book
-AND
-books.published=1"; // только из опубликованных сборников
+articles.book = books.id
+AND cross_aa.article = articles.id
+AND cross_aa.author = authors.id
+AND topics.id = articles.topic
+AND articles.deleted=0 AND topics.deleted=0 AND books.published=1 ";
 
-    // $query .= (IsSet($getarray['letter'])   && $getarray['letter']!='0')  ? " AND authors.name_{$lang} LIKE '".strtolower($getarray['letter'])."%'"   : "";
-    $query .= (IsSet($getarray['book'])     && $getarray['book']!=0 )   ? " AND articles.book = $getarray[book] "       : "";
-    $query .= (IsSet($getarray['topic'])    && $getarray['topic'] !=0 ) ? " AND articles.topic = $getarray[topic] "     : "";
+    $query .= (IsSet($getarray['book'])) && ($getarray['book']!=0 )     ? " AND books.id = $getarray[book]"     : "";
+    $query .= (IsSet($getarray['topic'])) && ($getarray['topic']!=0 )   ? " AND topics.id = $getarray[topic]"     : "";
+    $query .= (IsSet($getarray['letter'])) && ($getarray['letter']!='0')  ? " AND authors.name_{$lang} LIKE '{$getarray['letter']}%' " : "";
 
-    // die($query);
-    // die(print_r($getarray,true));
-    // die($query);
+    $query .= " GROUP BY articles.title_en
+    ORDER BY articles.id ";
 
     $res = mysql_query($query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
     $articles_count = @mysql_num_rows($res);
@@ -258,7 +258,7 @@ books.published=1"; // только из опубликованных сборн
     if ($articles_count>0) {
         while ($an_article = mysql_fetch_assoc($res))
         {
-            $id = $an_article['id']; // айди статьи
+            $id = $an_article['article_id']; // айди статьи
             $all_articles[$id] = $an_article; // ВСЯ статья
 
             $q_auths = "SELECT authors.name_{$lang},authors.title_{$lang},authors.id FROM authors,cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article={$id} ORDER BY cross_aa.id";
@@ -271,15 +271,13 @@ books.published=1"; // только из опубликованных сборн
                 {
                     //@todo: MESSAGE+this: формат вывода строки авторов
                     $all_articles[$id]['authors'] .= $an_author['name_'.$lang]." (".$an_author['title_'.$lang].")<br>";
-                } // while authors
+
+                } // while
                 $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4); //удаляет последний <br>
             } // if authors
         } // while each article record
     } // if
     //@todo: MESSAGE+this: формат вывода одной статьи в списке статей
-    /* $return .= <<<LA_START
-<table border="1" width="100%" class="articles_list">
-LA_START; */
     $return .= $MESSAGES['LoadArticlesList_Start'][$lang];
 
     // название, авторы, сборник, в котором она опубликована
@@ -287,8 +285,8 @@ LA_START; */
     if ($articles_count>0) {
         foreach ($all_articles as $a_id => $an_article) {
             $return .= sprintf($MESSAGES['LoadArticlesList_Each'][$lang],
-                $an_article['add_date'], $an_article['atitle'], $an_article['authors'],
-                $an_article['btitle'], $an_article['id']);
+                $an_article['add_date'], $an_article['article_title'], $an_article['authors'],
+                $an_article['book_title'], $an_article['article_id']); // so, topic_title unused, contains topic title
         };
     } else {
         // статей по заданному критерию нет
