@@ -143,14 +143,12 @@ switch ($fetch) {
                 $tpl_content = new kwt($path.'f_article+w_info.tpl[en].html');
 
                 $ai = DBLoadArticleInfo($id, $site_language); // id is article ID
-                $al = DBLoadArticleInfoAuthorsList($id, $site_language); // id is article ID
-
-                printr($al);
+                $al = DBLoadArticleInfoAuthorsList($id, $site_language); // id is article ID список авторов, писавших статью
 
                 $tpl_content_over = array(
                     'article-title' => $ai['title_'.$site_language],
                     'article-abstract' => $ai['abstract_'.$site_language],
-                    'article-authors-list' => $al,
+                    'article-authors-list' => $al, // список авторов, писавших статью
                     'article-keywords' => $ai['keywords_'.$site_language],
                     'article-book-title' => $ai['btitle'],
                     'article-book-year' => $ai['byear'],

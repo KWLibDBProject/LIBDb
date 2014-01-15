@@ -96,10 +96,9 @@ function DBLoadArticleInfoAuthorsList($id, $lang)
     $q = "SELECT authors.id AS aid, name_{$lang}, title_{$lang}, email FROM AUTHORS, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id";
     $ret = '';
     if ($r = mysql_query($q)) {
-        if (mysql_num_rows($r)>0) {
-            $row = mysql_fetch_assoc($r);
+        while ($row = @mysql_fetch_assoc($r)) {
             $ret .= sprintf($MESSAGES['LoadArticleInfoAuthorsList'][$lang],$row['name_'.$lang],$row['title_'.$lang],$row['email'],$row['aid']);
-        }
+        } // у статьи ОБЯЗАТЕЛЬНО есть авторы
     }
     return $ret;
 }
