@@ -1,9 +1,11 @@
 <?php
-$site_language = 'en';
 require_once('core/core.php');
 require_once('core/core.db.php');
 require_once('core/core.kwt.php');
-require_once('core/core.frontend.php');
+require_once('frontend.php');
+require_once('translations.php');
+
+$site_language = 'en';
 
 $tpl_index = new kwt('tpl/index.tpl.html');
 $tpl_index->config('<!--{','}-->');
@@ -11,11 +13,7 @@ $tpl_index->contentstart();
 
 $override = array();
 
-// загрузим "статические" поля
-
 $link = ConnectDB();
-// {topics}
-// сначала поле загрузим в переменную, потом обработаем массивом foreach
 
 $override['topics'] = DBLoadTopics($site_language); // в переменной тематические разделы, только LI-элементы вне UL
 $override['books'] = DBLoadBooks($site_language); // в переменной книжки в двухэтажном списке,
@@ -28,8 +26,7 @@ switch ($fetch) {
         // работа с авторами
         switch ($with) {
             case 'list': {
-//+                  fetch=authors   &   with=list
-//+                  Список авторов с селектом по 1 букве
+//+         fetch=authors   &   with=list           Список авторов с селектом по 1 букве
                 $path = "tpl/fetch=authors/with=list/";
 
                 $tpl_content = new kwt($path.'f_auth+w_list.tpl[en].html');
@@ -43,12 +40,11 @@ switch ($fetch) {
                 break;
             }
             case 'info': {
-//+-                  ?fetch=authors  &   with=info   & id=?
-//+-                  Расширенная информация по автору + список его статей
+//+-        ?fetch=authors  &   with=info   & id=?  Расширенная информация по автору + список его статей
                 $path = 'tpl/fetch=authors/with=info/';
 
                 $id = $_GET['id'];
-                $tpl_content = new kwt($path.'f_auth+w_info.tpl.html');
+                $tpl_content = new kwt($path.'f_auth+w_info.tpl[en].html');
                 $tpl_content_over = array(
                     'author_info' => DBLoadAuthorInformation($id, $site_language),
                     'author_publications' => DBLoadAuthorPublications($id, $site_language) // = articles.author.id
@@ -58,7 +54,7 @@ switch ($fetch) {
                 $tpl_content->contentstart();
                 $content = $tpl_content->getcontent();
 
-                $tpl_js = new kwt($path.'f_auth+w_info.tpl.js');
+                $tpl_js = new kwt($path.'f_auth+w_info.tpl[en].js');
                 $tpl_js->override( array( "author_id" => $id ) );
                 $tpl_js->contentstart();
                 $jscripts = $tpl_js->getcontent();
@@ -67,9 +63,9 @@ switch ($fetch) {
             }
             case 'all': {
                 // список ВСЕХ авторов - для поисковых систем
+                // И без кнопки перехода на автора, только ссылкой!
                 $content = 'ПОЛНЫЙ список авторов без всяких селектов - для поисковых систем';
                 $path = 'tpl/fetch=authors/with=extended/';
-
             }
         } // switch with authors
         break;
@@ -94,8 +90,7 @@ switch ($fetch) {
                 break;
             }
             case 'topic' : {
-//                  ?fetch=articles &   with=with=topic  &   id=?
-//                  Список статей с селектом по сборнику
+//          ?fetch=articles &   with=with=topic  &   id=? Список статей в топике + селект по сборнику
                 $content = 'Список статей с селектом по сборнику';
                 $path = 'tpl/fetch=articles/with=topic/';
 
@@ -142,6 +137,7 @@ switch ($fetch) {
             case 'all': { //@todo: LATER: ПОЛНЫЙ список статей без всяких селектов - для поисковых систем
 //              ?fetch=articles &   with=extended   &   id=?
 //              ПОЛНЫЙ список статей без всяких селектов - для поисковых систем
+                // И без кнопки перехода на статью, только ссылкой!
                 $content = 'ПОЛНЫЙ список статей без всяких селектов - для поисковых систем';
                 break;
             }

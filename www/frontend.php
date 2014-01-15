@@ -1,35 +1,31 @@
 <?php
-require_once('core.php');
+
 // функции, к которым обращается фронтэнд (сам сайт)
 
 // вот нам и понадобился вложенный шаблон... причем не просто вложенный, а повторяемый, типа
 // "повторить следующий блок N раз, заменяя какие-то переменные следующими:"
 function DBLoadTopics($lang)
 {
-    $q = "SELECT id, title_{$lang} AS title FROM topics WHERE deleted=0";
+    $q = "SELECT `id`, `title_{$lang}` AS title FROM topics WHERE `deleted`=0";
     $r = mysql_query($q);
     $ret = '';
-/*     $ret .= <<<DBLoadTopicsStart
+    $ret .= <<<DBLoadTopicsStart
 <ul>
-DBLoadTopicsStart; */
+DBLoadTopicsStart;
     while ($topic = mysql_fetch_assoc($r)) {
         $ret.= <<<DBLoadTopicsItem
         <li><a href="?fetch=articles&with=topic&id={$topic['id']}">{$topic['title']}</a></li>
 DBLoadTopicsItem;
-        // <li><a href="?fetch=articles&with=topic&id={$with=topic['id']}">{$with=topic['title']}</a></li>
-        // <li><a href="/articles/with=topic/{$with=topic['id']}">{$with=topic['title']}</a></li>
     }
-/*    $ret .= <<<DBLoadTopicsEnd
-
+   $ret .= <<<DBLoadTopicsEnd
 </ul>
-
-DBLoadTopicsEnd; */
+DBLoadTopicsEnd;
     return $ret;
 }
 
 function DBLoadBooks()
 {
-    $yq = "SELECT DISTINCT year FROM books WHERE `published`=1 ORDER BY `year` ";
+    $yq = "SELECT DISTINCT `year` FROM books WHERE `published`=1 AND `deleted`=0 ORDER BY `year` ";
     $yr = mysql_query($yq);
     $all_books = array();
     while ($ya = mysql_fetch_assoc($yr)) {
@@ -37,7 +33,7 @@ function DBLoadBooks()
     }
     foreach ($all_books as $key => $value)
     {
-        $bq = "SELECT id, title FROM books WHERE `year`=$key AND `published`=1 ORDER BY `title`";
+        $bq = "SELECT id, title FROM books WHERE `year`=$key AND `published`=1 AND `deleted`=0 ORDER BY `title`";
         $br = mysql_query($bq);
         while ($ba = mysql_fetch_assoc($br)) {
             $all_books[$key][ $ba['id'] ] = $ba['title'];
@@ -80,38 +76,45 @@ function DBLoadAuthorInformation($id, $lang) // @todo: this + language!!! + temp
 
 function DBLoadAuthorPublications($id, $lang) // @todo: this+ language
 {
+    global $MESSAGES;
     $ret = '';
-    $q = "SELECT articles.* FROM articles,cross_aa WHERE cross_aa.article = articles.id AND cross_aa.author=$id";
+    $q = "SELECT articles.* FROM articles, cross_aa WHERE cross_aa.article = articles.id AND cross_aa.author=$id";
     $r = mysql_query($q);
-    $ret .= <<<LAP_START
+    if (@mysql_num_rows($r)>0) {
+        $ret .= <<<LAP_START
 <ul>
-
 LAP_START;
-    while ($i = mysql_fetch_assoc($r)) {
-        // @this: MOD_REWRITE url to articles/info/xx
 
-        $ret .= <<<LAP_ITEM
+        while ($i = @mysql_fetch_assoc($r)) {
+            $ret .= <<<LAP_ITEM
 <li><a href="?fetch=articles&with=info&id={$i['id']}">{$i['title_'.$lang]}</a></li>
 LAP_ITEM;
-    }
-    $ret .= <<<LAP_END
+        }
+
+        $ret .= <<<LAP_END
 </ul>
 LAP_END;
+    } else {
+        $ret .= $MESSAGES['LoadAuthorPublications_NoArticles'][$lang];
+    }
+
     return $ret;
 }
 
 // функция работает аналогично core/articles.action.list.php , но иной формат вывода данных
-// вызывается функция из ajax.frontend.php @ load_articles_selected_by_query
+// вызывается функция из ajax.php @ load_articles_selected_by_query
 
-function DBLoadArticlesList($getarray, $lang)
+function DBLoadArticlesList($getarray, $lang, $loadmode='search') // $loadmode = search or onload
 {
+    global $MESSAGES;
+
     $return = '';
     // название, авторы, сборник, в котором она опубликована
     $query = "
 SELECT DISTINCT articles.id, articles.title_{$lang} AS atitle,
 topics.title_{$lang} AS ttitle,
 books.title AS btitle,
-add_date
+`add_date`
 from articles, cross_aa, topics, books
 WHERE
 cross_aa.article=articles.id
@@ -120,7 +123,9 @@ articles.deleted=0
 AND
 topics.id=articles.topic
 AND
-books.id=articles.book";
+books.id=articles.book
+AND
+books.published=1"; // только из опубликованных сборников
 
     $query .= (IsSet($getarray['author'])   && $getarray['author']!=0)  ? " AND cross_aa.author = $getarray[author] "   : "";
     $query .= (IsSet($getarray['book'])     && $getarray['book']!=0 )   ? " AND articles.book = $getarray[book] "       : "";
@@ -171,27 +176,21 @@ LA_START;
     </td>
 </tr>
 LA_EACH;
-        }; // foreach: вообще-то, если статей нет - надо сообщение вывести
+        };
     } else {
         // статей по заданному критерию нет
         //@MESSAGE: "нет статей по заданному критерию"
-        switch ($lang) {
-            case 'en': {
-                $no_articles_message = '<br><strong>No articles found within this search criteria!</strong>';
+        switch ($loadmode) {
+            case 'search' : {
+                $return .= $MESSAGES['LoadArticlesList_OnloadNoArticles'][$lang];
                 break;
             }
-            case 'ru': {
-                $no_articles_message = '<br><strong>Статей по заданным критериям поиска не найдено</strong>';
+            case 'onload' : {
+                $return .= $MESSAGES['LoadArticlesList_OnloadNoArticles'][$lang];
                 break;
             }
-            case 'uk': {
-                $no_articles_message = '<br><strong>Статей за заданими критеріями пошуку не знайдено</strong>';
-                break;
-            }
-        } // case
-
-        $return .= $no_articles_message;
-    }
+        } // case loadmode
+    } // else
 
     $return .= <<<LA_END
 </table>
@@ -201,7 +200,7 @@ LA_END;
 } // function
 
 // Загружает список авторов с отбором по первой букве, буква и язык передаются параметрами
-// вызывает нас ajax.frontend.php @ load_authors_selected_by_letter
+// вызывает нас ajax.php @ load_authors_selected_by_letter
 function DBLoadAuthorsSelectedByLetter($letter, $lang)
 {
     if ($letter != '0') {
@@ -215,6 +214,7 @@ function DBLoadAuthorsSelectedByLetter($letter, $lang)
     $n = mysql_num_rows($r);
     // ФИО, научное звание/ученая степень
     //@todo: MESSAGE форматная строка вывода @ load_authors_selected_by_letter
+    // LASBL_* лишние, если авторов нет.
     $return = <<<LASBL_START
         <ul>
 LASBL_START;
@@ -245,24 +245,112 @@ return $return;
 возврат массива "первых букв" для списка авторов
 генерируем массив "на лету" на основе первых букв авторов в зависимости от ЯЗЫКА
 
-вызывает нас ajax.frontend.php @  load_letters_optionlist
+вызывает нас ajax.php @  load_letters_optionlist
 */
 function DBLoadFirstLettersForSelector($lang)
 {
-    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM AUTHORS WHERE deleted=0";
-    $qr = mysql_query($ql) or Die("Death at request: ".$ql);
-    $qn = @mysql_num_rows($qr);
+    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0";
+    if ($qr = mysql_query($ql))    // or Die("Death at request: ".$ql);
+    {
+        $qn = @mysql_num_rows($qr);
 
-    if ($qn > 0) {
-        $return['error'] = 0;
-        while ($letter = mysql_fetch_assoc($qr)) {
-            $return['data'][ "{$letter['letter']}" ] = "{$letter['letter']}";
+        if ($qn > 0) {
+            $return['error'] = 0;
+            while ($letter = mysql_fetch_assoc($qr)) {
+                $return['data'][ "{$letter['letter']}" ] = "{$letter['letter']}";
+            }
+
+        } else {
+            $return['error'] = 1;
+            $return['data'] = 'No any letters found!';
         }
-
     } else {
-        $return['error'] = 1;
+        $return['error'] = 2;
+        $return['data'] = $ql;
     }
     return $return;
+}
+
+/* Три функции возврата данных в option соотв. селекта */
+function returnBooksOptionString_noid($row, $lang, $withoutid)
+{
+    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
+    // по идее можно и с шаблоном, но ну нафиг
+    /*     switch ($lang) {
+            case 'en': {
+                $name = $row['name_en'];
+                $title = $row['title_en'];
+                break;
+            }
+            case 'ru': {
+                $name = $row['name_ru'];
+                $title = $row['title_ru'];
+                break;
+            }
+            case 'uk': {
+                $name = $row['name_uk'];
+                $title = $row['title_uk'];
+                break;
+            }
+        } */
+    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+
+    $title = ($row['title'] != '') ? $row['title'] : 'Unnamed';
+
+    return $id."\"$title\"";
+}
+
+function returnAuthorsOptionString_noid($row, $lang, $withoutid)
+{
+    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
+    // по идее можно и с шаблоном, но ну нафиг
+    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+    switch ($lang) {
+        case 'en': {
+            $name = $row['name_en'];
+            $title = $row['title_en'];
+            break;
+        }
+        case 'ru': {
+            $name = $row['name_ru'];
+            $title = $row['title_ru'];
+            break;
+        }
+        case 'uk': {
+            $name = $row['name_uk'];
+            $title = $row['title_uk'];
+            break;
+        }
+    }
+    return $id."$name $title";
+
+}
+
+function returnTopicsOptionString_noid($row, $lang, $withoutid)
+{
+    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
+    // по идее можно и с шаблоном, но ну нафиг
+    switch ($lang) {
+        case 'en': {
+            // $name = $row['name_en'];
+            $title = $row['title_en'];
+            break;
+        }
+        case 'ru': {
+            // $name = $row['name_ru'];
+            $title = $row['title_ru'];
+            break;
+        }
+        case 'uk': {
+            // $name = $row['name_uk'];
+            $title = $row['title_uk'];
+            break;
+        }
+    }
+    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+    $title = ($title != '') ? $title : '<NONAME>';
+
+    return $id.$title;
 }
 
 ?>

@@ -17,10 +17,10 @@ function preloadOptionsList(url) // Загружает данные (кэшир�
 // target - ИМЯ селектора
 function BuildSelector(target, data, currentid) // currentid is 1 for NEW
 {
-    $.each(data['data'], function(id, value){
-        $("select[name="+target+"]").append('<option value="'+id+'">'+value+'</option>');
-    });
     if (data['error'] == 0) {
+        $.each(data['data'], function(id, value){
+            $("select[name="+target+"]").append('<option value="'+id+'">'+value+'</option>');
+        });
         currentid = (typeof currentid != 'undefined') ? currentid : 1;
         $("select[name="+target+"] option[value="+ currentid +"]").prop("selected",true);
     } else {

@@ -1,6 +1,9 @@
 <?php
-// отдает JSON объект для селектора "авторы"
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
 
+// отдает JSON объект для селектора "авторы"
 
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;
@@ -20,12 +23,12 @@ if ($result = mysql_query($query)) {
             $data['data'][$row['id']] = returnAuthorsOptionString($row, $lang, $withoutid); // see CORE.PHP
         }
     } else {
-        $data['data']['-1'] = 'Добавьте авторов в базу!!!';
-        $data['error'] = -1;
+        $data['data']['1'] = 'Добавьте авторов в базу!!!';
+        $data['error'] = 1;
     }
 } else {
-    $data['data']['-1'] = 'Ошибка работы с базой!';
-    $data['error'] = -1;
+    $data['data']['2'] = "Ошибка работы с базой! [$query]";
+    $data['error'] = 2;
 }
 print(json_encode($data));
 ?>

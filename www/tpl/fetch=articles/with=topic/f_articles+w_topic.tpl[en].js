@@ -1,10 +1,10 @@
-// var topic_id = {%topic_id%};
-/* Загрузка статей по определенному топику И сборнику (book) из селекта */
-var booksList = preloadOptionsList('core/ref_books/ref.books.action.getoptionlist.php?lang=en&withoutid');
+/* Загрузка статей из определенного топика с выбором сборника из селекта */
+
+var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionslist&lang=en');
 
 BuildSelector('select_with_book', booksList, 0);
 
-url = "core/ajax.frontend.php?actor=load_articles_selected_by_query&lang=en&topic="/*plus_topic_id*/;
+url = "ajax.php?actor=load_articles_selected_by_query&lang=en&topic="/*plus_topic_id*/;
 
 // возможно, что показ всех статей сразу будет несколько накладным
 $("#articles_list").empty().load(url);

@@ -1,4 +1,9 @@
 <?php
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
+
 $tpl = new kwt('authors.form.tpl');
 
 $over = array(

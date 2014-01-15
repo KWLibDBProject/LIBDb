@@ -1,4 +1,7 @@
 <?php
+require_once('core.php');
+require_once('core.db.php');
+require_once('core.kwt.php');
 
 if (isLogged()) {
     Redirect('admin.html');
@@ -16,6 +19,7 @@ if (isLogged()) {
             $return = DBLoginCheck($_POST['login'], $_POST['password']);
             if ($return['error']==0) {
                 /* ----------------------    @todo: ПРОАПГРЕЙДИТЬ ВХОД В СИСТЕМУ    ----------------- */
+                // session_start();
                 $_SESSION['u_id'] = $return['id'];
                 $_SESSION['u_permissions'] = $return['permissions'];
                 setcookie('u_libdb_logged',$return['id']);

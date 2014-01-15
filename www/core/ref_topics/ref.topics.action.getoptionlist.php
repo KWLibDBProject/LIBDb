@@ -1,5 +1,9 @@
 <?php
 // отдает JSON объект для селектора "топики"
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
 
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;

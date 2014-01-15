@@ -1,5 +1,7 @@
 <?php
-//@todo: + проверка ошибок + isAjaxCall
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
 
 $ref_name = 'authors';
 

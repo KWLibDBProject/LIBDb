@@ -1,10 +1,12 @@
 DirectoryIndex admin.login.php
 #<If "%{SERVER_NAME} =~ /ponyguild/">
-php_value include_path /home/web/data/www/ponyguild.ru/libdb/core
+#php_value include_path /home/web/data/www/ponyguild.ru/libdb/core
+#</If>
+#<If "%{SERVER_NAME} =~ /sweb/">
+#php_value include_path /home/o/opuru/public_html/core/
 #</If>
 #<Else>
-php_value include_path ".;\\home\\localhost\\www\\core"
+#php_value include_path ".;\\home\\localhost\\www\\core"
 #</Else>
 #
-php_value auto_prepend_file core.prepend.tpl
-#
+#php_value auto_prepend_file core.prepend.tpl

@@ -1,4 +1,8 @@
 <?php
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
 // с помощью этого скрипта мы загружаем данные и проставляем их в поля формы редактирования, используя JS
 $link = ConnectDB();
 

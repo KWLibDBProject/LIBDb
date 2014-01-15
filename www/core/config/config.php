@@ -14,7 +14,7 @@ $CFG = array(
     ),
     'password' => array(
         'local' => '',
-        'sweb' => 'opurumysqnopassword',
+        'sweb' => 'password',
         'pony' => 'JTofv6iB'
     ),
     'database' => array(

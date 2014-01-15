@@ -25,6 +25,7 @@ function isLogged()
     $we_are_logged = !empty($_SESSION);
     $we_are_logged = $we_are_logged && isset($_SESSION['u_id']);
     $we_are_logged = $we_are_logged && $_SESSION['u_id'] !== -1;
+    $we_are_logged = $we_are_logged && isset($_COOKIE['u_libdb_logged']);
     // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
     // return $we_are_logged ? 1 : 0;
     return (int) $we_are_logged ;
@@ -36,6 +37,8 @@ function printr($str)
 }
 
 /* Три функции возврата данных в option соотв. селекта */
+/* объявление переехало в frontend.php */
+
 function returnBooksOptionString($row, $lang, $withoutid)
 {
     // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
@@ -58,6 +61,7 @@ function returnBooksOptionString($row, $lang, $withoutid)
             }
         } */
     $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+
     $title = ($row['title'] != '') ? $row['title'] : 'Unnamed';
 
     return $id."\"$title\"";
@@ -115,5 +119,6 @@ function returnTopicsOptionString($row, $lang, $withoutid)
 
     return $id.$title;
 }
+
 
 ?>

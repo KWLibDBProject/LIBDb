@@ -1,4 +1,8 @@
 <?php
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
 /* файл вызывается черех аякс лоадер
 Варианты аргументов:
 
@@ -89,7 +93,7 @@ CloseDB($link);
 <td>{$row['udc']}</td>
 <td><small>{$row['authors']}</small></td>
 <td><small>Eng: {$row['title_en']}<br>Рус: {$row['title_ru']}<br>Укр: {$row['title_uk']}</small></td>
-<td>{$row['article']['add_date']}</td>
+<td>{$row['add_date']}</td>
 <td>
 <!-- <small>{$row['pdffile']['username']} ({$row['pdffile']['filesize']} bytes)</small><br> -->
     <button class="download-pdf" name="{$row['pdffile']['id']}" data-text="Show PDF"></button>

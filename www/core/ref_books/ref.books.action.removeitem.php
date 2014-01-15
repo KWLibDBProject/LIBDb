@@ -1,4 +1,8 @@
 <?php
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
 // удалить сборник, если в нем есть статьи НЕЛЬЗЯ
 
 $table = 'books';

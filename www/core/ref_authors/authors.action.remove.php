@@ -1,4 +1,9 @@
 <?php
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
+
 // а) удалить автора, если у него есть статьи НЕЛЬЗЯ
 $id = $_GET["id"];
 

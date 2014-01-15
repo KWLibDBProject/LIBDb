@@ -1,4 +1,9 @@
-﻿<html>
+﻿<?php
+require_once('core.php');
+require_once('core.db.php');
+require_once('core.kwt.php');
+?>
+<html>
 <head>
     <title>Справочник: Тематические разделы</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

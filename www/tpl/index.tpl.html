@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>LibDB </title>
     <meta charset='UTF-8'>
@@ -20,33 +20,31 @@
         <td colspan="2">
             [ <a href="?fetch=authors&with=list">Поиск по автору</a> ]
             [ <a href="?fetch=articles&with=extended">Расширенный поиск статей</a> ]
+            [ <a href="?fetch=news">Новости</a> ]
+            [ <a href="?fetch=estuff">Редколлегия</a> ]
         </td>
     </tr>
     <tr>
         <td width="200">
             [ Тематические разделы ]
-            <ul>
 <!--{topics}-->
-            </ul>
-            [ Сборники: ]
-            <!--{books}-->
-            [ <a href="?fetch=news">Новости</a> ]
-            <br>
-            [ <a href="?fetch=estuff">Редколлегия</a> ]
-            <br>
-            [ <a href="?fetch=articles&with=all">Все статьи</a> ]
-            <br>
-            [ <a href="?fetch=authors&with=all">Все авторы</a> ]
+        <td rowspan="2"  valign="top">
+<!--{content}-->
         </td>
-        <td valign="top">
-            <!--{content}-->
+    </tr>
+    <tr>
+        <td>
+            [ Сборники: ]
+<!--{books}-->
         </td>
     </tr>
 </table>
 <div id="footer">
-    <small><a href="/core/">Переход в админку</a></small>
-
-
+    <small>
+        [ <a href="/core/">Переход в админку</a> ]
+        [ <a href="?fetch=articles&with=all">Все статьи</a> ]
+        [ <a href="?fetch=authors&with=all">Все авторы</a> ]
+    </small>
 </div>
 </body>
 </html>

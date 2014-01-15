@@ -1,5 +1,9 @@
 <?php
 // удалить рубрику (топик), если в ней есть статьи НЕЛЬЗЯ
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
 
 if (!IsSet($_GET['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();

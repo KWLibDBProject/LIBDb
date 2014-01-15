@@ -1,4 +1,9 @@
 ﻿<?php
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
+
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 
 if (!IsSet($_POST['ref_name'])) {

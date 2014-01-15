@@ -1,5 +1,8 @@
 <?php
 // выводит в виде таблицы содержимое справочника 'users'
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
 
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 

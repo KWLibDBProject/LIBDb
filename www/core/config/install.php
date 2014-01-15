@@ -1,4 +1,5 @@
 <?php
+require_once('../core.db.php');
 
 /* для выгрузки скриптов создания сайтов надо использовать:
 SHOW CREATE TABLE `anytable`

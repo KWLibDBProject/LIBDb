@@ -1,4 +1,9 @@
 <?php
+require_once('../core.php');
+require_once('../core.db.php');
+require_once('../core.kwt.php');
+
+
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 $ref_name = 'authors';
 

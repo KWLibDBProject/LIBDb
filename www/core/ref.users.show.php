@@ -1,4 +1,10 @@
-﻿<html>
+﻿<?php
+require_once('core.php');
+require_once('core.db.php');
+require_once('core.kwt.php');
+// if (isLogged()==0) Redirect('admin.login.php');
+?>
+<html>
 <head>
     <title>Справочник: Список пользователей</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

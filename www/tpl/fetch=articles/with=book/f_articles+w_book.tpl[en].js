@@ -1,18 +1,18 @@
-// var book_id = {%book_id%} ;
-/* Загрузка статей по определенному сборнику И топику (topic) из селекта */
-var booksList = preloadOptionsList('core/ref_topics/ref.topics.action.getoptionlist.php?lang=en&withoutid');
+/* Загрузка статей из заданного сборнику с выбором топика из селекта  */
+var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optionslist&lang=en');
 
-BuildSelector('select_with_topic', booksList, 0);
+BuildSelector('select_with_topic', topicsList, 0);
 
-url = "core/ajax.frontend.php?actor=load_articles_selected_by_query&lang=en&book="/*plus_book_id*/;
+url_q = "ajax.php?actor=load_articles_selected_by_query&lang=en&book="/*plus_book_id*/;
+url_a = "ajax.php?actor=load_articles_all&lang=en&book="/*plus_book_id*/;
 
 // возможно, что показ всех статей сразу будет несколько накладным
-$("#articles_list").empty().load(url);
+$("#articles_list").empty().load(url_a);
 
 $("#button-show-withselection").on('click',function(){
     query = "&";
     query+="topic="+$('select[name="select_with_topic"]').val();
-    $("#articles_list").empty().load(url+query);
+    $("#articles_list").empty().load(url_q+query);
 });
 
 $("#button-reset-selection").on('click',function(){
@@ -20,7 +20,7 @@ $("#button-reset-selection").on('click',function(){
 });
 
 $("#button-show-all").on('click',function(){
-    $("#articles_list").empty().load(url);
+    $("#articles_list").empty().load(url_a);
 });
 
 $('#articles_list').on('click','.more_info',function(){
