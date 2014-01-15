@@ -1,0 +1,59 @@
+<style type="text/css">
+    .article-title {
+        text-transform: uppercase;
+    }
+    .article-abstact {
+        font-style: italic;
+    }
+    #download-pdf {
+        background-image:url('core/css/pdf-icon-128x128.png');
+        width:128px;
+        height:132px;
+        background-color: transparent;
+    }
+    .article-authors-list {
+        margin-top: 0;
+        list-style-type: decimal;
+    }
+    legend {
+        font-weight: bold;
+    }
+    legend.legend-pdf {
+        float: right;
+    }
+
+</style>
+<div class="article-content">
+    <fieldset>
+        <legend class="legend-pdf"><button type="button" id="download-pdf" data-href="core/getpdf.php?id={%article-pdfid%}" data-text="Show PDF"></button></legend>
+        <div class="article-title">
+            {%article-title%}
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Abstract: </legend>
+        <div class="article-abstact">
+            {%article-abstract%}
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Authors:</legend>
+        <ol class="article-authors-list">
+            {%article-authors-list%}
+        </ol>
+    </fieldset>
+    <fieldset>
+        <legend>Keywords</legend>
+        <div class="article-keywords">
+            {%article-keywords%}
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Published:</legend>
+        <div class="article-published">
+            {%article-book-title%}, {%article-book-year%}
+        </div>
+    </fieldset>
+
+
+</div>

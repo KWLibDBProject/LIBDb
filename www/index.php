@@ -40,14 +40,20 @@ switch ($fetch) {
                 break;
             }
             case 'info': {
-//+-        ?fetch=authors  &   with=info   & id=?  Расширенная информация по автору + список его статей
+//+        ?fetch=authors  &   with=info   & id=?  Расширенная информация по автору + список его статей
                 $path = 'tpl/fetch=authors/with=info/';
 
                 $id = $_GET['id'];
                 $tpl_content = new kwt($path.'f_auth+w_info.tpl[en].html');
+
+                $air = DBLoadAuthorInformation($id, $site_language);
+
                 $tpl_content_over = array(
-                    'author_info' => DBLoadAuthorInformation($id, $site_language),
-                    'author_publications' => DBLoadAuthorPublications($id, $site_language) // = articles.author.id
+                    'author_publications' => DBLoadAuthorPublications($id, $site_language), // = articles.author.id
+                    'author_name' => $air['author_name'],
+                    'author_title' => $air['author_title'],
+                    'author_email' => $air['author_email'],
+                    'author_workplace' => $air['author_workplace'],
                 );
 
                 $tpl_content->override($tpl_content_over);
@@ -128,10 +134,38 @@ switch ($fetch) {
                 break;
             }
             case 'info': { //@todo: NOW: Полная информация по статье id=
-//              ?fetch=articles &   with=info   &   id=?
-//              Полная информация по статье
+//          ?fetch=articles &   with=info   &   id=? Полная информация по статье
                 $id = $_GET['id'];
-                $content = 'Полная информация по статье id= '.$id;
+
+                $path = 'tpl/fetch=articles/with=info/';
+
+                $id = $_GET['id'];
+                $tpl_content = new kwt($path.'f_article+w_info.tpl[en].html');
+
+                $ai = DBLoadArticleInfo($id, $site_language); // id is article ID
+                $al = DBLoadArticleInfoAuthorsList($id, $site_language); // id is article ID
+
+                printr($al);
+
+                $tpl_content_over = array(
+                    'article-title' => $ai['title_'.$site_language],
+                    'article-abstract' => $ai['abstract_'.$site_language],
+                    'article-authors-list' => $al,
+                    'article-keywords' => $ai['keywords_'.$site_language],
+                    'article-book-title' => $ai['btitle'],
+                    'article-book-year' => $ai['byear'],
+                    'article-pdfid' => $ai['pdfid']
+                );
+
+                $tpl_content->override($tpl_content_over);
+                $tpl_content->contentstart();
+                $content = $tpl_content->getcontent();
+
+                $tpl_js = new kwt($path.'f_article+w_info.tpl[en].js');
+                // $tpl_js->override( array( "article_id" => $id ) );
+                $tpl_js->contentstart();
+                $jscripts = $tpl_js->getcontent();
+
 
 
 

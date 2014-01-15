@@ -1,4 +1,0 @@
-LIBDb
-=====
-
-KW LibDB

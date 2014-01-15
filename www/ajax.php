@@ -39,6 +39,14 @@ switch ($actor) {
         break;
     } // case
 
+    case 'load_articles_selected_by_query_with_letter' : {
+        $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
+        $return = DBLoadArticlesListWithLetter($_GET, $lang);
+
+        break;
+
+    }
+
     case 'load_articles_all' : {
         // запускается на старте, выводит другое сообщение при отсутствии статей
         $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';

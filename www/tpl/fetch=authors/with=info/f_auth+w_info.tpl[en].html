@@ -1,13 +1,42 @@
-<fieldset>
-    <legend>Об авторе</legend>
+<style type="text/css">
+    .photo_div {
+        border:1px solid black; width:150px; height:200px; float: right;
+    }
+    #info {
+        border: 0px solid red; float: left;
+        font-family: Georgia;
+    }
+    #info > div {
+        padding-bottom: 15px;
+    }
+    .author-name {
+        font-size: 300%; font-weight: bold;
+    }
+    .author-title {
+        font-size: 150%; font-weight: bold;
+    }
+    .author-email {
+        font-weight: bold;
+    }
+    .author-workplace {
+        font-style: italic;
+    }
+</style>
+<fieldset class="author-about">
+    <div class="photo_div"><img src="core/css/kota.jpg" width="150" height="200"></div>
+    <legend>About</legend>
+
     <div id="info">
-        {%author_info%}
+        <div class="author-name">{%author_name%}</div>
+        <div class="author-title">{%author_title%}</div>
+        <div><span class="author-email">E-Mail:</span>{%author_email%}</div>
+        <div class="author-workplace">{%author_workplace%}</div>
     </div>
 
 </fieldset>
 
-<fieldset>
-    <legend>Список публикаций</legend>
+<fieldset class="author-publications">
+    <legend>Publications</legend>
     <div id="articles_list">
         {%author_publications%}
     </div>

@@ -85,8 +85,11 @@ require_once('../core.kwt.php');
             $("#keywords_tabs").tabs();
 
             // bindings
-            $("#authors_list").on('click',".al-delete",function(){ $('li[data-li="'+$(this).attr('data-al')+'"]').remove(); });
+            // bind ADD AUTHOR button
             $(".al-add").on('click',function(){ InsertAuthorSelector("#authors_list",lastAuthorNumber); lastAuthorNumber++; });
+            // bind remove 'X' button for each author
+            $("#authors_list").on('click',".al-delete",function(){ $('li[data-li="'+$(this).attr('data-al')+'"]').remove(); });
+
 
             $("#button-exit").on('click',function(event){
                 event.preventDefault();
@@ -94,15 +97,38 @@ require_once('../core.kwt.php');
                 return false;
             });
 
+            $("#unique_test").on('click',function(){
+                test_authorsList = [];
+                $.each( $(".an_authors") , function(id, data) {
+                    test_authorsList.push($(data).val());
+                });
+                alert(isArrayUnique(test_authorsList));
+            } );
+
             $("#form_new_article").submit(function(){
-                bValid = true;
-                // проверка количества авторов
-                bValid = bValid && ($("#authors_list").find('li').size());
-                bValid = bValid && (strpos($("input[name=pdffile]").val() , '.pdf'));
-                if (!bValid) {
-                    alert('Не указаны авторы или неправильный файл для загрузки');
-                    return false;
+                var test_authorsList = [];
+                $.each( $(".an_authors") , function(id, data) {
+                    test_authorsList.push($(data).val());
+                });
+                var bValid = true;
+
+                if (!($("#authors_list").find('li').size())) {
+                    // проверка количества авторов
+                    alert('Не указаны авторы!');
+                    bValid = false;
+                } else if (!isArrayUnique(test_authorsList)) {
+                    // проверка уникальности авторов в статье
+                    alert('Обнаружены неуникальные авторы! ');
+                    bValid = false;
+                } else if (!strpos($("input[name=pdffile]").val() , '.pdf')) {
+                    // проверка PDF-файла
+                    alert('Указан неправильный файл для загрузки');
+                    bValid = false;
+                } else if ( $("input[name='add_date']").val().length == 0  ) {
+                    alert('Не указана дата!');
+                    bValid = false;
                 }
+                return bValid;
             });
 
         });
@@ -137,6 +163,7 @@ require_once('../core.kwt.php');
         <legend id="authors_legend">Авторы:</legend>
         <ul id="authors_list" class="authorslist"></ul>
         <input type="button" class="al-add" value="Добавить автора">
+        <button type="button" id="unique_test" style="display: none">Test</button>
     </fieldset>
     <fieldset>
         <legend>Название статьи на разных языках</legend>

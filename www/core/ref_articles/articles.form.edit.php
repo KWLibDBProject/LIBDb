@@ -89,8 +89,7 @@ CloseDB($link);
             force_p_newlines : false});
 
         $(document).ready(function () {
-            // onload
-            // load authors
+            // onload, load authors
             if (mode == 'edit') {
                 for (i=1; i<=loadedAuthorsNum; i++)
                 {
@@ -149,16 +148,29 @@ CloseDB($link);
             });
 
             $("#form_edit_article").submit(function(){
-                bValid = true;
-                // проверка количества авторов
-                bValid = bValid && ($("#authors_list").find('li').size());
-                if ($("#currfile_changed").val()==1) {
-                    bValid = bValid && (strpos($("input[name=pdffile]").val() , '.pdf'));
+                var bValid = true;
+                var test_authorsList = [];
+                $.each( $(".an_authors") , function(id, data) {
+                    test_authorsList.push($(data).val());
+                });
+
+                if (!($("#authors_list").find('li').size())) {
+                    // проверка количества авторов
+                    alert('Не указаны авторы!');
+                    bValid = false;
+                } else if (!isArrayUnique(test_authorsList)) {
+                    // проверка уникальности авторов в статье
+                    alert('Обнаружены неуникальные авторы! ');
+                    bValid = false;
+                } else if ($("#currfile_changed").val()==1 && !strpos($("input[name=pdffile]").val() , '.pdf'))
+                {
+                    alert('Указан неправильный файл для загрузки');
+                    bValid = false;
+                } else if ( $("input[name='add_date']").val().length == 0  ) {
+                    alert('Не указана дата!');
+                    bValid = false;
                 }
-                if (!bValid) {
-                    alert('Не указаны авторы или неправильный файл для загрузки');
-                    return false;
-                }
+                return bValid;
             });
 
             $("#button-delete").on('click',function(){
@@ -260,13 +272,13 @@ CloseDB($link);
                 <li><a href="#keywords-ru">На русском</a></li>
                 <li><a href="#keywords-uk">На украинском</a></li>
             </ul>
-            <div id="keywords-eng">
+            <div id="keywords-en">
                 <textarea id="keywords_en" name="keywords_en" cols="80" rows="6"><?php echo $the_article['keywords_en'] ;?></textarea>
             </div>
-            <div id="keywords-rus">
+            <div id="keywords-ru">
                 <textarea id="keywords_ru" name="keywords_ru" cols="80" rows="6"><?php echo $the_article['keywords_ru'] ;?></textarea>
             </div>
-            <div id="keywords-ukr">
+            <div id="keywords-uk">
                 <textarea id="keywords_uk" name="keywords_uk" cols="80" rows="6"><?php echo $the_article['keywords_uk'] ;?></textarea>
             </div>
         </div>

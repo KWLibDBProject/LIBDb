@@ -1,5 +1,7 @@
 <?php
+error_reporting(E_ALL);
 require_once('../core.db.php');
+require_once('../core.kwt.php');
 
 /* для выгрузки скриптов создания сайтов надо использовать:
 SHOW CREATE TABLE `anytable`
@@ -102,9 +104,12 @@ $all_tables = array(
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 );
+
+$link = ConnectDB();
+
 $root_user = array(
     'name' => 'Root administator',
-    'email' => mysql_real_escape_string('karel.wintersky@gmail.com'),
+    'email' => mysql_real_escape_string('karel.wintersky@gmail.com',$link),
     'permissions' => '255',
     'login' => 'root',
     'password' => 'root',
@@ -112,7 +117,7 @@ $root_user = array(
     'md5password' => md5('root')
 );
 
-ConnectDB();
+
 
 $tpl = new kwt('install.tpl');
 $tpl -> contentstart();

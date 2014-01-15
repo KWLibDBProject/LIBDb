@@ -10,17 +10,17 @@ BuildSelector('select_with_letter', lettersList, 0);
 BuildSelector('select_with_book', booksList, 0);
 BuildSelector('select_with_topic', topicsList, 0);
 
-url_q = "ajax.php?actor=load_articles_selected_by_query&lang=en";
+url_q = "ajax.php?actor=load_articles_selected_by_query_with_letter&lang=en";
 url_a = "ajax.php?actor=load_articles_all&lang=en";
 
 // возможно, что показ всех статей сразу будет несколько накладным
 $("#articles_list").empty().load(url_a);
 
 $("#button-show-withselection").on('click',function(){
-    query = "&";
+    query = "";
     query+="&topic="+$('select[name="select_with_topic"]').val();
     query+="&book="+$('select[name="select_with_book"]').val();
-    query+="letter="+$('select[name="select_by_letter"]').val();
+    query+="&letter="+$('select[name="select_with_letter"]').val();
     $("#articles_list").empty().load(url_q+query);
 });
 $("#button-reset-selection").on('click',function(){

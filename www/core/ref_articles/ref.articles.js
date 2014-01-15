@@ -12,3 +12,10 @@ function InsertAuthorSelector(targetdiv,selectorName) // N - идентифик�
     }
 }
 
+function isArrayUnique(arr)
+{
+    for (var j = 0, R = 1, J = arr.length - 1; j < J; j++)
+        for (var k = j + 1, K = J + 1; k < K; k++) R *= arr[j] - arr[k];
+    R = !!R;
+    return R;
+}
