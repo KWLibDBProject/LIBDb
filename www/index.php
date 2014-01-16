@@ -7,7 +7,15 @@ require_once('translations.php');
 
 $site_language = 'en';
 
-$tpl_index = new kwt('tpl/index.tpl.html');
+// init defaults fields and variables
+$content = '';
+$jscripts = '';
+$override = array( // template override array
+    'title' => '',          // title tag -- он различный для каждого языка
+);
+
+// load default template, based on language
+$tpl_index = new kwt('tpl/index.tpl[en].html'); // файлы шаблонов различны для разных языков + файл переводов
 $tpl_index->config('<!--{','}-->');
 $tpl_index->contentstart();
 
@@ -85,9 +93,26 @@ switch ($fetch) {
                 $tpl_js = new kwt($path.'f_auth+w_all.tpl[en].js');
                 $tpl_js->contentstart();
                 $jscripts = $tpl_js->getcontent();
-
-
+                break;
             }
+            case 'estuff': {
+                $content = 'Редколлегия';
+                // эквивалентно 'fetch = authors & with = all' + 1 критерий отбора "is_es = 1"
+                $content = 'ПОЛНЫЙ список авторов без всяких селектов - для поисковых систем';
+                $path = 'tpl/fetch=authors/with=estuff/';
+
+                $es_authors_list = DBLoadAuthorsSelectedByLetter('0',$site_language, 'yes');
+
+                $tpl_content = new kwt($path.'f_auth+w_estuff.tpl[en].html');
+                $tpl_content->override(array ( 'es_authors_list' => $es_authors_list ));
+                $tpl_content->contentstart();
+                $content = $tpl_content->getcontent();
+
+                $tpl_js = new kwt($path.'f_auth+w_estuff.tpl[en].js');
+                $tpl_js->contentstart();
+                $jscripts = $tpl_js->getcontent();
+                break;
+            } // case estuff
         } // switch with authors
         break;
     }
@@ -170,7 +195,7 @@ switch ($fetch) {
                     'article-pdfid' => $ai['pdfid']
                 );
 
-                $global_keywords = $ai['keywords_'.$site_language]; // GLOBAL KEYWORDS
+                $override['meta_keywords'] = $ai['keywords_'.$site_language]; // GLOBAL KEYWORDS
 
                 $tpl_content->override($tpl_content_over);
                 $tpl_content->contentstart();
@@ -184,16 +209,15 @@ switch ($fetch) {
 
                 break;
             }
-            case 'all': { //@todo: LATER: ПОЛНЫЙ список статей без всяких селектов - для поисковых систем
-//              ?fetch=articles &   with=extended   &   id=?
+            case 'all': {
+//              ?fetch=articles &   with=all
 //              ПОЛНЫЙ список статей без всяких селектов - для поисковых систем
-                // И без кнопки перехода на статью, только ссылкой!
                 $content = 'ПОЛНЫЙ список статей без всяких селектов - для поисковых систем';
                 $path = "tpl/fetch=articles/with=all/";
 
                 $tpl_content = new kwt($path.'f_articles+w_all.tpl[en].html');
 
-                $all_articles_list = DBLoadArticlesFullList($site_language);;
+                $all_articles_list = DBLoadArticlesFullList($site_language);
 
                 $tpl_content->override(array( 'all_articles_list' => $all_articles_list ));
                 $tpl_content->contentstart();
@@ -203,8 +227,6 @@ switch ($fetch) {
                 $tpl_js->override(array());
                 $tpl_js->contentstart();
                 $jscripts = $tpl_js->getcontent();
-
-
                 break;
             }
 
@@ -213,10 +235,19 @@ switch ($fetch) {
     }
     case 'news': {
         $content = "Новости";
-        break;
-    }
-    case 'estuff': {
-        $content = 'Редколлегия';
+
+        $path = "tpl/fetch=news/";
+
+        $tpl_content = new kwt($path.'f_news.tpl[en].html');
+        $tpl_content->contentstart();
+
+        $tpl_content->override(array ( 'news_list' => $content ));
+
+        $content = $tpl_content->getcontent();
+
+        $tpl_js = new kwt($path.'f_news.tpl[en].js');
+        $tpl_js->contentstart();
+        $jscripts = $tpl_js->getcontent();
         break;
     }
     default: {
@@ -224,7 +255,7 @@ switch ($fetch) {
     }
 }
 
-$override['meta_keywords'] = $global_keywords;
+// запишем в массив замен значения, сформированные в switch-section
 $override['content'] = $content;
 $override['content_jquery'] = $jscripts;
 

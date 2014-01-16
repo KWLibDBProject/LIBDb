@@ -120,5 +120,27 @@ function returnTopicsOptionString($row, $lang, $withoutid)
     return $id.$title;
 }
 
+function returnNewsOptionString($row, $lang, $withoutid) // © Thomas Moroh
+{
+    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+    switch ($lang) {
+        case 'en': {
+            $name = $row['text_en'];
+            $title = $row['title_en'];
+            break;
+        }
+        case 'ru': {
+            $name = $row['text_ru'];
+            $title = $row['title_ru'];
+            break;
+        }
+        case 'uk': {
+            $name = $row['text_uk'];
+            $title = $row['title_uk'];
+            break;
+        }
+    }
+    return $id."$name $title";
+}
 
 ?>

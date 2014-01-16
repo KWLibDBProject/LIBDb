@@ -392,18 +392,25 @@ AND articles.deleted=0 AND topics.deleted=0 AND books.published=1 ";
 }
 
 // Загружает список авторов с отбором по первой букве, буква и язык передаются параметрами
-// вызывает нас ajax.php @ load_authors_selected_by_letter
-function DBLoadAuthorsSelectedByLetter($letter, $lang)
+// вызывает нас ajax.php @ load_authors_selected_by_letter (и вообще много кто :) )
+function DBLoadAuthorsSelectedByLetter($letter, $lang, $is_es='no')
 {
     global $MESSAGES;
     $return = '';
+    // check for letter, '0' is ANY first letter
     if ($letter != '0') {
         $like = " AND authors.name_{$lang} LIKE "."'".strtolower($letter)."%'";
     } else {
         $like = '';
     }
+    // check for 'is author in editorial stuff', default is 'no'
+    if ($is_es != 'no') {
+        $where_es = ' AND is_es=1 ';
+    } else {
+        $where_es = '';
+    }
 
-    $q = "SELECT * FROM authors WHERE `deleted`=0 ".$like;
+    $q = "SELECT * FROM authors WHERE `deleted`=0 ".$where_es.$like;
     $r = mysql_query($q) or Die(0);
     // ФИО, научное звание/ученая степень
     $return .= $MESSAGES['LoadAuthorsSelectedByLetter_Start'][$lang];
