@@ -32,14 +32,14 @@ switch ($actor) {
         break;
     }
 
-    case 'load_articles_selected_by_query' :{
+    case 'load_articles_selected_by_query' :{           // f=auth&w=books,
         $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-        $return = DBLoadArticlesList($_GET, $lang);
+        $return = DBLoadArticlesListWithAuthor($_GET, $lang);
 
         break;
     } // case
 
-    case 'load_articles_selected_by_query_with_letter' : {
+    case 'load_articles_selected_by_query_with_letter' : { // f=articles&w=extended
         $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
         $return = DBLoadArticlesListWithLetter($_GET, $lang);
 
@@ -47,21 +47,12 @@ switch ($actor) {
 
     }
 
-    case 'load_articles_all' : {
+    case 'load_articles_all' : { // f=auth&w=books(onload), f=article&w=extended(onload)
         // запускается на старте, выводит другое сообщение при отсутствии статей
         $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-        $return = DBLoadArticlesList($_GET, $lang,'onload');
+        $return = DBLoadArticlesListWithLetter($_GET, $lang,'onload'); // was: DBLoadArticlesListWithAuthor
         break;
     }
-
-    case 'load_articles_with_topic': {
-        $topic = $_GET['topic'];
-        $book = $_GET['book'];
-        $lang = $_GET['lang'];
-
-        $return = DBLoadArticlesList($_GET, $lang);
-        break;
-    } // case
 
     case 'get_books_as_optionslist' : {
         // alias to core/ref_books/ref.books.action.getoptionlist.php without id

@@ -1,7 +1,3 @@
-/* var authorsList = preloadOptionsList('core/ref_authors/ref.authors.action.getoptionlist.php?lang=en&withoutid');
-var booksList = preloadOptionsList('core/ref_books/ref.books.action.getoptionlist.php?lang=en&withoutid');
-var topicsList = preloadOptionsList('core/ref_topics/ref.topics.action.getoptionlist.php?lang=en&withoutid'); */
-
 var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optionslist&lang=en');
 var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionslist&lang=en');
 var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist&lang=en');

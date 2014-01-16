@@ -6,16 +6,6 @@ $MESSAGES = array(
         'en' => '<div class="articles-list">У автора нет статей</div>',
         'uk' => '<div class="articles-list">У автора нет статей</div>'
     ),
-    'LoadArticlesList_SearchNoArticles' => array(
-        'ru' => '<br><strong>Статей по заданным критериям поиска не найдено</strong>',
-        'en' => '<br><strong>No articles found within this search criteria!</strong>',
-        'uk' => '<br><strong>Статей за заданими критеріями пошуку не знайдено</strong>',
-    ),
-    'LoadArticlesList_OnloadNoArticles' => array(
-    'ru' => 'Статей в сборнике нет',
-    'en' => 'Articles not found!',
-    'uk' => 'Статей в сборнике нет',
-    ),
     'LoadAuthorPublications_EachRecord' => array(
         'ru' => '<li><a href="?fetch=articles&with=info&id=%1$s">%2$s</a> "%3$s", %4$s г.</li>',
         'en' => '<li><a href="?fetch=articles&with=info&id=%1$s">%2$s</a> "%3$s", %4$s</li>',
@@ -82,6 +72,7 @@ $MESSAGES = array(
         'en' => '<li><a href="?fetch=authors&with=info&id=%4$s">%1$s, %2$s</a> (%3$s) </li>',
         'uk' => '<li><a href="?fetch=authors&with=info&id=%4$s">%1$s, %2$s</a> (%3$s) </li>',
     ),
+    /* используется в DBLoadArticlesListWithLetter */
     'LoadArticlesList_Start' => array(
         'ru' => '<table border="1" width="100%">',
         'en' => '<table border="1" width="100%">',
@@ -115,6 +106,24 @@ $MESSAGES = array(
         'en' => '</table>',
         'uk' => '</table>',
     ),
+    'LoadArticlesList_SearchNoArticles' => array(
+        'ru' => '<br><strong>Статей по заданным критериям поиска не найдено</strong>',
+        'en' => '<br><strong>No articles found within this search criteria!</strong>',
+        'uk' => '<br><strong>Статей за заданими критеріями пошуку не знайдено</strong>',
+    ),
+    'LoadArticlesList_OnloadNoArticles' => array(
+        'ru' => 'Статей в сборнике нет',
+        'en' => 'Articles not found!',
+        'uk' => 'Статей в сборнике нет',
+    ),
+    'LoadArticlesList_AuthorsTemplate' => array(
+        'hint' => '', // $an_author['name_'.$lang]." (".$an_author['title_'.$lang].")<br>";
+        'ru' => '%1$s (%2$s)<br>',
+        'en' => '%1$s (%2$s)<br>',
+        'uk' => '%1$s (%2$s)<br>',
+    ),
+
+    /* */
     'LoadAuthorsSelectedByLetter_Start' => array(
         'ru' => '<ul>',
         'en' => '<ul>',
@@ -150,11 +159,41 @@ $MESSAGES = array(
         'en' => 'Таких авторов нет',
         'uk' => 'Таких авторов нет',
     ),
+    /* LoadArticlesFullList used by DBLoadArticlesListFull($lang) */
+    'LoadArticlesFullList_Start' => array(
+        'ru' => '<ul>',
+        'en' => '<ul>',
+        'uk' => '<ul>',
+    ),
+    'LoadArticlesFullList_Each' => array(
+        'hint' => '<li><a href="?fetch=articles&with=info&lang=en&id=1">Название статьи . авторы (имя сборника , год сборника г.)</a></li>',
+        'ru' => '<li><a href="?fetch=articles&with=info&lang=en&id=%5$s">%2$s</a> %3$s. (%4$s, %1$s г.)</li>',
+        'en' => '<li><a href="?fetch=articles&with=info&lang=en&id=%5$s">%2$s</a> %3$s. (%4$s, %1$s)</li>',
+        'uk' => '<li><a href="?fetch=articles&with=info&lang=en&id=%5$s">%2$s</a> %3$s. (%4$s, %1$s г.)</li>',
+    ),
+    'LoadArticlesFullList_End' => array(
+        'ru' => '</ul>',
+        'en' => '</ul>',
+        'uk' => '</ul>',
+    ),
+    'LoadArticlesFullList_SearchNoArticles' => array(
+        'ru' => '<br><strong>Статей по заданным критериям поиска не найдено</strong>',
+        'en' => '<br><strong>No articles found within this search criteria!</strong>',
+        'uk' => '<br><strong>Статей за заданими критеріями пошуку не знайдено</strong>',
+    ),
+    'LoadArticlesFullList_AuthorsTemplate' => array(
+        'hint' => 'формат форматирования строки авторов для полного списка',
+        'ru' => '',
+        'en' => ' %1$s, %2$s;',
+        'uk' => '',
+    ),
     '...' => array(
+        'hint' => 'формат форматирования строки авторов для полного списка',
         'ru' => '',
         'en' => '',
         'uk' => '',
     ),
+
 
 );
 

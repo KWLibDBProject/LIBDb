@@ -71,8 +71,20 @@ switch ($fetch) {
             case 'all': {
                 // список ВСЕХ авторов - для поисковых систем
                 // И без кнопки перехода на автора, только ссылкой!
+                // фио, титул, email -> link to author page
                 $content = 'ПОЛНЫЙ список авторов без всяких селектов - для поисковых систем';
                 $path = 'tpl/fetch=authors/with=all/';
+
+                $all_authors_list = DBLoadAuthorsSelectedByLetter('0',$site_language);
+
+                $tpl_content = new kwt($path.'f_auth+w_all.tpl[en].html');
+                $tpl_content->override(array ( 'all_authors_list' => $all_authors_list ));
+                $tpl_content->contentstart();
+                $content = $tpl_content->getcontent();
+
+                $tpl_js = new kwt($path.'f_auth+w_all.tpl[en].js');
+                $tpl_js->contentstart();
+                $jscripts = $tpl_js->getcontent();
 
 
             }
@@ -158,18 +170,17 @@ switch ($fetch) {
                     'article-pdfid' => $ai['pdfid']
                 );
 
+                $global_keywords = $ai['keywords_'.$site_language]; // GLOBAL KEYWORDS
+
                 $tpl_content->override($tpl_content_over);
                 $tpl_content->contentstart();
+
                 $content = $tpl_content->getcontent();
 
                 $tpl_js = new kwt($path.'f_article+w_info.tpl[en].js');
                 // $tpl_js->override( array( "article_id" => $id ) );
                 $tpl_js->contentstart();
                 $jscripts = $tpl_js->getcontent();
-
-
-
-
 
                 break;
             }
@@ -178,6 +189,22 @@ switch ($fetch) {
 //              ПОЛНЫЙ список статей без всяких селектов - для поисковых систем
                 // И без кнопки перехода на статью, только ссылкой!
                 $content = 'ПОЛНЫЙ список статей без всяких селектов - для поисковых систем';
+                $path = "tpl/fetch=articles/with=all/";
+
+                $tpl_content = new kwt($path.'f_articles+w_all.tpl[en].html');
+
+                $all_articles_list = DBLoadArticlesFullList($site_language);;
+
+                $tpl_content->override(array( 'all_articles_list' => $all_articles_list ));
+                $tpl_content->contentstart();
+                $content = $tpl_content->getcontent();
+
+                $tpl_js = new kwt($path.'f_articles+w_all.tpl[en].js');
+                $tpl_js->override(array());
+                $tpl_js->contentstart();
+                $jscripts = $tpl_js->getcontent();
+
+
                 break;
             }
 
@@ -197,6 +224,7 @@ switch ($fetch) {
     }
 }
 
+$override['meta_keywords'] = $global_keywords;
 $override['content'] = $content;
 $override['content_jquery'] = $jscripts;
 
