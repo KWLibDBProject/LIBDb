@@ -110,8 +110,8 @@ require_once('core.kwt.php');
     </script>
 </head>
 <body>
-<button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ В АДМИНКУ</strong></button>
-<button id="add_item"  class="button-large">Добавить тему (топик)</button><br>
+<button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ В АДМИН-РАЗДЕЛ</strong></button>
+<button id="add_item"  class="button-large">Добавить тематический раздел</button><br>
 
 <div id="add_form" title="Добавить тематический раздел">
     <form action="ref_topics/ref.topics.action.insert.php">

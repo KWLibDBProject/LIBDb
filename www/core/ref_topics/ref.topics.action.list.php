@@ -2,12 +2,15 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.messages.php');
+
+$msg = TheMessenger::getIt(); // Messenger singleton class
 
 $link = ConnectDB();
 $ref_name = 'topics';
 
 $query = "SELECT * FROM $ref_name WHERE deleted=0";
-$res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$query);
+$res = mysql_query($query) or die($msg->say("errors/mysql_query_error",$query));
 
 $ref_numrows = @mysql_num_rows($res) ;
 
@@ -19,7 +22,7 @@ if ($ref_numrows > 0) {
 
     }
 } else {
-    $ref_message = 'Пока не ввели ни один топик!';
+    $ref_message = "Пока не добавили ни один тематический раздел.";
 }
 
 CloseDB($link);
@@ -49,7 +52,7 @@ REF_ANYROW;
         }
     } else {
         echo <<<REF_NUMROWS_ZERO
-<tr><td colspan="4">$ref_message</td></tr>
+<tr><td colspan="5">$ref_message</td></tr>
 REF_NUMROWS_ZERO;
     }
 ?>
