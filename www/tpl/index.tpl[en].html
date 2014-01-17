@@ -5,12 +5,21 @@
     <meta charset='UTF-8'>
     <script src="core/js/jquery-1.10.2.min.js"></script>
     <script src="core/js/core.js"></script>
+    <script src="frontend.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
             <!--{content_jquery}-->
+
+            setSelectorsByHash(".search_selector");
+            $(".hash_selectors").on('change', '.search_selector', function(){
+                setHashBySelectors();
+            });
         });
     </script>
+    <link rel="stylesheet" type="text/css" href="frontend.styles.css">
+    <link rel="stylesheet" type="text/css" href="frontend.forms.css">
+    <link rel="stylesheet" type="text/css" href="frontend.layout.css">
 </head>
 
 <body>

@@ -21,10 +21,10 @@ function BuildSelector(target, data, currentid) // currentid is 1 for NEW
         $.each(data['data'], function(id, value){
             $("select[name="+target+"]").append('<option value="'+id+'">'+value+'</option>');
         });
-        currentid = (typeof currentid != 'undefined') ? currentid : 1;
+        var currentid = (typeof currentid != 'undefined') ? currentid : 1;
         $("select[name="+target+"] option[value="+ currentid +"]").prop("selected",true);
     } else {
-        $("select[name="+target+"]").prop('disabled',true); //.attr('disabled','disabled')
+        $("select[name="+target+"]").prop('disabled',true);
     }
 }
 

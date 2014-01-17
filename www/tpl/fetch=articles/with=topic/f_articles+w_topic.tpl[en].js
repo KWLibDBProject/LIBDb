@@ -2,7 +2,7 @@
 
 var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionslist&lang=en');
 
-BuildSelector('select_with_book', booksList, 0);
+BuildSelector('book', booksList, 0);
 
 url = "ajax.php?actor=load_articles_selected_by_query&lang=en&topic="/*plus_topic_id*/;
 
@@ -11,12 +11,12 @@ $("#articles_list").empty().load(url);
 
 $("#button-show-withselection").on('click',function(){
     query = "&";
-    query+="book="+$('select[name="select_with_book"]').val();
+    query+="book="+$('select[name="book"]').val();
     $("#articles_list").empty().load(url+query);
 });
 
 $("#button-reset-selection").on('click',function(){
-    $('select[name="select_with_book"]').val(0);
+    $('select[name="book"]').val(0);
 });
 
 
