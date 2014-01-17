@@ -143,7 +143,7 @@ function DBLoadArticlesListWithAuthor($getarray, $lang, $loadmode='search') // $
 SELECT DISTINCT articles.id, articles.title_{$lang} AS atitle,
 topics.title_{$lang} AS ttitle,
 books.title AS btitle,
-`add_date`
+books.year AS add_date
 from articles, cross_aa, topics, books
 WHERE
 cross_aa.article=articles.id
@@ -227,12 +227,12 @@ function DBLoadArticlesListWithLetter($getarray, $lang, $loadmode='search') // $
     global $MESSAGES;
 
     $return = '';
-    // ВАЖНО: - не articles.add_data, а books.year!!!!
+    // ВАЖНО: - не articles.add_date, а books.year!!!!
     // сложный запрос.
     $query = "SELECT DISTINCT
 articles.title_{$lang} AS article_title,
 articles.id AS article_id,
-articles.add_date,
+books.year AS add_date,
 topics.title_{$lang} AS topic_title ,
 topics.id AS topic_id,
 books.title AS book_title,
