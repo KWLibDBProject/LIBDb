@@ -3,19 +3,18 @@ require_once('core/core.php');
 require_once('core/core.db.php');
 require_once('core/core.kwt.php');
 require_once('frontend.php');
-require_once('translations.php');
 
-$site_language = 'en';
+$site_language = FE_GetSiteLanguage(); // на самом деле получаем из куки
+$tpl_path = 'tpl';
 
 // init defaults fields and variables
 $content = '';
 $jscripts = '';
 $override = array( // template override array
-    'title' => '',          // title tag -- он различный для каждого языка
 );
 
 // load default template, based on language
-$tpl_index = new kwt('tpl/index.tpl[en].html'); // файлы шаблонов различны для разных языков + файл переводов
+$tpl_index = new kwt($tpl_path."/index.{$site_language}.html"); // файлы шаблонов различны для разных языков + файл переводов
 $tpl_index->config('<!--{','}-->');
 $tpl_index->contentstart();
 
@@ -23,41 +22,31 @@ $override = array();
 
 $link = ConnectDB();
 
-$override['topics'] = DBLoadTopics($site_language); // в переменной тематические разделы, только LI-элементы вне UL
-$override['books'] = DBLoadBooks($site_language); // в переменной книжки в двухэтажном списке,
+$override['rubrics'] = FE_PrintTopics(DB_LoadTopics($site_language),$site_language);
+$override['books'] = FE_PrintBooks(DB_LoadBooks($site_language),$site_language);
+
+// Main switch
 
 $fetch = isset($_GET['fetch']) ? $_GET['fetch'] : '';
 $with = isset($_GET['with']) ? $_GET['with'] : '';
-$message = '';
+
 switch ($fetch) {
-    case 'authors': {
-        // работа с авторами
+    case 'authors' : {
+        /* секция обработки авторов - информация или список */
         switch ($with) {
-            case 'list': {
-//+         fetch=authors   &   with=list           Список авторов с селектом по 1 букве
-                $path = "tpl/fetch=authors/with=list/";
-
-                $tpl_content = new kwt($path.'f_auth+w_list.tpl[en].html');
-                $tpl_content->contentstart();
-                $content = $tpl_content->getcontent();
-
-                $tpl_js = new kwt($path.'f_auth+w_list.tpl[en].js');
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
-
-                break;
-            }
-            case 'info': {
-//+        ?fetch=authors  &   with=info   & id=?  Расширенная информация по автору + список его статей
-                $path = 'tpl/fetch=authors/with=info/';
-
+            case 'info' : {
+                /*расширенная информация по автору + список его статей + фото */
+                $filename = $tpl_path.'/fetch=authors/with=info/f_authors+w_info.'.$site_language;
                 $id = $_GET['id'];
-                $tpl_content = new kwt($path.'f_auth+w_info.tpl[en].html');
 
-                $air = DBLoadAuthorInformation($id, $site_language);
+                $inner_html = new kwt($filename.".html");
 
-                $tpl_content_over = array(
-                    'author_publications' => DBLoadAuthorPublications($id, $site_language), // = articles.author.id
+                $air = DB_LoadAuthorInformation_ById($id, $site_language);
+
+                $a_articles = FE_PrintArticles_ByAuthor(DB_LoadArticles_ByAuthor($id, $site_language), $site_language);
+
+                $inner_html_override = array(
+                    'author_publications' => $a_articles,
                     'author_name' => $air['author_name'],
                     'author_title' => $air['author_title'],
                     'author_email' => $air['author_email'],
@@ -65,201 +54,128 @@ switch ($fetch) {
                     'author_bio' => $air['author_bio']
                 );
 
-                $tpl_content->override($tpl_content_over);
-                $tpl_content->contentstart();
-                $content = $tpl_content->getcontent();
+                $inner_html->override($inner_html_override);
+                $inner_html->contentstart();
 
-                $tpl_js = new kwt($path.'f_auth+w_info.tpl[en].js');
-                $tpl_js->override( array( "author_is_es" => ($air['author_is_es'])==1 ? 'block' : 'none' ) );
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
+                $content = $inner_html->getcontent();
+
+                $inner_js = new kwt($filename.".js");
+
+                $inner_js->override( array(
+                    "author_is_es" => ($air['author_is_es'])==1 ? 'block' : 'none' )
+                );
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
 
                 break;
-            }
-            case 'all': {
+            } // end case info
+            case 'all' : {
                 // список ВСЕХ авторов - для поисковых систем
-                // И без кнопки перехода на автора, только ссылкой!
                 // фио, титул, email -> link to author page
-                $content = 'ПОЛНЫЙ список авторов без всяких селектов - для поисковых систем';
-                $path = 'tpl/fetch=authors/with=all/';
+                $filename = $tpl_path.'/fetch=authors/with=all/f_authors+w_all.'.$site_language;
 
-                $all_authors_list = DBLoadAuthorsSelectedByLetter('0',$site_language);
+                $all_authors_list = DB_LoadAuthors_ByLetter('0',$site_language);
 
-                $tpl_content = new kwt($path.'f_auth+w_all.tpl[en].html');
-                $tpl_content->override(array ( 'all_authors_list' => $all_authors_list ));
-                $tpl_content->contentstart();
-                $content = $tpl_content->getcontent();
+                $inner_html = new kwt($filename.".html");
+                $inner_html->override( array (
+                    'all_authors_list' => $all_authors_list
+                ));
+                $inner_html->contentstart();
+                $content = $inner_html->getcontent();
 
-                $tpl_js = new kwt($path.'f_auth+w_all.tpl[en].js');
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
+                $inner_js = new kwt($filename.".js");
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
                 break;
-            }
+            } // end case all
+            //@todo: редколлегию переработать
             case 'estuff': {
-                $content = 'Редколлегия';
-                // эквивалентно 'fetch = authors & with = all' + 1 критерий отбора "is_es = 1"
-                $content = 'ПОЛНЫЙ список авторов без всяких селектов - для поисковых систем';
-                $path = 'tpl/fetch=authors/with=estuff/';
+                // список ВСЕХ авторов в редколлегии - для поисковых систем
+                // фио, титул, email -> link to author page
+                $filename = $tpl_path.'/fetch=authors/with=estuff/f_authors+w_estuff.'.$site_language;
 
-                $es_authors_list = DBLoadAuthorsSelectedByLetter('0',$site_language, 'yes');
+                $all_authors_list = DB_LoadAuthors_ByLetter('0',$site_language, 'yes');
 
-                $tpl_content = new kwt($path.'f_auth+w_estuff.tpl[en].html');
-                $tpl_content->override(array ( 'es_authors_list' => $es_authors_list ));
-                $tpl_content->contentstart();
-                $content = $tpl_content->getcontent();
+                $inner_html = new kwt($filename.".html");
+                $inner_html->override( array (
+                    'es_authors_list' => $all_authors_list
+                ));
+                $inner_html->contentstart();
+                $content = $inner_html->getcontent();
 
-                $tpl_js = new kwt($path.'f_auth+w_estuff.tpl[en].js');
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
+                $inner_js = new kwt($filename.".js");
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
+
                 break;
-            } // case estuff
-        } // switch with authors
+            } // end case estuff
+        }; // end $with authors switch
         break;
     }
     case 'articles': {
+        /* секция вывода статей по критерию поиска, информации по статье */
         switch ($with) {
             case 'extended': {
-//                  ?fetch=articles &   with=extended
-//                  Список статей с расширенным отбором
-                $content = 'Список статей с расширенным отбором';
-                $path = "tpl/fetch=articles/with=extended/";
+                $filename = $tpl_path.'/fetch=articles/with=extended/f_articles+w_extended.'.$site_language;
 
-                $tpl_content = new kwt($path.'f_articles+w_extended.tpl[en].html');
-                $tpl_content->contentstart();
+                $inner_html = new kwt($filename.'.html');
+                $inner_html->override( array ());
+                $inner_html->contentstart();
+                $content = $inner_html->getcontent();
 
-                $content = $tpl_content->getcontent();
-
-                $tpl_js = new kwt($path.'f_articles+w_extended.tpl[en].js');
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
+                $inner_js = new kwt($filename.'.js');
+                $inner_js->override( array() );
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
 
                 break;
-            }
-            case 'topic' : {
-//          ?fetch=articles &   with=with=topic  &   id=? Список статей в топике + селект по сборнику
-                $content = 'Список статей с селектом по сборнику';
-                $path = 'tpl/fetch=articles/with=topic/';
-
-                $tpl_content = new kwt($path.'f_articles+w_topic.tpl[en].html');
-                $tpl_content->contentstart();
-                $content = $tpl_content->getcontent();
-
-                $tpl_js = new kwt($path.'f_articles+w_topic.tpl[en].js');
-                $tpl_js->config('/*','*/');
-                $tpl_js->override( array( "plus_topic_id" => "+".$_GET['id'] ) );
-
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
-
+            } // end case extended
+            case 'topic': {
                 break;
-            }
-            case 'book': {
-//              ?fetch=articles &   with=book   &   id=?
-//              Список статей в сборнике
-                $content = 'Список статей в сборнике';
-                $path = 'tpl/fetch=articles/with=book/';
-
-                $tpl_content = new kwt($path.'f_articles+w_book.tpl[en].html');
-                $tpl_content->contentstart();
-                $content = $tpl_content->getcontent();
-
-                $tpl_js = new kwt($path.'f_articles+w_book.tpl[en].js');
-                $tpl_js->config('/*','*/');
-                $tpl_js->override( array( "plus_book_id" => "+".$_GET['id'] ) );
-
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
-
-
+            } // end case topic
+            case 'book' : {
                 break;
-            }
-            case 'info': { //@todo: NOW: Полная информация по статье id=
-//          ?fetch=articles &   with=info   &   id=? Полная информация по статье
-                $id = $_GET['id'];
-
-                $path = 'tpl/fetch=articles/with=info/';
-
-                $id = $_GET['id'];
-                $tpl_content = new kwt($path.'f_article+w_info.tpl[en].html');
-
-                $ai = DBLoadArticleInfo($id, $site_language); // id is article ID
-                $al = DBLoadArticleInfoAuthorsList($id, $site_language); // id is article ID список авторов, писавших статью
-
-                $tpl_content_over = array(
-                    'article-title' => $ai['title_'.$site_language],
-                    'article-abstract' => $ai['abstract_'.$site_language],
-                    'article-authors-list' => $al, // список авторов, писавших статью
-                    'article-keywords' => $ai['keywords_'.$site_language],
-                    'article-book-title' => $ai['btitle'],
-                    'article-book-year' => $ai['byear'],
-                    'article-pdfid' => $ai['pdfid']
-                );
-
-                $override['meta_keywords'] = $ai['keywords_'.$site_language]; // GLOBAL KEYWORDS
-
-                $tpl_content->override($tpl_content_over);
-                $tpl_content->contentstart();
-
-                $content = $tpl_content->getcontent();
-
-                $tpl_js = new kwt($path.'f_article+w_info.tpl[en].js');
-                // $tpl_js->override( array( "article_id" => $id ) );
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
-
+            } // end case book
+            case 'info' : {
                 break;
-            }
-            case 'all': {
-//              ?fetch=articles &   with=all
-//              ПОЛНЫЙ список статей без всяких селектов - для поисковых систем
-                $content = 'ПОЛНЫЙ список статей без всяких селектов - для поисковых систем';
-                $path = "tpl/fetch=articles/with=all/";
-
-                $tpl_content = new kwt($path.'f_articles+w_all.tpl[en].html');
-
-                $all_articles_list = DBLoadArticlesFullList($site_language);
-
-                $tpl_content->override(array( 'all_articles_list' => $all_articles_list ));
-                $tpl_content->contentstart();
-                $content = $tpl_content->getcontent();
-
-                $tpl_js = new kwt($path.'f_articles+w_all.tpl[en].js');
-                $tpl_js->override(array());
-                $tpl_js->contentstart();
-                $jscripts = $tpl_js->getcontent();
+            } // end case info
+            case 'all' : {
                 break;
-            }
-
-        }; // switch with articles
+            }// end case all
+        } // end $with articles switch
+        break;
+    }
+    case 'page' : {
+        /* секция вывода статических или условно-статических страниц */
         break;
     }
     case 'news': {
-        $content = "Новости";
-
-        $path = "tpl/fetch=news/";
-
-        $tpl_content = new kwt($path.'f_news.tpl[en].html');
-        $tpl_content->contentstart();
-
-        $tpl_content->override(array ( 'news_list' => $content ));
-
-        $content = $tpl_content->getcontent();
-
-        $tpl_js = new kwt($path.'f_news.tpl[en].js');
-        $tpl_js->contentstart();
-        $jscripts = $tpl_js->getcontent();
+        /* секция вывода новостей */
         break;
     }
+    case 'language': {
+        /* секция обработки изменения языка сайта*/
+        break;
+    } //
     default: {
-        // эктор "fetch" не установлен
-    }
-}
+        // default page
+        $content = 'Default page';
 
-// запишем в массив замен значения, сформированные в switch-section
-$override['content'] = $content;
+
+    }
+}; // end $fetch all switch
+
+
+
+
+$fetch = isset($_GET['fetch']) ? $_GET['fetch'] : '';
+$with = isset($_GET['with']) ? $_GET['with'] : '';
+
 $override['content_jquery'] = $jscripts;
+$override['content'] = $content;
 
 $tpl_index->override($override);
 $tpl_index->contentstart(); // если есть вложенные темплейты, этот вызов обязателен!!!!!!
 $tpl_index->out();
+
 ?>

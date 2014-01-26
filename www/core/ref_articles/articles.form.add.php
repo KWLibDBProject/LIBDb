@@ -45,6 +45,9 @@ require_once('../core.kwt.php');
         tinymce.init({selector:'textarea#abstract_uk',forced_root_block : "",
             force_br_newlines : true,
             force_p_newlines : false});
+        tinymce.init({selector:'textarea#refs',forced_root_block : "",
+            force_br_newlines : true,
+            force_p_newlines : false});
 
         $(document).ready(function () {
             // onload

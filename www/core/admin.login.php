@@ -31,7 +31,7 @@ if (isLogged()) {
             }
         } else {
             // отрисовка формы
-            $tpl = new kwt('admin.loginform.tpl');
+            $tpl = new kwt('admin.loginform.tpl_');
             $tpl->out();
         }
     }

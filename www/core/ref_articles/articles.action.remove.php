@@ -41,7 +41,7 @@ if ($result['error'] == 0) {
         'message' => $result['message']
     );
 }
-$tpl = new kwt('../ref.all.timed.callback.tpl');
+$tpl = new kwt('../ref.all.timed.callback.tpl_');
 $tpl->override($override);
 $tpl->out();
 ?>

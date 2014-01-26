@@ -37,7 +37,7 @@ function printr($str)
 }
 
 /* Три функции возврата данных в option соотв. селекта */
-/* объявление переехало в frontend.php */
+/* объявление переехало в frontend_.php */
 
 function returnBooksOptionString($row, $lang, $withoutid)
 {

@@ -87,6 +87,9 @@ CloseDB($link);
         tinymce.init({selector:'textarea#abstract_uk',forced_root_block : "",
             force_br_newlines : true,
             force_p_newlines : false});
+        tinymce.init({selector:'textarea#refs',forced_root_block : "",
+            force_br_newlines : true,
+            force_p_newlines : false});
 
         $(document).ready(function () {
             // onload, load authors
@@ -214,10 +217,12 @@ CloseDB($link);
 
         <span id="currfile_old">
         <button type="button" id="currfile_show" data-fileid="<?php echo $the_file['id'];?>">Посмотреть</button>
+        <br>
         <label for="currfile_text">Текущий файл:</label>
         <input type="text" size="60" id="currfile_text" value="<?php echo $the_file['username']?>">
         <button type="button" id="currfile_del" data-fileid="<?php echo $the_file['id'];?>">Удалить</button>
         </span>
+        <br>
         <label for="newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
         <input type="file" name="pdffile" id="newfile_input" disabled>
         <input type="hidden" name="currfile_changed" id="currfile_changed" value="0">

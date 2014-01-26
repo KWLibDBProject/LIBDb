@@ -1,70 +1,115 @@
 <?php
 require_once('core/core.kwt.php');
-require_once('translations.php');
 
-// функции, к которым обращается фронтэнд (сам сайт)
+/*
+Префикс DB_ имеют функции загрузки данных из базы
+Префикс FE_ имеют функции оформления данных на вывод
+Служебные функции префикса не имеют.
+*/
 
-// вот нам и понадобился вложенный шаблон... причем не просто вложенный, а повторяемый, типа
-// "повторить следующий блок N раз, заменяя какие-то переменные следующими:"
-function DBLoadTopics($lang)
+/* загружает из базы рубрики, отдает ассоциативный массив вида [id -> title] */
+function DB_LoadTopics($lang)
 {
     global $MESSAGES;
     $q = "SELECT `id`, `title_{$lang}` AS title FROM topics WHERE `deleted`=0";
     $r = mysql_query($q);
-    $ret = '';
+    $ret = array();
 
-    $ret .= $MESSAGES['LoadTopics_Start'][$lang];
-
-    while ($topic = mysql_fetch_assoc($r))
+    if (@mysql_num_rows($r) > 0)
     {
-        $ret .= sprintf($MESSAGES['LoadTopics_Each'][$lang], $topic['id'], $topic['title']);
+        while ($topic = mysql_fetch_assoc($r)) {
+            $ret[ $topic['id']  ] = $topic['title'];
+        }
     }
-    $ret .= $MESSAGES['LoadTopics_End'][$lang];
     return $ret;
 }
 
-function DBLoadBooks($lang)
+/* Выводит рубрики согласно правилам в translations_.php
+Принимает ассоциативный массив с данными и язык вывода */
+function FE_PrintTopics($data, $lang)
 {
     global $MESSAGES;
     $ret = '';
-    $yq = "SELECT DISTINCT `year` FROM books WHERE `published`=1 AND `deleted`=0 ORDER BY `year` ";
+    $ret .= <<<FE_PrintTopics_Start
+FE_PrintTopics_Start;
+
+    foreach ($data as $id => $title )
+    {
+        $ret .= <<<FE_PrintTopics_Each
+<li><a href="?fetch=articles&with=topic&id={$id}">{$title}</a></li>
+FE_PrintTopics_Each;
+    }
+
+    $ret .= <<<FE_PrintTopics_End
+FE_PrintTopics_End;
+;
+    return $ret;
+}
+
+/* загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом*/
+function DB_LoadBooks($lang)
+{
+    $ret = '';
+    $yq = "SELECT DISTINCT `year` FROM books WHERE `published`=1 AND `deleted`=0 ORDER BY `year` DESC";
     $yr = mysql_query($yq);
     $all_books = array();
     while ($ya = mysql_fetch_assoc($yr)) {
         $all_books[ $ya['year'] ] = array();
     }
-    foreach ($all_books as $key => $value)
+    foreach ($all_books as $year => $value)
     {
-        $bq = "SELECT id, title FROM books WHERE `year`=$key AND `published`=1 AND `deleted`=0 ORDER BY `title`";
+        // $bq = "SELECT id, title FROM books WHERE `year`=$key AND `published`=1 AND `deleted`=0 ORDER BY `title`";
+        $bq = "SELECT books.id, books.title, COUNT(articles.id) AS bcount FROM articles, books WHERE articles.book = books.id AND books.year = $year AND books.published=1 AND books.deleted=0 ORDER BY books.title";
         $br = mysql_query($bq);
         while ($ba = mysql_fetch_assoc($br)) {
-            $all_books[$key][ $ba['id'] ] = $ba['title'];
+            $all_books[$year][ $ba['id'] ]['title'] = $ba['title'];
+            $all_books[$year][ $ba['id'] ]['count'] = $ba['bcount'];
         }
 
     }
+    return $all_books;
+}
 
-    $ret .= $MESSAGES['LoadBooks_Start'][$lang];
+/* отображает список сборников (книг) согласно инструкциям в translations.php
+Принимает массив с данными и язык вывода */
+function FE_PrintBooks($all_books, $lang='en')
+{
+    $ret = '';
+    $ret .= <<<FE_PrintBooks_Start
+<ul>
+FE_PrintBooks_Start;
 
     foreach ($all_books as $key => $year_books)
     {
-        $ret .= sprintf($MESSAGES['LoadBooks_ItemStart'][$lang], $key);
+        $ret .= <<<FE_PrintBooks_ItemStart
+<li class="books-list-year"><div>{$key}</div><ul>
+FE_PrintBooks_ItemStart;
 
         foreach ($year_books as $id => $book)
         {
-            $ret .= sprintf($MESSAGES['LoadBooks_ItemEach'][$lang], $id, $book);
+            $ret .= <<<FE_PrintBooks_ItemEach
+<li class="books-list-eachbook"><a href="?fetch=articles&with=book&id={$id}"> {$book['title']} <em>({$book['count']})</em></a></li>
+FE_PrintBooks_ItemEach;
         }
-        $ret .= $MESSAGES['LoadBooks_ItemEnd'][$lang];
+        $ret .= <<<FE_PrintBooks_ItemEnd
+</ul></li>
+FE_PrintBooks_ItemEnd;
     }
-    $ret .= $MESSAGES['LoadBooks_End'][$lang];
-
+    $ret .= <<<FE_PrintBooks_End
+</ul>
+FE_PrintBooks_End;
+;
     return $ret;
 }
 
-function DBLoadAuthorInformation($id, $lang) // see template
+/*
+загружает информацию об авторе в ассциативный массив с учетом языка сайта
+*/
+function DB_LoadAuthorInformation_ById($id, $lang)
 {
-    global $MESSAGES;
+    global $MESSAGES_;
     $ret = '';
-    $q = "SELECT *  FROM authors WHERE id=$id";
+    $q = "SELECT * FROM `authors` WHERE id=$id";
     $r = mysql_query($q);
     if (@mysql_num_rows($r)>0) {
         $author = mysql_fetch_assoc($r);
@@ -78,370 +123,108 @@ function DBLoadAuthorInformation($id, $lang) // see template
     return $ret;
 }
 
-function DBLoadArticleInfo($id, $lang) // see template
+/*
+возвращает базовую информацию о статье из БД как асс.массив
+*/
+function DB_LoadArticleInformation_ById($id, $lang)
 {
     $q = "SELECT *, books.title AS btitle, books.year AS byear FROM articles, books  WHERE articles.id=$id AND books.id=articles.book";
+    $ret = array();
     if ($r = mysql_query($q)) {
         if (mysql_num_rows($r)>0) {
             $ret = mysql_fetch_assoc($r);
         }
     }
     return $ret;
-
 }
 
-function DBLoadArticleInfoAuthorsList($id, $lang)
+/* возвращает список авторов, участвовавших в создании статьи - как асс.массив
+с учетом языка! */
+function DB_LoadAuthors_ByArticle($id, $lang)
 {
-    global $MESSAGES;
-    // возвращает набор li-элементов с записями об авторах статьи:
-    // Иванов И.И., др.тех.наук
-    $q = "SELECT authors.id AS aid, name_{$lang}, title_{$lang}, email FROM AUTHORS, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id";
+    $q = "SELECT authors.id AS aid, name_{$lang}, title_{$lang}, email FROM authors, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id";
     $ret = '';
     if ($r = mysql_query($q)) {
         while ($row = @mysql_fetch_assoc($r)) {
-            $ret .= sprintf($MESSAGES['LoadArticleInfoAuthorsList'][$lang],$row['name_'.$lang],$row['title_'.$lang],$row['email'],$row['aid']);
+            $ret[ $row['aid'] ] = $row;
         } // у статьи ОБЯЗАТЕЛЬНО есть авторы
     }
     return $ret;
 }
 
-function DBLoadAuthorPublications($id, $lang) // @todo: темплейт заменен на переводной файл
+/* выводит список авторов по указанной статье на основе загруженных данных */
+function FE_PrintAuthors_ByArticle($authors, $lang)
 {
-    // публикации (название, номер сборника, год выпуска)
-    global $MESSAGES;
+//     global $MESSAGES;
     $ret = '';
-    $q = "SELECT articles.*, books.title AS btitle , SUBSTRING(books.date,7,4) AS bdate  FROM articles, cross_aa, books WHERE books.id=articles.book AND cross_aa.article = articles.id AND cross_aa.author=$id";
-    $r = mysql_query($q);
-    if (@mysql_num_rows($r)>0) {
-
-        $ret .= sprintf($MESSAGES['LoadAuthorPublications_Start'][$lang]);
-
-        while ($i = @mysql_fetch_assoc($r))
-        {
-            $ret .= sprintf($MESSAGES['LoadAuthorPublications_EachRecord'][$lang], $i['id'], $i['title_'.$lang], $i['btitle'], $i['bdate']);
+    foreach ($authors as $aid => $a_info)
+    {
+        // Иванов И.И., др.тех.наук
+        if ($a_info['email'] != '') {
+            $a_info['email'] = '('.$a_info['email'].')';
         }
-
-        $ret .= sprintf($MESSAGES['LoadAuthorPublications_End'][$lang]);
-
-    } else {
-        $ret .= $MESSAGES['LoadAuthorPublications_NoArticles'][$lang];
+        $ret .= <<<FE_PrintAuthorsInArticle
+<li><a href="?fetch=authors&with=info&id={$a_info['aid']}">{$a_info['name_'.$lang]}, {$a_info['title_'.$lang]}</a> {$a_info['email']} </li>
+FE_PrintAuthorsInArticle;
     }
-
     return $ret;
 }
 
-// функция работает аналогично core/articles.action.list.php , но иной формат вывода данных
-// вызывается функция из ajax.php @ load_articles_selected_by_query
-
-function DBLoadArticlesListWithAuthor($getarray, $lang, $loadmode='search') // $loadmode = search or onload
+/* возвращает список статей, которые написал указанный автор, но только в опубликованных сборниках */
+function DB_LoadArticles_ByAuthor($id, $lang)
 {
-    global $MESSAGES;
-
-    $return = '';
-    // название, авторы, сборник, в котором она опубликована
-    $query = "
-SELECT DISTINCT articles.id, articles.title_{$lang} AS atitle,
-topics.title_{$lang} AS ttitle,
-books.title AS btitle,
-books.year AS add_date
-from articles, cross_aa, topics, books
-WHERE
-cross_aa.article=articles.id
-AND
-articles.deleted=0
-AND
-topics.id=articles.topic
-AND
-books.id=articles.book
-AND
-books.published=1"; // только из опубликованных сборников, неудаленные статьи
-    //@todo: проверить эту функцию на эквивалентность (по результату) DBLoadArticlesListWithLetter
-    //где она вызывается ЕЩЕ кроме f=articles & w=extended ?
-
-    $query .= (IsSet($getarray['author'])   && $getarray['author']!=0)  ? " AND cross_aa.author = $getarray[author] "   : "";
-    $query .= (IsSet($getarray['book'])     && $getarray['book']!=0 )   ? " AND articles.book = $getarray[book] "       : "";
-    $query .= (IsSet($getarray['topic'])    && $getarray['topic'] !=0 ) ? " AND articles.topic = $getarray[topic] "     : "";
-
-    $res = mysql_query($query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
-    $articles_count = @mysql_num_rows($res);
-
-    $all_articles = array();
-
-    if ($articles_count>0) {
-        while ($an_article = mysql_fetch_assoc($res))
-        {
-            $id = $an_article['id']; // айди статьи
-            $all_articles[$id] = $an_article; // ВСЯ статья
-
-            $q_auths = "SELECT authors.name_{$lang},authors.title_{$lang},authors.id FROM authors,cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article={$id} ORDER BY cross_aa.id";
-            $r_auths = mysql_query($q_auths) or die($q_auths);
-            $r_auths_count = @mysql_num_rows($r_auths);
-
-            if ($r_auths_count>0)
-            {
-                while ($an_author = mysql_fetch_assoc($r_auths))
-                {
-                    //@todo: MESSAGE+this: формат вывода строки авторов
-                    $all_articles[$id]['authors'] .= $an_author['name_'.$lang]." (".$an_author['title_'.$lang].")<br>";
-                } // while authors
-                $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4); //удаляет последний <br>
-            } // if authors
-        } // while each article record
-    } // if
-    //@todo: MESSAGE+this: формат вывода одной статьи в списке статей
-    /* $return .= <<<LA_START
-<table border="1" width="100%" class="articles_list">
-LA_START; */
-    $return .= $MESSAGES['LoadArticlesList_Start'][$lang];
-
-    // название, авторы, сборник, в котором она опубликована
-    // atitle, $all_articles[$id]['authors'], btitle
-    if ($articles_count>0) {
-        foreach ($all_articles as $a_id => $an_article) {
-            $return .= sprintf($MESSAGES['LoadArticlesList_Each'][$lang],
-                $an_article['add_date'], $an_article['atitle'], $an_article['authors'],
-                $an_article['btitle'], $an_article['id']);
-        };
-    } else {
-        // статей по заданному критерию нет
-        //@MESSAGE: "нет статей по заданному критерию"
-        switch ($loadmode) {
-            case 'search' : {
-                $return .= $MESSAGES['LoadArticlesList_SearchNoArticles'][$lang];
-                break;
-            }
-            case 'onload' : {
-                $return .= $MESSAGES['LoadArticlesList_OnloadNoArticles'][$lang];
-                break;
-            }
-        } // case loadmode
-    } // else
-    $return .= $MESSAGES['LoadArticlesList_End'][$lang];
-    return $return;
-} // function
-
-// аналог core/articles.action.list.php , только вместо ID автора используется первая буква имени автора
-// вызывается функция из ajax.php @ load_articles_selected_by_query_with_letter
-function DBLoadArticlesListWithLetter($getarray, $lang, $loadmode='search') // $loadmode = search or onload
-{
-    global $MESSAGES;
-
-    $return = '';
-    // ВАЖНО: - не articles.add_date, а books.year!!!!
-    // сложный запрос.
-    $query = "SELECT DISTINCT
-articles.title_{$lang} AS article_title,
-articles.id AS article_id,
-books.year AS add_date,
-topics.title_{$lang} AS topic_title ,
-topics.id AS topic_id,
-books.title AS book_title,
-books.id AS books_id,
-authors.name_{$lang}
-FROM
-articles, cross_aa, books, topics, authors
-WHERE
-articles.book = books.id
-AND cross_aa.article = articles.id
-AND cross_aa.author = authors.id
-AND topics.id = articles.topic
-AND articles.deleted=0 AND topics.deleted=0 AND books.published=1 ";
-
-    $query .= (IsSet($getarray['book'])) && ($getarray['book']!=0 )     ? " AND books.id = $getarray[book]"     : "";
-    $query .= (IsSet($getarray['topic'])) && ($getarray['topic']!=0 )   ? " AND topics.id = $getarray[topic]"     : "";
-    $query .= (IsSet($getarray['letter'])) && ($getarray['letter']!='0')  ? " AND authors.name_{$lang} LIKE '{$getarray['letter']}%' " : "";
-
-    $query .= " GROUP BY articles.title_en
-    ORDER BY articles.id ";
-
-    $res = mysql_query($query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
-    $articles_count = @mysql_num_rows($res);
-
-    $all_articles = array();
-
-    if ($articles_count>0) {
-        while ($an_article = mysql_fetch_assoc($res))
-        {
-            $id = $an_article['article_id']; // айди статьи
-            $all_articles[$id] = $an_article; // ВСЯ статья
-
-            $q_auths = "SELECT authors.name_{$lang},authors.title_{$lang},authors.id FROM authors,cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article={$id} ORDER BY cross_aa.id";
-            $r_auths = mysql_query($q_auths) or die($q_auths);
-            $r_auths_count = @mysql_num_rows($r_auths);
-
-            if ($r_auths_count>0)
-            {
-                while ($an_author = mysql_fetch_assoc($r_auths))
-                {
-                    $all_articles[$id]['authors'] .= sprintf($MESSAGES['LoadArticlesList_AuthorsTemplate'][$lang], $an_author['name_'.$lang], $an_author['title_'.$lang]);
-//                    $all_articles[$id]['authors'] .= $an_author['name_'.$lang]." (".$an_author['title_'.$lang].")<br>";
-                } // while
-                if (strpos($all_articles[$id]['authors'], '<br>')>0)
-                    $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4); //удаляет последний <br> если он есть
-// not used here! $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-1); // удалить последний ";"
-            } // if authors
-        } // while each article record
-    } // if
-    $return .= $MESSAGES['LoadArticlesList_Start'][$lang];
-
-    // название, авторы, сборник, в котором она опубликована
-    // atitle, $all_articles[$id]['authors'], btitle
-    if ($articles_count>0) {
-        foreach ($all_articles as $a_id => $an_article) {
-            $return .= sprintf($MESSAGES['LoadArticlesList_Each'][$lang],
-                $an_article['add_date'], $an_article['article_title'], $an_article['authors'],
-                $an_article['book_title'], $an_article['article_id']); // so, topic_title unused, contains topic title
-        };
-    } else {
-        // статей по заданному критерию нет
-        //@MESSAGE: "нет статей по заданному критерию"
-        switch ($loadmode) {
-            case 'search' : {
-                $return .= $MESSAGES['LoadArticlesList_SearchNoArticles'][$lang];
-                break;
-            }
-            case 'onload' : {
-                $return .= $MESSAGES['LoadArticlesList_OnloadNoArticles'][$lang];
-                break;
-            }
-        } // case loadmode
-    } // else
-    $return .= $MESSAGES['LoadArticlesList_End'][$lang];
-    return $return;
-} // function
-
-// eq DBLoadArticlesListWithLetter, but load ALL articles with different output format
-function DBLoadArticlesFullList($lang) // список ВСЕХ статей для поисковиков
-{
-    global $MESSAGES;
-
-    $return = '';// ВАЖНО: - не articles.add_data, а books.year!!!!
-    // сложный запрос.
-    $query = "SELECT DISTINCT
-articles.title_{$lang} AS article_title,
-articles.id AS article_id,
-books.year as book_year,
-topics.title_{$lang} AS topic_title ,
-topics.id AS topic_id,
-books.title AS book_title,
-books.id AS books_id,
-authors.name_{$lang}
-FROM
-articles, cross_aa, books, topics, authors
-WHERE
-articles.book = books.id
-AND cross_aa.article = articles.id
-AND cross_aa.author = authors.id
-AND topics.id = articles.topic
-AND articles.deleted=0 AND topics.deleted=0 AND books.published=1 ";
-
-    $query .= (IsSet($getarray['book'])) && ($getarray['book']!=0 )     ? " AND books.id = $getarray[book]"     : "";
-    $query .= (IsSet($getarray['topic'])) && ($getarray['topic']!=0 )   ? " AND topics.id = $getarray[topic]"     : "";
-    $query .= (IsSet($getarray['letter'])) && ($getarray['letter']!='0')  ? " AND authors.name_{$lang} LIKE '{$getarray['letter']}%' " : "";
-
-    $query .= " GROUP BY articles.title_en
-    ORDER BY articles.id ";
-
-    $res = mysql_query($query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
-    $articles_count = @mysql_num_rows($res);
-
-    $all_articles = array();
-
-    if ($articles_count>0) {
-        while ($an_article = mysql_fetch_assoc($res))
-        {
-            $id = $an_article['article_id']; // айди статьи
-            $all_articles[$id] = $an_article; // ВСЯ статья
-
-            $q_auths = "SELECT authors.name_{$lang},authors.title_{$lang},authors.id FROM authors,cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article={$id} ORDER BY cross_aa.id";
-            $r_auths = mysql_query($q_auths) or die($q_auths);
-            $r_auths_count = @mysql_num_rows($r_auths);
-
-            if ($r_auths_count>0)
-            {
-                while ($an_author = mysql_fetch_assoc($r_auths))
-                {
-                    // @todo: сделать аналогично в других функциях вывода
-                    $all_articles[$id]['authors'] .= sprintf($MESSAGES['LoadArticlesFullList_AuthorsTemplate'][$lang], $an_author['name_'.$lang], $an_author['title_'.$lang]);
-                } // while
-                if (strpos($all_articles[$id]['authors'], '<br>')>0)
-                    $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4); //удаляет последний <br> если он есть
-                $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-1); // удалить последний ";"
-
-            } // if authors count > 0
-        } // while each article record
-    } // if
-    //@todo: MESSAGE+this: формат вывода одной статьи в списке статей
-    $return .= $MESSAGES['LoadArticlesFullList_Start'][$lang];
-
-    // название, авторы, сборник, в котором она опубликована
-    // atitle, $all_articles[$id]['authors'], btitle
-    if ($articles_count>0) {
-        foreach ($all_articles as $a_id => $an_article) {
-            $return .= sprintf($MESSAGES['LoadArticlesFullList_Each'][$lang],
-                $an_article['book_year'], $an_article['article_title'], $an_article['authors'],
-                $an_article['book_title'], $an_article['article_id']); // so, topic_title unused, contains topic title
-        };
-    } else {
-        // статей по заданному критерию нет
-        //@MESSAGE: "нет статей по заданному критерию"
-        $return .= $MESSAGES['LoadArticlesFullList_NoArticles'][$lang];
-    } // else
-    $return .= $MESSAGES['LoadArticlesFullList_End'][$lang];
-    return $return;
+    $ret = array();
+    $q = "SELECT articles.id AS aid, articles.title_en AS atitle, articles.pdfid, books.title AS btitle, SUBSTRING(books.date,7,4) AS bdate
+FROM articles, cross_aa, books
+WHERE books.id=articles.book AND cross_aa.article = articles.id AND books.published=1 AND cross_aa.author = $id";
+    $r = mysql_query($q);
+    if (@mysql_num_rows($r) > 0) {
+        while ($article = mysql_fetch_assoc($r)) {
+            $ret [ $article['aid'] ] = $article;
+        }
+    }
+    return $ret;
 }
 
-// Загружает список авторов с отбором по первой букве, буква и язык передаются параметрами
-// вызывает нас ajax.php @ load_authors_selected_by_letter (и вообще много кто :) )
-function DBLoadAuthorsSelectedByLetter($letter, $lang, $is_es='no')
+/* печатает список статей, которые написал указанный автор - принимает массив статей*/
+function FE_PrintArticles_ByAuthor($articles, $lang)
 {
-    global $MESSAGES;
-    $return = '';
-    // check for letter, '0' is ANY first letter
-    if ($letter != '0') {
-        $like = " AND authors.name_{$lang} LIKE "."'".strtolower($letter)."%'";
+    $ret = '';
+    if (count($articles) > 0) {
+        $ret .= <<<FE_PrintArticles_ByAuthor_Start
+<table class="articles_by-author-table">
+FE_PrintArticles_ByAuthor_Start;
+        foreach ($articles as $aid => $article)
+        {
+            $ret .= <<<FE_PrintArticles_ByAuthor_Each
+    <tr>
+        <td class="articles_by-author-table-book-title">{$article['btitle']}</td>
+        <td rowspan="2" class="articles_by-author-table-pdficon">
+            <a href="core/getpdf.php?id={$article['pdfid']}"><img src="tpl/pdf32x32.png" width="32" height="32"></a>
+        </td>
+        <td rowspan="2" class="articles_by-author-table-title"><a href="?fetch=articles&with=info&id={$article['aid']}">{$article['atitle']}</a></td>
+    </tr>
+    <tr>
+        <td class="articles_by-author-table-book-year">{$article['bdate']}</td>
+    </tr>
+FE_PrintArticles_ByAuthor_Each;
+        }
+        $ret .= <<<FE_PrintArticles_ByAuthor_End
+</table>
+FE_PrintArticles_ByAuthor_End;
     } else {
-        $like = '';
+        $ret .= '';
     }
-    // check for 'is author in editorial stuff', default is 'no'
-    if ($is_es != 'no') {
-        $where_es = ' AND is_es=1 ';
-    } else {
-        $where_es = '';
-    }
-
-    $q = "SELECT * FROM authors WHERE `deleted`=0 ".$where_es.$like;
-    $r = mysql_query($q) or Die(0);
-    // ФИО, научное звание/ученая степень
-    $return .= $MESSAGES['LoadAuthorsSelectedByLetter_Start'][$lang];
-
-    if ( @mysql_num_rows($r) > 0) {
-        while ($i = mysql_fetch_assoc($r)){
-            //@this: эктор-ссылка на /authors/info/(id) - работает, якорь для замены в модреврайт
-            $id = $i['id'];
-            $name = $i['name_'.$lang];
-            $title = $i['title_'.$lang];
-            $email = $i['email'];
-            $return .= sprintf($MESSAGES['LoadAuthorsSelectedByLetter_Each'][$lang], $id, $name, $title, $email);
-        } // while
-    } else {
-        $return .= $MESSAGES['LoadAuthorsSelectedByLetter_Nothing'][$lang];
-    }
-
-    $return .= $MESSAGES['LoadAuthorsSelectedByLetter_End'][$lang];
-    return $return;
+    return $ret;
 }
 
 /*
-//
-возврат массива "первых букв" для списка авторов
-генерируем массив "на лету" на основе первых букв авторов в зависимости от ЯЗЫКА
-
-вызывает нас ajax.php @  load_letters_optionlist
+возврат массива "первых букв" для списка авторов для указанного языка
+используется для аякс-запроса
 */
-function DBLoadFirstLettersForSelector($lang)
+function DB_LoadFirstLettersForSelector($lang)
 {
-    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0";
+    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0 ORDER BY name_{$lang}";
     if ($qr = mysql_query($ql))    // or Die("Death at request: ".$ql);
     {
         $qn = @mysql_num_rows($qr);
@@ -463,86 +246,81 @@ function DBLoadFirstLettersForSelector($lang)
     return $return;
 }
 
-/* Три функции возврата данных в option соотв. селекта */
-function returnBooksOptionString_noid($row, $lang, $withoutid)
+/* смена и установка языка сайта */
+function FE_GetSiteLanguage()
 {
-    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
-    // по идее можно и с шаблоном, но ну нафиг
-    /*     switch ($lang) {
-            case 'en': {
-                $name = $row['name_en'];
-                $title = $row['title_en'];
-                break;
-            }
-            case 'ru': {
-                $name = $row['name_ru'];
-                $title = $row['title_ru'];
-                break;
-            }
-            case 'uk': {
-                $name = $row['name_uk'];
-                $title = $row['title_uk'];
-                break;
-            }
-        } */
-    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
-
-    $title = ($row['title'] != '') ? $row['title'] : 'Unnamed';
-
-    return $id."\"$title\"";
-}
-
-function returnAuthorsOptionString_noid($row, $lang, $withoutid)
-{
-    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
-    // по идее можно и с шаблоном, но ну нафиг
-    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
-    switch ($lang) {
-        case 'en': {
-            $name = $row['name_en'];
-            $title = $row['title_en'];
-            break;
-        }
-        case 'ru': {
-            $name = $row['name_ru'];
-            $title = $row['title_ru'];
-            break;
-        }
-        case 'uk': {
-            $name = $row['name_uk'];
-            $title = $row['title_uk'];
-            break;
-        }
+    if (isset($_COOKIE['libdb_sitelanguage']) && $_COOKIE['libdb_sitelanguage'] != '') {
+        $lang = $_COOKIE['libdb_sitelanguage'];
+    } else {
+        $lang = 'en';
     }
-    return $id."$name $title";
-
+    return $lang;
 }
-
-function returnTopicsOptionString_noid($row, $lang, $withoutid)
+function FE_SetSiteLanguage($lang)
 {
-    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
-    // по идее можно и с шаблоном, но ну нафиг
-    switch ($lang) {
-        case 'en': {
-            // $name = $row['name_en'];
-            $title = $row['title_en'];
-            break;
-        }
-        case 'ru': {
-            // $name = $row['name_ru'];
-            $title = $row['title_ru'];
-            break;
-        }
-        case 'uk': {
-            // $name = $row['name_uk'];
-            $title = $row['title_uk'];
-            break;
-        }
-    }
-    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
-    $title = ($title != '') ? $title : '<NONAME>';
-
-    return $id.$title;
+    setcookie('libdb_sitelanguage', '', -3600);
+    setcookie('libdb_sitelanguage', $lang, 3600*24*366);
+    return $lang;
 }
+
+/* загрузка списка авторов с отбором по первой букве (в зависимости от языка)
+значение буквы по умолчанию '0', что означает ВСЕ авторы
+функция используется в аякс-ответах и в выгрузке полного списка авторов
+*/
+function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no')
+{
+    global $MESSAGES_;
+    $return = '';
+    // check for letter, '0' is ANY first letter
+    if ($letter != '0') {
+        $like = " AND authors.name_{$lang} LIKE "."'".strtolower($letter)."%'";
+    } else {
+        $like = '';
+    }
+    // check for 'is author in editorial stuff', default is 'no'
+    if ($is_es != 'no') {
+        $where_es = ' AND is_es=1 ';
+    } else {
+        $where_es = '';
+    }
+
+    $q = "SELECT * FROM authors WHERE `deleted`=0 ".$where_es.$like;
+    $r = mysql_query($q) or Die(0);
+    // ФИО, научное звание/ученая степень
+
+    $return .= <<<LoadAuthorsSelectedByLetter_Start
+<ul class="authors-list">
+LoadAuthorsSelectedByLetter_Start;
+
+    if ( @mysql_num_rows($r) > 0) {
+        while ($i = mysql_fetch_assoc($r)){
+            //@this: эктор-ссылка на /authors/info/(id) - работает, якорь для замены в модреврайт
+            $id = $i['id'];
+            $name = $i['name_'.$lang];
+            $title = $i['title_'.$lang];
+            $email = $i['email'];
+            $return .= <<<LoadAuthorsSelectedByLetter_Each
+<li class="authors-list-item">
+<label>
+<a href="?fetch=authors&with=info&id={$id}">{$name} , {$title}, {$email}</a>
+</label>
+</li>
+LoadAuthorsSelectedByLetter_Each;
+        } // while
+    } else {
+        $return .= <<<LoadAuthorsSelectedByLetter_Nothing
+Таких авторов нет!
+LoadAuthorsSelectedByLetter_Nothing;
+;
+    }
+
+    $return .= <<<LoadAuthorsSelectedByLetter_End
+</ul>
+LoadAuthorsSelectedByLetter_End;
+;
+    return $return;
+
+}
+
 
 ?>

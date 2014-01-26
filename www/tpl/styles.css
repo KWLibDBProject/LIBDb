@@ -1,0 +1,99 @@
+/* Общий сброс стилей для списков */
+ul, ol {
+    list-style-type:none;
+}
+
+/* Рубрики (темы) - стили для списка и элементов */
+.rubrics-list ul {
+    padding: 5px 10px 0 20px;
+    margin: 0;
+}
+.rubrics-list ul a{
+    color:#076f2f;
+    font-size:16px;
+    line-height:24px;
+    font-weight:bold;
+    display:block;
+    border-top:1px solid #ceceb4;
+    padding:10px 0 7px 0px;
+    text-decoration:none;
+    text-transform:uppercase;
+}
+.rubrics-list ul a:hover{
+    background:#e5e5dc;
+}
+.rubrics-list ul li:first-child a{
+    border-top:0;
+}
+
+/* Заголовок в списке рубрик */
+.rubrics-list h3{
+    font-size:16px;
+    color:navy;
+    padding: 5px 20px 0px 20px;
+    margin: 0;
+}
+
+/* books - сборники*/
+/* общий класс списка сборников */
+.books-list {
+}
+/* li-элемент, в который вкладываются сборники по годам */
+.books-list-year {
+}
+/* div с годом */
+.books-list-year > div {
+}
+/* li-элемент с каждым сборником-книгой */
+.books-list-eachbook {
+}
+
+/* классы описания автора */
+.photo_div {
+    border:1px solid black; width:150px; height:200px;
+    float: left; margin-right: 1em;
+}
+#info {
+    border: 0px solid red; float: left;
+    font-family: Georgia;
+}
+#info > div {
+    padding-bottom: 15px;
+}
+.author_name {
+    font-size: 250%; font-weight: bold;
+}
+.author_title {
+    font-size: 125%; font-weight: bold;
+}
+.author_email {
+    font-weight: bold;
+}
+.author_workplace {
+    font-style: italic;
+}
+.author_bio {}
+
+/* классы списка статей у автора */
+.articles_by-author-table {
+    width: 100%;
+    /* border: 1px solid #ffdab9; */
+}
+.articles_by-author-table td {
+    vertical-align: middle;
+}
+.articles_by-author-table-book-title {}
+.articles_by-author-table-pdficon {
+    width: 32px;
+}
+.articles_by-author-table-title {}
+.articles_by-author-table-book-year {}
+
+/* классы (полного) списка авторов */
+.authors-list {}
+
+/* классы полного списка авторов из редколлегии */
+.authors-list-as-estuff {}
+
+
+

@@ -1,0 +1,61 @@
+BODY { margin: 0; background: #f0f8ff; }
+#body {
+    min-width: 540px;
+    max-width: 1330px;
+    width: 95%;
+    margin: auto;
+}
+.layout { width: 100%; table-layout: fixed; }
+.layout TD {
+    padding: 7px;
+    vertical-align: top;
+    border: 1px solid #ffdab9;
+}
+
+.t-header {
+    height: 0px;
+}
+.t-logo {
+    width: 210px; /* left column width */
+}
+.t-logo-title {
+    width: 100%;
+    /* height:100px; */ /* top bar height */
+}
+.t-logo-langs {
+    /* right column width*/
+    width: 180px;
+}
+.t-logo-menu {
+}
+#menubar {
+    position: relative;
+    bottom: 0;
+}
+.leftblock {
+    vertical-align: top;
+}
+.centerblock {
+    vertical-align: top;
+}
+.rightblock {
+    vertical-align: top;
+}
+
+/* панель языков*/
+#langs-bar {
+    position: relative;
+    top: 0;right:0;
+    float: right;
+    /* width: 10px; */
+    text-align: right;
+    background-color: rgba(95, 182, 255, 0.36);
+}
+#langs-bar img {
+    border: 2px solid transparent;
+    margin: 5px;
+    margin-bottom: 0;
+}
+#langs-bar img:hover {
+    border: 2px solid red;
+}

@@ -119,7 +119,7 @@ $root_user = array(
 
 
 
-$tpl = new kwt('install.tpl');
+$tpl = new kwt('install.tpl_');
 $tpl -> contentstart();
 
 foreach ($all_tables as $table => $table_script)

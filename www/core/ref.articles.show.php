@@ -16,6 +16,9 @@ require_once('core.kwt.php');
         button {
             height: 30px;
         }
+        .label-span {
+            min-width: 10em;
+        }
     </style>
     <script type="text/javascript">
         var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
@@ -70,9 +73,15 @@ require_once('core.kwt.php');
 <hr>
 <fieldset>
     <legend>Критерии отбора</legend>
-    Автор: <select name="with_author"><option value="0">ЛЮБОЙ</option></option></select>
-    Тематический сборник: <select name="with_topic"><option value="0">ЛЮБОЙ</option></select>
-    Сборник: <select name="with_book"><option value="0">ЛЮБОЙ</option></select>
+    <label>
+        <span class="label-span">Автор: </span><select name="with_author"><option value="0">ЛЮБОЙ</option></option></select>
+    </label><br>
+    <label>
+        <span class="label-span">Категория (рубрика): </span><select name="with_topic"><option value="0">ЛЮБОЙ</option></select>
+    </label><br>
+    <label>
+        <span class="label-span">Сборник (книга): </span><select name="with_book"><option value="0">ЛЮБОЙ</option></select>
+    </label><br>
     <button id="button-show-withselection">Показать выбранное</button>
     <button id="button-reset-selection">Сбросить критерии</button>
     <button id="button-show-all">Показать ВСЕ статьи</button>
