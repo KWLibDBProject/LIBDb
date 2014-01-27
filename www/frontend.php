@@ -49,6 +49,9 @@ FE_PrintTopics_End;
 /* загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом*/
 function DB_LoadBooks($lang)
 {
+//@todo: ВАЖНО: тут кроется неучтенка: если в одному году несколько сборников - колво статей в них считается неправильно
+    // и вообще запрос составлен неверно (так, как будто в 1 году строго 1 сборник) .
+
     $ret = '';
     $yq = "SELECT DISTINCT `year` FROM books WHERE `published`=1 AND `deleted`=0 ORDER BY `year` DESC";
     $yr = mysql_query($yq);
@@ -59,11 +62,17 @@ function DB_LoadBooks($lang)
     foreach ($all_books as $year => $value)
     {
         // $bq = "SELECT id, title FROM books WHERE `year`=$key AND `published`=1 AND `deleted`=0 ORDER BY `title`";
-        $bq = "SELECT books.id, books.title, COUNT(articles.id) AS bcount FROM articles, books WHERE articles.book = books.id AND books.year = $year AND books.published=1 AND books.deleted=0 ORDER BY books.title";
+        $bq = "SELECT books.id, books.title, COUNT(articles.id) AS acount
+        FROM articles, books
+        WHERE articles.book = books.id AND
+        books.year = $year AND
+        books.published=1 AND
+        books.deleted=0 ORDER BY books.title";
+
         $br = mysql_query($bq);
         while ($ba = mysql_fetch_assoc($br)) {
             $all_books[$year][ $ba['id'] ]['title'] = $ba['title'];
-            $all_books[$year][ $ba['id'] ]['count'] = $ba['bcount'];
+            $all_books[$year][ $ba['id'] ]['count'] = $ba['acount'];
         }
 
     }
@@ -76,7 +85,6 @@ function FE_PrintBooks($all_books, $lang='en')
 {
     $ret = '';
     $ret .= <<<FE_PrintBooks_Start
-<ul>
 FE_PrintBooks_Start;
 
     foreach ($all_books as $key => $year_books)
@@ -96,7 +104,6 @@ FE_PrintBooks_ItemEach;
 FE_PrintBooks_ItemEnd;
     }
     $ret .= <<<FE_PrintBooks_End
-</ul>
 FE_PrintBooks_End;
 ;
     return $ret;
@@ -152,7 +159,7 @@ function DB_LoadAuthors_ByArticle($id, $lang)
     return $ret;
 }
 
-/* выводит список авторов по указанной статье на основе загруженных данных */
+/* выводит список авторов по указанной статье на основе загруженных данных DB_LoadAuthors_ByArticle() */
 function FE_PrintAuthors_ByArticle($authors, $lang)
 {
 //     global $MESSAGES;
@@ -186,7 +193,7 @@ WHERE books.id=articles.book AND cross_aa.article = articles.id AND books.publis
     return $ret;
 }
 
-/* печатает список статей, которые написал указанный автор - принимает массив статей*/
+/* печатает список статей, которые написал указанный автор - принимает массив статей DB_LoadArticles_ByAuthor() */
 function FE_PrintArticles_ByAuthor($articles, $lang)
 {
     $ret = '';
@@ -218,48 +225,25 @@ FE_PrintArticles_ByAuthor_End;
     return $ret;
 }
 
-/*
-возврат массива "первых букв" для списка авторов для указанного языка
-используется для аякс-запроса
-*/
-function DB_LoadFirstLettersForSelector($lang)
-{
-    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0 ORDER BY name_{$lang}";
-    if ($qr = mysql_query($ql))    // or Die("Death at request: ".$ql);
-    {
-        $qn = @mysql_num_rows($qr);
-
-        if ($qn > 0) {
-            $return['error'] = 0;
-            while ($letter = mysql_fetch_assoc($qr)) {
-                $return['data'][ "{$letter['letter']}" ] = "{$letter['letter']}";
-            }
-
-        } else {
-            $return['error'] = 1;
-            $return['data'] = 'No any letters found!';
-        }
-    } else {
-        $return['error'] = 2;
-        $return['data'] = $ql;
-    }
-    return $return;
-}
-
-/* смена и установка языка сайта */
+/* смена и установка языка сайта -- НЕ ПАШЕТ */
 function FE_GetSiteLanguage()
 {
+    $lang = 'en';
     if (isset($_COOKIE['libdb_sitelanguage']) && $_COOKIE['libdb_sitelanguage'] != '') {
-        $lang = $_COOKIE['libdb_sitelanguage'];
-    } else {
-        $lang = 'en';
+        switch ($_COOKIE['libdb_sitelanguage']) {
+            case 'en': { $lang = 'en'; break; }
+            case 'ru': { $lang = 'ru'; break; }
+            case 'uk': { $lang = 'uk'; break; }
+            default: {$lang = 'en'; break;}
+        }
     }
+    // SetCookie('libdb_sitelanguage', $lang, 3600*24*366);
     return $lang;
 }
 function FE_SetSiteLanguage($lang)
 {
-    setcookie('libdb_sitelanguage', '', -3600);
-    setcookie('libdb_sitelanguage', $lang, 3600*24*366);
+    // setcookie('libdb_sitelanguage', '', -3600);
+    // setcookie('libdb_sitelanguage', $lang, 3600*24*366);
     return $lang;
 }
 
@@ -320,6 +304,149 @@ LoadAuthorsSelectedByLetter_End;
 ;
     return $return;
 
+}
+
+
+/* функции генерации селектов */
+/*
+возврат массива "первых букв" для списка авторов для указанного языка
+используется для аякс-запроса
+*/
+function DB_LoadFirstLettersForSelector($lang)
+{
+    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0 ORDER BY name_{$lang}";
+    if ($qr = mysql_query($ql))    // or Die("Death at request: ".$ql);
+    {
+        $qn = @mysql_num_rows($qr);
+
+        if ($qn > 0) {
+            $return['error'] = 0;
+            while ($letter = mysql_fetch_assoc($qr)) {
+                $return['data'][ "{$letter['letter']}" ] = "{$letter['letter']}";
+            }
+
+        } else {
+            $return['error'] = 1;
+            $return['data'] = 'No any letters found!';
+        }
+    } else {
+        $return['error'] = 2;
+        $return['data'] = $ql;
+    }
+    return $return;
+}
+
+/* построение универсального запроса */
+function DB_BuildQuery($get, $lang)
+{
+    $q = "SELECT DISTINCT
+articles.id
+, articles.title_{$lang} AS article_title
+, articles.book
+, articles.topic
+, books.title AS books_title
+, topics.title_en AS topics_title
+, books.year AS books_year
+FROM
+articles
+, books, topics
+, cross_aa
+, authors
+WHERE
+authors.id = cross_aa.author AND
+    articles.id = cross_aa.article AND
+        books.id = articles.book AND
+            topics.id = articles.topic AND
+                articles.deleted = 0 AND books.published=1 AND topics.deleted=0
+";
+
+    $q .= (IsSet($get['book']) && ($get['book'] != 0))          ? " AND articles.book = {$get['book']} " : "";
+    $q .= (IsSet($get['topic']) && ($get['topic'] != 0))        ? " AND articles.topic = {$get['topic']}" : "";
+    $q .= (IsSet($get['letter']) && ($get['letter'] != '0'))    ? " AND authors.name_{$lang} LIKE '{$get['letter']}%' " : "";
+    $q .= (IsSet($get['aid']) && ($get['aid'] != 0))            ? " AND authors.id = {$get['aid']} " : "";
+    $q .= (IsSet($get['year']) && ($get['year'] != 0))          ? " AND books.year = {$get['year']} " : "";
+    $q .= " GROUP BY articles.title_{$lang} ORDER BY articles.id ";
+    return $q;
+}
+
+/* универсальная функция загрузки списка статей по сложному запросу */
+function DB_LoadArticlesByQuery($get, $lang, $loadmode = 'search')
+{
+    $return = '';
+    $query = DB_BuildQuery($get, $lang);
+
+    $res = mysql_query($query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
+    $articles_count = @mysql_num_rows($res);
+
+    $all_articles = array();
+
+    if ($articles_count > 0) {
+        while ($an_article = mysql_fetch_assoc($res))
+        {
+            $id = $an_article['id']; // айди статьи
+            $all_articles[$id] = $an_article;
+
+            $q_authors = "SELECT authors.name_{$lang},authors.title_{$lang},authors.id FROM authors,cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article={$id} ORDER BY cross_aa.id";
+            $r_authors = mysql_query($q_authors) or die("ОШИБКА: не получается извлечь авторов по статье: ".$q_authors);
+            $r_authors_count = @mysql_num_rows($r_authors);
+
+            if ($r_authors_count>0)
+            {
+                while ($an_author = mysql_fetch_assoc($r_authors))
+                {
+                    $all_articles[$id]['authors'] .= <<<LoadArticlesByQuery_AuthorsTemplate
+ {$an_author['name_'.$lang]}, {$an_author['title_'.$lang]};
+LoadArticlesByQuery_AuthorsTemplate;
+                }
+                if (strpos($all_articles[$id]['authors'], '<br>')>0)
+                    $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4); //удаляет последний <br> если он есть
+                    $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-1); // удалить последний ";"
+            } // if authors
+        } // while each article record
+    } // if
+    $return .= <<<LoadArticlesList_Start
+<table class="articles-list-by-query" border="1" width="100%">
+LoadArticlesList_Start;
+;
+
+    // название, авторы, сборник, в котором она опубликована
+    // atitle, $all_articles[$id]['authors'], btitle
+    if ($articles_count>0) {
+        foreach ($all_articles as $a_id => $an_article) {
+            $return .= <<<LoadArticlesList_Each
+<tr>
+<td>{$an_article['books_year']}</td>
+<td>«{$an_article['article_title']}»</td>
+<td>{$an_article['authors']}</td>
+<td><nobr>{$an_article['books_title']}</nobr></td>
+<td><button class="more_info" name="{$an_article['id']}" data-text="More"> >>> </button></td>
+</tr>
+LoadArticlesList_Each;
+        };
+    } else {
+        // статей по заданному критерию нет
+        //@MESSAGE: "нет статей по заданному критерию"
+        switch ($loadmode) {
+            case 'search' : {
+                $return .= <<<LoadArticlesList_SearchNoArticles
+<br><strong>No articles found within this search criteria!</strong>
+LoadArticlesList_SearchNoArticles;
+;
+                break;
+            }
+            case 'onload' : {
+                $return .= <<<LoadArticlesList_OnloadNoArticles
+Articles not found!
+LoadArticlesList_OnloadNoArticles;
+                break;
+            }
+        } // case loadmode
+    } // else
+    $return .= <<<LoadArticlesList_End
+</table>
+LoadArticlesList_End;
+;
+    return $return;
 }
 
 

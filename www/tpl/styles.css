@@ -36,13 +36,17 @@ ul, ol {
 
 /* books - сборники*/
 /* общий класс списка сборников */
-.books-list {
+.books-list > ul {
+    margin: 0;
+    padding: 0;
 }
 /* li-элемент, в который вкладываются сборники по годам */
 .books-list-year {
 }
 /* div с годом */
 .books-list-year > div {
+}
+.books-list-year > ul {
 }
 /* li-элемент с каждым сборником-книгой */
 .books-list-eachbook {
@@ -94,6 +98,10 @@ ul, ol {
 
 /* классы полного списка авторов из редколлегии */
 .authors-list-as-estuff {}
+
+/* классы полного списка статей (загружаемых аяксом) */
+.articles-list-by-query { /* класс основного списка */}
+
 
 
 

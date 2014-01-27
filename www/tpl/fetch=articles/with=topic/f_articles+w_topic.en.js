@@ -1,35 +1,22 @@
-var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optionlist&lang=en');
 var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist&lang=en');
-var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist&lang=en');
 
-BuildSelector('letter', lettersList, 0);
 BuildSelector('book', booksList, 0);
-BuildSelector('topic', topicsList, 0);
 
-url = "ajax.php?actor=load_articles_by_query&lang=en";
-
-// показ всех статей сразу будет несколько накладным
-// $("#articles_list").empty().load(url_a);
+url = "ajax.php?actor=load_articles_by_query&lang=en&topic="/*plus_topic_id*/;
 
 // если хэш установлен - нужно загрузить статьи согласно выбранным позициям
+// тут нам лишний if не нужен, мы на старте загружаем все статьи
 wlh = (window.location.hash).substr(1);
-if (wlh !== '') {
-    $("#articles_list").empty().load(url+'&'+wlh);
-}
+$("#articles_list").empty().load(url+'&'+wlh); // передача лишнего & запросу не вредит.
 
 $("#button-show-withselection").on('click',function(){
     query = "";
-    query+="&topic="+$('select[name="topic"]').val();
     query+="&book="+$('select[name="book"]').val();
-    query+="&letter="+$('select[name="letter"]').val();
     $("#articles_list").empty().load(url+query);
 });
 $("#button-reset-selection").on('click',function(){
-    $('select[name="letter"]').val(0);
-    $('select[name="topic"]').val(0);
     $('select[name="book"]').val(0);
-    setHashBySelectors();
-    // сброс хэша!
+    setHashBySelectors(); // сброс хэша!
 });
 $("#button-show-all").on('click',function(){
     $("#articles_list").empty().load(url);

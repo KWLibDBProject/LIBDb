@@ -119,24 +119,81 @@ switch ($fetch) {
                 $filename = $tpl_path.'/fetch=articles/with=extended/f_articles+w_extended.'.$site_language;
 
                 $inner_html = new kwt($filename.'.html');
-                $inner_html->override( array ());
+                // $inner_html->override( array ());
                 $inner_html->contentstart();
                 $content = $inner_html->getcontent();
 
                 $inner_js = new kwt($filename.'.js');
-                $inner_js->override( array() );
+                // $inner_js->override( array() );
                 $inner_js->contentstart();
                 $jscripts = $inner_js->getcontent();
 
                 break;
             } // end case extended
             case 'topic': {
+                $filename = $tpl_path.'/fetch=articles/with=topic/f_articles+w_topic.'.$site_language;
+
+                $inner_html = new kwt($filename.'.html');
+                // $inner_html->override( array ());
+                $inner_html->contentstart();
+                $content = $inner_html->getcontent();
+
+                $inner_js = new kwt($filename.'.js');
+
+                $inner_js->config('/*','*/');
+                $inner_js->override( array( "plus_topic_id" => "+".$_GET['id'] ) );
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
+
                 break;
             } // end case topic
             case 'book' : {
+                $filename = $tpl_path.'/fetch=articles/with=book/f_articles+w_book.'.$site_language;
+
+                $inner_html = new kwt($filename.'.html');
+                // $inner_html->override( array ());
+                $inner_html->contentstart();
+                $content = $inner_html->getcontent();
+
+                $inner_js = new kwt($filename.'.js');
+
+                $inner_js->config('/*','*/');
+                $inner_js->override( array( "plus_book_id" => "+".$_GET['id'] ) );
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
+
                 break;
             } // end case book
             case 'info' : {
+                $id = $_GET['id'];
+                $filename = $tpl_path.'/fetch=articles/with=info/f_articles+w_info.'.$site_language;
+
+                $inner_html = new kwt($filename.'.html');
+
+                $article_info = DB_LoadArticleInformation_ById($id, $site_language);
+                $article_authors = FE_PrintAuthors_ByArticle(DB_LoadAuthors_ByArticle($id, $site_language), $site_language);
+
+                $inner_html->override( array (
+                    'article-title' => $article_info['title_'.$site_language],
+                    'article-abstract' => $article_info['abstract_'.$site_language],
+                    'article-authors-list' => $article_authors, // список авторов, писавших статью
+                    'article-keywords' => $article_info['keywords_'.$site_language],
+                    'article-book-title' => $article_info['btitle'],
+                    'article-book-year' => $article_info['byear'],
+                    'article-pdfid' => $article_info['pdfid']
+                ));
+                $override['meta_keywords'] = $article_info['keywords_'.$site_language]; // GLOBAL KEYWORDS
+
+                $inner_html->contentstart();
+                $content = $inner_html->getcontent();
+
+                $inner_js = new kwt($filename.'.js');
+
+                $inner_js->config('/*','*/');
+                $inner_js->override( array( "plus_book_id" => "+".$_GET['id'] ) );
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
+
                 break;
             } // end case info
             case 'all' : {
@@ -173,6 +230,8 @@ $with = isset($_GET['with']) ? $_GET['with'] : '';
 
 $override['content_jquery'] = $jscripts;
 $override['content'] = $content;
+
+$override['debug'] = print_r($_COOKIE, true);
 
 $tpl_index->override($override);
 $tpl_index->contentstart(); // если есть вложенные темплейты, этот вызов обязателен!!!!!!

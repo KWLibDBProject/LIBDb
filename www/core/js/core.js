@@ -18,8 +18,9 @@ function preloadOptionsList(url) // Загружает данные (кэшир�
 function BuildSelector(target, data, currentid) // currentid is 1 for NEW
 {
     if (data['error'] == 0) {
+        var _target = "select[name='"+target+"']";
         $.each(data['data'], function(id, value){
-            $("select[name="+target+"]").append('<option value="'+id+'">'+value+'</option>');
+            $(_target).append('<option value="'+id+'">'+value+'</option>');
         });
         var currentid = (typeof currentid != 'undefined') ? currentid : 1;
         $("select[name="+target+"] option[value="+ currentid +"]").prop("selected",true);

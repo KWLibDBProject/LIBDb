@@ -1,9 +1,10 @@
 /* Разделить строку по параметрам © http://a2x.ru/?p=140 */
+/* возвращает массив вида 'valuename' => 'valuedata' */
 function getQuery( queryString , limiter)
 {
     var vars = queryString.split((limiter || '&')); //делим строку по & - parama1=1
-    var arr = new Array();
-    for (var i=0; i<vars.length; i++)
+    var arr = [];
+    for (var i=0 , vl = vars.length; i < vl; i++)
     {
         var pair = vars[i].split("="); //делим параметр со значением по =, и пишем в ассоциативный массив arr['param1'] = 1
         arr[pair[0]] = pair[1];
@@ -41,4 +42,22 @@ function setSelectorsByHash(target)
         sel_value = hashes_arr[sel_name] != 'undefined' ? hashes_arr[sel_name] : 0;
         $(target+"[name="+sel_name+"] option[value="+sel_value+"]").prop("selected",true);
     } );
+}
+
+function getCookie(name){
+    var pattern = RegExp(name + "=.[^;]*")
+    matched = document.cookie.match(pattern)
+    if(matched){
+        var cookie = matched[0].split('=')
+        return cookie[1]
+    }
+    return false
+}
+
+function setCookie (name, value, expires, path, domain, secure) {
+    document.cookie = name + "=" + escape(value) +
+        ((expires) ? "; expires=" + expires : "") +
+        ((path) ? "; path=" + path : "") +
+        ((domain) ? "; domain=" + domain : "") +
+        ((secure) ? "; secure" : "");
 }

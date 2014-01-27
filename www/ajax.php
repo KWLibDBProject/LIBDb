@@ -1,65 +1,27 @@
 <?php
+// Здесь собраны функции-ответы на вывод различных данных, передаваемых аяксом.
+// в основном это ответы на разные селекторы
 require_once('core/core.php');
 require_once('core/core.db.php');
 require_once('frontend.php');
 
-// Здесь собраны функции-ответы на вывод различных данных, передаваемых аяксом.
-// в основном это ответы на разные селекторы
 $actor = isset($_GET['actor']) ? $_GET['actor'] : '';
+$lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
 
 $return = '';
-
 $link = ConnectDB();
 
 switch ($actor) {
     case 'get_letters_as_optionlist' : {
-        $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-        $return = json_encode(DBLoadFirstLettersForSelector($lang));
+        /* загрузить первые буквы авторов и отдать JSON-объект для построения селекта */
+        $return = json_encode(DB_LoadFirstLettersForSelector($lang));
         break;
     }
-
-    case 'load_authors_selected_by_letter': {
-        $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-        $letter = isset($_GET['letter']) ? $_GET['letter'] : '';
-        $return = DBLoadAuthorsSelectedByLetter($letter,$lang);
-
-        break;
-    } // case
-    case 'load_authors_all' : {
-        $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-        $letter = isset($_GET['letter']) ? $_GET['letter'] : '';
-        $return = DBLoadAuthorsSelectedByLetter($letter,$lang);
-        break;
-    }
-
-    case 'load_articles_selected_by_query' :{           // f=auth&w=books,
-        $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-        $return = DBLoadArticlesListWithAuthor($_GET, $lang);
-
-        break;
-    } // case
-
-    case 'load_articles_selected_by_query_with_letter' : { // f=articles&w=extended
-        $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-        $return = DBLoadArticlesListWithLetter($_GET, $lang);
-
-        break;
-
-    }
-
-    case 'load_articles_all' : { // f=auth&w=books(onload), f=article&w=extended(onload)
-        // запускается на старте, выводит другое сообщение при отсутствии статей
-        $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
-        $return = DBLoadArticlesListWithLetter($_GET, $lang,'onload'); // was: DBLoadArticlesListWithAuthor
-        break;
-    }
-
-    case 'get_books_as_optionslist' : {
-        // alias to core/ref_books/ref.books.action.getoptionlist.php without id
-        $lang = $_GET['lang'];
-
-        $withoutid = 1;
-        $q = "SELECT * FROM books WHERE deleted=0";
+    case 'get_books_as_optionlist' : {
+        /* загрузить сборники и отдать JSON-объект для построения селекта */
+        $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
+        // $withoutid = 1;
+        $q = "SELECT * FROM books WHERE deleted=0 AND published=1";
         $r = mysql_query($q) or die($q);
         $n = @mysql_num_rows($r) ;
 
@@ -77,12 +39,11 @@ switch ($actor) {
 
         $return = json_encode($data);
         break;
-    } // case
-
-    case 'get_topics_as_optionslist' : {
-        // alias to core/ref_topics/ref.topics.action.getoptionlist.php without id
-        $lang = $_GET['lang'];
-        $withoutid = 1;
+    }
+    case 'get_topics_as_optionlist' : {
+        /* загрузить категории и отдать JSON-объект для построения селекта */
+        $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
+        // $withoutid = 1;
 
         $query = "SELECT * FROM topics WHERE deleted=0";
         $result = mysql_query($query) or die($query);
@@ -102,38 +63,15 @@ switch ($actor) {
 
         $return = json_encode($data);
         break;
-    } // case
-
-    case 'get_authors_as_optionslist' : {
-        $lang = $_GET['lang'];
-        $withoutid = 1;
-
-        $query = "SELECT * FROM authors WHERE deleted=0";
-        if ($result = mysql_query($query)) {
-            $ref_numrows = @mysql_num_rows($result) ;
-
-            if ($ref_numrows>0)
-            {
-                $data['error'] = 0;
-                while ($row = mysql_fetch_assoc($result))
-                {
-                    $data['data'][$row['id']] = returnAuthorsOptionString($row, $lang, $withoutid); // see CORE.PHP
-                }
-            } else {
-                $data['data']['1'] = 'Добавьте авторов в базу!!!';
-                $data['error'] = 1;
-            }
-        } else {
-            $data['data']['2'] = "Ошибка работы с базой! [$query]";
-            $data['error'] = 2;
-        }
-        $return = json_encode($data);
-        break;
-    } // case
-
-    default: {
     }
+    case 'load_articles_by_query' : {
+        $return = DB_LoadArticlesByQuery($_GET, $lang);
+        break;
+    }
+
+
 } // switch
+
 
 CloseDB($link);
 

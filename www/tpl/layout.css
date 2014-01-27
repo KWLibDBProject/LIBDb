@@ -59,3 +59,11 @@ BODY { margin: 0; background: #f0f8ff; }
 #langs-bar img:hover {
     border: 2px solid red;
 }
+/* ISSN */
+#issn-bar {
+    position: relative;
+    top: 0; right: 0;
+    float: right;
+    text-align: right;
+    padding: 2px;
+}
