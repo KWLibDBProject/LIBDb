@@ -231,6 +231,9 @@ $with = isset($_GET['with']) ? $_GET['with'] : '';
 $override['content_jquery'] = $jscripts;
 $override['content'] = $content;
 
+//$override['debug'] = print_r($_COOKIE, true);
+$override['debug'] = print_r($site_language, true);
+
 $tpl_index->override($override);
 $tpl_index->contentstart(); // если есть вложенные темплейты, этот вызов обязателен!!!!!!
 $tpl_index->out();
