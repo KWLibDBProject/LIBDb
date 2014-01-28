@@ -180,7 +180,8 @@ switch ($fetch) {
                     'article-keywords' => $article_info['keywords_'.$site_language],
                     'article-book-title' => $article_info['btitle'],
                     'article-book-year' => $article_info['byear'],
-                    'article-pdfid' => $article_info['pdfid']
+                    'article-pdfid' => $article_info['pdfid'],
+                    'article-refs' => $article_info['refs']
                 ));
                 $override['meta_keywords'] = $article_info['keywords_'.$site_language]; // GLOBAL KEYWORDS
 
@@ -231,8 +232,7 @@ $with = isset($_GET['with']) ? $_GET['with'] : '';
 $override['content_jquery'] = $jscripts;
 $override['content'] = $content;
 
-//$override['debug'] = print_r($_COOKIE, true);
-$override['debug'] = print_r($site_language, true);
+$override['debug'] = print_r($_COOKIE, true);
 
 $tpl_index->override($override);
 $tpl_index->contentstart(); // если есть вложенные темплейты, этот вызов обязателен!!!!!!
