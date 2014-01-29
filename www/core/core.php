@@ -1,6 +1,10 @@
 <?php
 // функции ядра
 
+/**
+ * @param $filename
+ * @return string
+ */
 function floadpdf($filename)
 {
     $fh = fopen($filename,"rb");
@@ -10,16 +14,27 @@ function floadpdf($filename)
     return $blobdata;
 }
 
+/**
+ * @param bool $debugmode
+ * @return bool
+ */
 function isAjaxCall($debugmode=false)
 {
     $debug = (isset($debugmode)) ? $debugmode : false;
     return ((!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) || ($debug);
 }
+
+/**
+ * @param $url
+ */
 function Redirect($url)
 {
     if (headers_sent() === false) header('Location: '.$url);
 }
 
+/**
+ * @return int
+ */
 function isLogged()
 {
     $we_are_logged = !empty($_SESSION);
@@ -31,6 +46,9 @@ function isLogged()
     return (int) $we_are_logged ;
 }
 
+/**
+ * @param $str
+ */
 function printr($str)
 {
     echo '<pre>'.print_r($str,true).'</pre>';
@@ -39,6 +57,12 @@ function printr($str)
 /* Три функции возврата данных в option соотв. селекта */
 /* объявление переехало в frontend_.php */
 
+/**
+ * @param $row
+ * @param $lang
+ * @param $withoutid
+ * @return string
+ */
 function returnBooksOptionString($row, $lang, $withoutid)
 {
     // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
@@ -67,6 +91,12 @@ function returnBooksOptionString($row, $lang, $withoutid)
     return $id."\"$title\"";
 }
 
+/**
+ * @param $row
+ * @param $lang
+ * @param $withoutid
+ * @return string
+ */
 function returnAuthorsOptionString($row, $lang, $withoutid)
 {
     // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
@@ -93,6 +123,12 @@ function returnAuthorsOptionString($row, $lang, $withoutid)
 
 }
 
+/**
+ * @param $row
+ * @param $lang
+ * @param $withoutid
+ * @return string
+ */
 function returnTopicsOptionString($row, $lang, $withoutid)
 {
     // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )

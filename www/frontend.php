@@ -130,9 +130,11 @@ function DB_LoadAuthorInformation_ById($id, $lang)
     return $ret;
 }
 
-/*
-возвращает базовую информацию о статье из БД как асс.массив
-*/
+/**
+ * @param $id       - айди статьи
+ * @param $lang     - язык
+ * @return array    - возвращает базовую информацию о статье из БД как асс.массив
+ */
 function DB_LoadArticleInformation_ById($id, $lang)
 {
     $q = "SELECT *, books.title AS btitle, books.year AS byear FROM articles, books  WHERE articles.id=$id AND books.id=articles.book";
@@ -207,7 +209,7 @@ FE_PrintArticles_ByAuthor_Start;
     <tr>
         <td class="articles_by-author-table-book-title">{$article['btitle']}</td>
         <td rowspan="2" class="articles_by-author-table-pdficon">
-            <a href="core/getpdf.php?id={$article['pdfid']}"><img src="tpl/pdf32x32.png" width="32" height="32"></a>
+            <a href="core/getpdf.php?id={$article['pdfid']}"><img src="images/pdf32x32.png" width="32" height="32"></a>
         </td>
         <td rowspan="2" class="articles_by-author-table-title"><a href="?fetch=articles&with=info&id={$article['aid']}">{$article['atitle']}</a></td>
     </tr>

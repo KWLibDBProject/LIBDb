@@ -64,5 +64,6 @@
     <button id="logintry">Вход</button>
 </div>
 <div id="message"></div>
+<a href="/index.php">Переход к основному сайту</a>
 </body>
 </html>
