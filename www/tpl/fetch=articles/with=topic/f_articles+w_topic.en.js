@@ -1,6 +1,7 @@
-var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist&lang=en');
+var siteLanguage = '&lang=en';
+var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist'+siteLanguage);
 
-BuildSelector('book', booksList, 0);
+BuildSelector('books', booksList, 0);
 
 url = "ajax.php?actor=load_articles_by_query&lang=en&topic="/*plus_topic_id*/;
 
@@ -11,11 +12,11 @@ $("#articles_list").empty().load(url+'&'+wlh); // передача лишнег�
 
 $("#button-show-withselection").on('click',function(){
     query = "";
-    query+="&book="+$('select[name="book"]').val();
+    query+="&book="+$('select[name="books"]').val();
     $("#articles_list").empty().load(url+query);
 });
 $("#button-reset-selection").on('click',function(){
-    $('select[name="book"]').val(0);
+    $('select[name="books"]').val(0);
     setHashBySelectors(); // сброс хэша!
 });
 $("#button-show-all").on('click',function(){
@@ -23,5 +24,5 @@ $("#button-show-all").on('click',function(){
 });
 
 $('#articles_list').on('click','.more_info',function(){
-    location.href = '?fetch=articles&with=info&lang=en&id='+$(this).attr('name');
+    location.href = '?fetch=articles&with=info&id='+$(this).attr('name')+siteLanguage;
 });

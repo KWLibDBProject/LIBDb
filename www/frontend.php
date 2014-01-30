@@ -349,6 +349,8 @@ articles.id
 , books.title AS books_title
 , topics.title_en AS topics_title
 , books.year AS books_year
+, articles.pages AS article_pages
+, pdfid
 FROM
 articles
 , books, topics
@@ -396,33 +398,64 @@ function DB_LoadArticlesByQuery($get, $lang, $loadmode = 'search')
             {
                 while ($an_author = mysql_fetch_assoc($r_authors))
                 {
+                    /* шаблон вывода списка авторов у каждой статьи (список строится с отбором по критериям) */
+                    //@todo: в теории эта функция делает то же самое, что и список авторов у статьи ?fetch=articles&with=info&id=1 например тут
+
+                    // каждого автора во первых можно сделать ссылкой, а во вторых - элементом UL
+
                     $all_articles[$id]['authors'] .= <<<LoadArticlesByQuery_AuthorsTemplate
- {$an_author['name_'.$lang]}, {$an_author['title_'.$lang]};
+· {$an_author['name_'.$lang]}, {$an_author['title_'.$lang]}<br>
 LoadArticlesByQuery_AuthorsTemplate;
                 }
                 if (strpos($all_articles[$id]['authors'], '<br>')>0)
                     $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4); //удаляет последний <br> если он есть
+                    /*
                     $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-1); // удалить последний ";"
+                    ВНЕЗАПНО - если его действительно удалять - ломается последний (многобайтовый) выводимый символ и получаются кракозярбы
+                    */
             } // if authors
         } // while each article record
     } // if
     $return .= <<<LoadArticlesList_Start
 <table class="articles-list-by-query" border="1" width="100%">
 LoadArticlesList_Start;
-;
 
     // название, авторы, сборник, в котором она опубликована
     // atitle, $all_articles[$id]['authors'], btitle
     if ($articles_count>0) {
         foreach ($all_articles as $a_id => $an_article) {
+            /* вот это надо переносить в translates[] */
+            switch ($lang) {
+                case 'en': { $lal_e_bi = 'Pp. '; break; }
+                case 'ru': { $lal_e_bi = 'C. '; break; }
+                case 'uk': { $lal_e_bi = 'C. '; break; }
+            }
+
+            $book_info = <<<LoadArticlesList_Each_BookInfo
+<nobr>{$an_article['books_title']}</nobr><br>
+<nobr>{$lal_e_bi} {$an_article['article_pages']}</nobr>
+LoadArticlesList_Each_BookInfo;
+
+
+
             $return .= <<<LoadArticlesList_Each
 <tr>
-<td>{$an_article['books_year']}</td>
-<td>«{$an_article['article_title']}»</td>
-<td>{$an_article['authors']}</td>
-<td><nobr>{$an_article['books_title']}</nobr></td>
-<td><button class="more_info" name="{$an_article['id']}" data-text="More"> >>> </button></td>
-</tr>
+    <td class="articles-list-table-book-title">
+{$book_info}
+    </td>
+    <td class="articles-list-table-pdficon">
+        <a href="core/getpdf.php?id={$an_article['pdfid']}"><img src="images/pdf32x32.png" width="32" height="32"></a>
+    </td>
+    <td class="articles-list-table-title">
+        <a href="?fetch=articles&with=info&id={$an_article['id']}">{$an_article['article_title']}</a>
+    </td>
+    <td>
+    {$an_article['authors']}
+    </td>
+<!--        <td>
+            <button class="more_info" name="{$an_article['id']}" data-text="More"> >>> </button>
+        </td> -->
+    </tr>
 LoadArticlesList_Each;
         };
     } else {

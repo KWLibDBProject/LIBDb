@@ -42,7 +42,7 @@ if (isAjaxCall()) {
             'buttonmessage' => 'Вернуться к списку авторов',
             'message' => 'Автор добавлен в базу данных'
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl_');
+        $tpl = new kwt('../ref.all.timed.callback.tpl');
         $tpl->override($override);
         $tpl->out();
     }

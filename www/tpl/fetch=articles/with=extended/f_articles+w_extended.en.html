@@ -5,7 +5,7 @@
             <tr>
                 <td>Author's name 1st letter:</td>
                 <td>
-                    <select name="letter" class="search_selector">
+                    <select name="letters" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
@@ -13,7 +13,7 @@
             <tr>
                 <td>Category: </td>
                 <td>
-                    <select name="topic" class="search_selector">
+                    <select name="topics" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
@@ -21,7 +21,7 @@
             <tr>
                 <td>Book: </td>
                 <td>
-                    <select name="book" class="search_selector">
+                    <select name="books" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
@@ -32,7 +32,7 @@
     <button id="button-reset-selection">Reset options</button>
     <button id="button-show-all">Show all articles</button>
 </fieldset>
-<fieldset>
+<fieldset class="search_results">
     <legend>Search results</legend>
     <div id="articles_list">
     </div>

@@ -52,7 +52,7 @@ if (isAjaxCall()) {
         'buttonmessage' => 'Вернуться к списку авторов',
         'message' => $result['message']
     );
-    $tpl = new kwt('../ref.all.timed.callback.tpl_');
+    $tpl = new kwt('../ref.all.timed.callback.tpl');
     $tpl->override($override);
     $tpl->out();
 }

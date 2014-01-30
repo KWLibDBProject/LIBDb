@@ -94,7 +94,9 @@ ul, ol {
 .articles_by-author-table-book-year {}
 
 /* классы (полного) списка авторов */
-.authors-list {}
+.authors-list {
+    list-style-type: disc;
+}
 
 /* классы полного списка авторов из редколлегии */
 .authors-list-as-estuff {}
@@ -102,6 +104,13 @@ ul, ol {
 /* классы полного списка статей (загружаемых аяксом) */
 .articles-list-by-query { /* класс основного списка */}
 
-
+fieldset.search_results {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.search_results > legend {
+    margin-left: 5px;
+    margin-right: 5px;
+}
 
 

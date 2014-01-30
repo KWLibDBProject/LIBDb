@@ -4,7 +4,7 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 
 
-$tpl = new kwt('authors.form.tpl_');
+$tpl = new kwt('authors.form.tpl');
 
 $over = array(
     'author_id' => isset($_GET['id']) ? $_GET['id'] : -1,
