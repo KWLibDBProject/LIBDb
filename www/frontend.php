@@ -54,6 +54,7 @@ function DB_LoadBooks($lang)
 
     $ret = '';
     $yq = "SELECT DISTINCT `year` FROM books WHERE `published`=1 AND `deleted`=0 ORDER BY `year` DESC";
+
     $yr = mysql_query($yq);
     $all_books = array();
     while ($ya = mysql_fetch_assoc($yr)) {
@@ -61,18 +62,20 @@ function DB_LoadBooks($lang)
     }
     foreach ($all_books as $year => $value)
     {
-        // $bq = "SELECT id, title FROM books WHERE `year`=$key AND `published`=1 AND `deleted`=0 ORDER BY `title`";
-        $bq = "SELECT books.id, books.title, COUNT(articles.id) AS acount
-        FROM articles, books
-        WHERE articles.book = books.id AND
-        books.year = $year AND
-        books.published=1 AND
-        books.deleted=0 ORDER BY books.title";
+        $bq = "SELECT books.title, books.year, books.id, COUNT(books.id) AS articles_count
+FROM books, articles
+WHERE
+articles.book = books.id AND
+books.year = $year AND
+books.published = 1 AND
+books.deleted = 0
+GROUP BY books.title
+ORDER BY `year`";
 
         $br = mysql_query($bq);
         while ($ba = mysql_fetch_assoc($br)) {
             $all_books[$year][ $ba['id'] ]['title'] = $ba['title'];
-            $all_books[$year][ $ba['id'] ]['count'] = $ba['acount'];
+            $all_books[$year][ $ba['id'] ]['count'] = $ba['articles_count'];
         }
 
     }
@@ -81,7 +84,7 @@ function DB_LoadBooks($lang)
 
 /* отображает список сборников (книг) согласно инструкциям в translations.php
 Принимает массив с данными и язык вывода */
-function FE_PrintBooks($all_books, $lang='en')
+function FE_PrintBooks_Old($all_books, $lang='en')
 {
     $ret = '';
     $ret .= <<<FE_PrintBooks_Start
@@ -96,7 +99,7 @@ FE_PrintBooks_ItemStart;
         foreach ($year_books as $id => $book)
         {
             $ret .= <<<FE_PrintBooks_ItemEach
-<li class="books-list-eachbook"><a href="?fetch=articles&with=book&id={$id}"> {$book['title']} <em>({$book['count']})</em></a></li>
+<li class="books-list-eachbook"><a href="?fetch=articles&with=book&id={$id}"> {$book['title']}</a>  ({$book['count']})</li>
 FE_PrintBooks_ItemEach;
         }
         $ret .= <<<FE_PrintBooks_ItemEnd
@@ -108,6 +111,37 @@ FE_PrintBooks_End;
 ;
     return $ret;
 }
+
+function FE_PrintBooks($all_books, $lang='en')
+{
+    $ret = '';
+    $ret .= <<<FE_PrintBooks_Start
+FE_PrintBooks_Start;
+
+    foreach ($all_books as $key => $year_books)
+    {
+        $ret .= <<<FE_PrintBooks_ItemStart
+<h3 class="books-list-year">{$key}</h3>
+<ul>
+FE_PrintBooks_ItemStart;
+
+        foreach ($year_books as $id => $book)
+        {
+            $ret .= <<<FE_PrintBooks_ItemEach
+<li class="books-list-eachbook"><a href="?fetch=articles&with=book&id={$id}"> {$book['title']}</a>  ({$book['count']})</li>
+
+FE_PrintBooks_ItemEach;
+        }
+        $ret .= <<<FE_PrintBooks_ItemEnd
+</ul>
+FE_PrintBooks_ItemEnd;
+    }
+    $ret .= <<<FE_PrintBooks_End
+FE_PrintBooks_End;
+    ;
+    return $ret;
+}
+
 
 /*
 загружает информацию об авторе в ассциативный массив с учетом языка сайта
@@ -183,7 +217,7 @@ FE_PrintAuthorsInArticle;
 function DB_LoadArticles_ByAuthor($id, $lang)
 {
     $ret = array();
-    $q = "SELECT articles.id AS aid, articles.title_en AS atitle, articles.pdfid, books.title AS btitle, SUBSTRING(books.date,7,4) AS bdate
+    $q = "SELECT articles.id AS aid, articles.title_{$lang} AS atitle, articles.pdfid, books.title AS btitle, SUBSTRING(books.date,7,4) AS bdate
 FROM articles, cross_aa, books
 WHERE books.id=articles.book AND cross_aa.article = articles.id AND books.published=1 AND cross_aa.author = $id";
     $r = mysql_query($q);

@@ -3,7 +3,7 @@ var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optionlist'+si
 
 BuildSelector('topics', topicsList, 0);
 
-url = "ajax.php?actor=load_articles_by_query&lang=en&book="/*plus_book_id*/;
+url = "ajax.php?actor=load_articles_by_query&book="/*plus_book_id*/+siteLanguage;
 
 // если хэш установлен - нужно загрузить статьи согласно выбранным позициям
 // тут нам лишний if не нужен, мы на старте загружаем все статьи

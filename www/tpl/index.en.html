@@ -8,6 +8,10 @@
     <link rel="stylesheet" type="text/css" href="tpl/layout.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="tpl/styles.css" media="screen" />
     <script type="text/javascript" src="core/js/jquery-1.10.2.min.js"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
     <script type="text/javascript" src="core/js/core.js"></script>
     <script type="text/javascript" src="tpl/frontend.js"></script>
 
@@ -32,6 +36,7 @@
                 }
                 return false;
             });
+            $( "#books-accordion" ).accordion();
         });
 
     </script>
@@ -85,11 +90,9 @@
                 <!--{content}-->
             </td>
             <td class="rightblock">
-                <div class="books-list">
-                    <h3>All books</h3>
-                    <ul>
-                        <!--{books}-->
-                    </ul>
+                All books
+                <div id="books-accordion" class="books-list">
+                    <!--{books}-->
                 </div>
             </td>
         </tr>

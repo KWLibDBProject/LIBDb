@@ -40,6 +40,7 @@ switch ($fetch) {
                 $id = $_GET['id'];
 
                 $inner_html = new kwt($filename.".html");
+                printr($site_language);
 
                 $air = DB_LoadAuthorInformation_ById($id, $site_language);
 
@@ -234,7 +235,7 @@ $with = isset($_GET['with']) ? $_GET['with'] : '';
 $override['content_jquery'] = $jscripts;
 $override['content'] = $content;
 
-$override['debug'] = print_r($_COOKIE, true);
+// $override['debug'] = print_r($_COOKIE, true);
 
 $tpl_index->override($override);
 $tpl_index->contentstart(); // если есть вложенные темплейты, этот вызов обязателен!!!!!!

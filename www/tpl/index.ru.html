@@ -11,6 +11,8 @@
     <script type="text/javascript" src="core/js/core.js"></script>
     <script type="text/javascript" src="tpl/frontend.js"></script>
 
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -32,6 +34,7 @@
                 }
                 return false;
             });
+            $( "#books-accordion" ).accordion();
         });
 
     </script>
@@ -85,11 +88,9 @@
                 <!--{content}-->
             </td>
             <td class="rightblock">
-                <div class="books-list">
-                    <h3>Все сборники</h3>
-                    <ul>
-                        <!--{books}-->
-                    </ul>
+                Все сборники
+                <div id="books-accordion" class="books-list">
+                    <!--{books}-->
                 </div>
             </td>
         </tr>
