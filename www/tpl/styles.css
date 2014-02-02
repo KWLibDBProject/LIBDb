@@ -114,3 +114,26 @@ fieldset.search_results {
 }
 
 
+/* Классы форматирования вывода списка статей по различным критериям отбора */
+/* Весь список авторов, сейчас применяется к таблице */
+.articles-list-by-query {}
+/* стиль вывода названия сборника */
+.articles-list-table-book-title {}
+/* стиль к ячейке с иконкой загрузки */
+.articles-list-table-pdficon {}
+/* стиль к ячейке с названием статьи */
+.articles-list-table-title {}
+/* стиль к спану со списком авторов у статьи */
+.articles-list-table-authors-list {
+    font-size: small;
+}
+/* вложенный спан с фамилией*/
+.articles-list-table-authors-list-name {
+    /* font-weight: bold; */
+    color: navy;
+}
+/* вложенный спан с титулом */
+.articles-list-table-authors-list-title {}
+/* стиль к ячейке с кнопкой MOAR */
+.articles-list-table-button-more-info {}
+

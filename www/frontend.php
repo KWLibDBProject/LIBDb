@@ -407,7 +407,9 @@ authors.id = cross_aa.author AND
     return $q;
 }
 
-/* универсальная функция загрузки списка статей по сложному запросу */
+/* универсальная функция загрузки списка статей по сложному запросу
+//todo: на самом деле она еще и печатает сразу то что загрузила!
+*/
 function DB_LoadArticlesByQuery($get, $lang, $loadmode = 'search')
 {
     $return = '';
@@ -434,11 +436,12 @@ function DB_LoadArticlesByQuery($get, $lang, $loadmode = 'search')
                 {
                     /* шаблон вывода списка авторов у каждой статьи (список строится с отбором по критериям) */
                     //@todo: в теории эта функция делает то же самое, что и список авторов у статьи ?fetch=articles&with=info&id=1 например тут
-
-                    // каждого автора во первых можно сделать ссылкой, а во вторых - элементом UL
-
+/*
                     $all_articles[$id]['authors'] .= <<<LoadArticlesByQuery_AuthorsTemplate
-· {$an_author['name_'.$lang]}, {$an_author['title_'.$lang]}<br>
+· <span class="articles-list-table-authors-list-name">{$an_author['name_'.$lang]}</span>, <span class="articles-list-table-authors-list-title">{$an_author['title_'.$lang]}</span><br>
+LoadArticlesByQuery_AuthorsTemplate; */
+                    $all_articles[$id]['authors'] .= <<<LoadArticlesByQuery_AuthorsTemplate
+· <a href="?fetch=authors&with=info&id={$an_author['id']}&lang={$lang}" class="articles-list-table-authors-list-name">{$an_author['name_'.$lang]}</a>, <span class="articles-list-table-authors-list-title">{$an_author['title_'.$lang]}</span><br>
 LoadArticlesByQuery_AuthorsTemplate;
                 }
                 if (strpos($all_articles[$id]['authors'], '<br>')>0)
@@ -484,10 +487,10 @@ LoadArticlesList_Each_BookInfo;
         <a href="?fetch=articles&with=info&id={$an_article['id']}">{$an_article['article_title']}</a>
     </td>
     <td>
-    {$an_article['authors']}
+    <span class="articles-list-table-authors-list">{$an_article['authors']}</span>
     </td>
 <!--        <td>
-            <button class="more_info" name="{$an_article['id']}" data-text="More"> >>> </button>
+            <button class="more_info articles-list-table-button-more-info" name="{$an_article['id']}" data-text="More"> >>> </button>
         </td> -->
     </tr>
 LoadArticlesList_Each;
