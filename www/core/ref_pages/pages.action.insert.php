@@ -1,11 +1,12 @@
 <?php
+print_r($_POST);
+
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
 $ref_name = 'staticpages';
 
-printr($_POST);
 
 $link = ConnectDB();
 $q = array(
