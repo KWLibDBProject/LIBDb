@@ -12,9 +12,9 @@ $all_tables = array(
 "CREATE TABLE `articles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `udc` char(30) DEFAULT NULL,
-  `title_en` char(100) DEFAULT NULL,
-  `title_ru` char(100) DEFAULT NULL,
-  `title_uk` char(100) DEFAULT NULL,
+  `title_en` char(250) DEFAULT NULL,
+  `title_ru` char(250) DEFAULT NULL,
+  `title_uk` char(250) DEFAULT NULL,
   `abstract_en` longtext,
   `abstract_ru` longtext,
   `abstract_uk` longtext,
@@ -34,9 +34,9 @@ $all_tables = array(
     'authors' =>
 "CREATE TABLE `authors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name_ru` char(100) DEFAULT NULL,
-  `name_en` char(100) DEFAULT NULL,
-  `name_uk` char(100) DEFAULT NULL,
+  `name_ru` char(250) DEFAULT NULL,
+  `name_en` char(250) DEFAULT NULL,
+  `name_uk` char(250) DEFAULT NULL,
   `workplace` char(200) DEFAULT NULL,
   `email` char(100) DEFAULT NULL,
   `deleted` int(11) DEFAULT '0',
@@ -119,7 +119,7 @@ $root_user = array(
 
 
 
-$tpl = new kwt('install.tpl_');
+$tpl = new kwt('install.tpl');
 $tpl -> contentstart();
 
 foreach ($all_tables as $table => $table_script)
