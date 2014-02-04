@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>/**page_title**/</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="../js/jquery-1.10.2.min.js"></script>
+    <script src="../js/tinymce.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="pages.css">
+    <style type="text/css"></style>
+
+    <script src="../js/core.js"></script>
+    <script src="ref.pages.js"></script>
+
+    <script type="text/javascript">
+        // tinyMCE inits
+        tinymce.init({
+            selector:'textarea#content_en',forced_root_block : "",
+            force_br_newlines : true,
+            force_p_newlines : false
+        });
+        tinymce.init({
+            selector:'textarea#content_ru',forced_root_block : "",
+            force_br_newlines : true,
+            force_p_newlines : false
+        });
+        tinymce.init({
+            selector:'textarea#content_uk',forced_root_block : "",
+            force_br_newlines : true,
+            force_p_newlines : false
+        });
+
+        $(document).ready(function () {
+            page_id = /**page_id**/;
+
+        if (page_id != -1) {
+            Pages_LoadRecord("#form_edit_page", page_id, 'content_en', 'content_ru', 'content_uk');
+            $("#button-remove").show();
+        }
+
+        $("#button-exit").on('click',function(event){
+            window.location.href = '../ref.pages.show.php';
+        });
+        $("#button-remove").on('click',function(event){
+            window.location.href = 'pages.action.remove.php?id='+page_id;
+        });
+
+        });
+    </script>
+</head>
+<body>
+
+<form action="/**form_call_script**/" method="post" enctype="multipart/form-data" id="form_edit_page">
+    <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СТРАНИЦ</strong></button>
+    <button type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СТАТЬЮ</strong></button>
+    <button type="submit" class="button-large" ><strong>/**submit_button_text**/</strong></button>
+    <hr>
+    <input type="hidden" name="id">
+    <fieldset>
+        <legend>Техническая информация</legend>
+        <label>Алиас (служебное имя страницы, не уверен - не меняй!)</label><br>
+        <input type="text" name="alias" id="alias" size=40 value=""><br>
+        <br>
+
+        <label>Комментарий (не обязательно)</label><br>
+        <input type="text" name="comment" id="comment" size=40 value="">
+    </fieldset>
+    <fieldset>
+        <legend>Страница на английском языке</legend>
+        <input type="text" name="title_en" id="title_en" size=60 value=""><br>
+        <textarea name="content_en" id="content_en" cols="90" rows="7"></textarea>
+    </fieldset>
+    <fieldset>
+        <legend>Страница на русском языке</legend>
+        <input type="text" name="title_ru" id="title_ru" size=60 value=""><br>
+        <textarea name="content_ru" id="content_ru" cols="90" rows="7"></textarea>
+    </fieldset>
+    <fieldset>
+        <legend>Страница на украинском языке</legend>
+        <input type="text" name="title_uk" id="title_uk" size=60 value=""><br>
+        <textarea name="content_uk" id="content_uk" cols="90" rows="7"></textarea>
+    </fieldset>
+
+<button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
+</form>
+
+</body>
+</html>
