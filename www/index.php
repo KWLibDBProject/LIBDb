@@ -206,6 +206,9 @@ switch ($fetch) {
     }
     case 'page' : {
         /* секция вывода статических или условно-статических страниц */
+        $page_alias = ($with === '') ? 'default' : $with;
+        $content = FE_GetStaticPage($page_alias, $site_language);
+
         break;
     }
     case 'news': {

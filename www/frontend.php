@@ -521,5 +521,25 @@ LoadArticlesList_End;
     return $return;
 }
 
+/* функция загрузки статических страниц из БД */
+function FE_GetStaticPage($alias, $lang)
+{
+    $return = '';
+
+    $query = "SELECT content_{$lang} AS pagecontent FROM staticpages WHERE alias LIKE '{$alias}'";
+    $res = mysql_query($query);
+    $numrows = mysql_num_rows($res);
+
+    if ($numrows == 1) {
+        $a = mysql_fetch_assoc($res);
+        $return = $a['pagecontent'];
+    } else {
+        $html404 = new kwt('tpl/page404.html');
+        $html404->contentstart();
+        $return = $html404->getcontent();
+    }
+    return $return;
+}
+
 
 ?>

@@ -18,10 +18,10 @@ function Pages_LoadRecord(destination, id, tt_en, tt_ru, tt_uk) // номер з
             $form.find("input[name='title_ru']").val( result['data']['title_ru'] );
             $form.find("input[name='title_uk']").val( result['data']['title_uk'] );
 
-            tinyMCE.get(tt_en).setContent(result['data']['content_en']);
             tinyMCE.get(tt_ru).setContent(result['data']['content_ru']);
             tinyMCE.get(tt_uk).setContent(result['data']['content_uk']);
-
+            tinyMCE.get(tt_en).setContent(result['data']['content_en']);
+            window.scroll(0,0);
         } else {
             // ошибка загрузки
         }
