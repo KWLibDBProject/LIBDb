@@ -1,4 +1,6 @@
 <?php
+//@todo: ПЕРЕЙТИ НА filestorage.action.remove!!!
+
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');

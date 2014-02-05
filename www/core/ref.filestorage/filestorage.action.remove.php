@@ -5,9 +5,9 @@ require_once('../core.kwt.php');
 
 // в $id может быть -1 - это значит, что пытаться удалять ничего не надо
 
-$id = IsSet($_GET['id']) ? $_GET['id'] : Die();
-$caller = IsSet($_GET['caller']) ? $_GET['caller'] : Die(); // books
-$field = IsSet($_GET['subcaller']) ? $_GET['subcaller'] : Die(); // books
+$id = IsSet($_GET['id']) ? $_GET['id'] : Die(); // айди удаляемого объекта
+$caller = IsSet($_GET['caller']) ? $_GET['caller'] : Die(); // таблица, в которой ОБНОВЛЯЕМ релейшен объекта
+$field = IsSet($_GET['subcaller']) ? $_GET['subcaller'] : Die(); // поле, в которое записываем -1 для таблицы
 
 $ref_filestorage = 'filestorage';
 

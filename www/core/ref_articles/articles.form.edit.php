@@ -140,7 +140,11 @@ CloseDB($link);
             });
 
             $("#currfile_del").on('click',function(){
-                var getting = $.get('../ref_articles/articles.action.deletepdf.php', { id: $(this).attr('data-fileid') });
+                var getting = $.get('../ref.filestorage/filestorage.action.remove.php', {
+                    id: $(this).attr('data-fileid'),
+                    caller: 'articles',
+                    subcaller: 'pdfid'
+                });
                 getting.done(function(data){
                     result = $.parseJSON(data);
                     if (result['error'] == 0) {
