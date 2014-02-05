@@ -3,6 +3,7 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
+$ref_filestorage = 'filestorage';
 
 $result['message'] = '';
 $result['error'] = 0;
@@ -17,7 +18,7 @@ $q = "DELETE FROM articles WHERE id=$id";
 mysql_query($q,$link) or Die("Death at $q");
 
 // удалить пдфку из пдфдата
-$q = "DELETE FROM pdfdata WHERE articleid=$id";
+$q = "DELETE FROM $ref_filestorage WHERE relation=$id";
 mysql_query($q,$link) or Die("Death at $q");
 
 // удалить соответствия из cross_aa

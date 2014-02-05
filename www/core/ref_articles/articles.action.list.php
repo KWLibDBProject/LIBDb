@@ -3,6 +3,8 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
+$ref_filestorage = 'filestorage';
+
 /* файл вызывается черех аякс лоадер
 Варианты аргументов:
 
@@ -43,7 +45,7 @@ if ($articles_count>0) {
         $all_articles[$id] = $an_article; // ВСЯ статья
 
         // получить информацию о связанной ПДФке
-        $qp = "SELECT id,username,filesize FROM pdfdata WHERE articleid = $id";
+        $qp = "SELECT id, username, filesize FROM $ref_filestorage WHERE relation = $id";
         $rp = mysql_query($qp) or Die("Death on $qp");
         if (@mysql_num_rows($rp) > 0)
         {

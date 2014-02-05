@@ -5,14 +5,18 @@ require_once('../core.kwt.php');
 
 $id = IsSet($_GET['id']) ? $_GET['id'] : Die();
 
-// удалить из таблицы pdfdata
+$ref_filestorage = 'filestorage';
+
+// удалить из таблицы filestorage
 
 $link = ConnectDB();
 
-$pdf_record = mysql_fetch_assoc(mysql_query("SELECT articleid FROM pdfdata WHERE id=$id"))or Die("Die on: SELECT articleid FROM pdfdata WHERE id=$id");
-$a_result = mysql_query("UPDATE articles SET pdfid=-1 WHERE id=".$pdf_record['articleid']) or Die("Die on: UPDATE articles SET pdfid=0 WHERE id=".$pdf_record['articleid']);
+$pdf_record = mysql_fetch_assoc(mysql_query("SELECT relation FROM $ref_filestorage WHERE id=$id"))or Die("Die on: SELECT articleid FROM filestorage WHERE id=$id");
 
-$del = mysql_query("DELETE FROM pdfdata WHERE id=$id") or Die("Die on: DELETE FROM pdfdata WHERE id=$id");
+$a_result = mysql_query("UPDATE articles SET pdfid=-1 WHERE id=".$pdf_record['relation']) or Die("Die on: UPDATE articles SET pdfid=0 WHERE id=".$pdf_record['relation']);
+
+$del = mysql_query("DELETE FROM $ref_filestorage WHERE id=$id") or Die("Die on: DELETE FROM $ref_filestorage WHERE id=$id");
+
 CloseDB($link);
 $result['error'] = 0;
 print(json_encode($result));

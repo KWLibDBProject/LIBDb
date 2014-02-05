@@ -22,7 +22,7 @@ function isConnectedDB()
     return $CONFIG['flag_dbconnected'];
 }
 
-function MakeInsert($arr,$table,$where="")
+function MakeInsert($arr, $table, $where="")
 {
     $str = "INSERT INTO $table ";
 

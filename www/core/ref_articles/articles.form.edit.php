@@ -3,6 +3,7 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
+$ref_filestorage = 'filestorage';
 
 $id = IsSet($_GET['id']) ? $_GET['id'] : 1;
 
@@ -40,7 +41,7 @@ $the_currentBook = $the_article['book'];
 $the_currentTopic = $the_article['topic'];
 
 // получаем ПДФ-файл
-$qp = "SELECT id,username,filesize FROM pdfdata WHERE articleid=$id";
+$qp = "SELECT id,username,filesize FROM $ref_filestorage WHERE relation=$id";
 $rp = mysql_query($qp,$link);
 $np = @mysql_num_rows($rp);
 if ($np > 0) {
@@ -64,6 +65,12 @@ CloseDB($link);
 
     <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+
     <script type="text/javascript">
         var authorsList = preloadOptionsList('../ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
@@ -129,8 +136,9 @@ CloseDB($link);
 
             // логика кнопок
             $("#currfile_show").on('click',function(){ // show current file
-                window.location.href="../getpdf.php?id="+$(this).attr('data-fileid');
+                window.location.href="../getfile.php?id="+$(this).attr('data-fileid');
             });
+
             $("#currfile_del").on('click',function(){
                 var getting = $.get('../ref_articles/articles.action.deletepdf.php', { id: $(this).attr('data-fileid') });
                 getting.done(function(data){
@@ -138,7 +146,8 @@ CloseDB($link);
                     if (result['error'] == 0) {
                         $("#newfile_input").removeProp("disabled");
                         $("#currfile_changed").attr("value","1");
-                        $("#currfile_old").hide();
+                        $("#pdf-file-old").hide();
+                        $("#pdf-file-new").show();
                     } else {
                         alert('Ошибка удаления файла!');
                     }
@@ -215,17 +224,18 @@ CloseDB($link);
         <legend>PDF-file</legend>
         <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
 
-        <span id="currfile_old">
+        <span id="pdf-file-old">
         <button type="button" id="currfile_show" data-fileid="<?php echo $the_file['id'];?>">Посмотреть</button>
-        <br>
         <label for="currfile_text">Текущий файл:</label>
         <input type="text" size="60" id="currfile_text" value="<?php echo $the_file['username']?>">
         <button type="button" id="currfile_del" data-fileid="<?php echo $the_file['id'];?>">Удалить</button>
         </span>
-        <br>
-        <label for="newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
-        <input type="file" name="pdffile" id="newfile_input" disabled>
-        <input type="hidden" name="currfile_changed" id="currfile_changed" value="0">
+        <div id="pdf-file-new" class="hidden">
+            <label for="newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
+            <input type="file" name="pdffile" id="newfile_input" disabled>
+            <input type="hidden" name="currfile_changed" id="currfile_changed" value="0">
+        </div>
+
     </fieldset>
     <fieldset>
         <legend>Авторы:</legend>

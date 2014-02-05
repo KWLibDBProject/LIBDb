@@ -15,6 +15,20 @@ function floadpdf($filename)
 }
 
 /**
+ *
+ */
+function floadfile($filename)
+{
+    $fh = fopen($filename,"rb");
+    $real_filesize = filesize($filename);
+    $blobdata = fread($fh, $real_filesize);
+    fclose($fh);
+    return $blobdata;
+}
+
+
+
+/**
  * @param bool $debugmode
  * @return bool
  */

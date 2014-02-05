@@ -79,7 +79,7 @@ $all_tables = array(
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
-    'pdfdata' =>
+    'filestorage' =>
     "CREATE TABLE `pdfdata` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` longblob,

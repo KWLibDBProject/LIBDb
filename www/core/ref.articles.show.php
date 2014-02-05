@@ -41,7 +41,7 @@ require_once('core.kwt.php');
             });
             $('#articles_list')
                     .on('click','.download-pdf',function(){
-                        window.location.href="getpdf.php?id="+$(this).attr('name')
+                        window.location.href="getfile.php?id="+$(this).attr('name')
                     })
                     .on('click','.edit_button',function(){
                         location.href = 'ref_articles/articles.form.edit.php?id='+$(this).attr('name');

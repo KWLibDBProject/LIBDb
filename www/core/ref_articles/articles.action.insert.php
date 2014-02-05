@@ -3,6 +3,7 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
+$ref_filestorage = 'filestorage';
 
 $result['message'] = '';
 $result['error'] = 0;
@@ -37,15 +38,18 @@ $res = mysql_query($qstr, $link) or Die("Невозможно вставить �
 $new_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");
 
 if (IsSet($_FILES)) {
-    $pdf_username = $_FILES['pdffile']['name'];
-    $pdf_filesize = $_FILES['pdffile']['size'];
 
-    $tmp_name = ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\',$_FILES['pdffile']['tmp_name']) : $_FILES['pdffile']['tmp_name'];
+    $insert_data = array(
+        'username' => $pdf_username = $_FILES['pdffile']['name'],
+        'tempname' => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\',$_FILES['pdffile']['tmp_name']) : $_FILES['pdffile']['tmp_name'],
+        'filesize' => $_FILES['pdffile']['size'],
+        'relation' => $new_id,
+        'filetype' => $_FILES['pdffile']['type']
+    );
 
-    $blobdata = mysql_escape_string(floadpdf($tmp_name));
+    $insert_data['content'] = mysql_escape_string(floadpdf($insert_data['tempname']));
 
-    $q = "INSERT INTO `pdfdata` (`content`,`username`,`tempname`,`filesize`,`articleid`)
-    VALUES ('$blobdata','$pdf_username','$tmp_name','$pdf_filesize' , '$new_id')";
+    $q = MakeInsert($insert_data, $ref_filestorage);
 
     mysql_query($q, $link) or Die("Death on $q");
     $pdf_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");

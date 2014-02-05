@@ -70,7 +70,7 @@ books.year = $year AND
 books.published = 1 AND
 books.deleted = 0
 GROUP BY books.title
-ORDER BY `year`";
+ORDER BY books.title";
 
         $br = mysql_query($bq);
         while ($ba = mysql_fetch_assoc($br)) {
@@ -243,7 +243,7 @@ FE_PrintArticles_ByAuthor_Start;
     <tr>
         <td class="articles_by-author-table-book-title">{$article['btitle']}</td>
         <td rowspan="2" class="articles_by-author-table-pdficon">
-            <a href="core/getpdf.php?id={$article['pdfid']}"><img src="images/pdf32x32.png" width="32" height="32"></a>
+            <a href="core/getfile.php?id={$article['pdfid']}"><img src="images/pdf32x32.png" width="32" height="32"></a>
         </td>
         <td rowspan="2" class="articles_by-author-table-title"><a href="?fetch=articles&with=info&id={$article['aid']}">{$article['atitle']}</a></td>
     </tr>
@@ -481,7 +481,7 @@ LoadArticlesList_Each_BookInfo;
 {$book_info}
     </td>
     <td class="articles-list-table-pdficon">
-        <a href="core/getpdf.php?id={$an_article['pdfid']}"><img src="images/pdf32x32.png" width="32" height="32"></a>
+        <a href="core/getfile.php?id={$an_article['pdfid']}"><img src="images/pdf32x32.png" width="32" height="32"></a>
     </td>
     <td class="articles-list-table-title">
         <a href="?fetch=articles&with=info&id={$an_article['id']}">{$an_article['article_title']}</a>

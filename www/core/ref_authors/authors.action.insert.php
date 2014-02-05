@@ -19,7 +19,7 @@ $q = array(
     'phone' => mysql_escape_string($_POST['phone']),
     'bio' => mysql_escape_string($_POST['bio']),
 );
-$qstr = MakeInsert($q,$ref_name);
+$qstr = MakeInsert($q, $ref_name);
 
 if ($res = mysql_query($qstr, $link)) {
     $result['message'] = $qstr;

@@ -1,0 +1,91 @@
+body {
+    font-size:14pt;
+}
+
+.reference_list { /* базовый класс для вывода контента справочника */
+    height: 500px;
+    width: 99%;
+    border: 1px solid gray;
+    overflow-y: scroll;
+}
+
+.centred_cell, th {
+    text-align: center;
+}
+
+/* глобальные классы show/hide */
+.global_display {
+    display: block;
+}
+.global_hide {
+    display: none;
+}
+
+/* класс текстарии */
+textarea {
+    resize: none;
+    /* min-width: 267px;
+min-height:150px;
+max-width: 267px;
+max-height:150px; */
+}
+
+.span_is_es { /* класс для галочки "редколлегия" */
+    white-space: nowrap;
+}
+
+.button-large {
+    height: 60px;
+}
+
+.field {
+    clear:both;
+    text-align:right;
+    line-height:30px;
+}
+
+label {
+    float:left;
+    padding-right:35px;
+}
+
+.fields_area {
+    float:left;
+    clear:both;
+}
+
+.button-large { /* класс для большой кнопки */
+    height: 60px;
+}
+
+img {
+    vertical-align: middle;
+}
+
+/* icons for links */
+a.icon {
+    line-height: 28px;
+}
+.icon:before {
+    height: 24px;
+    width: 24px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.icon-jpg:before {
+    content: " ";
+    background: url(../css/jpeg24x24.png);
+}
+.icon-pdf:before {
+    content: " ";
+    background: url(../css/pdf24x24.png);
+}
+
+.clear {
+    clear:both;
+}
+
+.hidden {
+    display: none;
+}
