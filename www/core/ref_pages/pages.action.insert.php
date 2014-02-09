@@ -1,5 +1,5 @@
 <?php
-print_r($_POST);
+// print_r($_POST);
 
 require_once('../core.php');
 require_once('../core.db.php');

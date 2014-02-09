@@ -1,6 +1,5 @@
 var ref_name = "topics";
 var button_id = 0;
-//@todo: многоязычные топики
 
 function ShowErrorMessage(message)
 {

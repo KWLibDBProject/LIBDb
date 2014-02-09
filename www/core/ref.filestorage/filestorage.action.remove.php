@@ -23,7 +23,7 @@ if ($id != -1)
 
     $result['message'] .= "[ $q ]\r\n";
 
-    $q = "UPDATE $caller SET $field=-1 WHERE id={$file_record['relation']}";
+    $q = "UPDATE {$caller} SET {$field}=-1 WHERE id={$file_record['relation']}";
 
     $result['message'] .= "[ $q ]\r\n";
 

@@ -6,7 +6,7 @@ require_once('../core.kwt.php');
 $ref_name = 'staticpages';
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 
-printr($_POST);
+// printr($_POST);
 
 $link = ConnectDB();
 $q = array(

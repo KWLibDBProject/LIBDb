@@ -152,7 +152,16 @@ switch ($fetch) {
                 $filename = $tpl_path.'/fetch=articles/with=book/f_articles+w_book.'.$site_language;
 
                 $inner_html = new kwt($filename.'.html');
-                // $inner_html->override( array ());
+                // load extended book fields by ID
+                /* move to function!!! */
+                $book_row = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title, file_toc FROM books WHERE id={$_GET['id']}"));
+
+                /* */
+                $inner_html->override( array (
+                    'file_cover' => $book_row['file_cover'],
+                    'file_title' => $book_row['file_title'],
+                    'file_toc' => $book_row['file_toc']
+                ));
                 $inner_html->contentstart();
                 $content = $inner_html->getcontent();
 
@@ -207,6 +216,7 @@ switch ($fetch) {
     case 'page' : {
         /* секция вывода статических или условно-статических страниц */
         $page_alias = ($with === '') ? 'default' : $with;
+        // если никакую страницу не запрашиваем - выводим контент страницы с алиасом DEFAULT
         $content = FE_GetStaticPage($page_alias, $site_language);
 
         break;

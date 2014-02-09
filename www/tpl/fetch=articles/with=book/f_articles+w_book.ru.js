@@ -26,3 +26,12 @@ $("#button-show-all").on('click',function(){
 $('#articles_list').on('click','.more_info',function(){
     location.href = '?fetch=articles&with=info&id='+$(this).attr('name')+siteLanguage;
 });
+
+// attach lightbox event to image above search area
+$(".books-extended-info").on('click','.lightbox-image',function(){
+    $.colorbox({
+        photo: true,
+        href: $(this).attr('href')
+    });
+    return false;
+});

@@ -102,7 +102,7 @@
     </fieldset>
     <fieldset class="fields_area">
         <legend>Управление</legend>
-        <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ АВТОРОВ</strong></button>
+        <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
         <button disabled type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СБОРНИК</strong></button>
         <button type="submit" class="button-large" ><strong>ДОБАВИТЬ СБОРНИК</strong></button>
     </fieldset>

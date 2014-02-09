@@ -32,14 +32,28 @@ $noimg_240x180.= 'x0jGMprxjGhMoxrXyMY2uvGNcIyjHOdIxzra8Y54zKMe98jHPvrxj0SMAAA7';
 $id = isset($_GET['id']) ? $_GET['id'] : -1;
 if ($id != -1) {
     $link = ConnectDB() or Die("Не удается соединиться с базой данных!");
-    $q = "SELECT content, filetype FROM $file_storage WHERE (id=$id)";
+    $q = "SELECT content, filetype, username FROM $file_storage WHERE (id=$id)";
     $result = mysql_query($q) or Die("Не удается выполнить запрос к БД, строка запроса: [$q]");
     $fetch = mysql_fetch_array($result) or Die("Не удается получить результат запроса ($q)");
 
-    header("Content-type: ".$fetch['filetype']);
+    header ("HTTP/1.1 200 OK");
+    header ("X-Powered-By: PHP/" . phpversion());
+    header ("Expires: Thu, 19 Nov 1981 08:52:00 GMT");
+    header ("Cache-Control: None");
+    header ("Pragma: no-cache");
+    header ("Accept-Ranges: bytes");
+    header ("Content-Disposition: inline; filename=\"" . $fetch['username'] . "\"");
+    header ("Content-Type: application/octet-stream");
+    // header ("Content-Length: " . $filesize);
+    header ("Age: 0");
+    header ("Proxy-Connection: close");
+
     print($fetch['content']);
     flush();
     CloseDB($link);
+
+
+
 } else
 {
     header("Content-type: image/gif");

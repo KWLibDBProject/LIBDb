@@ -12,10 +12,10 @@ require_once('core.kwt.php');
 
     <link rel="stylesheet" type="text/css" href="ref_books/books.css">
 
-    <script src="js/core.js"></script>
-    <script src="ref_books/books.js"></script>
+    <script type="text/javascript" src="js/core.js"></script>
+    <script type="text/javascript" src="ref_books/books.js"></script>
 
-    <script src="js/jquery.colorbox.js"></script>
+    <script type="text/javascript" src="js/jquery.colorbox.js"></script>
     <link rel="stylesheet" href="css/colorbox.css" />
 
     <script type="text/javascript">

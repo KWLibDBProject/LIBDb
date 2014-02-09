@@ -34,7 +34,7 @@ if (!IsSet($_GET['id'])) {
             } else {
                 // DB error again
                 $result["error"] = 1;
-                $result['message'] = 'Ошибка удаления сбоника из базы данных!';
+                $result['message'] = 'Ошибка удаления сборника из базы данных!';
             }
         }
     } else {
