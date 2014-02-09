@@ -65,7 +65,7 @@ switch ($actor) {
         break;
     }
     case 'load_articles_by_query' : {
-        $return = DB_LoadArticlesByQuery($_GET, $lang);
+        $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
         break;
     }
 

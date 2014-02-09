@@ -7,6 +7,28 @@ require_once('core/core.kwt.php');
 Служебные функции префикса не имеют.
 */
 
+/* функция загрузки статических страниц из БД */
+function FE_GetStaticPage($alias, $lang)
+{
+    $return = '';
+
+    $query = "SELECT content_{$lang} AS pagecontent FROM staticpages WHERE alias LIKE '{$alias}'";
+    $res = mysql_query($query);
+    $numrows = mysql_num_rows($res);
+
+    if ($numrows == 1) {
+        $a = mysql_fetch_assoc($res);
+        $return = $a['pagecontent'];
+    } else {
+        $html404 = new kwt('tpl/page404.html');
+        $html404->contentstart();
+        $return = $html404->getcontent();
+    }
+    return $return;
+}
+
+
+
 /* загружает из базы рубрики, отдает ассоциативный массив вида [id -> title] */
 function DB_LoadTopics($lang)
 {
@@ -49,10 +71,6 @@ FE_PrintTopics_End;
 /* загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом*/
 function DB_LoadBooks($lang)
 {
-//@todo: ВАЖНО: тут кроется неучтенка: если в одному году несколько сборников - колво статей в них считается неправильно
-    // и вообще запрос составлен неверно (так, как будто в 1 году строго 1 сборник) .
-
-    $ret = '';
     $yq = "SELECT DISTINCT `year` FROM books WHERE `published`=1 AND `deleted`=0 ORDER BY `year` DESC";
 
     $yr = mysql_query($yq);
@@ -84,33 +102,6 @@ ORDER BY books.title";
 
 /* отображает список сборников (книг) согласно инструкциям в translations.php
 Принимает массив с данными и язык вывода */
-function FE_PrintBooks_Old($all_books, $lang='en')
-{
-    $ret = '';
-    $ret .= <<<FE_PrintBooks_Start
-FE_PrintBooks_Start;
-
-    foreach ($all_books as $key => $year_books)
-    {
-        $ret .= <<<FE_PrintBooks_ItemStart
-<li class="books-list-year"><div>{$key}</div><ul>
-FE_PrintBooks_ItemStart;
-
-        foreach ($year_books as $id => $book)
-        {
-            $ret .= <<<FE_PrintBooks_ItemEach
-<li class="books-list-eachbook"><a href="?fetch=articles&with=book&id={$id}"> {$book['title']}</a>  ({$book['count']})</li>
-FE_PrintBooks_ItemEach;
-        }
-        $ret .= <<<FE_PrintBooks_ItemEnd
-</ul></li>
-FE_PrintBooks_ItemEnd;
-    }
-    $ret .= <<<FE_PrintBooks_End
-FE_PrintBooks_End;
-;
-    return $ret;
-}
 
 function FE_PrintBooks($all_books, $lang='en')
 {
@@ -183,31 +174,35 @@ function DB_LoadArticleInformation_ById($id, $lang)
 
 /* возвращает список авторов, участвовавших в создании статьи - как асс.массив
 с учетом языка! */
-function DB_LoadAuthors_ByArticle($id, $lang)
+function DB_LoadAuthors_ByArticle($id, $lang, $with_email='yes')
 {
-    $q = "SELECT authors.id AS aid, name_{$lang}, title_{$lang}, email FROM authors, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id";
-    $ret = '';
+    $q_email = ($with_email == 'yes') ? ', email AS author_email' : ''; // insert email request to query
+    $q = "SELECT authors.id AS author_id, name_{$lang} AS author_name, title_{$lang} AS author_title {$q_email} FROM authors, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id";
+    $ret = array();
     if ($r = mysql_query($q)) {
         while ($row = @mysql_fetch_assoc($r)) {
-            $ret[ $row['aid'] ] = $row;
-        } // у статьи ОБЯЗАТЕЛЬНО есть авторы
+            $ret[ $row['author_id'] ] = $row;
+        }
     }
     return $ret;
 }
 
-/* выводит список авторов по указанной статье на основе загруженных данных DB_LoadAuthors_ByArticle() */
+/*
+выводит список авторов по указанной статье на основе загруженных данных DB_LoadAuthors_ByArticle()
+этот список нужен в /articles/[extended|book|topic]/ (поиск по критерию)
+и в списке авторов по статье -- /articles/info/
+*/
 function FE_PrintAuthors_ByArticle($authors, $lang)
 {
-//     global $MESSAGES;
     $ret = '';
     foreach ($authors as $aid => $a_info)
     {
         // Иванов И.И., др.тех.наук
-        if ($a_info['email'] != '') {
-            $a_info['email'] = '('.$a_info['email'].')';
+        if ($a_info['author_email'] != '') {
+            $a_info['author_email'] = ' ('.$a_info['author_email'].')';
         }
         $ret .= <<<FE_PrintAuthorsInArticle
-<li><a href="?fetch=authors&with=info&id={$a_info['aid']}">{$a_info['name_'.$lang]}, {$a_info['title_'.$lang]}</a> {$a_info['email']} </li>
+<li><a href="?fetch=authors&with=info&id={$a_info['author_id']}&lang=$lang">{$a_info['author_name']}</a>, {$a_info['author_title']} {$a_info['author_email']} </li>\r
 FE_PrintAuthorsInArticle;
     }
     return $ret;
@@ -289,7 +284,6 @@ function FE_SetSiteLanguage($lang)
 */
 function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no')
 {
-    global $MESSAGES_;
     $return = '';
     // check for letter, '0' is ANY first letter
     if ($letter != '0') {
@@ -380,9 +374,9 @@ articles.id
 , articles.title_{$lang} AS article_title
 , articles.book
 , articles.topic
-, books.title AS books_title
-, topics.title_en AS topics_title
-, books.year AS books_year
+, books.title AS book_title
+, topics.title_en AS topic_title
+, books.year AS book_year
 , articles.pages AS article_pages
 , pdfid
 FROM
@@ -407,10 +401,9 @@ authors.id = cross_aa.author AND
     return $q;
 }
 
-/* универсальная функция загрузки списка статей по сложному запросу
-//todo: на самом деле она еще и печатает сразу то что загрузила!
+/* универсальная функция печати списка статей по сложному запросу
 */
-function DB_LoadArticlesByQuery($get, $lang, $loadmode = 'search')
+function _DB_LoadArticlesByQuery($get, $lang, $loadmode = 'search')
 {
     $return = '';
     $query = DB_BuildQuery($get, $lang);
@@ -441,11 +434,11 @@ function DB_LoadArticlesByQuery($get, $lang, $loadmode = 'search')
 · <span class="articles-list-table-authors-list-name">{$an_author['name_'.$lang]}</span>, <span class="articles-list-table-authors-list-title">{$an_author['title_'.$lang]}</span><br>
 LoadArticlesByQuery_AuthorsTemplate; */
                     $all_articles[$id]['authors'] .= <<<LoadArticlesByQuery_AuthorsTemplate
-· <a href="?fetch=authors&with=info&id={$an_author['id']}&lang={$lang}" class="articles-list-table-authors-list-name">{$an_author['name_'.$lang]}</a>, <span class="articles-list-table-authors-list-title">{$an_author['title_'.$lang]}</span><br>
+<li><a href="?fetch=authors&with=info&id={$an_author['id']}&lang={$lang}" class="articles-list-table-authors-list-name">{$an_author['name_'.$lang]}</a>, <span class="articles-list-table-authors-list-title">{$an_author['title_'.$lang]}</span></li>
 LoadArticlesByQuery_AuthorsTemplate;
                 }
-                if (strpos($all_articles[$id]['authors'], '<br>')>0)
-                    $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4); //удаляет последний <br> если он есть
+/*                if (strpos($all_articles[$id]['authors'], '<br>')>0)
+                    $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4); //удаляет последний <br> если он есть */
                     /*
                     $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-1); // удалить последний ";"
                     ВНЕЗАПНО - если его действительно удалять - ломается последний (многобайтовый) выводимый символ и получаются кракозярбы
@@ -487,7 +480,7 @@ LoadArticlesList_Each_BookInfo;
         <a href="?fetch=articles&with=info&id={$an_article['id']}">{$an_article['article_title']}</a>
     </td>
     <td>
-    <span class="articles-list-table-authors-list">{$an_article['authors']}</span>
+    <ul class="articles-list-table-authors-list">{$an_article['authors']}</ul>
     </td>
 <!--        <td>
             <button class="more_info articles-list-table-button-more-info" name="{$an_article['id']}" data-text="More"> >>> </button>
@@ -521,22 +514,160 @@ LoadArticlesList_End;
     return $return;
 }
 
-/* функция загрузки статических страниц из БД */
-function FE_GetStaticPage($alias, $lang)
+/*
+Загрузка статей по сложному запросу
+*/
+
+function DB_LoadArticlesByQuery($get, $lang, $with_email = 'yes')
+{
+    $query = DB_BuildQuery($get, $lang);
+    $res = mysql_query($query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
+    $articles_count = @mysql_num_rows($res);
+    $all_articles = array();
+
+    if ($articles_count > 0) {
+        while ($an_article = mysql_fetch_assoc($res))
+        {
+            $id = $an_article['id'];
+            $all_articles[$id] = $an_article;
+            $all_articles[$id]['authors'] = DB_LoadAuthors_ByArticle($id, $lang, $with_email);
+        } //end while
+    } // end if
+    return $all_articles;
+}
+
+
+/*
+возвращает ОДИН элемент из списка статей в сокращенной нотации (для "полного списка статей")
+а именно - "<li> Название. авторы; автор; автор; сборник, в котором она опубликована"
+*/
+
+function FE_PrintArticleItem_Simple($an_article, $lang)
+{
+    $return = '';
+    $authors_string = '';
+    foreach ($an_article['authors'] as $id => $an_author)
+    {
+        $authors_string .= ' '.$an_author['author_name'].';';
+    }
+    // $authors_string = substr($authors_string,0,-1); // удалить последний ";"
+
+    $return .= <<<FE_PAI_Simple
+<li>
+    <a href="?fetch=articles&with=info&id={$an_article['id']}">{$an_article['article_title']}</a>
+    {$authors_string} {$an_article['book_year']}
+</li>
+FE_PAI_Simple;
+
+    return $return;
+}
+
+/*
+возвращает ОДИН элемент из списка статей в расширенной табличной нотации (для отбора статей)
+*/
+
+function FE_PrintArticleItem_Extended($an_article, $lang)
+{
+    $return = '';
+    $authors_string = '';
+    // построить список авторов
+    $authors_string = FE_PrintAuthors_ByArticle($an_article['authors'], $lang);
+
+    switch ($lang) {
+        case 'en': { $lal_e_bi = 'Pp. '; break; }
+        case 'ru': { $lal_e_bi = 'C. '; break; }
+        case 'uk': { $lal_e_bi = 'C. '; break; }
+    }
+
+    $book_info = <<<LoadArticlesList_Each_BookInfo
+<nobr>{$an_article['books_title']}</nobr><br>
+<nobr>{$lal_e_bi} {$an_article['article_pages']}</nobr>
+LoadArticlesList_Each_BookInfo;
+
+
+    $return .= <<<LoadArticlesList_Each
+<tr>
+    <td class="articles-list-table-book-title">
+        {$book_info}
+    </td>
+    <td class="articles-list-table-pdficon">
+        <a href="core/getfile.php?id={$an_article['pdfid']}"><img src="images/pdf32x32.png" width="32" height="32"></a>
+    </td>
+    <td class="articles-list-table-title">
+        <a href="?fetch=articles&with=info&id={$an_article['id']}">{$an_article['article_title']}</a>
+    </td>
+    <td>
+        <ul class="articles-list-table-authors-list">
+            {$authors_string}
+        </ul>
+    </td>
+</tr>
+LoadArticlesList_Each;
+    return $return;
+}
+
+/* выводит СПИСОК статей в СОКРАЩЕННОЙ нотации */
+function FE_PrintArticlesList_Simple($articles, $lang)
+{
+    $return = '';
+    if (count($articles)>0)
+    {
+        $return .= <<<PAL_S_Start
+<ul class="articles-list-full">
+PAL_S_Start;
+        foreach ($articles as $an_article_id => $an_article_data)
+        {
+            $return .= FE_PrintArticleItem_Simple($an_article_data, $lang);
+        }
+        $return .= <<<PAL_S_End
+</ul>
+PAL_S_End;
+    }
+    return $return;
+}
+
+/* выводит СПИСОК статей в ПОЛНОЙ нотации (таблицу) (для отборочных скриптов)*/
+function FE_PrintArticlesList_Extended($articles, $lang)
 {
     $return = '';
 
-    $query = "SELECT content_{$lang} AS pagecontent FROM staticpages WHERE alias LIKE '{$alias}'";
-    $res = mysql_query($query);
-    $numrows = mysql_num_rows($res);
+    if (count($articles) > 0)
+    {
+        $return .= <<<LoadArticlesList_Start
+<table class="articles-list-by-query" border="1" width="100%">
+LoadArticlesList_Start;
 
-    if ($numrows == 1) {
-        $a = mysql_fetch_assoc($res);
-        $return = $a['pagecontent'];
+        foreach ($articles as $an_article_id => $an_article_data)
+        {
+            $return .= FE_PrintArticleItem_Extended($an_article_data, $lang);
+        }
+
+        $return .= <<<LoadArticlesList_End
+</table>
+LoadArticlesList_End;
     } else {
-        $html404 = new kwt('tpl/page404.html');
-        $html404->contentstart();
-        $return = $html404->getcontent();
+        switch ($lang)
+        {
+            case 'en': {
+                $return .= <<<LoadArticlesList_SearchNoArticles_EN
+<br><strong>No articles found within this search criteria!</strong>
+LoadArticlesList_SearchNoArticles_EN;
+                break;
+            }
+            case 'ru': {
+                $return .= <<<LoadArticlesList_SearchNoArticlesRU
+<br><strong>No articles found within this search criteria!</strong>
+LoadArticlesList_SearchNoArticlesRU;
+                break;
+            }
+            case 'uk': {
+                $return .= <<<LoadArticlesList_SearchNoArticlesUA
+<br><strong>No articles found within this search criteria!</strong>
+LoadArticlesList_SearchNoArticlesUA;
+                break;
+            }
+        }
+        // empty array
     }
     return $return;
 }

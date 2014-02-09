@@ -152,11 +152,9 @@ switch ($fetch) {
                 $filename = $tpl_path.'/fetch=articles/with=book/f_articles+w_book.'.$site_language;
 
                 $inner_html = new kwt($filename.'.html');
-                // load extended book fields by ID
-                /* move to function!!! */
+                // load extended book fields by ID -- @todo: move to function !!!
                 $book_row = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title, file_toc FROM books WHERE id={$_GET['id']}"));
 
-                /* */
                 $inner_html->override( array (
                     'file_cover' => $book_row['file_cover'],
                     'file_title' => $book_row['file_title'],
@@ -181,7 +179,7 @@ switch ($fetch) {
                 $inner_html = new kwt($filename.'.html');
 
                 $article_info = DB_LoadArticleInformation_ById($id, $site_language);
-                $article_authors = FE_PrintAuthors_ByArticle(DB_LoadAuthors_ByArticle($id, $site_language), $site_language);
+                $article_authors = FE_PrintAuthors_ByArticle(DB_LoadAuthors_ByArticle($id, $site_language, 'yes'), $site_language);
 
                 $inner_html->override( array (
                     'article-title' => $article_info['title_'.$site_language],
@@ -208,6 +206,23 @@ switch ($fetch) {
                 break;
             } // end case info
             case 'all' : {
+                // список ВСЕХ СТАТЕЙ - для поисковых систем
+                // фио, титул, email -> link to author page
+                $filename = $tpl_path.'/fetch=articles/with=all/f_articles+w_all.'.$site_language;
+                $inner_html = new kwt($filename.".html");
+
+                $inner_html->override( array (
+                    'all_articles_list' => FE_PrintArticlesList_Simple(DB_LoadArticlesByQuery(array(), $site_language, 'no') ,$lang)
+                ));
+                $inner_html->contentstart();
+                $content = $inner_html->getcontent();
+
+                $inner_js = new kwt($filename.".js");
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
+
+
+
                 break;
             }// end case all
         } // end $with articles switch

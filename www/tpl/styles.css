@@ -152,8 +152,18 @@ fieldset.search_results {
 .articles-list-table-title {}
 /* стиль к спану со списком авторов у статьи */
 .articles-list-table-authors-list {
+    list-style-type: none;
+    padding: 0;
+    margin:0;
+}
+.articles-list-table-authors-list li {
     font-size: small;
 }
+
+.articles-list-table-authors-list li:before{
+    content: '· ';
+}
+
 /* вложенный спан с фамилией*/
 .articles-list-table-authors-list-name {
     /* font-weight: bold; */
@@ -164,3 +174,7 @@ fieldset.search_results {
 /* стиль к ячейке с кнопкой MOAR */
 .articles-list-table-button-more-info {}
 
+/* класс UL для списка ВСЕХ статей */
+.articles-list-full {
+    list-style-type: disc;
+}
