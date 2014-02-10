@@ -2,6 +2,10 @@
 require_once('core.php');
 require_once('core.db.php');
 require_once('core.kwt.php');
+
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
 ?>
 <html>
 <head>
@@ -22,7 +26,7 @@ require_once('core.kwt.php');
             $("#pages_list").load("ref_pages/pages.action.list.php");
 
             $("#button_exit").on('click',function(event){
-                window.location.href = 'admin.html';
+                window.location.href = '/core/';
             });
             $("#add_item").on('click',function(event){
                 window.location.href = 'ref_pages/pages.form.php';

@@ -27,6 +27,7 @@ BODY { margin: 0; background: #f0f8ff; }
     width: 180px;
 }
 .t-logo-menu {
+    overflow: hidden;
 }
 #menubar {
     position: relative;

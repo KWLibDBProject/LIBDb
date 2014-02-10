@@ -3,7 +3,6 @@
     <title>Redirect... </title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="refresh" content="{%time%};URL={%target%}">
-    <link rel="stylesheet" type="text/css" href="ref_authors/authors.css">
     <style type="text/css">
         #wait {  /* класс для области вывода таймера */
             color: red;

@@ -1,7 +1,11 @@
-﻿<?php
+<?php
 require_once('core.php');
 require_once('core.db.php');
 require_once('core.kwt.php');
+
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
 ?>
 <html>
 <head>
@@ -103,7 +107,7 @@ require_once('core.kwt.php');
             });
 
             $("#button-exit").on('click',function(event){
-                window.location.href = 'admin.html';
+                window.location.href = '/core/';
             });
 
         });

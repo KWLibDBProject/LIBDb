@@ -2,6 +2,11 @@
 require_once('core.php');
 require_once('core.db.php');
 require_once('core.kwt.php');
+
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
+
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -37,7 +42,7 @@ require_once('core.kwt.php');
                 location.href = 'ref_articles/articles.form.add.php';
             });
             $("#button-exit").on('click',function(){
-                location.href = 'admin.html';
+                location.href = '/core/';
             });
             $('#articles_list')
                     .on('click','.download-pdf',function(){

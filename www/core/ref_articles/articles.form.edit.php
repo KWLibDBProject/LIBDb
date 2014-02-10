@@ -3,51 +3,67 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
+
 $ref_filestorage = 'filestorage';
 
-$id = IsSet($_GET['id']) ? $_GET['id'] : 1;
+if (isset($_GET['id']))
+{
+    $id = $_GET['id'];
+} else {
+    Redirect('/core/ref.articles.show.php');
+}
 
 $link = ConnectDB();
 $query = "select * from articles where id=$id"; // получаем СТАТЬЮ
+
 $res_article = mysql_query($query) or die("Невозможно получить содержимое статьи! ".$query);
+
 $numarticles = @mysql_num_rows($res_article);
-if ($numarticles)
+
+if ($numarticles == 1)
 {
     $the_article = mysql_fetch_assoc($res_article);
-}
 // получаем авторов
-$query = "select * from cross_aa where article=$id";
-$res_authors = mysql_query($query) or die("Невозможно получить кросс-таблицу автор X статья! ".$query);
+    $query = "select * from cross_aa where article=$id";
+    $res_authors = mysql_query($query) or die("Невозможно получить кросс-таблицу автор X статья! ".$query);
 
-$numauthors = @mysql_num_rows($res_authors);
-$the_loadedAuthorsNum = $numauthors;
+    $numauthors = @mysql_num_rows($res_authors);
+    $the_loadedAuthorsNum = $numauthors;
 
-$currAuthList = "{ ";
+    $currAuthList = "{ ";
 
-if ($numauthors>0)
-{
-    for ($i=1;$i<=$numauthors;$i++)
+    if ($numauthors>0)
     {
-        $tmp = mysql_fetch_assoc($res_authors);
-        $currAuthList .= " $i : $tmp[author] ,";
+        for ($i=1;$i<=$numauthors;$i++)
+        {
+            $tmp = mysql_fetch_assoc($res_authors);
+            $currAuthList .= " $i : $tmp[author] ,";
+        }
     }
-}
 
-$the_currAuthList = substr($currAuthList,0,-1);
-$the_currAuthList.= '}'; // значение для currAuthorsList
+    $the_currAuthList = substr($currAuthList,0,-1);
+    $the_currAuthList.= '}'; // значение для currAuthorsList
 
-$the_mode = 'edit';
-$the_currentBook = $the_article['book'];
-$the_currentTopic = $the_article['topic'];
+    $the_mode = 'edit';
+    $the_currentBook = $the_article['book'];
+    $the_currentTopic = $the_article['topic'];
 
 // получаем ПДФ-файл
-$qp = "SELECT id,username,filesize FROM $ref_filestorage WHERE relation=$id";
-$rp = mysql_query($qp,$link);
-$np = @mysql_num_rows($rp);
-if ($np > 0) {
-    $the_file = mysql_fetch_assoc($rp);
+    $qp = "SELECT id,username,filesize FROM $ref_filestorage WHERE relation=$id";
+    $rp = mysql_query($qp,$link);
+    $np = @mysql_num_rows($rp);
+    if ($np > 0) {
+        $the_file = mysql_fetch_assoc($rp);
+    }
+} else {
+    $the_currAuthList = '{ }';
+    $the_loadedAuthorsNum = 0;
+    $the_currentBook = -1;
+    $the_currentTopic = -1;
 }
-
 CloseDB($link);
 ?>
 <!DOCTYPE HTML>
@@ -69,9 +85,15 @@ CloseDB($link);
         .hidden {
             display: none;
         }
+        #no_article_warning {
+            font-weight: bold;
+            font-size: 150%;
+            color: red;
+        }
     </style>
 
     <script type="text/javascript">
+        var isArticleExists = <?php echo $numarticles ?>;
         var authorsList = preloadOptionsList('../ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
         var topicsList = preloadOptionsList('../ref_topics/ref.topics.action.getoptionlist.php');
@@ -99,6 +121,11 @@ CloseDB($link);
             force_p_newlines : false});
 
         $(document).ready(function () {
+            if (0 == isArticleExists) {
+                $('#form_edit_article').hide();
+                $('#no_article_warning').show();
+            }
+
             // onload, load authors
             if (mode == 'edit') {
                 for (i=1; i<=loadedAuthorsNum; i++)
@@ -158,9 +185,9 @@ CloseDB($link);
                 });
             });
 
-            $("#button-exit").on('click',function(event){
+            $(".button-exit").on('click',function(event){
                 event.preventDefault();
-                window.location.href = '../ref.articles.show.php';
+                window.location.href = '/core/ref.articles.show.php';
             });
 
             $("#form_edit_article").submit(function(){
@@ -199,7 +226,10 @@ CloseDB($link);
 </head>
 
 <body>
-<form action="../ref_articles/articles.action.update.php" method="post" enctype="multipart/form-data" id="form_edit_article">
+<div id="no_article_warning" class="hidden">
+    СТАТЬЯ С УКАЗАННЫМ ИДЕНТИФИКАТОРОМ В БАЗЕ НЕ ОБНАРУЖЕНА!!!
+</div>
+<form action="articles.action.update.php" method="post" enctype="multipart/form-data" id="form_edit_article">
     <input type="hidden" name="article_id" value="<?php echo $id; ?>">
 
     <fieldset>
@@ -308,7 +338,8 @@ CloseDB($link);
     </fieldset>
     <button type="submit" class="button-large" id="button-save"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
     <button type="button" class="button-large" id="button-delete" name="<?php echo $id; ?>"><strong>УДАЛИТЬ СТАТЬЮ</strong></button>
+    <button type="button" class="button-large button-exit"><strong>ОТМЕНИТЬ</strong></button>
 </form>
-<button type="button" class="button-large" id="button-exit"><strong>ОТМЕНИТЬ</strong></button>
+
 </body>
 </html>

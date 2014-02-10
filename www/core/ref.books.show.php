@@ -1,7 +1,11 @@
-﻿<?php
+<?php
 require_once('core.php');
 require_once('core.db.php');
 require_once('core.kwt.php');
+
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
 ?>
 <html>
 <head>
@@ -24,7 +28,7 @@ require_once('core.kwt.php');
             $("#books_list").load("ref_books/books.action.list.php");
 
             $("#button_exit").on('click',function(event){
-                window.location.href = 'admin.html';
+                window.location.href = '/core/';
             });
             $("#add_item").on('click',function(event){
                 window.location.href = 'ref_books/books.form.add.php';

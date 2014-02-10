@@ -51,12 +51,11 @@ function Redirect($url)
  */
 function isLogged()
 {
+    // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
     $we_are_logged = !empty($_SESSION);
     $we_are_logged = $we_are_logged && isset($_SESSION['u_id']);
     $we_are_logged = $we_are_logged && $_SESSION['u_id'] !== -1;
     $we_are_logged = $we_are_logged && isset($_COOKIE['u_libdb_logged']);
-    // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
-    // return $we_are_logged ? 1 : 0;
     return (int) $we_are_logged ;
 }
 

@@ -70,7 +70,8 @@ function DBLoginCheck($login, $password)
                 'error' => 0,
                 'message' => 'User credentials correct! ',
                 'id' => $user['id'],
-                'permissions' => $user['permissions']
+                'permissions' => $user['permissions'],
+                'url' => 'admin.html'
             );
         } else {
             // пароль неверен

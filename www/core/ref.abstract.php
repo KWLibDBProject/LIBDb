@@ -1,4 +1,11 @@
 <?php
+require_once('core.php');
+require_once('core.db.php');
+
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
+
 /*
 Abstract reference module
 

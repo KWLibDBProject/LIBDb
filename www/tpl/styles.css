@@ -3,6 +3,17 @@ ul, ol {
     list-style-type:none;
 }
 
+/* Header */
+.t-logo-title {
+}
+
+.logo-title {
+    font-weight: bold;
+    font-size: 200%;
+    color: navy;
+    font-style: italic;
+}
+
 /* Рубрики (темы) - стили для списка и элементов */
 .rubrics-list ul {
     padding: 5px 10px 0 20px;

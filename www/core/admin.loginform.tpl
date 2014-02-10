@@ -11,6 +11,7 @@
             $.ajaxSetup({cache: false});
 
             $("#loginform").on('click','#logintry',function(event){
+                event.preventDefault();
                 $('#message').empty().hide();
                 var $form = $("#loginform").find('form');
                 fValid = true;
@@ -27,15 +28,16 @@
                         result = $.parseJSON(data);
                         if (result['error'] == 0) {
                             // default
-                            md5 = md5($form.find("input[name='password']").val());
+                            document.location.href = result['url'];
+                            /* md5 = md5($form.find("input[name='password']").val());
                             $form.find("input[name='timestamp']").val( parseInt(new Date().getTime()/1000) );
                             $form.find("input[name='password']").val(md5);
                             $form.find("input[name='md5password']").val(md5);
-                            $form.trigger('submit');
+                            $form.trigger('submit'); */
                         } else {
                             // error message
                             $('#message').html(result['message']).fadeIn(500);
-                            event.preventDefault();
+                            // event.preventDefault();
                         }
                     });
 
@@ -43,6 +45,7 @@
                     // логин пуст
                     $('#message').fadeIn(500).html('Логин-то введите, ок? ');
                 }
+                event.preventDefault();
             });
         });
     </script>
@@ -51,17 +54,32 @@
             border: 1px solid red;
             display: none;
         }
+        dt {
+            float: left; /* Для размещения на одной строке */
+            width: 100px; /* Ширина для текста */
+            text-align: right; /* Выравнивание по правому краю */
+            padding-right: 5px; /* Отступ справа */
+            min-height: 1px; /* Минимальная высота */
+        }
+        dd {
+            position: relative; /* Относительное позиционирование */
+            top: -1px; /* Смещаем поля вверх */
+            margin-bottom: 10px; /* Расстояние между строк */
+        }
     </style>
 </head>
 <body>
 <div id="loginform">
     <form action="admin.login.php" method="post">
-        <label>Login: <input type="text" name="login" required></label><br>
-        <label>Password: <input type="password" name="password"></label><br>
-        <input type="hidden" name="md5password">
-        <input type="hidden" name="timestamp">
+        <dl>
+            <dt>Login: </dt>
+            <dd><input type="text" name="login" required></label></dd>
+            <dt>Password: </dt>
+            <dd><input type="password" name="password"></dd>
+            <dt></dt>
+            <dd><button type="submit" id="logintry">Вход</button></dd>
+        </dl>
     </form>
-    <button id="logintry">Вход</button>
 </div>
 <div id="message"></div>
 <a href="/index.php">Переход к основному сайту</a>
