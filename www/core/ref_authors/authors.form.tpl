@@ -24,14 +24,13 @@
 
             if (author_id != -1) {
                 Authors_LoadRecord("#form_edit_author", author_id, 'bio');
-                $("#button-remove").show();
+                $("#button-remove").show().on('click',function(event){
+                    window.location.href = 'authors.action.remove.php?id='+author_id;
+                });
             }
 
             $("#button-exit").on('click',function(event){
-                window.location.href = '../ref.authors.show.php';
-            });
-            $("#button-remove").on('click',function(event){
-                window.location.href = 'authors.action.remove.php?id='+author_id;
+                window.location.href = '/core/ref.authors.show.php';
             });
             $("#is_es").on('change',function(event){
                 $("#es_fieldset").toggle();

@@ -18,14 +18,14 @@ if ($ref_numrows > 0) {
     while ($ref_record = mysql_fetch_assoc($res)) {
         $ref_list[$ref_record['id']] = $ref_record;
     }
-} else {
-    $ref_message = 'Пока не ввели ни одного автора!';
 }
 
 CloseDB($link);
-?>
-
+$return = <<<AAL_Start
 <table border="1" width="100%">
+AAL_Start;
+
+$return .= <<<AAA_TH
     <tr>
         <th width="3%"> ID </th>
         <th width="30%" colspan="2"> Ф.И.О. </th>
@@ -34,12 +34,15 @@ CloseDB($link);
         <th width="22%"> Место работы </th>
         <th width="5%">&nbsp;</th>
     </tr>
-    <!-- single table row -->
-<?php
-    if ($ref_numrows>0) {
-        foreach ($ref_list as $row) {
-            //@todo: TEMPLATE ?
-echo <<<REF_ONEROW
+AAA_TH;
+if ($ref_numrows > 0)
+{
+    foreach ($ref_list as $row) {
+        foreach ($row as $fid => $field) {
+            if (empty($field)) $row[$fid] = '&nbsp;';
+        }
+
+        $return .= <<<AAA_EACH
     <tr>
         <td rowspan="3"> {$row['id']} </td>
         <td width="4%"><strong>Eng:</strong></td>
@@ -61,15 +64,23 @@ echo <<<REF_ONEROW
         <td><strong>Укр:</strong></td>
         <td> {$row['name_uk']} </td>
         <td> {$row['title_uk']} </td>
-        <td> &nbsp; </td>
-        <td> &nbsp; </td>
+        <td> Photo: </td>
+        <td>
+            <a href="css/kota.jpg" target="_blank" class="lightbox"> &lt;Show&gt; </a>
+        </td>
     </tr>
-REF_ONEROW;
-        } //foreach
-        echo '</table>';
-    } else {
-echo <<<REF_NUMROWS_ZERO
-<tr><td colspan="11">$ref_message</td></tr>
-REF_NUMROWS_ZERO;
-    } // else
+AAA_EACH;
+    }
+} else {
+    $return .= <<<AAA_NO_AUTHORS
+<tr><td colspan="11">Пока не добавили ни одного автора!</td></tr>
+AAA_NO_AUTHORS;
+
+}
+
+$return .= <<<AAA_END
+</table>
+AAA_END;
+
+print $return;
 ?>

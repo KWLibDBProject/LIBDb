@@ -14,7 +14,7 @@ book - показать статьи в сборнике
 */
 
 $link = ConnectDB();
-
+/* этот же запрос существует в frontend.php (DB_BuildQuery)*/
 $query = "
 SELECT DISTINCT articles.id, articles.title_en AS title_en, articles.title_ru AS title_ru, articles.title_uk AS title_uk, udc, pdfid, add_date, pages,
 topics.title_ru AS ttitle,

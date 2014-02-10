@@ -48,11 +48,11 @@ if (isAjaxCall()) {
 } else {
     $override = array(
         'time' => 15,
-        'target' => '../ref.authors.show.php',
+        'target' => '/core/ref.authors.show.php',
         'buttonmessage' => 'Вернуться к списку авторов',
         'message' => $result['message']
     );
-    $tpl = new kwt('../ref.all.timed.callback.tpl');
+    $tpl = new kwt('/core/ref.all.timed.callback.tpl');
     $tpl->override($override);
     $tpl->out();
 }

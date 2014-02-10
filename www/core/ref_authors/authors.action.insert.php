@@ -38,11 +38,11 @@ if (isAjaxCall()) {
         // use template
         $override = array(
             'time' => 10,
-            'target' => '../ref.authors.show.php',
+            'target' => '/core/ref.authors.show.php',
             'buttonmessage' => 'Вернуться к списку авторов',
             'message' => 'Автор добавлен в базу данных'
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
+        $tpl = new kwt('/core/ref.all.timed.callback.tpl');
         $tpl->override($override);
         $tpl->out();
     }
