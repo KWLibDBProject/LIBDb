@@ -16,8 +16,8 @@
         }
         ul{
             margin-left: 0;
-            padding-left: 0;
             margin-bottom: 0; margin-top: 0;
+            padding: 0;
         }
         ul li {
             list-style-type: none;
@@ -32,7 +32,7 @@
             background-color: #d3d3d3;
         }
         .admin-button {
-            height: 40px;
+            height: 60px;
             width: 150px;
         }
     </style>
@@ -41,28 +41,56 @@
 <body>
 <table width="100%">
     <tr>
-        <td>
+        <td width="180">
             <!-- типа меню -->
-            <div>СПРАВОЧНИКИ: </div>
             <ul>
-                <li><button data-href="ref.topics.show.php" class="admin-button">ТЕМАТИЧЕСКИЕ РАЗДЕЛЫ</button></li>
-                <li><button data-href="ref.books.show.php" class="admin-button">СБОРНИКИ (КНИГИ)</button></li>
-                <li></li>
+                <li>
+                    Разделы сайта
+                </li>
+                <li>
+                    <button data-href="ref.topics.show.php" class="admin-button">ТЕМАТИЧЕСКИЕ РАЗДЕЛЫ</button>
+                </li>
+                <li>
+                    <button data-href="ref.books.show.php" class="admin-button">СБОРНИКИ (КНИГИ)</button>
+                </li>
+                <li>
+                    <button data-href="ref.authors.show.php" class="admin-button">АВТОРЫ</button>
+                </li>
+                <li>
+                    <button data-href="ref.articles.show.php" class="admin-button">СТАТЬИ</button>
+                </li>
+                <li>
+                    <button data-href="ref.pages.show.php" class="admin-button">СТАТИЧЕСКИЕ<br>СТРАНИЦЫ</button>
+                </li>
+                <li>
+                    <div>Администратору:</div>
+                </li>
+                <li>
+                    <button data-href="ref.users.show.php" class="admin-button">ПОЛЬЗОВАТЕЛИ</button>
+                </li>
+                <li>
+                    <button data-href="ref.filestorage.show.php" class="admin-button" disabled>Filestorage</button>
+                </li>
+                <li>
+                    <button data-href="statistics.show.php" class="admin-button" disabled>Статистика</button>
+                </li>
+                <li>
+                    Управление:
+                </li>
+                <li>
+                    <button data-href="admin.logout.php" class="admin-button">Logout</button>
+                </li>
             </ul>
-            <div>&nbsp;</div>
-            <button data-href="ref.authors.show.php" class="admin-button">АВТОРЫ</button>
-            <div>&nbsp;</div>
-            <button data-href="ref.articles.show.php" class="admin-button">СТАТЬИ</button>
-            <hr>
-            <button data-href="ref.pages.show.php" class="admin-button">СТАТИЧЕСКИЕ<br>СТРАНИЦЫ</button>
-            <hr>
-            <div>Администратору:</div>
-            <button data-href="ref.users.show.php" class="admin-button">СПРАВОЧНИК: ПОЛЬЗОВАТЕЛИ</button>
-            <br><br>
-            <button data-href="admin.logout.php" class="admin-button">Logout</button>
         </td>
-        <td>
-            <!-- типа контент -->
+        <td valign="top">
+            <h1>Рекомендуемый порядок ввода данных</h1>
+            <ol>
+                <li>
+
+                </li>
+
+
+            </ol>
         </td>
     </tr>
 </table>

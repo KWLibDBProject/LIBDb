@@ -3,6 +3,10 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
+
 $ref_filestorage = 'filestorage';
 
 $result['message'] = '';
@@ -79,14 +83,14 @@ CloseDB($link);
 if ($result['error'] == 0) {
     $override = array(
         'time' => 10,
-        'target' => '../ref.articles.show.php',
+        'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
         'message' => 'Статья добавлена'
     );
 } else {
     $override = array(
         'time' => 10,
-        'target' => '../ref.articles.show.php',
+        'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
         'message' => $result['message']
     );

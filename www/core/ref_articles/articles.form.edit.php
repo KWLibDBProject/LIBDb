@@ -281,15 +281,15 @@ CloseDB($link);
         <table>
             <tr>
                 <td><label for="title_en">Article title</label></td>
-                <td><input type="text" name="title_en" id="title_en" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_en'] ;?>"></td>
+                <td><input type="text" name="title_en" id="title_en" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_en'] ;?>"></td>
             </tr>
             <tr>
                 <td><label for="title_ru">Название статьи:</label></td>
-                <td><input type="text" name="title_ru" id="title_ru" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_ru'] ;?>"></td>
+                <td><input type="text" name="title_ru" id="title_ru" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_ru'] ;?>"></td>
             </tr>
             <tr>
                 <td><label for="title_uk">Назва статті:</label></td>
-                <td><input type="text" name="title_uk" id="title_uk" size="60" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_uk'] ;?>"></td>
+                <td><input type="text" name="title_uk" id="title_uk" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_uk'] ;?>"></td>
             </tr>
         </table>
     </fieldset>

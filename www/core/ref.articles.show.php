@@ -17,14 +17,6 @@ if (!isLogged()) header('Location: /core/');
     <script src="js/core.js"></script>
 
     <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
-    <style>
-        button {
-            height: 30px;
-        }
-        .label-span {
-            min-width: 10em;
-        }
-    </style>
     <script type="text/javascript">
         var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
@@ -73,27 +65,35 @@ if (!isLogged()) header('Location: /core/');
 </head>
 
 <body>
-<button id="button-exit" class="button-large">Выход в админку </button>
-<button id="button-newarticle" class="button-large">Добавить новую статью </button>
+<button id="button-exit" class="button-large button-bold"><<< Back </button>
+<button id="button-newarticle" class="button-large">Добавить статью </button>
 <hr>
 <fieldset>
     <legend>Критерии отбора</legend>
-    <label>
-        <span class="label-span">Автор: </span><select name="with_author"><option value="0">ЛЮБОЙ</option></option></select>
-    </label><br>
-    <label>
-        <span class="label-span">Категория (рубрика): </span><select name="with_topic"><option value="0">ЛЮБОЙ</option></select>
-    </label><br>
-    <label>
-        <span class="label-span">Сборник (книга): </span><select name="with_book"><option value="0">ЛЮБОЙ</option></select>
-    </label><br>
-    <button id="button-show-withselection">Показать выбранное</button>
-    <button id="button-reset-selection">Сбросить критерии</button>
-    <button id="button-show-all">Показать ВСЕ статьи</button>
+    <dl>
+        <dt>Автор:</dt>
+        <dd>
+            <select name="with_author"><option value="0">ЛЮБОЙ</option></option></select>
+        </dd>
+        <dt>Тематический раздел: </dt>
+        <dd>
+            <select name="with_topic"><option value="0">ЛЮБОЙ</option></select>
+        </dd>
+        <dt>Сборник (книга):</dt>
+        <dd>
+            <select name="with_book"><option value="0">ЛЮБОЙ</option></select>
+        </dd>
+    </dl>
+    <button id="button-show-withselection" class="button-large">Показать выбранное</button>
+    <button id="button-reset-selection" class="button-large">Сбросить критерии</button>
+    <button id="button-show-all" class="button-large hidden">Показать ВСЕ статьи</button>
+</fieldset>
+<fieldset class="result">
+    <legend>Результаты поиска</legend>
+    <div id="articles_list">
+    </div>
 </fieldset>
 
-<div id="articles_list">
-</div>
 
 </body>
 </html>

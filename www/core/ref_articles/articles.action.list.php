@@ -53,29 +53,33 @@ if ($articles_count>0) {
         }
 
         // получить информацию об авторах
-
-        //@todo: LANGUAGE (в админке все по русски)
         $r_auths = mysql_query("SELECT authors.name_ru,authors.title_ru,authors.id FROM authors,cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
         $r_auths_count = @mysql_num_rows($r_auths);
 
         if ($r_auths_count>0)
         {
-            $i=1;
+            // $i=1;
             while ($an_author = mysql_fetch_assoc($r_auths))
             {
-                $all_articles[$id]['authors'] .= $an_author['name_ru']." (".$an_author['title_ru']." )<br>";
-                $i++;
+                $all_articles[$id]['authors'] .= <<<ArticlesAL_AuthorsEach
+<li> <a href="/?fetch=authors&with=info&id={$an_author['id']}&lang=ru" target="_blank">{$an_author['name_ru']}</a> ({$an_author['title_ru']})</li>
+ArticlesAL_AuthorsEach;
+                // $i++;
             }
-            $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4);
+            // $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4);
         }
     }
 }
 CloseDB($link);
-?>
+
+$return = <<<ArticlesAL_Start
 <table border="1" width="100%">
+ArticlesAL_Start;
+
+$return .= <<<ArticlesAL_TH
     <tr>
         <th width="3%">id</th>
-        <th>Топик</th>
+        <th>Тематический<br> раздел</th>
         <th>Сборник</th>
         <th width="7%">УДК</th>
         <th>Авторы</th>
@@ -83,35 +87,42 @@ CloseDB($link);
         <th width="7%">Дата</th>
         <th width="105" colspan="1">Control<br><small>PDF info</small></th>
     </tr>
-    <?php
-    if ($articles_count > 0) {
-        foreach ($all_articles as $a_id => $a_article)
-        {
-            $row = $a_article;
-            //@todo: TEMPLATE : можно переделать под темлейты
-            echo <<<REF_ANYARTICLE
+ArticlesAL_TH;
+
+if ($articles_count > 0) {
+    foreach ($all_articles as $a_id => $a_article)
+    {
+        $row = $a_article;
+        $return .= <<<ArticlesAL_Each
 <tr>
 <td>{$row['id']}</td>
 <td>{$row['ttitle']}</td>
-<td>{$row['btitle']}</td>
+<td><nobr>{$row['btitle']}</nobr></td>
 <td>{$row['udc']}</td>
-<td><small>{$row['authors']}</small></td>
-<td><small>Eng: {$row['title_en']}<br>Рус: {$row['title_ru']}<br>Укр: {$row['title_uk']}</small></td>
-<td>{$row['add_date']}</td>
 <td>
-<!-- <small>{$row['pdffile']['username']} ({$row['pdffile']['filesize']} bytes)</small><br> -->
+<ol class="articles-list-table-authors-list">
+{$row['authors']}
+</ol>
+</td>
+<td><small>{$row['title_ru']}</small></td>
+<td class="center_cell"><small>{$row['add_date']}</small></td>
+<td>
     <button class="download-pdf" name="{$row['pdffile']['id']}" data-text="Show PDF"></button>
     <button class="edit_button" name="{$row['id']}" data-text="Edit"></button>
 </td>
 </tr>
-REF_ANYARTICLE;
-        }
-    } else {
-        echo <<<REF_NUMROWS_ZERO
-<tr><td colspan="8">$ref_message</td></tr>
-REF_NUMROWS_ZERO;
+ArticlesAL_Each;
     }
+} else {
+    $return .= <<<ArticlesAL_Nothing
+<tr><td colspan="8">Статей не найдено</td></tr>
 
-    ?>
+ArticlesAL_Nothing;
+}
 
+$return .= <<<ArticlesAL_End
 </table>
+ArticlesAL_End;
+
+print($return);
+?>

@@ -100,7 +100,7 @@ if (!isLogged()) header('Location: /core/');
 
             $("#button-exit").on('click',function(event){
                 event.preventDefault();
-                window.location.href = '../ref.articles.show.php';
+                window.location.href = '/core/ref.articles.show.php';
                 return false;
             });
 
@@ -177,15 +177,15 @@ if (!isLogged()) header('Location: /core/');
         <table>
             <tr>
                 <td><label for="title_en">Article title</label></td>
-                <td><input type="text" name="title_en" id="title_en" size="60" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="title_en" id="title_en" size="80" class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
                 <td><label for="title_ru">Название статьи:</label></td>
-                <td><input type="text" name="title_ru" id="title_ru" size="60" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="title_ru" id="title_ru" size="80" class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
                 <td><label for="title_uk">Назва статті:</label></td>
-                <td><input type="text" name="title_uk" id="title_uk" size="60" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="title_uk" id="title_uk" size="80" class="text ui-widget-content ui-corner-all"></td>
             </tr>
         </table>
     </fieldset>
@@ -233,8 +233,9 @@ if (!isLogged()) header('Location: /core/');
         <textarea id="refs" name="refs" cols="80" rows="10"></textarea>
     </fieldset>
     <input type="hidden" name="caller" value="articles.new">
+    <button class="button-large" id="button-exit"><strong>ОТМЕНИТЬ</strong></button>
     <button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
 </form>
-<button class="button-large" id="button-exit"><strong>ОТМЕНИТЬ</strong></button>
+
 </body>
 </html>

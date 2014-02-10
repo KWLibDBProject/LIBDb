@@ -11,9 +11,6 @@ legend {
     color: navy;
     font-weight: bold;
 }
-.button-large {
-    height: 60px;
-}
 .download-pdf {
     background-image:url('../css/pdf48x48.png');
     width:50px;
@@ -27,4 +24,52 @@ legend {
 button {
     padding: 0;
     margin: 0;
+}
+
+td.center_cell {
+    text-align: center;
+}
+
+dl {
+    margin: 0;
+}
+dt {
+    float: left;
+    width: 150px;
+    text-align: left;
+    padding-right: 5px;
+    min-height: 1px;
+}
+dd {
+    position: relative;
+    top: -1px;
+    margin-bottom: 10px;
+}
+
+.button-large {
+    min-width: 160px;
+    height: 40px;
+}
+.button-bold {
+    font-weight: bold;
+}
+fieldset.result {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.articles-list-table-authors-list {
+    list-style-type: none;
+    padding: 0;
+    margin:0;
+}
+.articles-list-table-authors-list li {
+    font-size: small;
+}
+
+.articles-list-table-authors-list li:before{
+    content: '› ';
+}
+.hidden {
+    display: none;
 }

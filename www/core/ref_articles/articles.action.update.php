@@ -90,14 +90,14 @@ CloseDB($link);
 if ($result['error'] == 0) {
     $override = array(
         'time' => 10,
-        'target' => '../ref.articles.show.php',
+        'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
         'message' => 'Информация о статье в базе обновлена'
     );
 } else {
     $override = array(
         'time' => 10,
-        'target' => '../ref.articles.show.php',
+        'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
         'message' => $result['message']
     );
