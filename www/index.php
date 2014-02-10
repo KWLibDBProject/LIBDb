@@ -40,7 +40,6 @@ switch ($fetch) {
                 $id = $_GET['id'];
 
                 $inner_html = new kwt($filename.".html");
-                printr($site_language);
 
                 $air = DB_LoadAuthorInformation_ById($id, $site_language);
 
@@ -220,8 +219,6 @@ switch ($fetch) {
                 $inner_js = new kwt($filename.".js");
                 $inner_js->contentstart();
                 $jscripts = $inner_js->getcontent();
-
-
 
                 break;
             }// end case all
