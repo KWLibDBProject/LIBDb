@@ -66,7 +66,7 @@ if ($ref_numrows > 0)
         <br>
         <a href="getfile.php?id={$book['file_toc']}" class="icon-pdf icon">Оглавление</a>
     </td>
-    <td class="centred_cell"><button class="edit_button" name="{$book['book_id']}">Edit</button></td>
+    <td class="centred_cell"><button class="actor-edit button-edit" name="{$book['book_id']}">Edit</button></td>
 </tr>
 BAL_EACH;
     }

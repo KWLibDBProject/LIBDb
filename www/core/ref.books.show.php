@@ -14,46 +14,48 @@ if (!isLogged()) header('Location: /core/');
 
     <script src="js/jquery-1.10.2.min.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="ref_books/books.css">
 
     <script type="text/javascript" src="js/core.js"></script>
-    <script type="text/javascript" src="ref_books/books.js"></script>
 
     <script type="text/javascript" src="js/jquery.colorbox.js"></script>
-    <link rel="stylesheet" href="css/colorbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/colorbox.css" />
 
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            $("#books_list").load("ref_books/books.action.list.php");
+            $("#books_list")
+                    .load("ref_books/books.action.list.php")
+                    .on('click','.lightbox-image',function(){
+                        $.colorbox({
+                            photo: true,
+                            href: $(this).attr('href')
+                        });
+                        return false;
+                    });
 
-            $("#button_exit").on('click',function(event){
+            $("#actor-exit").on('click',function(event){
                 window.location.href = '/core/';
             });
-            $("#add_item").on('click',function(event){
+            $("#actor-add").on('click',function(event){
                 window.location.href = 'ref_books/books.form.add.php';
             });
             $('#books_list')
-                    .on('click','.edit_button',function(){
+                    .on('click','.actor-edit',function(){
                         window.location.href = 'ref_books/books.form.edit.php?id='+$(this).attr('name');
                     });
-            $("#books_list").on('click','.lightbox-image',function(){
-                $.colorbox({
-                    photo: true,
-                    href: $(this).attr('href')
-                });
-                return false;
-            });
-
         });
     </script>
 </head>
 <body>
-<button type="button" class="button-large" id="button_exit"><strong>ВЕРНУТЬСЯ В АДМИНКУ</strong></button>
-<button type="button" class="button-large" id="add_item">Добавить сборник</button><br>
+<button type="button" class="button-large" id="actor-exit"><strong><<< НАЗАД </strong></button>
+<button type="button" class="button-large" id="actor-add">Добавить сборник</button><br>
 <hr>
-<div id="books_list" class="reference-list">
-</div>
+<fieldset class="result-list">
+    <div id="books_list" class="reference-list">
+    </div>
+</fieldset>
 
 </body>
 </html>

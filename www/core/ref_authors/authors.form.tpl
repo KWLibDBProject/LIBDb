@@ -5,6 +5,7 @@
     <script src="../js/jquery-1.10.2.min.js"></script>
     <script src="../js/tinymce.min.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="authors.css">
     <style type="text/css"></style>
 

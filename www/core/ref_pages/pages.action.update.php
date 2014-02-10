@@ -39,9 +39,9 @@ if (isAjaxCall()) {
         // use template
         $override = array(
             'time' => 10,
-            'target' => '../ref.pages.show.php',
+            'target' => '/core/ref.pages.show.php',
             'buttonmessage' => 'Вернуться к списку страниц',
-            'message' => 'Страница добавлена в базу данных'
+            'message' => 'Данные обновлены'
         );
         $tpl = new kwt('../ref.all.timed.callback.tpl');
         $tpl->override($override);

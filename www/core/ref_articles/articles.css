@@ -1,35 +1,13 @@
-.authorslist {
+.authors_list_in_form {
     list-style-type: none;
     list-style-position: inside;
     padding: 0;
     margin:0;
 }
-.authorslist > li > label {
+.authors_list_in_form > li > label {
     padding-right: 1em;
 }
-legend {
-    color: navy;
-    font-weight: bold;
-}
-.download-pdf {
-    background-image:url('../css/pdf48x48.png');
-    width:50px;
-    height:50px;
-}
-.edit_button {
-    background-image: url('../css/edit48x48.png');
-    width:50px;
-    height:50px;
-}
-button {
-    padding: 0;
-    margin: 0;
-}
-
-td.center_cell {
-    text-align: center;
-}
-
+/* выравнивание для критериев отбора */
 dl {
     margin: 0;
 }
@@ -46,18 +24,7 @@ dd {
     margin-bottom: 10px;
 }
 
-.button-large {
-    min-width: 160px;
-    height: 40px;
-}
-.button-bold {
-    font-weight: bold;
-}
-fieldset.result {
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
+/* авторы в списке */
 .articles-list-table-authors-list {
     list-style-type: none;
     padding: 0;
@@ -69,7 +36,4 @@ fieldset.result {
 
 .articles-list-table-authors-list li:before{
     content: '› ';
-}
-.hidden {
-    display: none;
 }

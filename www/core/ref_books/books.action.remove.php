@@ -1,6 +1,7 @@
 <?php
 require_once('../core.php');
 require_once('../core.db.php');
+require_once('../core.filestorage.php');
 require_once('../core.kwt.php');
 
 // удалить сборник, если в нем есть статьи НЕЛЬЗЯ
@@ -25,7 +26,14 @@ if (!IsSet($_GET['id'])) {
             $result['message'] = 'Нельзя удалять сборник (книгу), если в нем есть статьи!';
         } else {
             // статей нет, можно удалить
+            /* вот тут нужно удалить 3 файла из таблицы STORAGE!!! */
+            $book_files = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title, file_toc FROM books WHERE id=$id"));
+            FileStorage::removeFile($book_files['file_cover']);
+            FileStorage::removeFile($book_files['file_title']);
+            FileStorage::removeFile($book_files['file_toc']);
+
             $q = "DELETE FROM $table WHERE (id=$id)";
+
             if ($r = mysql_query($q)) {
                 // запрос удаление успешен
                 $result["error"] = 0;

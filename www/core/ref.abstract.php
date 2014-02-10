@@ -120,7 +120,7 @@ TABLE_START;
     <td>{$ref_record['data_int']}&nbsp;</td>
     <td>{$ref_record['data_str']}&nbsp;</td>
     <td>{$ref_record['data_comment']}&nbsp;</td>
-    <td class="centred_cell"><button class="edit_button" name="{$ref_record['id']}">Edit</button></td>
+    <td class="centred_cell"><button class="actor-edit button-edit" name="{$ref_record['id']}">Edit</button></td>
 </tr>
 TABLE_EACHROW;
                 }
@@ -165,7 +165,7 @@ TABLE_IS_EMPTY;
         .ui-dialog .ui-state-error {
             padding: .3em;
         }
-        #_ref_list { /* базовый класс для вывода контента справочника */
+        #ref_list {
             height: 500px;
             width: 99%;
             border: 1px solid gray;
@@ -273,7 +273,7 @@ TABLE_IS_EMPTY;
             $("#ref_list").load("?action=list&ref="+ref_name);
 
             /* вызов и обработчик диалога ADD-ITEM */
-            $("#add_item").on('click',function() {
+            $("#actor-add").on('click',function() {
                 $('#add_form').dialog('open');
             });
 
@@ -316,7 +316,7 @@ TABLE_IS_EMPTY;
 
             /* вызов и обработчик диалога редактирования */
 
-            $('#ref_list').on('click', '.edit_button', function() {
+            $('#ref_list').on('click', '.actor-edit', function() {
                 button_id = $(this).attr('name');
 
                 Abstract_CallLoadItem("#edit_form", button_id);
@@ -351,16 +351,16 @@ TABLE_IS_EMPTY;
                 }
             });
 
-            $("#button-exit").on('click',function(event){
-                window.history.back();
+            $("#actor-exit").on('click',function(event){
+                location.href = '/core/';
             });
 
         });
     </script>
 </head>
 <body>
-<button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ В АДМИН-РАЗДЕЛ</strong></button>
-<button id="add_item"  class="button-large"><strong>Добавить запись в справочник</strong></button><br>
+<button type="button" class="button-large" id="actor-exit"><strong> <<< НАЗАД </strong></button>
+<button type="button" class="button-large" id="actor-add"><strong>Добавить запись в справочник</strong></button><br>
 
 <div id="add_form" title="Добавить запись в справочник [<?php echo $reference ?>]">
     <form action="?action=insert">
@@ -390,10 +390,11 @@ TABLE_IS_EMPTY;
         </fieldset>
     </form>
 </div>
-
 <hr>
-<div id="ref_list">
-</div>
+<fieldset class="result-list">
+    <div id="ref_list">
+    </div>
+</fieldset>
 
 </body>
 </html>

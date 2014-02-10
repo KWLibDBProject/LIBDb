@@ -51,7 +51,7 @@ if ($ref_numrows > 0)
         <td width="5%">E-Mail: </td>
         <td> {$row['email']} </td>
         <td rowspan="3"> {$row['workplace']} </td>
-        <td rowspan="3"class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
+        <td rowspan="3"class="centred_cell"><button class="actor-edit button-edit" name="{$row['id']}">Edit</button></td>
     </tr>
     <tr>
         <td><strong>Рус:</strong></td>

@@ -18,7 +18,8 @@ if (!isLogged()) header('Location: /core/');
     <script src="../js/jquery.ui.datepicker.rus.js"></script>
     <script src="../js/tinymce.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">
+    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
 
@@ -168,7 +169,7 @@ if (!isLogged()) header('Location: /core/');
     </fieldset>
     <fieldset>
         <legend id="authors_legend">Авторы:</legend>
-        <ul id="authors_list" class="authorslist"></ul>
+        <ul id="authors_list" class="authors_list_in_form"></ul>
         <input type="button" class="al-add" value="Добавить автора">
         <button type="button" id="unique_test" style="display: none">Test</button>
     </fieldset>

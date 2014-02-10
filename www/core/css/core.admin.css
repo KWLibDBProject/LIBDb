@@ -1,0 +1,93 @@
+/* Классы блоков для вывода справочников */
+/* Класс области вывода с фиксированной высотой */
+.list-limited-height {
+    height: 500px;
+    width: 99%;
+    border: 1px solid gray;
+    overflow-y: scroll;
+}
+
+/* Классы таблиц и ячеек */
+/* общие */
+.centred_cell, .center_cell, th {
+    text-align: center;
+}
+
+/* Классы кнопок */
+.button-large { /* общий класс большой кнопки */
+    height: 50px;
+    min-width: 160px;
+}
+.button-bold {
+    font-weight: bold;
+}
+
+/* new */
+.button-edit {
+    width: 50px;
+    height: 50px;
+}
+.button-download {
+    width: 50px;
+    height: 50px;
+}
+
+.button-edit-icon {
+    background-image: url('../css/edit48x48.png');
+    width:50px;
+    height:50px;
+}
+.button-download-icon {
+    background-image:url('../css/pdf48x48.png');
+    width:50px;
+    height:50px;
+}
+
+/*fieldset & legends */
+fieldset.result-list {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* table highlight rows */
+fieldset.table-hl-rows tr:hover {
+    background-color: #f0e68c;
+}
+fieldset.table-hl-rows tr:hover>th {
+    background-color: white;
+}
+
+
+legend {
+    color: navy;
+    font-weight: bold;
+}
+
+
+/* служебные классы */
+.hidden {
+    display: none;
+}
+textarea {
+    resize: none;
+}
+
+/* attach icons for links to image/pdf files */
+a.icon {
+    line-height: 28px;
+}
+.icon:before {
+    height: 24px;
+    width: 24px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.icon-jpg:before {
+    content: " ";
+    background: url(../css/jpeg24x24.png);
+}
+.icon-pdf:before {
+    content: " ";
+    background: url(../css/pdf24x24.png);
+}

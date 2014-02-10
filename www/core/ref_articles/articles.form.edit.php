@@ -79,8 +79,10 @@ CloseDB($link);
     <script src="../js/core.js"></script>
     <script src="ref.articles.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../ref_articles/articles.css">
-    <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="articles.css">
+    <link rel="stylesheet" type="text/css" href="/core/css/jquery-ui-1.10.3.custom.min.css">
+
     <style>
         .hidden {
             display: none;
@@ -273,7 +275,7 @@ CloseDB($link);
     </fieldset>
     <fieldset>
         <legend>Авторы:</legend>
-        <ul id="authors_list" class="authorslist"></ul>
+        <ul id="authors_list" class="authors_list_in_form"></ul>
         <input type="button" class="al-add" value="Добавить автора">
     </fieldset>
     <fieldset>

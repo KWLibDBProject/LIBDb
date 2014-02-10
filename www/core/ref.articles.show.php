@@ -16,7 +16,9 @@ if (!isLogged()) header('Location: /core/');
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/core.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
+
     <script type="text/javascript">
         var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
@@ -37,10 +39,10 @@ if (!isLogged()) header('Location: /core/');
                 location.href = '/core/';
             });
             $('#articles_list')
-                    .on('click','.download-pdf',function(){
+                    .on('click','.actor-download-pdf',function(){
                         window.location.href="getfile.php?id="+$(this).attr('name')
                     })
-                    .on('click','.edit_button',function(){
+                    .on('click','.actor-edit',function(){
                         location.href = 'ref_articles/articles.form.edit.php?id='+$(this).attr('name');
                     });
 
@@ -65,7 +67,7 @@ if (!isLogged()) header('Location: /core/');
 </head>
 
 <body>
-<button id="button-exit" class="button-large button-bold"><<< Back </button>
+<button id="button-exit" class="button-large button-bold"><<< НАЗАД </button>
 <button id="button-newarticle" class="button-large">Добавить статью </button>
 <hr>
 <fieldset>
@@ -88,7 +90,7 @@ if (!isLogged()) header('Location: /core/');
     <button id="button-reset-selection" class="button-large">Сбросить критерии</button>
     <button id="button-show-all" class="button-large hidden">Показать ВСЕ статьи</button>
 </fieldset>
-<fieldset class="result">
+<fieldset class="result-list">
     <legend>Результаты поиска</legend>
     <div id="articles_list">
     </div>

@@ -7,6 +7,7 @@
     <script src="../js/jquery.ui.datepicker.rus.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
+    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="books.css">
 
     <script src="../js/core.js"></script>

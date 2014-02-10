@@ -18,7 +18,13 @@ $res = mysql_query($query) or die("Невозможно получить сод�
 $ref_numrows = mysql_num_rows($res);
 
 if ($ref_numrows != 0) {
-    $data['data'] = mysql_fetch_assoc($res);
+    $row = mysql_fetch_assoc($res);
+    /* foreach ($row as $key=>$field)
+    {
+        $newrow [$key] = (empty($field)) ? '&nbsp;' : $field;
+    }*/
+
+    $data['data'] = $row;
     $data['error'] = 0;
     $data['message'] = '';
 } else {

@@ -6,7 +6,7 @@ function ShowErrorMessage(message)
     alert(message);
 }
 
-function Topics_CallAddItem(source)
+function Topics_CallAddItem(source, result_area)
 {
     var $form = $(source).find('form');
     url = $form.attr("action");
@@ -17,10 +17,9 @@ function Topics_CallAddItem(source)
         ref_name: ref_name
     } );
     posting.done(function(data){
-
         result = $.parseJSON(data);
         if (result['error']==0) { // update list
-            $("#ref_list").empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
             $( source ).dialog( "close" );
         } else {
             // Some errors, show message!
@@ -52,7 +51,7 @@ function Topics_CallLoadItem(destination, id) // номер записи, цел
     });
 }
 
-function Topics_CallUpdateItem(source, id)
+function Topics_CallUpdateItem(source, id, result_area)
 {
     var $form = $(source).find('form');
     url = $form.attr("action");
@@ -66,7 +65,7 @@ function Topics_CallUpdateItem(source, id)
     posting.done(function(data){
         result = $.parseJSON(data);
         if (result['error']==0) { // update list
-            $("#ref_list").empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
             $( source ).dialog( "close" );
         } else {
             // Some errors, show message!
@@ -75,7 +74,7 @@ function Topics_CallUpdateItem(source, id)
     });
 }
 
-function Topics_CallRemoveItem(target, id)
+function Topics_CallRemoveItem(target, id, result_area)
 {
     url = 'ref_topics/ref.topics.action.removeitem.php?ref='+ref_name;
     var getting = $.get(url, {
@@ -85,7 +84,7 @@ function Topics_CallRemoveItem(target, id)
     getting.done(function(data){
         result = $.parseJSON(data);
         if (result['error'] == 0) {
-            $('#ref_list').empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
             $( target ).dialog( "close" );
         } else {
             // удаление невозможно

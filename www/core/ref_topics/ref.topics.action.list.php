@@ -46,7 +46,7 @@ if ($ref_numrows > 0)
 <td>{$row['title_en']}</td>
 <td>{$row['title_ru']}</td>
 <td>{$row['title_uk']}</td>
-<td class="centred_cell"><button class="edit_button" name="{$row['id']}">Edit</button></td>
+<td class="centred_cell"><button class="actor-edit button-edit" name="{$row['id']}">Edit</button></td>
 </tr>
 REF_TAL_EACH;
     }

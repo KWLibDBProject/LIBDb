@@ -1,11 +1,15 @@
 <?php
 require_once('../core.php');
 require_once('../core.db.php');
-require_once('../core.kwt.php');
+require_once('../core.filestorage.php');
 
 // в $id может быть -1 - это значит, что пытаться удалять ничего не надо
 
-$id = IsSet($_GET['id']) ? $_GET['id'] : Die(); // айди удаляемого объекта
+$id = IsSet($_GET['id']) ? $_GET['id'] : -1; // айди удаляемого объекта
+if (empty($id)) {
+    $id = -1;
+}
+
 $caller = IsSet($_GET['caller']) ? $_GET['caller'] : Die(); // таблица, в которой ОБНОВЛЯЕМ релейшен объекта
 $field = IsSet($_GET['subcaller']) ? $_GET['subcaller'] : Die(); // поле, в которое записываем -1 для таблицы
 
@@ -18,8 +22,9 @@ if ($id != -1)
     $result['message'] = '';
     $link = ConnectDB();
     $q = "SELECT relation FROM $ref_filestorage WHERE id = $id";
+    $r = mysql_query($q) or die($q);
 
-    $file_record = mysql_fetch_assoc(mysql_query($q));
+    $file_record = mysql_fetch_assoc($r);
 
     $result['message'] .= "[ $q ]\r\n";
 
@@ -28,11 +33,14 @@ if ($id != -1)
     $result['message'] .= "[ $q ]\r\n";
 
     $a_result = mysql_query($q) or Die($q);
-    $q = "DELETE FROM $ref_filestorage WHERE id=$id";
 
-    $result['message'] .= "[ $q ]\r\n";
+    FileStorage::removeFile($id);
 
-    mysql_query($q) or Die($q);
+    // $q = "DELETE FROM $ref_filestorage WHERE id=$id";
+
+    // $result['message'] .= "[ $q ]\r\n";
+
+    // mysql_query($q) or Die($q);
 
     CloseDB($link);
     $result['error'] = 0;

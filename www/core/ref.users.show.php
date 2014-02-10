@@ -16,9 +16,10 @@ if (!isLogged()) header('Location: /core/');
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/ref.main.css">
+    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
+
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
-    <link rel="stylesheet" href="css/ref.ui.css">
+    <link rel="stylesheet" type="text/css" href="css/core.ui.css">
 
     <script src="js/core.js"></script>
     <script src="ref_users/ref.users.js"></script>
@@ -28,7 +29,7 @@ if (!isLogged()) header('Location: /core/');
             $("#ref_list").load("ref_users/ref.users.action.list.php?ref="+ref_name);
 
             /* вызов и обработчик диалога ADD-ITEM */
-            $("#add_item").on('click',function() {
+            $("#actor-add").on('click',function() {
                 $('#add-form').dialog('open');
             });
             $( "#add-form" ).dialog({
@@ -69,7 +70,7 @@ if (!isLogged()) header('Location: /core/');
             });
 
             /* вызов и обработчик диалога редактирования */
-            $('#ref_list').on('click', '.edit_button', function() {
+            $('#ref_list').on('click', '.actor-edit', function() {
                 button_id = $(this).attr('name');
                 Users_CallLoadItem("#edit_form",button_id);
                 $('#edit_form').dialog('open');
@@ -104,7 +105,7 @@ if (!isLogged()) header('Location: /core/');
                     $(this).find('form').trigger('reset');
                 }
             });
-            $("#button-exit").on('click',function(event){
+            $("#actor-exit").on('click',function(event){
                 window.location.href = '/core/';
                 return false;
             });
@@ -113,8 +114,8 @@ if (!isLogged()) header('Location: /core/');
     </script>
 </head>
 <body>
-<button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ В АДМИНКУ</strong></button>
-<button id="add_item" class="button-large">Добавить пользователя</button><br>
+<button type="button" class="button-large" id="actor-exit"><strong><<< НАЗАД </strong></button>
+<button type="button" class="button-large" id="actor-add">Добавить пользователя</button><br>
 
 <div id="add-form" title="Добавить пользователя">
     <form action="ref_users/ref.users.action.insert.php">
@@ -125,7 +126,7 @@ if (!isLogged()) header('Location: /core/');
             <input type="text" name="add_email" id="add_email" value="" class="text ui-widget-content ui-corner-all">
             <label for="add_phone">Телефон для связи:</label>
             <input type="text" name="add_phone" id="add_phone" value="" class="text ui-widget-content ui-corner-all">
-            <label for="add_permissions">Уровень доступа (0-255):</label>
+            <label for="add_permissions">Уровень доступа (0-250):</label>
             <input type="text" name="add_permissions" id="add_permissions" value="" class="text ui-widget-content ui-corner-all">
             <label for="add_login">Имя пользователя (login):</label>
             <input type="text" name="add_login" id="add_login" value ="" class="text ui-widget-content ui-corner-all">
@@ -143,7 +144,7 @@ if (!isLogged()) header('Location: /core/');
             <input type="text" name="edit_email" id="edit_email" value="" class="text ui-widget-content ui-corner-all">
             <label for="edit_phone">Телефон для связи:</label>
             <input type="text" name="edit_phone" id="edit_phone" value="" class="text ui-widget-content ui-corner-all">
-            <label for="edit_permissions">Уровень доступа (0-255)</label>
+            <label for="edit_permissions">Уровень доступа (0-250)</label>
             <input type="text" name="edit_permissions" id="edit_permissions" value="" class="text ui-widget-content ui-corner-all">
             <label for="edit_login">Имя пользователя (login):</label>
             <input type="text" name="edit_login" id="edit_login" value="" class="text ui-widget-content ui-corner-all">
@@ -153,8 +154,10 @@ if (!isLogged()) header('Location: /core/');
     </form>
 </div>
 <hr>
-<div id="ref_list">
-</div>
+<fieldset class="result-list table-hl-rows">
+    <div id="ref_list">
+    </div>
+</fieldset>
 
 </body>
 </html>

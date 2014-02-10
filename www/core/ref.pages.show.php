@@ -14,7 +14,7 @@ if (!isLogged()) header('Location: /core/');
 
     <script src="js/jquery-1.10.2.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/ref.main.css">
+    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="ref_pages/pages.css">
 
     <script src="js/core.js"></script>
@@ -25,25 +25,26 @@ if (!isLogged()) header('Location: /core/');
             $.ajaxSetup({cache: false});
             $("#pages_list").load("ref_pages/pages.action.list.php");
 
-            $("#button_exit").on('click',function(event){
+            $("#actor-exit").on('click',function(event){
                 window.location.href = '/core/';
             });
-            $("#add_item").on('click',function(event){
+            $("#actor-add").on('click',function(event){
                 window.location.href = 'ref_pages/pages.form.php';
             });
             $('#pages_list')
-                    .on('click','.edit_button',function(){
+                    .on('click','.actor-edit',function(){
                         window.location.href = 'ref_pages/pages.form.php?id='+$(this).attr('name');
                     });
         });
     </script>
 </head>
 <body>
-<button type="button" class="button-large" id="button_exit" data-href="admin.html"><strong>ВЕРНУТЬСЯ В АДМИНКУ</strong></button>
-<button type="button" class="button-large" id="add_item" data-href="pages.form.php">Добавить статическую страницу</button><br>
+<button type="button" class="button-large" id="actor-exit"><strong><<< НАЗАД </strong></button>
+<button type="button" class="button-large" id="actor-add">Добавить статическую страницу</button><br>
 <hr>
-<div id="pages_list">
-</div>
-
+<fieldset class="result-list">
+    <div id="pages_list">
+    </div>
+</fieldset>
 </body>
 </html>

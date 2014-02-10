@@ -11,7 +11,8 @@ $ref_filestorage = 'filestorage';
 
 $id = IsSet($_GET['id']) ? $_GET['id'] : -1;
 
-if ($id != -1) {
+if ($id != -1)
+{
     $link = ConnectDB();
     $q = "select * from books where id=$id";
     $r = mysql_query($q) or die("Death at : $q");
@@ -85,6 +86,7 @@ if ($id != -1) {
     <link rel="stylesheet" href="../css/colorbox.css" />
 
     <link rel="stylesheet" type="text/css" href="books.css">
+    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
 
     <script src="../js/core.js"></script>
     <script src="books.js"></script>

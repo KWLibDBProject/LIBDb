@@ -32,7 +32,7 @@ if ($result['error'] == 0) {
         'time' => 10,
         'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
-        'message' => 'Статья в базе данных поставлена на удаление'
+        'message' => 'Статья удалена из базы данных'
     );
 } else {
     $override = array(
