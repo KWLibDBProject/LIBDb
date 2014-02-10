@@ -114,8 +114,8 @@ if (!isLogged()) header('Location: /core/');
     </script>
 </head>
 <body>
-<button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ В АДМИН-РАЗДЕЛ</strong></button>
-<button id="add_item"  class="button-large">Добавить тематический раздел</button><br>
+<button type="button" id="button-exit" class="button-large"><strong><<< BACK</strong></button>
+<button type="button" id="add_item"  class="button-large">Добавить тематический раздел</button><br>
 
 <div id="add_form" title="Добавить тематический раздел">
     <form action="ref_topics/ref.topics.action.insert.php">
@@ -142,8 +142,6 @@ if (!isLogged()) header('Location: /core/');
         </fieldset>
      </form>
 </div>
-
-
 
 <hr>
 <div id="ref_list">

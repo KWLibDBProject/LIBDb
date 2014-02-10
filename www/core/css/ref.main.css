@@ -19,10 +19,6 @@
 /* класс текстарии */
 textarea {
     resize: none;
-    /* min-width: 267px;
-min-height:150px;
-max-width: 267px;
-max-height:150px; */
 }
 
 .span_is_es { /* класс для галочки "редколлегия" */
@@ -31,4 +27,5 @@ max-height:150px; */
 
 .button-large {
     height: 60px;
+    min-width: 120px;
 }

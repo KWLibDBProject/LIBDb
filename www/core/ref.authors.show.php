@@ -54,7 +54,7 @@ if (!isLogged()) header('Location: /core/');
     </style>
 </head>
 <body>
-<button type="button" class="button-large" id="button_exit"><strong>ВЕРНУТЬСЯ В АДМИНКУ</strong></button>
+<button type="button" class="button-large" id="button_exit"><strong><<< BACK </strong></button>
 <button type="button" class="button-large" id="add_item">Добавить автора</button><br>
 <hr>
 <div id="authors_list">
