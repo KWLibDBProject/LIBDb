@@ -47,7 +47,7 @@ if (!IsSet($_GET['id'])) {
     } else {
         $override = array(
             'time' => 15,
-            'target' => '../ref.books.show.php',
+            'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => $result['message']
         );

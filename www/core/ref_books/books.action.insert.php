@@ -63,14 +63,14 @@ if (isAjaxCall()) {
     if ($result['error'] == 0) {
         $override = array(
             'time' => 10,
-            'target' => '../ref.books.show.php',
+            'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => 'Сборник добавлен'
         );
     } else {
         $override = array(
             'time' => 10,
-            'target' => '../ref.books.show.php',
+            'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => $result['message']
         );

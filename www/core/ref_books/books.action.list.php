@@ -22,31 +22,32 @@ if ($ref_numrows > 0) {
     while($ref_record = mysql_fetch_assoc($res)) {
         $ref_list[$ref_record['book_id']] = $ref_record;
     }
-} else {
-    $ref_message = 'Пока не добавили ни один сборник!';
 }
 
-
 CloseDB($link);
-?>
+$return = <<<BAL_Start
 <table border="1" width="100%">
-    <tr>
-        <th width="5%">(id)</th>
-        <th width="20%">Название или номер сборника</th>
-        <th width="10%">Дата/год выпуска</th>
-        <th width="10%">Страницы со статьями</th>
-        <th width="15%">Сборник готов? </th>
-        <th width="10%">Кол-во статей</th>
-        <th width="15%">Файлы</th>
-        <th width="7%">Управление</th>
-    </tr>
-    <?php
-    if ($ref_numrows > 0) {
-        foreach ($ref_list as $r_id => $book)
-        {
-            //@todo: MOVE TO TEMPLATE
-            $book_ready = ($book['published']!=0) ? "Да<br><small>(опубликован)</small>" : "Нет<br><small>(в работе)</small>";
-            echo <<<REF_ANYROW
+BAL_Start;
+
+$return .= <<<BAL_TH
+<tr>
+    <th width="5%">(id)</th>
+    <th width="20%">Название или номер сборника</th>
+    <th width="10%">Дата/год выпуска</th>
+    <th width="10%">Страницы со статьями</th>
+    <th width="15%">Сборник готов? </th>
+    <th width="10%">Кол-во статей</th>
+    <th width="15%">Файлы</th>
+    <th width="7%">Управление</th>
+</tr>
+BAL_TH;
+
+if ($ref_numrows > 0)
+{
+    foreach ($ref_list as $r_id => $book)
+    {
+        $book_ready = ($book['published']!=0) ? "Да<br><small>(опубликован)</small>" : "Нет<br><small>(в работе)</small>";
+        $return .= <<<BAL_EACH
 <tr>
     <td class="centred_cell">{$book['book_id']}         </td>
     <td>{$book['title']}                                </td>
@@ -67,15 +68,18 @@ CloseDB($link);
     </td>
     <td class="centred_cell"><button class="edit_button" name="{$book['book_id']}">Edit</button></td>
 </tr>
-REF_ANYROW;
-        }
-        echo "</table>";
-    } else {
-        echo <<<REF_NUMROWS_ZERO
-<tr><td colspan="8">$ref_message</td></tr>
-REF_NUMROWS_ZERO;
+BAL_EACH;
     }
 
-    ?>
+} else {
+    $return .= <<<AAL_NOTHING
+<tr><td colspan="8">Пока не добавили ни один сборник!</td></tr>
+AAL_NOTHING;
+}
 
+$return .= <<<AAL_END
 </table>
+AAL_END;
+print($return);
+
+?>

@@ -7,12 +7,9 @@
     <script src="../js/jquery.ui.datepicker.rus.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
-
-
     <link rel="stylesheet" type="text/css" href="books.css">
 
     <script src="../js/core.js"></script>
-    <script src="ref.books.js"></script>
 
     <script type="text/javascript">
     $(document).ready(function () {
@@ -86,17 +83,17 @@
         <legend>Файлы</legend>
         <div class="field">
             <label for="file_cover">Обложка (изображение)</label>
-            <input type="file" name="file_cover" id="file_cover">
+            <input type="file" name="file_cover" id="file_cover" size="40">
             <button class="file-unlink" name="file_cover" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_title">Титульный лист (PDF-file)</label>
-            <input type="file" name="file_title" id="file_title">
+            <input type="file" name="file_title" id="file_title" size="40">
             <button class="file-unlink" name="file_title" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_toc">Оглавление (PDF-file)</label>
-            <input type="file" name="file_toc" id="file_toc">
+            <input type="file" name="file_toc" id="file_toc" size="40">
             <button class="file-unlink" name="file_toc" disabled>X</button>
         </div>
     </fieldset>

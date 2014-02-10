@@ -53,7 +53,8 @@ if (count($_FILES)>0) {
 
 } else {
     $result['error'] = 1;
-    $result['message'] .= "Не выбраны файлы для загрузки или ошибка передачи данных! <br>\r\n";
+    // файлы не менялись, хотя прочие данные обновлены
+    $result['message'] .= "Данные обновлены!";
 }
 
 
@@ -65,14 +66,14 @@ if (isAjaxCall()) {
     if ($result['error'] == 0) {
         $override = array(
             'time' => 15,
-            'target' => '../ref.books.show.php',
+            'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => 'Сборник обновлен'
         );
     } else {
         $override = array(
             'time' => 15,
-            'target' => '../ref.books.show.php',
+            'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => $result['message']
         );

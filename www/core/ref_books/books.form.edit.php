@@ -3,6 +3,10 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
+
 $ref_filestorage = 'filestorage';
 
 $id = IsSet($_GET['id']) ? $_GET['id'] : -1;
@@ -11,53 +15,58 @@ if ($id != -1) {
     $link = ConnectDB();
     $q = "select * from books where id=$id";
     $r = mysql_query($q) or die("Death at : $q");
-    $book = mysql_fetch_assoc($r);
 
-    // теперь надо загрузить информацию о файлах!
-    // file_cover
-    if ($book['file_cover'] != -1 )
-    {
-        $q = "select id, username from $ref_filestorage WHERE id = {$book['file_cover']}";
-        $r = mysql_query($q) or Die("Death at: $q");
-        $f = mysql_fetch_assoc($r);
-        $book['file_cover_data']['id'] = $f['id'];
-        $book['file_cover_data']['username'] = $f['username'];
-        $book['file_cover_data']['disabled_flag'] = '';
-    } else {
-        $book['file_cover_data']['id'] = -1;
-        $book['file_cover_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
-        $book['file_cover_data']['disabled_flag'] = 'disabled';
-    }
-    // file_title
-    if ($book['file_title'] != -1 )
-    {
-        $q = "select id, username from $ref_filestorage WHERE id = {$book['file_title']}";
-        $r = mysql_query($q) or Die("Death at: $q");
-        $f = mysql_fetch_assoc($r);
-        $book['file_title_data']['id'] = $f['id'];
-        $book['file_title_data']['username'] = $f['username'];
-        $book['file_title_data']['disabled_flag'] = '';
-    } else {
-        $book['file_title_data']['id'] = -1;
-        $book['file_title_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
-        $book['file_title_data']['disabled_flag'] = 'disabled';
-    }
-    // file_toc
-    if ($book['file_toc'] != -1 )
-    {
-        $q = "select id, username from $ref_filestorage WHERE id = {$book['file_toc']}";
-        $r = mysql_query($q) or Die("Death at: $q");
-        $f = mysql_fetch_assoc($r);
-        $book['file_toc_data']['id'] = $f['id'];
-        $book['file_toc_data']['username'] = $f['username'];
-        $book['file_toc_data']['disabled_flag'] = '';
-    } else {
-        $book['file_toc_data']['id'] = -1;
-        $book['file_toc_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
-        $book['file_toc_data']['disabled_flag'] = 'disabled';
-    }
+    if (@mysql_num_rows($r) > 0) {
+        $book = mysql_fetch_assoc($r);
 
-
+        // теперь надо загрузить информацию о файлах!
+        // file_cover
+        if ($book['file_cover'] != -1 )
+        {
+            $q = "select id, username from $ref_filestorage WHERE id = {$book['file_cover']}";
+            $r = mysql_query($q) or Die("Death at: $q");
+            $f = mysql_fetch_assoc($r);
+            $book['file_cover_data']['id'] = $f['id'];
+            $book['file_cover_data']['username'] = $f['username'];
+            $book['file_cover_data']['disabled_flag'] = '';
+        } else {
+            $book['file_cover_data']['id'] = -1;
+            $book['file_cover_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_cover_data']['disabled_flag'] = 'disabled';
+        }
+        // file_title
+        if ($book['file_title'] != -1 )
+        {
+            $q = "select id, username from $ref_filestorage WHERE id = {$book['file_title']}";
+            $r = mysql_query($q) or Die("Death at: $q");
+            $f = mysql_fetch_assoc($r);
+            $book['file_title_data']['id'] = $f['id'];
+            $book['file_title_data']['username'] = $f['username'];
+            $book['file_title_data']['disabled_flag'] = '';
+        } else {
+            $book['file_title_data']['id'] = -1;
+            $book['file_title_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_title_data']['disabled_flag'] = 'disabled';
+        }
+        // file_toc
+        if ($book['file_toc'] != -1 )
+        {
+            $q = "select id, username from $ref_filestorage WHERE id = {$book['file_toc']}";
+            $r = mysql_query($q) or Die("Death at: $q");
+            $f = mysql_fetch_assoc($r);
+            $book['file_toc_data']['id'] = $f['id'];
+            $book['file_toc_data']['username'] = $f['username'];
+            $book['file_toc_data']['disabled_flag'] = '';
+        } else {
+            $book['file_toc_data']['id'] = -1;
+            $book['file_toc_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_toc_data']['disabled_flag'] = 'disabled';
+        }
+        $isBookExists = 1;
+    } else {
+        $isBookExists = 0;
+        $book['published'] = 0;
+    }
     CloseDb($link);
 } else {
     Die('Некорректный вызов! ');
@@ -81,8 +90,24 @@ if ($id != -1) {
     <script src="books.js"></script>
 
     <script type="text/javascript">
+        var isBookExists = <?php echo $isBookExists ?>;
+        var is_published = {
+            'error' : 0,
+            'data' : {
+                '0' : 'Нет (в работе)',
+                '1' : 'Да (опубликован)'
+            }
+        };
+
         $(document).ready(function () {
-            $("#button-exit").on('click',function(event){
+            if (0 == isBookExists) {
+                $('#form_book').hide();
+                $('#no_book_warning').show();
+            } else {
+                BuildSelector('is_book_ready', is_published, <?php echo $book['published'] ?>);
+            }
+
+            $(".button-exit").on('click',function(event){
                 window.location.href = '../ref.books.show.php';
             });
             $("#button-remove").on('click',function(event){
@@ -91,7 +116,7 @@ if ($id != -1) {
             });
 
             $("#form_book").submit(function(){
-            /*    var bValid = true;
+                var bValid = true;
                 if (($('input[name=file_cover_changed]').val() == 1) && ($('input[name="file_cover"]').val() == '')) {
                     alert('Обязательно укажите файл с обложкой (изображение в формате JPG/GIF/PNG) ! ');
                     bValid = false;
@@ -104,7 +129,7 @@ if ($id != -1) {
                     alert('Файл с оглавлением должен быть в формате PDF! ');
                     bValid = false;
                 }
-                return bValid; */
+                return bValid;
             });
             // WIDGETS
             $("#book_datepicker").datepicker({
@@ -114,9 +139,6 @@ if ($id != -1) {
                 minDate: '01/01/2003',
                 maxDate: '01/01/2020',
                 showButtonPanel: true
-                // showOn: "both",
-                // buttonImageOnly: true,
-                // buttonImage: "../css/images/calendar.gif"
             });
             $("#book_title").focus();
 
@@ -151,19 +173,21 @@ if ($id != -1) {
                     }
                 }); // getting.done
             });
-            var is_published = {
-                'error' : 0,
-                'data' : {
-                    '0' : 'Нет (в работе)',
-                    '1' : 'Да (опубликован)'
-                }
-            };
-            BuildSelector('is_book_ready', is_published, <?php echo $book['published'] ?>);
-
         });
     </script>
+    <style>
+        #no_book_warning {
+            font-weight: bold;
+            font-size: 150%;
+            color: red;
+        }
+    </style>
 </head>
 <body>
+<div id="no_book_warning" class="hidden">
+    СБОРНИК С УКАЗАННЫМ ИДЕНТИФИКАТОРОМ В БАЗЕ НЕ ОБНАРУЖЕН!!!
+    <button type="button" class="button-large button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
+</div>
 
 <form action="books.action.update.php" method="post" enctype="multipart/form-data" id="form_book">
     <input type="hidden" name="book_id" value="<?php echo $book['id']; ?>">
@@ -201,7 +225,7 @@ if ($id != -1) {
         </div>
         <div id="file_cover_new" class="hidden">
             <label for="file_cover_newfile_input">Прикрепить НОВЫЙ файл (JPEG/PNG/GIF):</label>
-            <input type="file" name="file_cover" id="file_cover_newfile_input" disabled>
+            <input type="file" name="file_cover" id="file_cover_newfile_input" size="60" disabled>
             <input type="hidden" name="file_cover_changed" id="file_cover_changed" value="0">
         </div>
     </fieldset>
@@ -216,7 +240,7 @@ if ($id != -1) {
         </div>
         <div id="file_title_new" class="hidden">
             <label for="file_title_newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
-            <input type="file" name="file_title" id="file_title_newfile_input" disabled>
+            <input type="file" name="file_title" id="file_title_newfile_input" size="60" disabled>
             <input type="hidden" name="file_title_changed" id="file_title_changed" value="0">
         </div>
     </fieldset>
@@ -231,7 +255,7 @@ if ($id != -1) {
         </div>
         <div id="file_toc_new" class="hidden">
             <label for="file_toc_newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
-            <input type="file" name="file_toc" id="file_toc_newfile_input" disabled>
+            <input type="file" name="file_toc" id="file_toc_newfile_input" size="60" disabled>
             <input type="hidden" name="file_toc_changed" id="file_toc_changed" value="0">
         </div>
     </fieldset>
@@ -239,7 +263,7 @@ if ($id != -1) {
 
     <fieldset class="fields_area">
         <legend>Управление</legend>
-        <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
+        <button type="button" class="button-large button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
         <button type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СБОРНИК</strong></button>
         <button type="submit" class="button-large" ><strong>ОБНОВИТЬ СБОРНИК</strong></button>
     </fieldset>
