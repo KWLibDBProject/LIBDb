@@ -17,9 +17,13 @@ BODY { margin: 0; background: #f0f8ff; }
 }
 .t-logo {
     width: 210px; /* left column width */
+    height: 150px;
+    background-image: url(/images/sova_106x150.png);
+    background-repeat: no-repeat;
 }
 .t-logo-title {
     width: 100%;
+    text-align: center;
     /* height:100px; */ /* top bar height */
 }
 .t-logo-langs {
@@ -27,7 +31,6 @@ BODY { margin: 0; background: #f0f8ff; }
     width: 180px;
 }
 .t-logo-menu {
-    overflow: hidden;
 }
 #menubar {
     position: relative;

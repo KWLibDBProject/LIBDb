@@ -5,6 +5,11 @@ ul, ol {
 
 /* Header */
 .t-logo-title {
+    /* text-transform: uppercase; */
+}
+
+#main_content { /*контейнер с контентом*/
+
 }
 
 .logo-title {
