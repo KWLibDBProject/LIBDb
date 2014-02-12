@@ -4,9 +4,6 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 require_once('../core.filestorage.php');
 
-printr($_POST);
-printr($_FILES);
-
 $ref_name = 'authors';
 
 $link = ConnectDB();

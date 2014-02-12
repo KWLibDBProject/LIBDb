@@ -4,9 +4,6 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 require_once('../core.filestorage.php');
 
-printr($_POST);
-printr($_FILES);
-
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 $ref_name = 'authors';
 
