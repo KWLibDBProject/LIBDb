@@ -151,6 +151,7 @@ function DB_LoadAuthorInformation_ById($id, $lang)
         $ret['author_workplace'] = $author['workplace'];
         $ret['author_bio'] = $author['bio'];
         $ret['author_is_es'] = $author['is_es'];
+        $ret['author_photo_id'] = $author['photo_id'];
     }
     return $ret;
 }
@@ -177,7 +178,7 @@ function DB_LoadArticleInformation_ById($id, $lang)
 function DB_LoadAuthors_ByArticle($id, $lang, $with_email='yes')
 {
     $q_email = ($with_email == 'yes') ? ', email AS author_email' : ''; // insert email request to query
-    $q = "SELECT authors.id AS author_id, name_{$lang} AS author_name, title_{$lang} AS author_title {$q_email} FROM authors, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id";
+    $q = "SELECT authors.id AS author_id, name_{$lang} AS author_name, title_{$lang} AS author_title {$q_email} FROM authors, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id ORDER BY name_{$lang}";
     $ret = array();
     if ($r = mysql_query($q)) {
         while ($row = @mysql_fetch_assoc($r)) {
@@ -297,8 +298,9 @@ function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no')
     } else {
         $where_es = '';
     }
+    $order = "ORDER BY authors.name_{$lang}";
+    $q = "SELECT * FROM authors WHERE `deleted`=0 {$where_es} {$like} {$order}";
 
-    $q = "SELECT * FROM authors WHERE `deleted`=0 ".$where_es.$like;
     $r = mysql_query($q) or Die(0);
     // ФИО, научное звание/ученая степень
 

@@ -34,7 +34,8 @@ if (isset($_FILES)) {
             'tempname' => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\', $a_file_data['tmp_name']) : $a_file_data['tmp_name'],
             'filesize' => $a_file_data['size'],
             'relation' => $new_id,
-            'filetype' => $a_file_data['type']
+            'filetype' => $a_file_data['type'],
+            'collection' => 'books'
         );
         $insert_array['content'] = mysql_escape_string(floadfile($insert_array['tempname']));
         $q = MakeInsert($insert_array, $ref_filestorage);

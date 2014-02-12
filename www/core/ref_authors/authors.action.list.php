@@ -9,8 +9,8 @@ $link = ConnectDB();
 
 $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'authors';
 $ref_prompt = IsSet($_GET["prompt"]) ? ($_GET["prompt"]) : 'Работа с автором';
-
-$query = "SELECT * FROM $ref_name WHERE deleted=0";
+// $sort_order = "ORDER BY name_ru";
+$query = "SELECT * FROM $ref_name WHERE deleted=0 $sort_order";
 $res = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($res) ;
 
@@ -66,7 +66,7 @@ if ($ref_numrows > 0)
         <td> {$row['title_uk']} </td>
         <td> Photo: </td>
         <td>
-            <a href="css/kota.jpg" target="_blank" class="lightbox"> &lt;Show&gt; </a>
+            <a href="getimage.php?id={$row['photo_id']}" target="_blank" class="lightbox"> &lt;Show&gt; </a>
         </td>
     </tr>
 AAA_EACH;

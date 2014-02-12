@@ -5,8 +5,11 @@
     <script src="js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".admin-button").on('click',function(){
+            $(".actor-button").on('click',function(){
                 window.location.href = $(this).attr('data-href');
+            });
+            $(".actor-button-sub").on('click',function(){
+                $('#'+$(this).attr('data-submenu-id') ).toggle(400);
             });
         });
     </script>
@@ -14,14 +17,15 @@
         table {
             border: 1px dotted blue;
         }
-        ul{
+        ul {
             margin-left: 0;
             margin-bottom: 0; margin-top: 0;
             padding: 0;
         }
         ul li {
             list-style-type: none;
-            padding: 2px;
+            padding-top: 2px;
+            padding-bottom: 2px;
         }
         div {
             margin:0;
@@ -31,8 +35,32 @@
             color: gray;
             background-color: #d3d3d3;
         }
-        .admin-button {
+
+        ol li {
+            margin-bottom: 0.5em;
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* submenu microengine */
+        .have-top-border {
+            border-top: 3px navy solid;
+            padding-top: 10px;
+            margin-top: 10px;
+            width: 150px;
+        }
+        .admin-button-large {
             height: 60px;
+            width: 150px;
+        }
+        .admin-button-small {
+            width: 150px;
+        }
+        .actor-button-sub {
+            width: 150px;
+        }
+        .submenu-fieldset {
             width: 150px;
         }
     </style>
@@ -48,53 +76,72 @@
                     Разделы сайта
                 </li>
                 <li>
-                    <button data-href="ref.topics.show.php" class="admin-button">ТЕМАТИЧЕСКИЕ РАЗДЕЛЫ</button>
+                    <button data-href="ref.topics.show.php" class="admin-button-large actor-button">ТЕМАТИЧЕСКИЕ РАЗДЕЛЫ</button>
                 </li>
                 <li>
-                    <button data-href="ref.books.show.php" class="admin-button">СБОРНИКИ (КНИГИ)</button>
+                    <button data-href="ref.books.show.php" class="admin-button-large actor-button">СБОРНИКИ (КНИГИ)</button>
                 </li>
                 <li>
-                    <button data-href="ref.authors.show.php" class="admin-button">АВТОРЫ</button>
+                    <button data-href="ref.authors.show.php" class="admin-button-large actor-button">АВТОРЫ</button>
                 </li>
                 <li>
-                    <button data-href="ref.articles.show.php" class="admin-button">СТАТЬИ</button>
+                    <button data-href="ref.articles.show.php" class="admin-button-large actor-button">СТАТЬИ</button>
                 </li>
                 <li>
-                    <button data-href="ref.pages.show.php" class="admin-button">СТАТИЧЕСКИЕ<br>СТРАНИЦЫ</button>
+                    <button data-href="ref.pages.show.php" class="admin-button-large actor-button">СТАТИЧЕСКИЕ<br>СТРАНИЦЫ</button>
+                </li>
+                <li class="have-top-border">
+                    <button type="button" class="admin-button-small actor-button-sub" data-submenu-id="submenu-tools">Администратору:</button>
+                    <ul id="submenu-tools" class="hidden submenu-border">
+                        <li>
+                            <button data-href="ref.users.show.php" class="admin-button-large actor-button">ПОЛЬЗОВАТЕЛИ</button>
+                        </li>
+                        <li>
+                            <button data-href="ref.filestorage.show.php" class="admin-button-large actor-button" disabled>Filestorage</button>
+                        </li>
+                        <li>
+                            <button data-href="statistics.show.php" class="admin-button-large actor-button" disabled>Статистика</button>
+                        </li>
+
+                    </ul>
                 </li>
                 <li>
-                    <div>Администратору:</div>
+                    <button type="button" class="admin-button-small actor-button-sub" data-submenu-id="submenu-refs">Технические</button>
+                    <ul id="submenu-refs" class="hidden submenu-fieldset">
+                        <li>
+                            <a href="ref.abstract.php?ref=ref_selfhood">Ref: Самость</a>
+                        </li>
+                    </ul>
                 </li>
-                <li>
-                    <button data-href="ref.users.show.php" class="admin-button">ПОЛЬЗОВАТЕЛИ</button>
-                </li>
-                <li>
-                    <button data-href="ref.filestorage.show.php" class="admin-button" disabled>Filestorage</button>
-                </li>
-                <li>
-                    <button data-href="statistics.show.php" class="admin-button" disabled>Статистика</button>
-                </li>
+
                 <li>
                     Управление:
                 </li>
                 <li>
-                    <button data-href="admin.logout.php" class="admin-button">Logout</button>
+                    <button data-href="admin.logout.php" class="admin-button actor-button">Logout</button>
                 </li>
             </ul>
         </td>
         <td valign="top">
-            <h1>Рекомендуемый порядок ввода данных</h1>
+            <h1>Краткая справка</h1>
+            <h3>Как добавлять статью?</h3>
             <ol>
                 <li>
+                    Просмотрите статью. В ней есть авторы, сборник, УДК
+
+                </li>
+                <li>
+                    Откройте <button class=" actor-button" data-href="ref.authors.show.php">справочник авторов</button>
+                    и найдите
 
                 </li>
 
-
             </ol>
+
         </td>
     </tr>
 </table>
-
+<div><a href="/" target="_blank">Main site</a></div>
 <div id="footer">© Karel Wintersky, 2014.</div>
 
 </body>

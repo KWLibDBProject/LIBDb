@@ -1,7 +1,3 @@
 DirectoryIndex admin.login.php
 php_flag magic_quotes_gpc off
 php_flag magic_quotes_runtime off
-
-# php_value include_path /home/o/public_html/core
-# php_value include_path ".;\\home\\localhost\\www\\core"
-# php_value auto_prepend_file core.autoprepend.php

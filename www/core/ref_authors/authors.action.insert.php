@@ -2,6 +2,10 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.filestorage.php');
+
+printr($_POST);
+printr($_FILES);
 
 $ref_name = 'authors';
 
@@ -18,10 +22,22 @@ $q = array(
     'is_es' => (strtolower(mysql_escape_string($_POST['is_es']))=='on' ? 1 : 0),
     'phone' => mysql_escape_string($_POST['phone']),
     'bio' => mysql_escape_string($_POST['bio']),
+    /* самость */
+    'selfhood' => mysql_escape_string($_POST['selfhood']),
 );
 $qstr = MakeInsert($q, $ref_name);
+$res = mysql_query($qstr, $link) or die("Error at $qstr");
 
-if ($res = mysql_query($qstr, $link)) {
+if (!empty($res)) {
+    $new_author_id = mysql_insert_id(); // айди автора в базе, он нужен для вставки фото
+
+    if ($_POST['file_current_changed'] == 1)
+    {
+        if (isset($_FILES))
+        {
+            FileStorage::addFile($_FILES['file_new_input'], $new_author_id, 'authors', 'photo_id');
+        }
+    }
     $result['message'] = $qstr;
     $result['error'] = 0;
 }

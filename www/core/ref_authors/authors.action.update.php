@@ -2,7 +2,10 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.filestorage.php');
 
+printr($_POST);
+printr($_FILES);
 
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 $ref_name = 'authors';
@@ -21,11 +24,22 @@ $q = array(
     'is_es' => (strtolower(mysql_escape_string($_POST['is_es']))=='on' ? 1 : 0),
     'phone' => mysql_escape_string($_POST['phone']),
     'bio' => mysql_escape_string($_POST['bio']),
+    /* самость */
+    'selfhood' => mysql_escape_string($_POST['selfhood']),
 );
 
 $qstr = MakeUpdate($q, $ref_name, "WHERE id=$id");
+$res = mysql_query($qstr, $link);
 
-if ($res = mysql_query($qstr, $link)) {
+if (!empty($res)) {
+    $new_author_id = $id; // айди автора в базе, он нужен для вставки фото
+    if ($_POST['file_current_changed'] == 1)
+    {
+        if (!empty($_FILES))
+        {
+            FileStorage::addFile($_FILES['file_new_input'], $new_author_id, 'authors', 'photo_id');
+        }
+    }
     $result['message'] = $qstr;
     $result['error'] = 0;
 }
@@ -41,7 +55,7 @@ if (isAjaxCall()) {
     if ($result['error'] == 0) {
         // use template
         $override = array(
-            'time' => 10,
+            'time' => 300,
             'target' => '/core/ref.authors.show.php',
             'buttonmessage' => 'Вернуться к списку авторов',
             'message' => 'Информация об авторе обновлена'

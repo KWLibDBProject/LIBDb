@@ -12,6 +12,9 @@
     <script src="../js/core.js"></script>
     <script src="ref.authors.js"></script>
 
+    <script src="../js/jquery.colorbox.js"></script>
+    <link rel="stylesheet" href="../css/colorbox.css" />
+
     <script type="text/javascript">
         // tinyMCE inits
         tinymce.init({
@@ -21,30 +24,78 @@
         });
 
         $(document).ready(function () {
+            $.ajaxSetup({cache: false, async: false});
+            selfhoodList = preloadOptionsList('../ref.abstract.getoptionslist.php?ref=ref_selfhood');
+            currentSelfhood = 0;
             author_id = {%author_id%};
 
             if (author_id != -1) {
-                Authors_LoadRecord("#form_edit_author", author_id, 'bio');
-                $("#button-remove").show().on('click',function(event){
+                currentSelfhood = Authors_LoadRecord("#form_edit_author", author_id, 'bio');
+                $(".actor-button-remove").show().on('click',function(event){
                     window.location.href = 'authors.action.remove.php?id='+author_id;
                 });
+            } else {
+                $("select[name='selfhood']").prop('disabled', true); // значение селекта 'selfhood' для нового автора
             }
+            $("#form_edit_author").show();
+            /* флажки установим (полностью отвязывая блок с файлами от оверрайда шаблона
+            для ADD (author_id == -1) - true, EDIT: false */
+            $("button[name='file_current_id_show']").prop('disabled', (author_id == -1) );
 
-            $("#button-exit").on('click',function(event){
+
+            //@hint: создать селектор 'selfhood' (мы создаем его, лишь узнав текущее значение)
+            BuildSelector('selfhood', selfhoodList, currentSelfhood);
+
+            $(".actor-button-exit").on('click',function(event){
                 window.location.href = '/core/ref.authors.show.php';
             });
-            $("#is_es").on('change',function(event){
-                $("#es_fieldset").toggle();
+
+            $("#is_es").on('change', function(event){
+                $("select[name='selfhood']").prop('disabled', !this.checked);
+                // Участник редколлегии КАК МИНИМУМ тех-редактор, сменим значение селектора 'selfhood'
+                //@hint: +this.checked преобразует bool -> int
+                $("select[name='selfhood'] option[value='"+ +this.checked +"']").prop("selected",true);
             });
 
+            /* photo actors */
+            $(".actor-file-current-remove").on('click', function(){
+                var getting = $.get('../ref.filestorage/filestorage.action.remove.php', {
+                    id: $(this).attr('data-fileid'), // тут почему то Undefined
+                    caller: 'authors',
+                    subcaller: 'photo_id'
+                });
+                getting.done(function(data){
+                    result = $.parseJSON(data);
+                    if (result['error'] == 0)
+                    {
+                        $('#file_new_input').removeProp("disabled");
+                        $('#file_new').show().find("input[name=file_current_changed]").attr("value","1");
+                        $('#file_current').hide();
+                    } else {
+                        // alert('Ошибка удаления файла!');
+                    }
+                }); // getting.done
+            });
+
+            $(".actor-file-current-show").on('click', function(){
+                var link = "../getimage.php?id="+$(this).attr('data-fileid');
+                $.colorbox({
+                    href: link,
+                    photo: true
+                });
+            });
+            // вставить проверку валидации данных по сабмиту. Надо ли?
+            //
+
+            $("#name_en").focus();
         });
     </script>
 </head>
 <body>
 
-<form action="{%form_call_script%}" method="post" enctype="multipart/form-data" id="form_edit_author">
-    <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ АВТОРОВ</strong></button>
-    <button type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ АВТОРА</strong></button>
+<form action="{%form_call_script%}" method="post" enctype="multipart/form-data" id="form_edit_author" class="hidden">
+    <button type="button" class="button-large actor-button-exit" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ АВТОРОВ</strong></button>
+    <button type="button" class="button-large actor-button-remove" id="button-remove"><strong>УДАЛИТЬ АВТОРА</strong></button>
     <button type="submit" class="button-large" ><strong>{%submit_button_text%}</strong></button>
     <hr>
     <input type="hidden" name="id">
@@ -91,24 +142,42 @@
     </fieldset>
     <hr>
 
-        <fieldset id="es_fieldset_">
-        <legend>Автор как участник редколлегии</legend>
-    </fieldset>
+    <fieldset id="es_fieldset">
+        <legend>
+            Расширенные сведения об авторе
+        </legend>
+        <label>Участник редакционной коллегии:<input type="checkbox" name="is_es" id="is_es"></label>
+        <br>
+        Роль в редакционной коллегии:
+        <select name="selfhood">
+            <option value="0">[0] НЕТ</option>
+        </select>
+        <br><br>
 
-    <fieldset>
-        <legend><label>Участие в редакционной коллегии:<input type="checkbox" name="is_es" id="is_es"></label>  </legend>
-        <div id="es_fieldset">
-            <label for="bio">Биография и публикации в других изданиях:</label><br>
-            <textarea name="bio" id="bio" cols="90" rows="7"></textarea>
-
-            Поля редколлегии
-            Поле фотографии
+        <!-- photo inputs -->
+        <div id="file_current">
+            <label for="file_current_input">
+                <button type="button" class="actor-file-current-show lightboxed" name="file_current_id_show">Фотография</button>
+            </label>
+            <input type="text" size="60" id="file_current_input" name="file_current_input" value="Нажмите *удалить* и добавьте фотографию автора">
+            <button type="button" name="file_current_id_remove" class="actor-file-current-remove">Удалить</button>
         </div>
+
+        <div id="file_new" class="hidden">
+            <label for="file_new_input">Прикрепить НОВЫЙ файл (JPEG/PNG/GIF):</label>
+            <input type="file" name="file_new_input" id="file_new_input" size="60" disabled>
+            <input type="hidden" name="file_current_changed" id="file_current_changed" value="0">
+            <div class="hint"></div>
+        </div>
+        <br>
+        <!-- bio -->
+        <fieldset>
+            <legend>Биография и публикации в других изданиях:</legend>
+            <textarea name="bio" id="bio" cols="90" rows="7"></textarea>
+        </fieldset>
     </fieldset>
-
     <hr>
-
-    <button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
+    <button type="submit" class="button-large" ><strong>{%submit_button_text%}</strong></button>
 </form>
 
 </body>

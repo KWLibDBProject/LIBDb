@@ -1,7 +1,7 @@
 #button-remove { /* класс по умолчанию для скрытой кнопки удаления */
     display: none;
 }
-#es_fieldset {
+#_es_fieldset {
     display: none;
 }
 

@@ -46,12 +46,13 @@ switch ($fetch) {
                 $a_articles = FE_PrintArticles_ByAuthor(DB_LoadArticles_ByAuthor($id, $site_language), $site_language);
 
                 $inner_html_override = array(
-                    'author_publications' => $a_articles,
-                    'author_name' => $air['author_name'],
-                    'author_title' => $air['author_title'],
-                    'author_email' => $air['author_email'],
-                    'author_workplace' => $air['author_workplace'],
-                    'author_bio' => $air['author_bio']
+                    'author_publications'   => $a_articles,
+                    'author_name'           => $air['author_name'],
+                    'author_title'          => $air['author_title'],
+                    'author_email'          => $air['author_email'],
+                    'author_workplace'      => $air['author_workplace'],
+                    'author_bio'            => $air['author_bio'],
+                    'author_photo_id'       => $air['author_photo_id']
                 );
 
                 $inner_html->override($inner_html_override);

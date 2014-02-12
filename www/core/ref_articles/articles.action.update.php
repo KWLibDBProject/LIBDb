@@ -45,7 +45,8 @@ if ($is_newfile == 1) {
             'tempname' => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\',$_FILES['pdffile']['tmp_name']) : $_FILES['pdffile']['tmp_name'],
             'filesize' => $_FILES['pdffile']['size'],
             'relation' => $article_id,
-            'filetype' => $_FILES['pdffile']['type']
+            'filetype' => $_FILES['pdffile']['type'],
+            'collection' => 'articles'
         );
 
         $insert_data['content'] = mysql_escape_string(floadpdf($insert_data['tempname']));
