@@ -52,7 +52,8 @@ switch ($fetch) {
                     'author_email'          => $air['author_email'],
                     'author_workplace'      => $air['author_workplace'],
                     'author_bio'            => $air['author_bio'],
-                    'author_photo_id'       => $air['author_photo_id']
+                    'author_photo_id'       => $air['author_photo_id'],
+                    'author_photo_link'     => ($air['author_photo_id'] == -1) ? "/images/no_photo.png" : "core/getimage.php?id={$air['author_photo_id']}"
                 );
 
                 $inner_html->override($inner_html_override);

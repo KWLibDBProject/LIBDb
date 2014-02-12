@@ -1,19 +1,18 @@
-<style type="text/css">
-</style>
 <fieldset class="author-about">
-    <div class="photo_div">
-        <img src="core/getimage.php?id={%author_photo_id%}" width="150" height="200">
-    </div>
     <legend>About</legend>
-    <div id="info">
-
-        <div class="author_name">{%author_name%}</div>
-        <div class="author_title">{%author_title%}</div>
-        <div><span class="author_email">E-Mail: </span>{%author_email%}</div>
-        <div class="author_workplace">{%author_workplace%}</div>
-        <div class="author_bio">{%author_bio%}</div>
+     <div class="photo_div">
+        <img src="{%author_photo_link%}" width="150" height="200" class="photo">
     </div>
-
+    <div id="author_info">
+        <p class="author_name">{%author_name%}</p>
+        <p class="author_title">{%author_title%}</p>
+        <p><span class="author_email">E-Mail: </span>{%author_email%}</p>
+        <p class="author_workplace">{%author_workplace%}</p>
+    </div>
+</fieldset>
+<fieldset class="author_bio">
+    <legend>Biography</legend>
+    <span class="author_bio">{%author_bio%}</span>
 </fieldset>
 
 <fieldset class="author-publications">
