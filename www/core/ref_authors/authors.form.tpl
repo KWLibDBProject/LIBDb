@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="../js/jquery-1.10.2.min.js"></script>
     <script src="../js/tinymce.min.js"></script>
+    <script src="../js/tinymce.ru.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="authors.css">
@@ -85,19 +86,27 @@
             tinymce.init({
                 selector:'textarea#bio_en',forced_root_block : "",
                 force_br_newlines : true,
-                force_p_newlines : false
+                force_p_newlines : false,
+                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
             });
             tinymce.init({
                 selector:'textarea#bio_ru',forced_root_block : "",
                 force_br_newlines : true,
-                force_p_newlines : false
+                force_p_newlines : false,
+                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
             });
             tinymce.init({
                 selector:'textarea#bio_uk',forced_root_block : "",
                 force_br_newlines : true,
-                force_p_newlines : false
+                force_p_newlines : false,
+                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
             });
-
+            tinymce.init({
+                selector:'textarea#workplace',forced_root_block : "",
+                force_br_newlines : true,
+                force_p_newlines : false,
+                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+            });
             $("#name_en").focus();
         });
     </script>
@@ -139,12 +148,12 @@
         <legend>Контактные данные:</legend>
 
         <label for="email">E-Mail</label><br>
-        <input type="text" name="email" id="email" value="">
+        <input type="text" name="email" id="email">
 
         <br>
 
         <label for="phone">Телефон для связи</label><br>
-        <input type="text" name="phone" id="phone" value="">
+        <input type="text" name="phone" id="phone">
 
         <br>
 
@@ -188,15 +197,17 @@
         <br>
         <!-- bio -->
         <h2>Биография на различных языках</h2>
-
+        <hr>
         <h3>Биография на английском языке</h3>
-        <textarea name="bio_en" id="bio_en" cols="90" rows="7"></textarea>
+        <textarea name="bio_en" id="bio_en" cols="90" rows="12"></textarea>
+        <hr>
 
         <h3>Биография на русском языке</h3>
-        <textarea name="bio_ru" id="bio_ru" cols="90" rows="7"></textarea>
+        <textarea name="bio_ru" id="bio_ru" cols="90" rows="12"></textarea>
+        <hr>
 
         <h3>Биография на украинском языке</h3>
-        <textarea name="bio_uk" id="bio_uk" cols="90" rows="7"></textarea>
+        <textarea name="bio_uk" id="bio_uk" cols="90" rows="12"></textarea>
 
     </fieldset>
     <hr>
