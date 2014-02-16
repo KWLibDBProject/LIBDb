@@ -1,0 +1,35 @@
+/* список сборников справа на странице */
+
+/* общий класс списка сборников */
+.books-list > ul {
+    margin: 0;
+    padding: 0;
+}
+/* класс заголовка года */
+.books-list-year {
+}
+/* блок: сборники по году */
+.books-list-year > ul {
+}
+/* li-элемент с каждым сборником(книгой) */
+.books-list-eachbook {
+    font-size: small;
+    text-indent: -20px;
+}
+
+.books-list h3 {
+    font-size:16px;
+    color:navy;
+    padding: 5px 20px 0px 20px;
+    margin: 0;
+}
+
+.books-list-header {
+    font-size:16px;
+    color:navy;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+    display: block;
+    padding-bottom: 10px;
+}

@@ -6,7 +6,9 @@
         Odessa national polytechnic university</title>
     <link rel="stylesheet" type="text/css" href="tpl/menu.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="tpl/layout.css" media="screen" />
+
     <link rel="stylesheet" type="text/css" href="tpl/styles.css" media="screen" />
+
     <script type="text/javascript" src="core/js/jquery-1.10.2.min.js"></script>
 
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
@@ -71,6 +73,7 @@
                         <li>
                             <a href="">About</a>
                             <ul>
+                                <li><a href="?fetch=page&with=forauthors">For authors</a></li>
                                 <li><a href="?fetch=page&with=pubethics">Publishing ethics</a></li>
                                 <li><a href="?fetch=authors&with=estuff">Editorial stuff</a></li>
                                 <li><a href="?fetch=page&with=details">Magazine details</a></li>
@@ -78,7 +81,8 @@
                                 <li><a href="?fetch=page&with=contacts">Contacts</a></li>
                             </ul>
                         </li>
-                        <li><a href="?fetch=page&with=forauthors">For authors</a></li>
+                        <li><a href="?fetch=authors&with=list">Our authors</a></li>
+                        <li><a href="?fetch=page&with=confs">Conference</a></li>
                         <li><a href="?fetch=news">News</a></li>
                     </ul>
                 </div>
@@ -99,7 +103,7 @@
                 </div>
             </td>
             <td class="rightblock">
-                All books
+                <span class="books-list-header">All books</span>
                 <div id="books-accordion" class="books-list">
                     <!--{books}-->
                 </div>

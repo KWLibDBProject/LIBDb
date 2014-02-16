@@ -1,0 +1,11 @@
+/* Header */
+.t-logo-title {
+    /* text-transform: uppercase; */
+}
+
+.logo-title {
+    font-weight: bold;
+    font-size: 200%;
+    color: navy;
+    font-style: italic;
+}

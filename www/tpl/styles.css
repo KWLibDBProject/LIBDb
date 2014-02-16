@@ -1,157 +1,25 @@
-/* Общий сброс стилей для списков */
-ul, ol {
-    list-style-type:none;
-}
+@import url("main.reset.css");
+@import url("main.logo.css");
+@import url("main.rubrics.css");
+@import url("main.books.css");
 
-/* Header */
-.t-logo-title {
-    /* text-transform: uppercase; */
-}
+/* modules styles */
+
+@import url("main.articles.books.css"); /*  ?fetch=articles&with=book&id=...   */
+@import "main.authors.info.css"; /* /authors/info/N */
+@import "main.articles.extended.css"; /* articles/extended/N */
+@import "main.authors.estuff.css"; /* authors/estuff/ */
 
 #main_content { /*контейнер с контентом*/
 
 }
 
-.logo-title {
-    font-weight: bold;
-    font-size: 200%;
-    color: navy;
-    font-style: italic;
-}
-
-/* Рубрики (темы) - стили для списка и элементов */
-.rubrics-list ul {
-    padding: 5px 10px 0 20px;
-    margin: 0;
-}
-.rubrics-list ul a{
-    color:#076f2f;
-    font-size:14px;
-    line-height:20px;
-    font-weight:bold;
-    display:block;
-    border-top:1px solid #ceceb4;
-    padding:10px 0 7px 0px;
-    text-decoration:none;
-    text-transform:uppercase;
-}
-.rubrics-list ul a:hover{
-    background:#e5e5dc;
-}
-.rubrics-list ul li:first-child a{
-    border-top:0;
-}
-
-/* Заголовок в списке рубрик */
-.rubrics-list h3{
-    font-size:16px;
-    color:navy;
-    padding: 5px 20px 0px 20px;
-    margin: 0;
-}
-
-/* books - сборники*/
-/* верхний блок с тремя картинками-ссылками - расширенная инфа о каждом сборнике */
-.books-extended-info ul{
-    margin: 0; padding: 4px;
-    text-align: center;
-}
-.books-extended-info ul li {
-    display: inline-block;
-    min-width: 128px;
-    text-align: center;
-    margin-right: 5px;
-    border: 2px solid transparent;
-    padding: 0;
-}
-.books-extended-info li:hover {
-    border: 2px solid #d2691e;
-}
-.books-extended-info a {
-    text-decoration: none;
-    color: #483d8b;
-}
-.books-extended-info a:hover {
-    color: red;
-}
-.books-extended-info a:visited {
-    color: #483d8b
-}
-
-/* общий класс списка сборников */
-.books-list > ul {
-    margin: 0;
-    padding: 0;
-}
-/* класс заголовка года */
-.books-list-year {
-}
-/* блок: сборники по году */
-.books-list-year > ul {
-}
-/* li-элемент с каждым сборником(книгой) */
-.books-list-eachbook {
-    font-size: small;
-    text-indent: -20px;
-}
-
-/* классы описания автора */
-.photo_div {
-    border:1px solid black; width:150px; height:200px;
-    float: left;
-    margin-right: 1em;
-}
-#author_info {
-    border: 0px solid red;
-    font-family: Georgia;
-}
-#author_info > div {
-    padding-bottom: 15px;
-}
-#author_info p {
-    margin-top:0;
-}
-
-.author_name {
-    font-size: 250%; font-weight: bold;
-}
-.author_title {
-    font-size: 125%; font-weight: bold;
-}
-.author_email {
-    font-weight: bold;
-}
-.author_workplace {
-    font-style: italic;
-}
-.author_bio {}
-
-/* классы списка статей у автора */
-.articles_by-author-table {
-    width: 100%;
-    /* border: 1px solid #ffdab9; */
-}
-.articles_by-author-table td {
-    vertical-align: middle;
-}
-.articles_by-author-table-book-title {}
-.articles_by-author-table-pdficon {
-    width: 32px;
-}
-.articles_by-author-table-title {}
-.articles_by-author-table-book-year {}
-
-/* классы (полного) списка авторов */
+/* классы (полного) списка авторов (Load authors by letter) */
 .authors-list {
     list-style-type: disc;
 }
 
-/* классы полного списка авторов из редколлегии */
-.authors-list-as-estuff {}
-
-/* классы полного списка статей (загружаемых аяксом) */
-.articles-list-by-query { /* класс основного списка */}
-
+/* оформление search results */
 fieldset.search_results {
     padding-left: 2px;
     padding-right: 2px;
@@ -161,41 +29,7 @@ fieldset.search_results {
     margin-right: 5px;
 }
 
-
-/* Классы форматирования вывода списка статей по различным критериям отбора */
-/* Весь список авторов, сейчас применяется к таблице */
-.articles-list-by-query {}
-/* стиль вывода названия сборника */
-.articles-list-table-book-title {}
-/* стиль к ячейке с иконкой загрузки */
-.articles-list-table-pdficon {}
-/* стиль к ячейке с названием статьи */
-.articles-list-table-title {}
-/* стиль к спану со списком авторов у статьи */
-.articles-list-table-authors-list {
-    list-style-type: none;
-    padding: 0;
-    margin:0;
-}
-.articles-list-table-authors-list li {
-    font-size: small;
-}
-
-.articles-list-table-authors-list li:before{
-    content: '· ';
-}
-
-/* вложенный спан с фамилией*/
-.articles-list-table-authors-list-name {
-    /* font-weight: bold; */
-    color: navy;
-}
-/* вложенный спан с титулом */
-.articles-list-table-authors-list-title {}
-/* стиль к ячейке с кнопкой MOAR */
-.articles-list-table-button-more-info {}
-
-/* класс UL для списка ВСЕХ статей */
+/* класс UL для списка ВСЕХ статей в сокращенной нотации */
 .articles-list-full {
     list-style-type: disc;
 }

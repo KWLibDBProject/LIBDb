@@ -1,0 +1,45 @@
+/* классы описания автора */
+.photo_div {
+    border:1px solid black; width:150px; height:200px;
+    float: left;
+    margin-right: 1em;
+}
+#author_info {
+    border: 0px solid red;
+    font-family: Georgia;
+}
+#author_info > div {
+    padding-bottom: 15px;
+}
+#author_info p {
+    margin-top:0;
+}
+.author_name {
+    font-size: 250%; font-weight: bold;
+}
+.author_title {
+    font-size: 125%; font-weight: bold;
+}
+.author_email {
+    font-weight: bold;
+}
+.author_workplace {
+    font-style: italic;
+}
+/* разделить класс спана и филдсета! */
+.author_bio {}
+
+/* стили таблицы СТАТЬИ у АВТОРА */
+.articles_by-author-table {
+    width: 100%;
+    /* border: 1px solid #ffdab9; */
+}
+.articles_by-author-table td {
+    vertical-align: middle;
+}
+.articles_by-author-table-book-title {}
+.articles_by-author-table-pdficon {
+    width: 32px;
+}
+.articles_by-author-table-title {}
+.articles_by-author-table-book-year {}

@@ -1,0 +1,27 @@
+/* books - сборники*/
+/* верхний блок с тремя картинками-ссылками - расширенная инфа о каждом сборнике */
+.books-extended-info ul{
+    margin: 0; padding: 4px;
+    text-align: center;
+}
+.books-extended-info ul li {
+    display: inline-block;
+    min-width: 128px;
+    text-align: center;
+    margin-right: 5px;
+    border: 2px solid transparent;
+    padding: 0;
+}
+.books-extended-info li:hover {
+    border: 2px solid #d2691e;
+}
+.books-extended-info a {
+    text-decoration: none;
+    color: #483d8b;
+}
+.books-extended-info a:hover {
+    color: red;
+}
+.books-extended-info a:visited {
+    color: #483d8b
+}

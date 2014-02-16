@@ -1,0 +1,30 @@
+/* Рубрики (темы) - стили для списка и элементов */
+.rubrics-list ul {
+    padding: 5px 10px 0 20px;
+    margin: 0;
+}
+.rubrics-list ul a{
+    color:#076f2f;
+    font-size:14px;
+    line-height:20px;
+    font-weight:bold;
+    display:block;
+    border-top:1px solid #ceceb4;
+    padding:10px 0 7px 0;
+    text-decoration:none;
+    text-transform:uppercase;
+}
+.rubrics-list ul a:hover{
+    background:#e5e5dc;
+}
+.rubrics-list ul li:first-child a{
+    border-top:0;
+}
+
+/* Заголовок в списке рубрик */
+.rubrics-list h3{
+    font-size:16px;
+    color:navy;
+    padding: 5px 20px 0px 20px;
+    margin: 0;
+}
