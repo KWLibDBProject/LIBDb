@@ -75,6 +75,7 @@ CloseDB($link);
     <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="../js/jquery.ui.datepicker.rus.js"></script>
     <script src="../js/tinymce.min.js"></script>
+    <script src="../js/tinymce.ru.js"></script>
 
     <script src="../js/core.js"></script>
     <script src="ref.articles.js"></script>
@@ -110,15 +111,19 @@ CloseDB($link);
 
         // tinyMCE inits
         tinymce.init({selector:'textarea#abstract_en',forced_root_block : "",
+            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false});
         tinymce.init({selector:'textarea#abstract_ru',forced_root_block : "",
+            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false});
         tinymce.init({selector:'textarea#abstract_uk',forced_root_block : "",
+            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false});
         tinymce.init({selector:'textarea#refs',forced_root_block : "",
+            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false});
 

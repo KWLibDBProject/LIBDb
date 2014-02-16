@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="../js/jquery-1.10.2.min.js"></script>
     <script src="../js/tinymce.min.js"></script>
+    <script src="../js/tinymce.ru.js"></script>
 
     <link rel="stylesheet" type="text/css" href="pages.css">
     <style type="text/css"></style>
@@ -15,16 +16,19 @@
         // tinyMCE inits
         tinymce.init({
             selector:'textarea#content_en',forced_root_block : "",
+            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false
         });
         tinymce.init({
             selector:'textarea#content_ru',forced_root_block : "",
+            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false
         });
         tinymce.init({
             selector:'textarea#content_uk',forced_root_block : "",
+            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false
         });
