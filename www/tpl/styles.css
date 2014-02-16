@@ -5,7 +5,7 @@
 
 /* modules styles */
 
-@import url("main.articles.books.css"); /*  ?fetch=articles&with=book&id=...   */
+@import "main.articles.books.css"; /*  ?fetch=articles&with=book&id=...   */
 @import "main.authors.info.css"; /* /authors/info/N */
 @import "main.articles.extended.css"; /* articles/extended/N */
 @import "main.authors.estuff.css"; /* authors/estuff/ */
@@ -18,6 +18,12 @@
 .authors-list {
     list-style-type: disc;
 }
+
+/* search selectors */
+.search_selector {
+    width: 200px;
+}
+
 
 /* оформление search results */
 fieldset.search_results {
