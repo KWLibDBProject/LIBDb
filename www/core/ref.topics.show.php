@@ -126,6 +126,7 @@ if (!isLogged()) header('Location: /core/');
             <label for="add_title_uk">Тематичний розділ:</label>
             <input type="text" name="add_title_uk" id="add_title_uk" class="text ui-widget-content ui-corner-all">
         </fieldset>
+        Пожалуйста, вводите тематические разделы маленькими (строчными) буквами. Помните, на сайте они все равно выведутся большими (прописными)!
     </form>
 </div>
 <div id="edit_form" title="Изменить тематический раздел">
@@ -137,8 +138,8 @@ if (!isLogged()) header('Location: /core/');
             <input type="text" name="edit_title_ru" id="edit_title_ru" class="text ui-widget-content ui-corner-all">
             <label for="edit_title_uk">Тематичний розділ:</label>
             <input type="text" name="edit_title_uk" id="edit_title_uk" class="text ui-widget-content ui-corner-all">
-
         </fieldset>
+        Пожалуйста, вводите тематические разделы маленькими (строчными) буквами. Помните, на сайте они все равно выведутся большими (прописными)!
      </form>
 </div>
 
