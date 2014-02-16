@@ -43,7 +43,7 @@ function Topics_CallLoadItem(destination, id) // номер записи, цел
         if (result['error'] == 0) {
             // загружаем данные в поля формы
             $form.find("input[name='edit_title_en']").val( result['data']['title_en'] );
-            $form.find("input[name='edit_title_ru']").val( result['data']['title_en'] );
+            $form.find("input[name='edit_title_ru']").val( result['data']['title_ru'] );
             $form.find("input[name='edit_title_uk']").val( result['data']['title_uk'] );
         } else {
             // ошибка загрузки
