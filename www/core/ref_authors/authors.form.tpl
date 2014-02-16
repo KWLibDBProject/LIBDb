@@ -17,14 +17,9 @@
 
     <script type="text/javascript">
         // tinyMCE inits
-        tinymce.init({
-            selector:'textarea#bio',forced_root_block : "",
-            force_br_newlines : true,
-            force_p_newlines : false
-        });
-
         $(document).ready(function () {
             $.ajaxSetup({cache: false, async: false});
+
             selfhoodList = preloadOptionsList('../ref.abstract.getoptionslist.php?ref=ref_selfhood');
             currentSelfhood = 0;
             author_id = {%author_id%};
@@ -87,6 +82,22 @@
             // вставить проверку валидации данных по сабмиту. Надо ли?
             //
 
+            tinymce.init({
+                selector:'textarea#bio_en',forced_root_block : "",
+                force_br_newlines : true,
+                force_p_newlines : false
+            });
+            tinymce.init({
+                selector:'textarea#bio_ru',forced_root_block : "",
+                force_br_newlines : true,
+                force_p_newlines : false
+            });
+            tinymce.init({
+                selector:'textarea#bio_uk',forced_root_block : "",
+                force_br_newlines : true,
+                force_p_newlines : false
+            });
+
             $("#name_en").focus();
         });
     </script>
@@ -146,13 +157,18 @@
         <legend>
             Расширенные сведения об авторе
         </legend>
-        <label>Участник редакционной коллегии:<input type="checkbox" name="is_es" id="is_es"></label>
-        <br>
-        Роль в редакционной коллегии:
-        <select name="selfhood">
-            <option value="0">[0] НЕТ</option>
-        </select>
-        <br><br>
+        <dl class="h-layout">
+            <dt class="w250">Участник редакционной коллегии:</dt>
+            <dd><input type="checkbox" name="is_es" id="is_es"></dd>
+            <dt class="w250">
+                Роль в редакционной коллегии:
+            </dt>
+            <dd>
+                <select name="selfhood">
+                    <option value="0">[0] НЕТ</option>
+                </select>
+            </dd>
+        </dl>
 
         <!-- photo inputs -->
         <div id="file_current">
@@ -171,10 +187,17 @@
         </div>
         <br>
         <!-- bio -->
-        <fieldset>
-            <legend>Биография и публикации в других изданиях:</legend>
-            <textarea name="bio" id="bio" cols="90" rows="7"></textarea>
-        </fieldset>
+        <h2>Биография на различных языках</h2>
+
+        <h3>Биография на английском языке</h3>
+        <textarea name="bio_en" id="bio_en" cols="90" rows="7"></textarea>
+
+        <h3>Биография на русском языке</h3>
+        <textarea name="bio_ru" id="bio_ru" cols="90" rows="7"></textarea>
+
+        <h3>Биография на украинском языке</h3>
+        <textarea name="bio_uk" id="bio_uk" cols="90" rows="7"></textarea>
+
     </fieldset>
     <hr>
     <button type="submit" class="button-large" ><strong>{%submit_button_text%}</strong></button>

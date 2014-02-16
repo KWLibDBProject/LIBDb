@@ -20,7 +20,9 @@ $q = array(
     'workplace' => mysql_escape_string($_POST['workplace']),
     'is_es' => (strtolower(mysql_escape_string($_POST['is_es']))=='on' ? 1 : 0),
     'phone' => mysql_escape_string($_POST['phone']),
-    'bio' => mysql_escape_string($_POST['bio']),
+    'bio_en' => mysql_escape_string($_POST['bio_en']),
+    'bio_ru' => mysql_escape_string($_POST['bio_ru']),
+    'bio_uk' => mysql_escape_string($_POST['bio_uk']),
     /* самость */
     'selfhood' => mysql_escape_string($_POST['selfhood']),
 );

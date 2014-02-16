@@ -44,11 +44,19 @@ function Authors_LoadRecord(destination, id, tinyarea_target) // номер за
             $form.find("button[name='file_current_id_remove']").attr('data-fileid', result['data']['photo_id'] ); // === data-fileid="{%file_current_id%}"
             $form.find("button[name='file_current_id_show']").attr('data-fileid', result['data']['photo_id'] ); // === data-fileid="{%file_current_id%}"
 
-            if (result['data']['bio'] != '') // prevent auto focus for empty biography field
+            // ВНЕЗАПНО: не работает: tinyMCE.get(tinyarea_target).setContent(result['data']['bio']);
+            if (result['data']['bio_en'] != '')
             {
-                tinyMCE.get(tinyarea_target).setContent(result['data']['bio']); // вместо $form.find("textarea[name='bio']").val(result['data']['bio']);
+                $form.find("textarea[name='bio_en']").val(result['data']['bio_en']);
             }
-
+            if (result['data']['bio_ru'] != '')
+            {
+                $form.find("textarea[name='bio_ru']").val(result['data']['bio_ru']);
+            }
+            if (result['data']['bio'] != '')
+            {
+                $form.find("textarea[name='bio_uk']").val(result['data']['bio_uk']);
+            }
         } else {
             // ошибка загрузки
         }

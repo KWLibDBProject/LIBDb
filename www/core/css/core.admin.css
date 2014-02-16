@@ -91,3 +91,30 @@ a.icon {
     content: " ";
     background: url(../css/pdf24x24.png);
 }
+
+/* список определений, выровненный горизонтально  */
+dl.h-layout {
+    margin: 0;
+}
+
+dl.h-layout dt.w150 {
+    float: left;
+    width: 150px;
+    text-align: left;
+    padding-right: 5px;
+    min-height: 1px;
+}
+
+dl.h-layout dt.w250 {
+    float: left;
+    width: 250px;
+    text-align: left;
+    padding-right: 5px;
+    min-height: 1px;
+}
+
+dl.h-layout dd {
+    position: relative;
+    top: -1px;
+    margin-bottom: 10px;
+}
