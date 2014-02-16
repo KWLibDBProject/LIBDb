@@ -18,7 +18,7 @@ BODY { margin: 0; background: #f0f8ff; }
 .t-logo {
     width: 210px; /* left column width */
     height: 150px;
-    background-image: url(/images/_sova_106x150.png);
+    background-image: url(/images/sova_106x150.png);
     background-repeat: no-repeat;
 }
 .t-logo-title {

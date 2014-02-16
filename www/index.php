@@ -239,17 +239,12 @@ switch ($fetch) {
         /* секция вывода новостей */
         break;
     }
-    case 'language': {
-        /* секция обработки изменения языка сайта*/
-        break;
-    } //
     default: {
         // default page
-        $content = 'Default page';
+        $page_alias = 'about';
+        $content = FE_GetStaticPage($page_alias, $site_language);
         // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
         // + ? последняя новость
-
-
     }
 }; // end $fetch all switch
 
