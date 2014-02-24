@@ -58,7 +58,7 @@
 
 <form action="books.action.insert.php" method="post" enctype="multipart/form-data" id="form_book">
     <input type="hidden" name="MAX_FILE_SIZE" value="30000000">
-    <fieldset class="fields_area">
+    <fieldset class="fields_area rounded">
         <legend>Данные о сборнике</legend>
         <div class="field">
             <label for="book_title">Название:</label>
@@ -80,7 +80,7 @@
         </div>
     </fieldset>
 
-    <fieldset class="fields_area">
+    <fieldset class="fields_area rounded">
         <legend>Файлы</legend>
         <div class="field">
             <label for="file_cover">Обложка (изображение)</label>
@@ -98,7 +98,7 @@
             <button class="file-unlink" name="file_toc" disabled>X</button>
         </div>
     </fieldset>
-    <fieldset class="fields_area">
+    <fieldset class="fields_area rounded">
         <legend>Управление</legend>
         <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
         <button disabled type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СБОРНИК</strong></button>
