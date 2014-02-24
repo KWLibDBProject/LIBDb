@@ -148,7 +148,7 @@ function DB_LoadAuthorInformation_ById($id, $lang)
         $ret['author_name'] = $author['name_'.$lang];
         $ret['author_title'] = $author['title_'.$lang];
         $ret['author_email'] = $author['email'];
-        $ret['author_workplace'] = $author['workplace'];
+        $ret['author_workplace'] = $author['workplace_'.$lang];
         $ret['author_bio'] = $author['bio_'.$lang];
         $ret['author_is_es'] = $author['is_es'];
         $ret['author_photo_id'] = $author['photo_id'];

@@ -23,7 +23,9 @@ function Authors_LoadRecord(destination, id, tinyarea_target) // номер за
             $form.find("input[name='title_uk']").val( result['data']['title_uk'] );
             $form.find("input[name='email']").val( result['data']['email'] );
             $form.find("input[name='phone']").val( result['data']['phone'] );
-            $form.find("textarea[name='workplace']").val(result['data']['workplace']);
+            $form.find("textarea[name='workplace_en']").val(result['data']['workplace_en']);
+            $form.find("textarea[name='workplace_ru']").val(result['data']['workplace_ru']);
+            $form.find("textarea[name='workplace_uk']").val(result['data']['workplace_uk']);
             /*
             * $result['data']['is_es'] - это строка. Её надо преобразовать к числу, а потом
             * применять к нему логические преобразования для установки чекбоксов. Если parseInt()

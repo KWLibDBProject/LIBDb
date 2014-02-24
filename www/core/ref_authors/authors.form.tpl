@@ -102,7 +102,19 @@
                 plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
             });
             tinymce.init({
-                selector:'textarea#workplace',forced_root_block : "",
+                selector:'textarea#workplace_en',forced_root_block : "",
+                force_br_newlines : true,
+                force_p_newlines : false,
+                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+            });
+            tinymce.init({
+                selector:'textarea#workplace_ru',forced_root_block : "",
+                force_br_newlines : true,
+                force_p_newlines : false,
+                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+            });
+            tinymce.init({
+                selector:'textarea#workplace_uk',forced_root_block : "",
                 force_br_newlines : true,
                 force_p_newlines : false,
                 plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
@@ -121,44 +133,55 @@
     <input type="hidden" name="id">
     <fieldset>
         <label for="name_en">Name, surname</label><br>
-        <input type="text" name="name_en" id="name_en" size="40" value="">
+        <input type="text" name="name_en" id="name_en" size="60" value="">
         <br>
 
         <label for="name_ru">Ф.И.О. (русский)</label><br>
-        <input type="text" name="name_ru" id="name_ru" size="40" value="">
+        <input type="text" name="name_ru" id="name_ru" size="60" value="">
         <br>
 
         <label for="name_uk">Ф.И.О. (украинский)</label><br>
-        <input type="text" name="name_uk" id="name_uk" size="40" value="">
+        <input type="text" name="name_uk" id="name_uk" size="60" value="">
     </fieldset>
     <fieldset>
         <label for="title_en">Звание, ученая степень, должность (на английском)</label><br>
-        <input type="text" name="title_en" id="title_en" size="40" value="">
+        <input type="text" name="title_en" id="title_en" size="60" value="">
         <br>
 
         <label for="title_ru">Звание, ученая степень, должность</label><br>
-        <input type="text" name="title_ru" id="title_ru" size="40" value="">
+        <input type="text" name="title_ru" id="title_ru" size="60" value="">
         <br>
 
         <label for="title_uk">Званна, вчена ступiнь, посада</label><br>
-        <input type="text" name="title_uk" id="title_uk" size="40" value="">
+        <input type="text" name="title_uk" id="title_uk" size="60" value="">
 
     </fieldset>
     <fieldset>
         <legend>Контактные данные:</legend>
 
         <label for="email">E-Mail</label><br>
-        <input type="text" name="email" id="email">
+        <input type="text" name="email" id="email" size="60">
 
         <br>
 
         <label for="phone">Телефон для связи</label><br>
-        <input type="text" name="phone" id="phone">
+        <input type="text" name="phone" id="phone" size="60">
+
+    </fieldset>
+    <fieldset>
+        <legend>Место работы: </legend>
+        <label for="workplace_en"><strong>Место работы (на английском)</strong></label><br>
+        <textarea name="workplace_en" id="workplace_en" cols="90" rows="5"></textarea>
 
         <br>
 
-        <label for="workplace">Место работы</label><br>
-        <textarea name="workplace" id="workplace" cols="90" rows="5"></textarea>
+        <label for="workplace_ru"><strong>Место работы (на русском)</strong></label><br>
+        <textarea name="workplace_ru" id="workplace_ru" cols="90" rows="5"></textarea>
+
+        <br>
+
+        <label for="workplace_uk"><strong>Место работы (на украинском)</strong></label><br>
+        <textarea name="workplace_uk" id="workplace_uk" cols="90" rows="5"></textarea>
     </fieldset>
     <hr>
 
