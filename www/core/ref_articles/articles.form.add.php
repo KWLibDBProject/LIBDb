@@ -54,7 +54,11 @@ if (!isLogged()) header('Location: /core/');
             plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false});
-        tinymce.init({selector:'textarea#refs',forced_root_block : "",
+        tinymce.init({selector:'textarea#refs_en',forced_root_block : "",
+            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
+            force_br_newlines : true,
+            force_p_newlines : false});
+        tinymce.init({selector:'textarea#refs_ru',forced_root_block : "",
             plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false});
