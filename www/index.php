@@ -190,7 +190,7 @@ switch ($fetch) {
                     'article-book-title' => $article_info['btitle'],
                     'article-book-year' => $article_info['byear'],
                     'article-pdfid' => $article_info['pdfid'],
-                    'article-refs' => $article_info['refs']
+                    'article-refs' => $article_info['refs_'.$site_language]
                 ));
                 $override['meta_keywords'] = $article_info['keywords_'.$site_language]; // GLOBAL KEYWORDS
 

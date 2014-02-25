@@ -235,8 +235,14 @@ if (!isLogged()) header('Location: /core/');
         </div>
     </fieldset>
     <fieldset>
-        <legend>References: </legend>
-        <textarea id="refs" name="refs" cols="80" rows="10"></textarea>
+        <legend>Источники: </legend>
+        <label for="refs_ru"><strong>Список литературы:</strong></label><br>
+        <textarea id="refs_ru" name="refs_ru" cols="80" rows="10"></textarea>
+
+        <br>
+
+        <label for="refs_en"><strong>References: </strong></label><br>
+        <textarea id="refs_en" name="refs_en" cols="80" rows="10"></textarea>
     </fieldset>
     <input type="hidden" name="caller" value="articles.new">
     <button class="button-large" id="button-exit"><strong>ОТМЕНИТЬ</strong></button>

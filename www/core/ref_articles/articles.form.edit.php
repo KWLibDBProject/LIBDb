@@ -340,8 +340,14 @@ CloseDB($link);
         </div>
     </fieldset>
     <fieldset>
-        <legend>References: </legend>
-        <textarea id="refs" name="refs" cols="80" rows="10"><?php echo $the_article['refs'] ;?></textarea>
+        <legend>Источники: </legend>
+        <label for="refs_ru"><strong>Список литературы:</strong></label><br>
+        <textarea id="refs_ru" name="refs_ru" cols="80" rows="10"><?php echo $the_article['refs_ru'] ;?></textarea>
+
+        <br>
+
+        <label for="refs_en"><strong>References:</strong></label><br>
+        <textarea id="refs_en" name="refs_en" cols="80" rows="10"><?php echo $the_article['refs_en'] ;?></textarea>
     </fieldset>
     <button type="submit" class="button-large" id="button-save"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
     <button type="button" class="button-large" id="button-delete" name="<?php echo $id; ?>"><strong>УДАЛИТЬ СТАТЬЮ</strong></button>
