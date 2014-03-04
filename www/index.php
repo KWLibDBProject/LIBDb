@@ -111,6 +111,20 @@ switch ($fetch) {
 
                 break;
             } // end case estuff
+            case 'list' : {
+
+                $filename = $tpl_path.'/fetch=authors/with=list/f_authors+w_list.'.$site_language;
+
+                $inner_html = new kwt($filename.".html");
+                $inner_html->contentstart();
+                $content = $inner_html->getcontent();
+
+                $inner_js = new kwt($filename.".js");
+                $inner_js->contentstart();
+                $jscripts = $inner_js->getcontent();
+
+                break;
+            } // end case list
         }; // end $with authors switch
         break;
     }

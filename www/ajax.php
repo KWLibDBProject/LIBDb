@@ -64,8 +64,14 @@ switch ($actor) {
         $return = json_encode($data);
         break;
     }
+
     case 'load_articles_by_query' : {
         $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
+        break;
+    }
+
+    case 'load_authors_selected_by_letter': {
+        $return = DB_LoadAuthors_ByLetter($_GET['letter'], $_GET['lang'], 'no');
         break;
     }
 
