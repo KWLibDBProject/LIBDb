@@ -318,7 +318,7 @@ LoadAuthorsSelectedByLetter_Start;
             $return .= <<<LoadAuthorsSelectedByLetter_Each
 <li class="authors-list-item">
 <label>
-<a href="?fetch=authors&with=info&id={$id}">{$name} , {$title}, {$email}</a>
+<a href="?fetch=authors&with=info&id={$id}">{$name}</a>, {$title}
 </label>
 </li>
 LoadAuthorsSelectedByLetter_Each;
