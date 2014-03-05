@@ -35,13 +35,15 @@ if (!isLogged()) header('Location: /core/');
             setSelectorsByHash(".search_selector");
             $(".hash_selectors").on('change', '.search_selector', function(){
                 setHashBySelectors();
+                // enable or disable button if first letter selected
+                $(".actor-show-abc").prop('disabled', ($('select[name="letter"]').val() != '0') );
             });
 
             // onload
             $("#authors_list").load("ref_authors/authors.action.list.php");
 
             // bind exit actor
-            $(".actor_exit").on('click',function(event){
+            $(".actor-exit").on('click',function(event){
                 window.location.href = '/core/';
             });
             // bind add actor
@@ -70,8 +72,11 @@ if (!isLogged()) header('Location: /core/');
             $(".actor-show-all").on('click',function(){
                 // reset search selector
                 $('select[name="letter"]').val(0);
-                setHashBySelectors(); // сброс хэша!
+                setHashBySelectors();
                 $("#authors_list").empty().load('ref_authors/authors.action.list.php?'+siteLanguage);
+            });
+            $(".actor-show-abc").on('click', function(){
+                $("#authors_list").empty().load('ref_authors/authors.action.list.php?order_by_name=yes&'+siteLanguage);
             });
         });
     </script>
@@ -82,9 +87,12 @@ if (!isLogged()) header('Location: /core/');
 <hr>
 <fieldset>
     <legend>Критерии поиска</legend>
+    <button class="actor-show-abc">Отсортировать по фамилии</button>
+    <button class="actor-show-all">Показать всех</button>
     Первая буква имени: <form class="hash_selectors inline_form"><select name="letter" class="search_selector"><option value="0">ANY</option></select></form>
     <button class="actor-show-withselection">Показать выбранных</button>
-    <button class="actor-show-all">Показать всех</button>
+
+
 </fieldset>
 
 <fieldset class="result-list table-hl-rows">
