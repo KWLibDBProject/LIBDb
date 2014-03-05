@@ -72,7 +72,7 @@ switch ($actor) {
 
     case 'load_authors_selected_by_letter': {
         //todo: разделить на PRINT(LOAD())
-        $return = DB_LoadAuthors_ByLetter($_GET['letter'], $_GET['lang'], 'no');
+        $return = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter($_GET['letter'], $_GET['lang'], 'no'), $site_language);
         break;
     }
 

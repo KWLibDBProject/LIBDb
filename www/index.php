@@ -76,7 +76,7 @@ switch ($fetch) {
                 // фио, титул, email -> link to author page
                 $filename = $tpl_path.'/fetch=authors/with=all/f_authors+w_all.'.$site_language;
 
-                $all_authors_list = DB_LoadAuthors_ByLetter('0',$site_language);
+                $all_authors_list = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter('', $site_language, 'no'), $site_language);
 
                 $inner_html = new kwt($filename.".html");
                 $inner_html->override( array (
@@ -96,11 +96,23 @@ switch ($fetch) {
                 // фио, титул, email -> link to author page
                 $filename = $tpl_path.'/fetch=authors/with=estuff/f_authors+w_estuff.'.$site_language;
 
-                $all_authors_list = DB_LoadAuthors_ByLetter('0',$site_language, 'yes');
+                $all_authors_plainlist = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes'), $site_language);
+
+                // вообще-то порядок (в смысле запрашиваемый selfhood) хорошо бы дергать из справочника, но...
 
                 $inner_html = new kwt($filename.".html");
                 $inner_html->override( array (
-                    'es_authors_list' => $all_authors_list
+                    // 'es_authors_list' => $all_authors_plainlist,
+                    // главный редактор = 5
+                    'estuff_main_editor' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 5), $site_language),
+                    // замглавного редактора = 4
+                    'estuff_main_subeditors' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 4), $site_language),
+                    // редакционная коллегия = 3
+                    'estuff_local_editors' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 3), $site_language),
+                    // международная редакционная коллегия = 1
+                    'estuff_remote_editors' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 1), $site_language),
+                    // редакторы = 6
+                    'estuff_simple_editors' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 6), $site_language),
                 ));
                 $inner_html->contentstart();
                 $content = $inner_html->getcontent();

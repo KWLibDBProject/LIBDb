@@ -284,61 +284,121 @@ function FE_SetSiteLanguage($lang)
 функция используется в аякс-ответах, в выгрузке полного списка авторов и выгрузке
 списка авторов по первой букве
 */
-//@todo: разделить на LOAD & PRINT!!!
-function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no')
+function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 {
-    $return = '';
+    $authors = array();
     // check for letter, '0' is ANY first letter
+    if ($letter == '') { $letter = '0'; }
     if ($letter != '0') {
-        $like = " AND authors.name_{$lang} LIKE '{$letter}%'";
+        $where_like = " AND authors.name_{$lang} LIKE '{$letter}%'";
     } else {
-        $like = '';
+        $where_like = '';
     }
+
+
     // check for 'is author in editorial stuff', default is 'no'
     if ($is_es != 'no') {
         $where_es = ' AND is_es=1 ';
     } else {
         $where_es = '';
     }
+    // optional parameter selfhood (for extended estuff)
+    if ($selfhood != -1 )
+    {
+        $where_selfhood = " AND selfhood=$selfhood";
+    } else {
+        $where_selfhood = '';
+    }
+
     $order = "ORDER BY authors.name_{$lang}";
-    $q = "SELECT * FROM authors WHERE `deleted`=0 {$where_es} {$like} {$order}";
+
+    //@todo: вообще-то тут можно вместо * перечислить поля в формате xx_lang AS yy и отвязаться от передачи $sitelanguage в функции FE_Print*()
+    //но для этого придется править все функции, которые используют этот лоаред...
+    $q = "SELECT * FROM `authors` WHERE `deleted`=0 {$where_es} {$where_selfhood} {$where_like} {$order}";
 
     $r = mysql_query($q) or Die(0);
+
+    if ( @mysql_num_rows($r) > 0 ) {
+        while ($i = mysql_fetch_assoc($r)) {
+            $authors[ $i['id'] ] = $i;
+        }
+    }
+    return $authors;
     // ФИО, научное звание/ученая степень
 
-    $return .= <<<LoadAuthorsSelectedByLetter_Start
-<ul class="authors-list">
-LoadAuthorsSelectedByLetter_Start;
+}
 
-    if ( @mysql_num_rows($r) > 0) {
-        while ($i = mysql_fetch_assoc($r)){
+/* печать загруженного списка авторов ($authors) в примитивной (простой строковой) форме */
+function FE_PrintAuthors_PlainList($authors, $lang)
+{
+    $return = '';
+    $return .= <<<PrintAuthorsSelectedByLetter_Start
+<ul class="authors-list">
+PrintAuthorsSelectedByLetter_Start;
+
+    if (sizeof($authors) > 0 )
+    {
+        foreach ($authors as $i => $an_author)
+        {
+            $id = $an_author['id'];
+            $name = $an_author['name_'.$lang];
+            $title = $an_author['title_'.$lang];
+            $email = $an_author['email'];
             //@this: эктор-ссылка на /authors/info/(id) - работает, якорь для замены в модреврайт
-            $id = $i['id'];
-            $name = $i['name_'.$lang];
-            $title = $i['title_'.$lang];
-            $email = $i['email'];
-            $return .= <<<LoadAuthorsSelectedByLetter_Each
+            $return .= <<<PrintAuthorsSelectedByLetter_Each
 <li class="authors-list-item">
 <label>
 <a href="?fetch=authors&with=info&id={$id}">{$name}</a>, {$title}
 </label>
 </li>
-LoadAuthorsSelectedByLetter_Each;
-        } // while
+PrintAuthorsSelectedByLetter_Each;
+        }
     } else {
-        $return .= <<<LoadAuthorsSelectedByLetter_Nothing
+        $return .= <<<PrintAuthorsSelectedByLetter_Nothing
 Таких авторов нет!
-LoadAuthorsSelectedByLetter_Nothing;
-;
+PrintAuthorsSelectedByLetter_Nothing;
+    }
+    $return .= <<<PrintAuthorsSelectedByLetter_End
+</ul>
+PrintAuthorsSelectedByLetter_End;
+    return $return;
+}
+
+/* печать нужных авторов ($authors) в расширенной форме для /authors/estuff */
+/* функция НЕ оборачивает элементы списка в UL, поэтому её вывод надо вставлять
+во внутрь списка в шаблоне */
+function FE_PrintAuthors_EStuffList($authors, $lang)
+{
+    $return = '';
+    $return .= <<<fe_printauthors_estuff_start
+fe_printauthors_estuff_start;
+    if ( sizeof($authors) > 0 ) {
+        foreach ($authors as $i => $an_author ) {
+            $name = $an_author['name_'.$lang];
+            // как первое слово в имени обернуть в <strong> ?
+            // $name = preg_replace("/(\w*)( )/",  '<strong>'."\\1".'</strong> ', $name);
+            $title = $an_author['title_'.$lang];
+            $title = ($title != '') ? ",<br><div class=\"smaller\">{$title}</div>" : "";
+
+            $email = ($an_author['email'] != '') ? "<strong>E-Mail: </strong>{$an_author['email']}" : '';
+/*             $return .= <<<fe_printauthors_estuff_each
+<li><span class="authors-estufflist-name">{$name}</span>,<br>
+   <div class="smaller">{$title}</div>
+   <strong>E-Mail: </strong>{$email}
+</li>
+fe_printauthors_estuff_each; */
+            $return .= <<<fe_printauthors_estuff_each
+            <li><span class="authors-estufflist-name">{$name}</span>{$title}{$email}</li>\r\n
+fe_printauthors_estuff_each;
+        }
     }
 
-    $return .= <<<LoadAuthorsSelectedByLetter_End
-</ul>
-LoadAuthorsSelectedByLetter_End;
-;
-    return $return;
+    $return .= <<<fe_printauthors_estuff_end
+fe_printauthors_estuff_end;
 
+    return $return;
 }
+
 
 
 /* функции генерации селектов */
