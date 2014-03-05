@@ -1,0 +1,11 @@
+.button-large { /* класс для большой кнопки */
+    height: 60px;
+}
+.button-remove { /* класс по умолчанию для скрытой кнопки удаления */
+    display: none;
+}
+
+#form_edit_story fieldset legend {
+    font-weight: bold;
+    color: navy;
+}
