@@ -9,6 +9,7 @@
 @import "main.authors.info.css"; /* /authors/info/N */
 @import "main.articles.extended.css"; /* articles/extended/N */
 @import "main.authors.estuff.css"; /* authors/estuff/ */
+@import "main.authors.list.css"; /* authors/list/ */
 
 #main_content { /*контейнер с контентом*/
 

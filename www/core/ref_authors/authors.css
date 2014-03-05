@@ -5,3 +5,15 @@
     display: none;
 }
 
+form.inline_form {
+    display: inline;
+}
+
+/* Классы оформления элементов в выводе (all authors list) */
+.aal-author-name {
+    font-weight: bold;
+}
+.aal-author-info {
+    // font-size: smaller;
+    font-style: italic;
+}

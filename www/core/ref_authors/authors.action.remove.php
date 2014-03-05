@@ -21,8 +21,7 @@ if ($rt = mysql_query($qt)) {
         $result['message'] = 'Нельзя удалять автора, если у него есть статьи!';
     } else {
         // статей нет, можно удалять автора
-
-        $q = "UPDATE $table SET deleted=1 WHERE (id=$id)";
+        $q = "DELETE FROM $table WHERE (id = $id)";
         if ($r = mysql_query($q)) {
             // запрос удаление успешен
             $result["error"] = 0;

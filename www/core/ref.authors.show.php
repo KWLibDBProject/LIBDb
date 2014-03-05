@@ -1,7 +1,7 @@
 <?php
 require_once('core.php');
-require_once('core.db.php');
-require_once('core.kwt.php');
+// require_once('core.db.php');
+// require_once('core.kwt.php');
 
 $SID = session_id();
 if(empty($SID)) session_start();
@@ -22,18 +22,35 @@ if (!isLogged()) header('Location: /core/');
 
     <script src="js/core.js"></script>
     <script src="ref_authors/ref.authors.js"></script>
+    <script type="text/javascript" src="/tpl/frontend.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            $("#authors_list").load("ref_authors/authors.action.list.php?ref="+ref_name);
+            var siteLanguage = 'lang=ru';
+            var lettersList = preloadOptionsList('/ajax.php?actor=get_letters_as_optionlist&'+siteLanguage);
+            BuildSelector('letter', lettersList, 0);
 
-            $("#button_exit").on('click',function(event){
+            // bind hash selectors
+            setSelectorsByHash(".search_selector");
+            $(".hash_selectors").on('change', '.search_selector', function(){
+                setHashBySelectors();
+                // enable or disable button if first letter selected
+                $(".actor-show-abc").prop('disabled', ($('select[name="letter"]').val() != '0') );
+            });
+
+            // onload
+            $("#authors_list").load("ref_authors/authors.action.list.php");
+
+            // bind exit actor
+            $(".actor-exit").on('click',function(event){
                 window.location.href = '/core/';
             });
-            $("#add_item").on('click',function(event){
+            // bind add actor
+            $(".actor-add-item").on('click',function(event){
                 window.location.href = 'ref_authors/authors.form.php';
             });
+            // bind lightbox and edit action
             $('#authors_list')
                     .on('click','.actor-edit',function(){
                         window.location.href = 'ref_authors/authors.form.php?id='+$(this).attr('name');
@@ -45,14 +62,41 @@ if (!isLogged()) header('Location: /core/');
                         });
                         return false;
                     });
+            // search criteria bindings
+            $(".actor-show-withselection").on('click',function(){
+                var query = "&";
+                query+="letter="+$('select[name="letter"]').val();
+                $("#authors_list").empty().load('ref_authors/authors.action.list.php?'+siteLanguage+query);
+            });
+
+            $(".actor-show-all").on('click',function(){
+                // reset search selector
+                $('select[name="letter"]').val(0);
+                setHashBySelectors();
+                $("#authors_list").empty().load('ref_authors/authors.action.list.php?'+siteLanguage);
+            });
+            $(".actor-show-abc").on('click', function(){
+                $("#authors_list").empty().load('ref_authors/authors.action.list.php?order_by_name=yes&'+siteLanguage);
+            });
         });
     </script>
 </head>
 <body>
-<button type="button" class="button-large" id="button_exit"><strong><<< НАЗАД </strong></button>
-<button type="button" class="button-large" id="add_item">Добавить автора</button><br>
+<button type="button" class="button-large actor-exit"><strong><<< НАЗАД </strong></button>
+<button type="button" class="button-large actor-add-item">Добавить автора</button><br>
 <hr>
+<fieldset>
+    <legend>Критерии поиска</legend>
+    <button class="actor-show-abc">Отсортировать по фамилии</button>
+    <button class="actor-show-all">Показать всех</button>
+    Первая буква имени: <form class="hash_selectors inline_form"><select name="letter" class="search_selector"><option value="0">ANY</option></select></form>
+    <button class="actor-show-withselection">Показать выбранных</button>
+
+
+</fieldset>
+
 <fieldset class="result-list table-hl-rows">
+    <legend>Результаты поиска</legend>
     <div id="authors_list">
     </div>
 </fieldset>

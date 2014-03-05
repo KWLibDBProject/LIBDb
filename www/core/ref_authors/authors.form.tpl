@@ -120,6 +120,23 @@
                 plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
             });
             $("#name_en").focus();
+            // вставить проверку заполненности фамилий на всех языках
+            $("#form_edit_author").submit(function(){
+                var bValid = true;
+                if ($('input[name="name_en"]').val() == '') {
+                    alert('Обязательно укажите фамилию автора на английском языке');
+                    bValid = false;
+                }
+                if ($('input[name="name_ru"]').val() == '') {
+                    alert('Обязательно укажите фамилию автора на русском языке');
+                    bValid = false;
+                }
+                if ($('input[name="name_uk"]').val() == '') {
+                    alert('Обязательно укажите фамилию автора на украинском языке');
+                    bValid = false;
+                }
+                return bValid;
+            }); // .submit
         });
     </script>
 </head>
@@ -143,6 +160,7 @@
         <label for="name_uk">Ф.И.О. (украинский)</label><br>
         <input type="text" name="name_uk" id="name_uk" size="60" value="">
     </fieldset>
+    <small>Важно: Не оставляйте поля пустыми. Введите фамилии на всех языках</small>
     <fieldset>
         <label for="title_en">Звание, ученая степень, должность (на английском)</label><br>
         <input type="text" name="title_en" id="title_en" size="60" value="">

@@ -57,7 +57,7 @@ if (isAjaxCall()) {
             'time' => 10,
             'target' => '/core/ref.authors.show.php',
             'buttonmessage' => 'Вернуться к списку авторов',
-            'message' => 'Автор добавлен в базу данных'
+            'message' => "Автор добавлен в базу данных, его внутренний идентификатор = $new_author_id"
         );
         $tpl = new kwt('../ref.all.timed.callback.tpl');
         $tpl->override($override);

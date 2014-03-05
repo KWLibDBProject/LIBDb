@@ -88,7 +88,6 @@ function Topics_CallRemoveItem(target, id, result_area)
             $( target ).dialog( "close" );
         } else {
             // удаление невозможно
-            //@todo: JS message error
             ShowErrorMessage(result['message']); // Невозможно удалить топик, вероятно в нем есть статьи!
             $( target ).dialog( "close" );
         }

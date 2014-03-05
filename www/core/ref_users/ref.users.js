@@ -6,7 +6,7 @@ function Users_CallAddItem(source)
     bValid = true;
     var $form = $(source).find('form');
     url = $form.attr("action");
-    //@todo: validate user information! - вопрос только, что именно нужно валидировать? Емейл?
+    //@ validate user information! - вопрос только, что именно нужно валидировать? Емейл?
     var posting = $.post(url, {
         name: $form.find("input[name='add_name']").val(),
         ref_name: ref_name,

@@ -281,14 +281,16 @@ function FE_SetSiteLanguage($lang)
 
 /* загрузка списка авторов с отбором по первой букве (в зависимости от языка)
 значение буквы по умолчанию '0', что означает ВСЕ авторы
-функция используется в аякс-ответах и в выгрузке полного списка авторов
+функция используется в аякс-ответах, в выгрузке полного списка авторов и выгрузке
+списка авторов по первой букве
 */
+//@todo: разделить на LOAD & PRINT!!!
 function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no')
 {
     $return = '';
     // check for letter, '0' is ANY first letter
     if ($letter != '0') {
-        $like = " AND authors.name_{$lang} LIKE "."'".strtolower($letter)."%'";
+        $like = " AND authors.name_{$lang} LIKE '{$letter}%'";
     } else {
         $like = '';
     }
@@ -318,7 +320,7 @@ LoadAuthorsSelectedByLetter_Start;
             $return .= <<<LoadAuthorsSelectedByLetter_Each
 <li class="authors-list-item">
 <label>
-<a href="?fetch=authors&with=info&id={$id}">{$name} , {$title}, {$email}</a>
+<a href="?fetch=authors&with=info&id={$id}">{$name}</a>, {$title}
 </label>
 </li>
 LoadAuthorsSelectedByLetter_Each;

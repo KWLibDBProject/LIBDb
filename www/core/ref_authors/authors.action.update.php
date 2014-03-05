@@ -59,7 +59,7 @@ if (isAjaxCall()) {
             'time' => 300,
             'target' => '/core/ref.authors.show.php',
             'buttonmessage' => 'Вернуться к списку авторов',
-            'message' => 'Информация об авторе обновлена'
+            'message' => "Информация об авторе c внутренним идентификатором $id обновлена"
         );
         $tpl = new kwt('../ref.all.timed.callback.tpl');
         $tpl->override($override);
