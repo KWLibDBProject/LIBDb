@@ -25,10 +25,23 @@ function setHashBySelectors()
         var name = $(data).attr('name');
         if (val != '0')
             hashstr += name + "=" + val + "&";
-        // hashstr += encodeURIComponent(key) + "=" + encodeURIComponent(arr[key]) + "&";
+            // stackoverflow рекомендует экранирование символов, но пока что везде где тестировали
+            // прекрасно работало без экранирования (в адресную строку пишется русская буква)
+            // hashstr += encodeURIComponent(key) + "=" + encodeURIComponent(arr[key]) + "&";
     } );
-    hashstr = hashstr.substring(0, hashstr.length-1); //chop off last "&"
-    window.location.hash = hashstr;
+    // хэш будет выглядеть '#...&', поэтому при установке надо отрезать последний символ.
+    // пустой хэш - '#&' - его не нужно устанавливать.
+    // window.location.hash = (hashstr.length > 2) ? hashstr.substring(0, hashstr.length-1) : '';
+    // но лучше попробуем использовать HTML5 API
+    if (hashstr.length > 2) {
+        window.location.hash = hashstr.substring(0, hashstr.length-1)
+    } else {
+        if ('pushState' in history) {
+            history.pushState('', window.title, window.location.pathname + window.location.search);
+        } else {
+            window.location.hash = '';
+        }
+    }
 }
 
 function setSelectorsByHash(target)
