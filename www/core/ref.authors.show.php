@@ -68,6 +68,9 @@ if (!isLogged()) header('Location: /core/');
             });
 
             $(".actor-show-all").on('click',function(){
+                // reset search selector
+                $('select[name="letter"]').val(0);
+                setHashBySelectors(); // сброс хэша!
                 $("#authors_list").empty().load('ref_authors/authors.action.list.php?'+siteLanguage);
             });
         });

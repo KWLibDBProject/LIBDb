@@ -16,5 +16,7 @@ $("#button-show-withselection").on('click',function(){
 });
 
 $("#button-show-all").on('click',function(){
+    $('select[name="letter"]').val(0);
+    setHashBySelectors(); // сброс хэша!
     $("#output_list").empty().load(url_all);
 });
