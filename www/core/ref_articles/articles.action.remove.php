@@ -11,8 +11,6 @@ $id = IsSet($_GET['id']) ? $_GET['id'] : Die("No id!");
 
 $link = ConnectDB();
 
-// @todo: TEST: когда нельзя удалить статью?
-
 // удалить статью из артиклез
 $q = "DELETE FROM articles WHERE id=$id";
 mysql_query($q,$link) or Die("Death at $q");

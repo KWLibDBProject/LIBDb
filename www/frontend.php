@@ -284,6 +284,7 @@ function FE_SetSiteLanguage($lang)
 функция используется в аякс-ответах, в выгрузке полного списка авторов и выгрузке
 списка авторов по первой букве
 */
+//@todo: разделить на LOAD & PRINT!!!
 function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no')
 {
     $return = '';

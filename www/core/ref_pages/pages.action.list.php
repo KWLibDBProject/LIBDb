@@ -33,7 +33,6 @@ CloseDB($link);
 <?php
     if ($ref_numrows>0) {
         foreach ($ref_list as $row) {
-            //@todo: TEMPLATE ?
             echo <<<REF_ONEROW
     <tr>
         <td>{$row['id']}</td>

@@ -3,14 +3,19 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
-// @todo: переписать вывод под шаблон
-
 $link = ConnectDB();
 
-$ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'authors';
-$ref_prompt = IsSet($_GET["prompt"]) ? ($_GET["prompt"]) : 'Работа с автором';
+$ref_name = 'authors';
+
 // $sort_order = "ORDER BY name_ru";
-$query = "SELECT * FROM $ref_name WHERE deleted=0 $sort_order";
+
+if ( (!isset($_GET['letter'])) || ($_GET['letter'] != '0') ) {
+    $like = " AND authors.name_ru LIKE '{$_GET['letter']}%'";
+} else {
+    $like = '';
+}
+
+$query = "SELECT * FROM {$ref_name} WHERE deleted=0 {$like} {$sort_order}";
 $res = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($res) ;
 

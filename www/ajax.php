@@ -71,6 +71,7 @@ switch ($actor) {
     }
 
     case 'load_authors_selected_by_letter': {
+        //todo: разделить на PRINT(LOAD())
         $return = DB_LoadAuthors_ByLetter($_GET['letter'], $_GET['lang'], 'no');
         break;
     }

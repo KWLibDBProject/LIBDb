@@ -5,3 +5,6 @@
     display: none;
 }
 
+form.inline_form {
+    display: inline;
+}
