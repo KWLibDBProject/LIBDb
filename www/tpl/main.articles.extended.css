@@ -33,3 +33,7 @@
 /* стиль к ячейке с кнопкой MOAR */
 .articles-list-table-button-more-info {}
 
+.hidden {
+    display: none;
+}
+

@@ -19,11 +19,16 @@ if (wlh !== '') {
 }
 
 $("#button-show-withselection").on('click',function(){
-    query = "";
-    query+="&topic="+$('select[name="topics"]').val();
-    query+="&book="+$('select[name="books"]').val();
-    query+="&letter="+$('select[name="letters"]').val();
-    $("#articles_list").empty().load(url+query);
+    if ($('#button-toggle-search').attr('data-searchmode') == 'extended')
+    {
+        query = "";
+        query+="&topic="+$('select[name="topics"]').val();
+        query+="&book="+$('select[name="books"]').val();
+        query+="&letter="+$('select[name="letters"]').val();
+        $("#articles_list").empty().load(url+query);
+    } else {
+        alert('Expert search is not implemented!');
+    }
 });
 $("#button-reset-selection").on('click',function(){
     $('select[name="letters"]').val(0);
@@ -37,4 +42,16 @@ $("#button-show-all").on('click',function(){
 
 $('#articles_list').on('click','.more_info',function(){
     location.href = '?fetch=articles&with=info&id='+$(this).attr('name')+siteLanguage;
+});
+
+// onload
+$('#expert_search').hide();
+$('#button-show-extended').hide();
+
+// extended/expert toggle
+$("#button-toggle-search").on('click',function(){
+    $(this).attr('data-searchmode', $(this).attr('data-searchmode') == 'expert' ? 'extended' : 'expert' );
+    $(this).html( ($(this).attr('data-searchmode') == 'expert') ? '<<< LESS Search criteria' : 'MORE Search criteria >>>' );
+    $('#extended_search').toggle();
+    $('#expert_search').toggle();
 });
