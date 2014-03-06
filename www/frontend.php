@@ -335,7 +335,6 @@ function FE_PrintAuthors_PlainList($authors, $lang)
     $return .= <<<PrintAuthorsSelectedByLetter_Start
 <ul class="authors-list">
 PrintAuthorsSelectedByLetter_Start;
-
     if (sizeof($authors) > 0 )
     {
         foreach ($authors as $i => $an_author)
@@ -343,7 +342,7 @@ PrintAuthorsSelectedByLetter_Start;
             $id = $an_author['id'];
             $name = $an_author['name_'.$lang];
             $title = $an_author['title_'.$lang];
-            $email = $an_author['email'];
+            // $email = $an_author['email'];
             //@this: эктор-ссылка на /authors/info/(id) - работает, якорь для замены в модреврайт
             $return .= <<<PrintAuthorsSelectedByLetter_Each
 <li class="authors-list-item">
