@@ -5,7 +5,7 @@
             <tr>
                 <td>Первая буква автора:</td>
                 <td>
-                    <select name="letters" class="search_selector">
+                    <select name="extended_letters" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
@@ -13,7 +13,7 @@
             <tr>
                 <td>Тема: </td>
                 <td>
-                    <select name="topics" class="search_selector">
+                    <select name="extended_topics" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
@@ -21,7 +21,7 @@
             <tr>
                 <td>Сборник: </td>
                 <td>
-                    <select name="books" class="search_selector">
+                    <select name="extended_books" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
@@ -29,23 +29,23 @@
         </table>
         <table id="expert_search" class="hidden">
             <tr>
-                <td>Author's name: </td>
+                <td>Фамилия автора: </td>
                 <td colspan="3"><input type="text" name="expert_name" size="40"></td>
             </tr>
             <tr>
-                <td>Year: </td>
+                <td>Год: </td>
                 <td><input type="text" name="expert_year"></td>
-                <td>UDC: </td>
+                <td>УДК: </td>
                 <td><input type="text" name="expert_udc"></td>
             </tr>
             <tr>
-                <td>Keywods: </td>
+                <td>Ключевые слова: </td>
                 <td colspan="3"><input type="text" name="expert_keywords" size="40"></td>
             </tr>
-            <tr>
-                <td>Annotation: </td>
-                <td colspan="3"><input type="text" name="expert_annotation" size="40"></td>
-            </tr>
+            <!-- <tr>
+                <td>Аннотация: </td>
+                <td colspan="3"><input type="text" name="expert_abstract" size="40"></td>
+            </tr> -->
         </table>
     </form>
     <button id="button-show-withselection">Показать выбранное</button>

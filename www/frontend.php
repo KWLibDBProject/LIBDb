@@ -374,18 +374,14 @@ fe_printauthors_estuff_start;
     if ( sizeof($authors) > 0 ) {
         foreach ($authors as $i => $an_author ) {
             $name = $an_author['name_'.$lang];
-            // как первое слово в имени обернуть в <strong> ?
-            // $name = preg_replace("/(\w*)( )/",  '<strong>'."\\1".'</strong> ', $name);
+            // первое слово в имени обернуть в <strong> ?
+            // $name = preg_replace('/(?<=\>)\b(\w*)\b|^\w*\b/', '<strong>$0</strong>', $name); // see http://stackoverflow.com/questions/10833435/wrap-b-tag-around-first-word-of-string-with-preg-replace
+            $name = preg_replace('/^([^\s]+)/','<strong>\1</strong>',$name); // спасибо Мендору
+
             $title = $an_author['title_'.$lang];
             $title = ($title != '') ? ",<br><div class=\"smaller\">{$title}</div>" : "";
 
             $email = ($an_author['email'] != '') ? "<strong>E-Mail: </strong>{$an_author['email']}" : '';
-/*             $return .= <<<fe_printauthors_estuff_each
-<li><span class="authors-estufflist-name">{$name}</span>,<br>
-   <div class="smaller">{$title}</div>
-   <strong>E-Mail: </strong>{$email}
-</li>
-fe_printauthors_estuff_each; */
             $return .= <<<fe_printauthors_estuff_each
             <li><span class="authors-estufflist-name">{$name}</span>{$title}{$email}</li>\r\n
 fe_printauthors_estuff_each;
@@ -432,41 +428,65 @@ function DB_LoadFirstLettersForSelector($lang)
 /* построение универсального запроса */
 function DB_BuildQuery($get, $lang)
 {
-    $q = "SELECT DISTINCT
+    $q = '';
+    $q_select = " SELECT DISTINCT
 articles.id
+, articles.udc AS article_udc
+, articles.add_date AS article_add_date
 , articles.title_{$lang} AS article_title
 , articles.book
 , articles.topic
 , books.title AS book_title
-, topics.title_en AS topic_title
+, topics.title_{$lang} AS topic_title
 , books.year AS book_year
 , articles.pages AS article_pages
-, pdfid
-FROM
+, pdfid ";
+    // $q_select_expert = ", articles.keywords_{$lang}";
+
+    $q_from = " FROM
 articles
 , books, topics
 , cross_aa
-, authors
-WHERE
+, authors ";
+
+    $q_base_where = " WHERE
 authors.id = cross_aa.author AND
     articles.id = cross_aa.article AND
         books.id = articles.book AND
             topics.id = articles.topic AND
-                articles.deleted = 0 AND books.published=1 AND topics.deleted=0
-";
+                articles.deleted = 0 AND books.published=1 AND topics.deleted=0 ";
 
-    $q .= (IsSet($get['book']) && ($get['book'] != 0))          ? " AND articles.book = {$get['book']} " : "";
-    $q .= (IsSet($get['topic']) && ($get['topic'] != 0))        ? " AND articles.topic = {$get['topic']}" : "";
-    $q .= (IsSet($get['letter']) && ($get['letter'] != '0'))    ? " AND authors.name_{$lang} LIKE '{$get['letter']}%' " : "";
-    $q .= (IsSet($get['aid']) && ($get['aid'] != 0))            ? " AND authors.id = {$get['aid']} " : "";
-    $q .= (IsSet($get['year']) && ($get['year'] != 0))          ? " AND books.year = {$get['year']} " : "";
-    $q .= " GROUP BY articles.title_{$lang} ORDER BY articles.id ";
+    $q_final = " GROUP BY articles.title_{$lang} ORDER BY articles.id ";
+
+    /* Extended search conditions */
+    $q_extended = '';
+    $q_extended .= (IsSet($get['book']) && ($get['book'] != 0))          ? " AND articles.book = {$get['book']} " : "";
+    $q_extended .= (IsSet($get['topic']) && ($get['topic'] != 0))        ? " AND articles.topic = {$get['topic']}" : "";
+    $q_extended .= (IsSet($get['letter']) && ($get['letter'] != '0'))    ? " AND authors.name_{$lang} LIKE '{$get['letter']}%' " : "";
+    $q_extended .= (IsSet($get['aid']) && ($get['aid'] != 0))            ? " AND authors.id = {$get['aid']} " : "";
+    $q_extended .= (IsSet($get['year']) && ($get['year'] != 0))          ? " AND books.year = {$get['year']} " : "";
+
+    /* Expert search conditions */
+    $q_expert = '';
+    if ($get['actor'] == 'load_articles_expert_search') {
+        /* AND authors.name_en LIKE 'Mak%' */
+        /* AND articles.udc LIKE '%621%' */
+        /* AND articles.add_date LIKE '%2013' */
+        /* AND articles.keywords_en LIKE '%robot%' */
+        $q_expert .= (IsSet($get['expert_name'])    && ($get['expert_name'] != ''))             ? " AND authors.name_{$lang} LIKE '{$get['expert_name']}%' " : "";
+        $q_expert .= (IsSet($get['expert_udc'])     && ($get['expert_udc'] != ''))              ? " AND articles.udc LIKE '%{$get['expert_udc']}%' " : "";
+        $q_expert .= (IsSet($get['expert_add_date'])     && ($get['expert_add_date'] != ''))    ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' " : "";
+        $q_expert .= (IsSet($get['expert_keywords'])     && ($get['expert_keywords'] != ''))    ? " AND articles.keywords_{$lang} LIKE '%{$get['expert_keywords']}%' " : "";
+    }
+
+    $q = $q_select . $q_from . $q_base_where . $q_extended . $q_expert . $q_final;
     return $q;
 }
 
-
 /*
 Загрузка статей по сложному запросу
+$with_email - передается в DB_LoadAuthorsByArticles, который отдает МАССИВ авторов по статье)
+этот массив обрабатывается в FE_Print-функции, использующей результаты этой функции.
 */
 function DB_LoadArticlesByQuery($get, $lang, $with_email = 'yes')
 {
@@ -576,7 +596,7 @@ PAL_S_End;
     return $return;
 }
 
-/* выводит СПИСОК статей в ПОЛНОЙ нотации (таблицу) (для отборочных скриптов)*/
+/* выводит СПИСОК статей в ПОЛНОЙ четырехколоночной нотации (таблицу) (для отборочных скриптов)*/
 function FE_PrintArticlesList_Extended($articles, $lang)
 {
     $return = '';
@@ -622,5 +642,10 @@ LoadArticlesList_SearchNoArticlesUA;
     return $return;
 }
 
+/* выводит СПИСОК статей в ПОЛНОЙ двухколоночной нотации (таблицу) (для отборочных скриптов)*/
+function  FE_PrintArticlesList_Expert($articles, $lang)
+{
+
+}
 
 ?>

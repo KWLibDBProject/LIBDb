@@ -1,4 +1,4 @@
-(function($) {
+/* (function($) {
     // thanx to: http://drupalace.ru/lesson/skript-kotoryy-menyaet-cvet-pervogo-slova-v-stroke
     $.fn.paintFirstWord = function(selection_class) {
         var str = this.html();
@@ -9,4 +9,4 @@
 })(jQuery);
 $('span.authors-estufflist-name').each( function() {
     $(this).paintFirstWord('authors-estufflist-firstword');
-});
+}); */

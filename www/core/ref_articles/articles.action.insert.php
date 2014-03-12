@@ -19,7 +19,7 @@ if (!IsSet($_POST['caller'])) {
 $link = ConnectDB();
 
 $q = array(
-    'udc' => mysql_escape_string($_POST['udc']),
+    'udc' => str_replace(" ","",mysql_escape_string($_POST['udc'])),
     'title_en' => mysql_escape_string($_POST['title_en']),
     'title_ru' => mysql_escape_string($_POST['title_ru']),
     'title_uk' => mysql_escape_string($_POST['title_uk']),

@@ -3,11 +3,12 @@ var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optionlist'+si
 var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist'+siteLanguage);
 var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist'+siteLanguage);
 
-BuildSelector('letters', lettersList, 0);
-BuildSelector('books', booksList, 0);
-BuildSelector('topics', topicsList, 0);
+BuildSelector('extended_letters', lettersList, 0);
+BuildSelector('extended_books', booksList, 0);
+BuildSelector('extended_topics', topicsList, 0);
 
-url = "ajax.php?actor=load_articles_by_query"+siteLanguage;
+url_extended = "ajax.php?actor=load_articles_by_query"+siteLanguage;
+url_expert = "ajax.php?actor=load_articles_expert_search"+siteLanguage;
 
 // показ всех статей сразу будет несколько накладным
 // $("#articles_list").empty().load(url_a);
@@ -15,29 +16,42 @@ url = "ajax.php?actor=load_articles_by_query"+siteLanguage;
 // если хэш установлен - нужно загрузить статьи согласно выбранным позициям
 wlh = (window.location.hash).substr(1);
 if (wlh !== '') {
-    $("#articles_list").empty().load(url+'&'+wlh);
+    $("#articles_list").empty().load(url_extended+'&'+wlh);
 }
 
 $("#button-show-withselection").on('click',function(){
+    var query = "";
+    var url = "";
     if ($('#button-toggle-search').attr('data-searchmode') == 'extended')
     {
-        query = "";
-        query+="&topic="+$('select[name="topics"]').val();
-        query+="&book="+$('select[name="books"]').val();
-        query+="&letter="+$('select[name="letters"]').val();
-        $("#articles_list").empty().load(url+query);
+        query+="&topic="+$('select[name="extended_extopics"]').val();
+        query+="&book="+$('select[name="extended_books"]').val();
+        query+="&letter="+$('select[name="extended_letters"]').val();
+        url = url_extended;
     } else {
-        alert('Expert search is not implemented!');
+        query+= "&expert_name=" + $('input[name="expert_name"]').val();
+        query+= "&expert_udc=" + $('input[name="expert_udc"]').val();
+        query+= "&expert_add_date=" + $('input[name="expert_year"]').val();
+        query+= "&expert_keywords=" + $('input[name="expert_keywords"]').val();
+        // query+= "&expert_abstract=" + $('input[name="expert_abstract"]').val();
+        url = url_expert;
+        // alert('Expert search is not implemented!');
     }
+    $("#articles_list").empty().load(url + query);
 });
 $("#button-reset-selection").on('click',function(){
-    $('select[name="letters"]').val(0);
-    $('select[name="topics"]').val(0);
-    $('select[name="books"]').val(0);
+    $('select[name="extended_letters"]').val(0);
+    $('select[name="extended_topics"]').val(0);
+    $('select[name="extended_books"]').val(0);
+    $('input[name="expert_name"]').val('');
+    $('input[name="expert_udc"]').val('');
+    $('input[name="expert_year"]').val('');
+    $('input[name="expert_keywords"]').val('');
+    $('input[name="expert_abstract"]').val('');
     setHashBySelectors(); // сброс хэша!
 });
 $("#button-show-all").on('click',function(){
-    $("#articles_list").empty().load(url);
+    $("#articles_list").empty().load(url_extended);
 });
 
 $('#articles_list').on('click','.more_info',function(){
