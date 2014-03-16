@@ -32,7 +32,9 @@ $("#button-show-withselection").on('click',function(){
         query+= "&expert_name=" + $('input[name="expert_name"]').val();
         query+= "&expert_udc=" + $('input[name="expert_udc"]').val();
         query+= "&expert_add_date=" + $('input[name="expert_year"]').val();
-        query+= "&expert_keywords=" + $('input[name="expert_keywords"]').val();
+        // kill first, last and duplicated spaces,
+        // replace '+' to escaped %2b and replace 'space' to '+'
+        query+= "&expert_keywords=" + ($('input[name="expert_keywords"]').val()).fulltrim().replace(/\+/g,"%2B").replace(/ /g,'+');
         // query+= "&expert_abstract=" + $('input[name="expert_abstract"]').val();
         url = url_expert;
         // alert('Expert search is not implemented!');

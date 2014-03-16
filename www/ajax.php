@@ -78,7 +78,7 @@ switch ($actor) {
         break;
     }
     case 'load_articles_expert_search': {
-        // Поиск статей - экспертный ()
+        // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
         $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
         break;
     }

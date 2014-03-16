@@ -473,14 +473,30 @@ authors.id = cross_aa.author AND
         /* AND articles.udc LIKE '%621%' */
         /* AND articles.add_date LIKE '%2013' */
         /* AND articles.keywords_en LIKE '%robot%' */
-        $q_expert .= (IsSet($get['expert_name'])    && ($get['expert_name'] != ''))             ? " AND authors.name_{$lang} LIKE '{$get['expert_name']}%' " : "";
-        $q_expert .= (IsSet($get['expert_udc'])     && ($get['expert_udc'] != ''))              ? " AND articles.udc LIKE '%{$get['expert_udc']}%' " : "";
-        $q_expert .= (IsSet($get['expert_add_date'])     && ($get['expert_add_date'] != ''))    ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' " : "";
-        $q_expert .= (IsSet($get['expert_keywords'])     && ($get['expert_keywords'] != ''))    ? " AND articles.keywords_{$lang} LIKE '%{$get['expert_keywords']}%' " : "";
+        $q_expert .= ($get['expert_name'] != '')             ? " AND authors.name_{$lang} LIKE '{$get['expert_name']}%' " : "";
+        $q_expert .= ($get['expert_udc'] != '')              ? " AND articles.udc LIKE '%{$get['expert_udc']}%' " : "";
+        $q_expert .= ($get['expert_add_date'] != '')    ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' " : "";
+        // тут надо проверить, есть ли в keywords '+' и если да - построить OR запрос на результате split()'а
+        // $q_expert .= ($get['expert_keywords'] != '')    ? " AND (articles.keywords_{$lang} LIKE '%{$get['expert_keywords']}%') " : "";
+
+        if ( strpos($get['expert_keywords'], ' ') > 0 ) {
+            $expert_keywords = $get['expert_keywords'];
+            // $expert_keywords = str_replace('%2B', '+', $expert_keywords);
+
+            $keywords = explode(' ', $expert_keywords);
+            $q_expert .= " AND ( ";
+            foreach ($keywords as $keyword) {
+                $q_expert .= " articles.keywords_{$lang} LIKE '%{$keyword}%' ";
+                $q_expert .= " OR ";
+            }
+            $q_expert = substr($q_expert , 0 , (strlen($q_expert)-4));
+            $q_expert .= " ) ";
+        } else {
+            $q_expert .= " AND (articles.keywords_{$lang} LIKE '%{$get['expert_keywords']}%') ";
+        }
     }
 
     $q = $q_select . $q_from . $q_base_where . $q_extended . $q_expert . $q_final;
-//die($q);
     return $q;
 }
 
