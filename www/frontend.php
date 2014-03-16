@@ -479,21 +479,14 @@ authors.id = cross_aa.author AND
         // тут надо проверить, есть ли в keywords '+' и если да - построить OR запрос на результате split()'а
         // $q_expert .= ($get['expert_keywords'] != '')    ? " AND (articles.keywords_{$lang} LIKE '%{$get['expert_keywords']}%') " : "";
 
-        if ( strpos($get['expert_keywords'], ' ') > 0 ) {
-            $expert_keywords = $get['expert_keywords'];
-            // $expert_keywords = str_replace('%2B', '+', $expert_keywords);
-
-            $keywords = explode(' ', $expert_keywords);
-            $q_expert .= " AND ( ";
-            foreach ($keywords as $keyword) {
-                $q_expert .= " articles.keywords_{$lang} LIKE '%{$keyword}%' ";
-                $q_expert .= " OR ";
-            }
-            $q_expert = substr($q_expert , 0 , (strlen($q_expert)-4));
-            $q_expert .= " ) ";
-        } else {
-            $q_expert .= " AND (articles.keywords_{$lang} LIKE '%{$get['expert_keywords']}%') ";
+        /* это оптимизированная достраивалка запроса на основе множественных keywords */
+        $keywords = explode(' ', $get['expert_keywords']);
+        $q_expert .= " AND ( ";
+        foreach ($keywords as $keyword) {
+            $q_expert .= " articles.keywords_{$lang} LIKE '%{$keyword}%' OR ";
         }
+        $q_expert = substr($q_expert , 0 , (strlen($q_expert)-4));
+        $q_expert .= " ) ";
     }
 
     $q = $q_select . $q_from . $q_base_where . $q_extended . $q_expert . $q_final;
