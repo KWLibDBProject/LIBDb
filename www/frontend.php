@@ -480,6 +480,7 @@ authors.id = cross_aa.author AND
     }
 
     $q = $q_select . $q_from . $q_base_where . $q_extended . $q_expert . $q_final;
+//die($q);
     return $q;
 }
 
@@ -646,6 +647,20 @@ LoadArticlesList_SearchNoArticlesUA;
 function  FE_PrintArticlesList_Expert($articles, $lang)
 {
 
+}
+
+/* загружает в асс.массив новость с указанным id,
+usable: используется для pure-вставки в шаблон
+*/
+function DB_LoadNewsItem($id, $lang)
+{
+    $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, date_add FROM news where id={$id}";
+    if ($r = mysql_query($query)) {
+        if (@mysql_num_rows($r) > 0) {
+            $ret = mysql_fetch_assoc($r);
+        }
+    }
+    return $ret;
 }
 
 ?>

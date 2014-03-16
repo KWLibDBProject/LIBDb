@@ -5,26 +5,14 @@
 
 /* modules styles */
 
-@import "main.articles.books.css"; /*  ?fetch=articles&with=book&id=...   */
-@import "main.authors.info.css"; /* /authors/info/N */
-@import "main.articles.extended.css"; /* articles/extended/N */
-@import "main.authors.estuff.css"; /* authors/estuff/ */
-@import "main.authors.list.css"; /* authors/list/ */
-
 #main_content { /*контейнер с контентом*/
 
-}
-
-/* классы (полного) списка авторов (Load authors by letter) */
-.authors-list {
-    list-style-type: disc;
 }
 
 /* search selectors */
 .search_selector {
     width: 200px;
 }
-
 
 /* оформление search results */
 fieldset.search_results {
