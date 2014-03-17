@@ -24,7 +24,13 @@
 
 .authors-inlist-name {}
 
-.authors-estufflist-firstword {
+.authors-estufflist-firstword { /*выделение фамилии (первого слова в ФИО)*/
     color: #2a8eb8;
     font-weight: bold;
+}
+
+#estuff p {
+    margin: 0;
+    padding: 0;
+    display: inline;
 }
