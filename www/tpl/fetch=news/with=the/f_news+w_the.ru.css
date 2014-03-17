@@ -2,7 +2,7 @@ div, .news-item {
     border: 0px solid black;
 }
 .news-title {
-    display: inline-block;
+    display: table-cell;
     float: left;
     max-width: 80%;
     width: 80%;
@@ -10,7 +10,7 @@ div, .news-item {
     font-weight: bold;
 }
 .news-date {
-    display: inline-block;
+    display: table-cell;
     float: right;
     max-width: 20%;
     width: 20%;
@@ -22,6 +22,5 @@ div, .news-item {
 .news-text {
     clear: both;
     background-color: #f5fffa;
-
     padding-top: 15px
 }

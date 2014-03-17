@@ -308,7 +308,7 @@ switch ($fetch) {
             case 'the': {
                 /* вывод конкретной новости */
                 if (isset($_GET['id'])) {
-                    $id = $_GET['id'];
+                    $id = intval($_GET['id']);
                 } else {
                     Redirect('?fetch=news&with=list');
                 }
@@ -341,8 +341,9 @@ switch ($fetch) {
                 /* список новостей */
                 $filename = $tpl_path.'/fetch=news/with=list/f_news+w_list.'.$site_language;
 
-                $inner_html = new kwt($filename.'.html');
+                $news_list_toc = DB_LoadNewsListTOC($site_language);
 
+                $inner_html = new kwt($filename.'.html');
                 // $inner_html->override( array ());
                 $inner_html->contentstart();
                 $maincontent_html = $inner_html->getcontent();

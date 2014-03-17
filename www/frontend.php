@@ -472,12 +472,10 @@ authors.id = cross_aa.author AND
         /* AND authors.name_en LIKE 'Mak%' */
         /* AND articles.udc LIKE '%621%' */
         /* AND articles.add_date LIKE '%2013' */
-        /* AND articles.keywords_en LIKE '%robot%' */
+        /* AND (articles.keywords_en LIKE '%robot%' OR ... OR ... )*/
         $q_expert .= ($get['expert_name'] != '')             ? " AND authors.name_{$lang} LIKE '{$get['expert_name']}%' " : "";
         $q_expert .= ($get['expert_udc'] != '')              ? " AND articles.udc LIKE '%{$get['expert_udc']}%' " : "";
         $q_expert .= ($get['expert_add_date'] != '')    ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' " : "";
-        // тут надо проверить, есть ли в keywords '+' и если да - построить OR запрос на результате split()'а
-        // $q_expert .= ($get['expert_keywords'] != '')    ? " AND (articles.keywords_{$lang} LIKE '%{$get['expert_keywords']}%') " : "";
 
         /* это оптимизированная достраивалка запроса на основе множественных keywords */
         $keywords = explode(' ', $get['expert_keywords']);
@@ -671,5 +669,19 @@ function DB_LoadNewsItem($id, $lang)
     }
     return $ret;
 }
+/* загружает список новостей в краткой форме (асс.массив)
+[id] => [id => '', title => '', date => '']
+используется в шаблоне */
+function DB_LoadNewsListTOC($lang)
+{
+    $query = "SELECT id, title_{$lang} AS title, date_add AS date FROM news";
+    if ($r = mysql_query($query)) {
+        while ($row = mysql_fetch_assoc($r)) {
+            $ret[ $row['id'] ] = $row;
+        }
+    }
+    return $ret;
+}
+
 
 ?>

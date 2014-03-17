@@ -2,6 +2,7 @@
 .rubrics-list ul {
     padding: 5px 10px 0 20px;
     margin: 0;
+    list-style-type:none;
 }
 .rubrics-list ul a{
     color:#076f2f;
