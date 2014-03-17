@@ -187,7 +187,7 @@
 
     </fieldset>
     <fieldset>
-        <legend>Место работы: </legend>
+        <legend>Место работы (в именительном падеже): </legend>
         <label for="workplace_en"><strong>Место работы (на английском)</strong></label><br>
         <textarea name="workplace_en" id="workplace_en" cols="90" rows="5"></textarea>
 

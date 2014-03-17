@@ -374,16 +374,18 @@ fe_printauthors_estuff_start;
     if ( sizeof($authors) > 0 ) {
         foreach ($authors as $i => $an_author ) {
             $name = $an_author['name_'.$lang];
-            // первое слово в имени обернуть в <strong> ?
-            // $name = preg_replace('/(?<=\>)\b(\w*)\b|^\w*\b/', '<strong>$0</strong>', $name); // see http://stackoverflow.com/questions/10833435/wrap-b-tag-around-first-word-of-string-with-preg-replace
-            $name = preg_replace('/^([^\s]+)/','<strong>\1</strong>',$name); // спасибо Мендору
+            // первое слово в имени обернуть в <strong>
+            $name = preg_replace('/^([^\s]+)/','<span class="authors-estufflist-firstword">\1</span>',$name); // спасибо Мендору
 
             $title = $an_author['title_'.$lang];
             $title = ($title != '') ? ",<br><div class=\"smaller\">{$title}</div>" : "";
 
+            $workplace = $an_author['workplace_'.$lang];
+            $workplace = ($title != '') ? "<div class=\"smaller\">{$workplace}</div>" : "";
+
             $email = ($an_author['email'] != '') ? "<strong>E-Mail: </strong>{$an_author['email']}" : '';
             $return .= <<<fe_printauthors_estuff_each
-            <li><span class="authors-estufflist-name">{$name}</span>{$title}{$email}</li>\r\n
+            <li><span class="authors-estufflist-name">{$name}</span>{$title}{$workplace}{$email}</li>\r\n
 fe_printauthors_estuff_each;
         }
     }
