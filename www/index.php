@@ -364,17 +364,31 @@ switch ($fetch) {
         break;
     }
     default: {
-        // default page
-        $page_alias = 'about';
-        $maincontent_html = FE_GetStaticPage($page_alias, $site_language);
         // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
         // + ? последняя новость
+        $filename = $tpl_path.'/default/default.'.$site_language;
+        // default page
+        $r_last = mysql_fetch_assoc(mysql_query("SELECT id,title,DATE FROM books ORDER BY title desc"));
+        // out data
+        $inner_html = new kwt($filename.".html");
+        $inner_html->override( array (
+            'static_page_content' => FE_GetStaticPage('about', $site_language),
+            'last_book_content' => FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery(array('book'=> $r_last['id'], 'lang' => $site_language), $site_language, 'no'), $site_language)
+        ));
+        $inner_html->contentstart();
+        $maincontent_html = $inner_html->getcontent();
+
+        $inner_js = new kwt($filename.".js");
+        $inner_js->contentstart();
+        $maincontent_js = $inner_js->getcontent();
+
+        /* CSS Template */
+        $inner_css = new kwt($filename.".css");
+        $inner_css->contentstart();
+        $maincontent_css = $inner_css->getcontent();
     }
 }; // end $fetch all switch
 
-
-$fetch = isset($_GET['fetch']) ? $_GET['fetch'] : '';
-$with = isset($_GET['with']) ? $_GET['with'] : '';
 
 $override['content_jquery'] = $maincontent_js;
 $override['content_html'] = $maincontent_html;
