@@ -96,7 +96,7 @@ switch ($fetch) {
                 break;
             } // end case all
             //@todo: редколлегию переработать
-            case 'estuff': {
+            case 'estaff': {
                 $filename = $tpl_path.'/fetch=authors/with=estuff/f_authors+w_estuff.'.$site_language;
 
                 // $all_authors_plainlist = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes'), $site_language);
