@@ -1,6 +1,33 @@
-<fieldset>
-    <legend>Editorial stuff</legend>
-    <div id="all-authors-as-estuff">
-        {%es_authors_list%}
-    </div>
+<fieldset id="estuff">
+    <legend>Редакционная коллегия</legend>
+    <!--    <div id="all-authors-as-estuff">
+              {%es_authors_list%}
+    </div>-->
+    <h2>Editor-in-Chief</h2>
+    <ul class="no-marker">
+        {%estuff_main_editor%}
+    </ul>
+    <h2>Deputy Editor-in-Chief</h2>
+    <ul>
+        {%estuff_main_subeditors%}
+    </ul>
+    <h2>Editorial board</h2>
+    <ul>
+        {%estuff_local_editors%}
+    </ul>
+    <h2><em>International editorial board</em></h2>
+    <ul>
+        {%estuff_remote_editors%}
+    </ul>
+
+    <h3>Editors</h3>
+    <ul>
+        {%estuff_simple_editors%}
+    </ul>
+
+    <h3>Assistant Editor</h3>
+    <ul>
+        <li><span class="authors-estufflist-name"><span class="authors-estufflist-firstword">Бабийчук</span> Ольга Борисовна</span></li>
+    </ul>
+
 </fieldset>

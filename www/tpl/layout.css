@@ -61,6 +61,9 @@ BODY { margin: 0; background: #f0f8ff; }
 #langs-bar img:hover {
     border: 2px solid red;
 }
+#langs-bar .hover_active_lang {
+    border: 2px solid green;
+}
 /* ISSN */
 #issn-bar {
     position: relative;

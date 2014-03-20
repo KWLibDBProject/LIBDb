@@ -11,7 +11,7 @@
     <script type="text/javascript" src="core/js/core.js"></script>
     <script type="text/javascript" src="tpl/frontend.js"></script>
 
-    <script type="text/javascript" src="core/js/jquery.colorbox.js"></script>
+    <script type="text/javascript" src="core/js/jquery.colorbox-min.js"></script>
     <link rel="stylesheet" href="core/css/colorbox.css" />
 
 
@@ -42,6 +42,9 @@
         });
 
     </script>
+    <style type="text/css">
+        <!--{content_css}-->
+    </style>
 </head>
 <body>
 <div id="body">
@@ -60,7 +63,7 @@
                 <div id="langs-bar">
                     <a data-lang="ru" href="" class="actor-switch-language"><img src="images/rus.png"></a>
                     <a data-lang="en" href="" class="actor-switch-language"><img src="images/eng.png"></a>
-                    <a data-lang="uk" href="" class="lang-active actor-switch-language"><img src="images/ukr.png"></a>
+                    <a data-lang="uk" href="" class="lang-active actor-switch-language"><img src="images/ukr.png" class="hover_active_lang"></a>
                 </div>
             </td>
         </tr>
@@ -74,22 +77,21 @@
                             <ul>
                                 <li><a href="?fetch=page&with=pubethics">Видавницька етика</a></li>
                                 <li><a href="?fetch=page&with=forauthors">Аннотацiя к журналу</a></li>
-                                <li><a href="?fetch=authors&with=estuff">Редакцiйна колегiя</a></li>
+                                <li><a href="?fetch=authors&with=estaff">Редакцiйна колегiя</a></li>
                                 <li><a href="?fetch=page&with=details">Рецензування статей</a></li>
-                                <li><a href="?fetch=page&with=contacts">Реквизити журналу</a></li>
-                                <li><a href="?fetch=page%with=contacts">Контакти</a></li>
+                                <li><a href="?fetch=page&with=imprint">Реквизити журналу</a></li>
+                                <li><a href="?fetch=page&with=contacts">Контакти</a></li>
                             </ul>
                         </li>
                         <li>
-                            <a href="">For authors</a>
+                            <a href="?fetch=page&with=default">Для авторiв</a>
                             <ul>
                                 <li><a href="?fetch=page&with=tom">Порядок розгляду статей</a></li>
                                 <li><a href="?fetch=page&with=format">Вимоги до оформлення</a></li>
                             </ul>
                         </li>
                         <li><a href="?fetch=authors&with=list">Наші автори</a></li>
- <!--                       <li><a href="?fetch=page&with=confs">Конференції</a></li> -->
-                        <li><a href="?fetch=news">Новини</a></li>
+                        <li><a href="?fetch=news&with=list">Новини</a></li>
                     </ul>
                 </div>
             </td>
@@ -98,7 +100,7 @@
             <td class="t-logo" rowspan="2"><img src="/images/sova_106x150.png" width="106" height="150" border="0"></td>
             <td class="leftblock">
                 <div class="rubrics-list">
-                    <h3>Всi рубрики</h3>
+                    <h3>Усi рубрики</h3>
                     <ul>
                         <!--{rubrics}-->
                     </ul>
@@ -106,7 +108,7 @@
             </td>
             <td class="centerblock">
                 <div id="main_content">
-                    <!--{content}-->
+                    <!--{content_html}-->
                 </div>
             </td>
             <td class="rightblock">

@@ -1,0 +1,36 @@
+/* "main.authors.estuff.css"; /* authors/estuff/ */
+.authors-list-as-estuff {}
+
+#estuff h1, h2, h3 {
+    text-align: center;
+}
+
+#estuff ul {
+    list-style-type: square;
+    font-size: large;
+}
+
+#estuff ul.no-marker {
+    list-style-type: none;
+}
+
+#estuff ul li {
+    margin-bottom: 1em;
+}
+
+.smaller-text {
+    font-size: smaller;
+}
+
+.authors-inlist-name {}
+
+.authors-estufflist-firstword { /*выделение фамилии (первого слова в ФИО)*/
+    color: #2a8eb8;
+    font-weight: bold;
+}
+
+#estuff p {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}

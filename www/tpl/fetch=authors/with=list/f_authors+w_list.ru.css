@@ -1,0 +1,9 @@
+/* "main.authors.list.css"; /* authors/list/ */
+/* классы описания списка авторов */
+form.inline_form {
+    display: inline;
+}
+
+.authors-list {
+    list-style-type: disc;
+}

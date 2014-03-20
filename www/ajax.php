@@ -64,15 +64,22 @@ switch ($actor) {
         $return = json_encode($data);
         break;
     }
-
+    /* called by:
+    f_articles+w_extended.en.js ->
+    */
     case 'load_articles_by_query' : {
+        // Поиск статей - расширенный (/articles/extended/)
         $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
         break;
     }
 
     case 'load_authors_selected_by_letter': {
-        //todo: разделить на PRINT(LOAD())
-        $return = DB_LoadAuthors_ByLetter($_GET['letter'], $_GET['lang'], 'no');
+        $return = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter($_GET['letter'], $lang, 'no'), $lang);
+        break;
+    }
+    case 'load_articles_expert_search': {
+        // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
+        $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
         break;
     }
 

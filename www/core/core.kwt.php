@@ -42,7 +42,9 @@ class KWT
     // вызываем, когда надо отдать все с сервера, обычно в конце
     public function out()
     {
-        include($this->file);
+        if (is_readable($this->file)) {
+            include($this->file);
+        }
         ob_end_flush();
     }
 
@@ -79,7 +81,9 @@ class KWT
     public function getcontent($clear=true)
     {
         if (!isset($clear)) $clear = true;
-        include($this->file);
+        if (is_readable($this->file)) {
+            include($this->file);
+        }
         $return = ob_get_contents();
 
         if ($clear) ob_end_clean();

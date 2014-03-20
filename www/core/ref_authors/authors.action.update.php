@@ -56,7 +56,7 @@ if (isAjaxCall()) {
     if ($result['error'] == 0) {
         // use template
         $override = array(
-            'time' => 300,
+            'time' => 10,
             'target' => '/core/ref.authors.show.php',
             'buttonmessage' => 'Вернуться к списку авторов',
             'message' => "Информация об авторе c внутренним идентификатором $id обновлена"

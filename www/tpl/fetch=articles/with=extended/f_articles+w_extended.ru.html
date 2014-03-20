@@ -1,11 +1,11 @@
 <fieldset>
     <legend>Критерии поиска</legend>
-    <form  class="hash_selectors">
-        <table>
+    <form  class="hash_selectors" style="padding-bottom: 5px">
+        <table id="extended_search">
             <tr>
                 <td>Первая буква автора:</td>
                 <td>
-                    <select name="letters" class="search_selector">
+                    <select name="extended_letters" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
@@ -13,7 +13,7 @@
             <tr>
                 <td>Тема: </td>
                 <td>
-                    <select name="topics" class="search_selector">
+                    <select name="extended_topics" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
@@ -21,16 +21,37 @@
             <tr>
                 <td>Сборник: </td>
                 <td>
-                    <select name="books" class="search_selector">
+                    <select name="extended_books" class="search_selector">
                         <option value="0">ANY</option>
                     </select>
                 </td>
             </tr>
         </table>
+        <table id="expert_search" class="hidden">
+            <tr>
+                <td>Фамилия автора: </td>
+                <td colspan="3"><input type="text" name="expert_name" size="40"></td>
+            </tr>
+            <tr>
+                <td>Год: </td>
+                <td><input type="text" name="expert_year"></td>
+                <td>УДК: </td>
+                <td><input type="text" name="expert_udc"></td>
+            </tr>
+            <tr>
+                <td>Ключевые слова (ИЛИ): </td>
+                <td colspan="3"><input type="text" name="expert_keywords" size="40"></td>
+            </tr>
+            <!-- <tr>
+                <td>Аннотация: </td>
+                <td colspan="3"><input type="text" name="expert_abstract" size="40"></td>
+            </tr> -->
+        </table>
     </form>
     <button id="button-show-withselection">Показать выбранное</button>
     <button id="button-reset-selection">Начальные значения</button>
     <button id="button-show-all">Показать все статьи</button>
+    <button id="button-toggle-search" data-searchmode="extended"> MORE Search criteria >>> </button>
 </fieldset>
 <fieldset>
     <legend>Результаты поиска</legend>

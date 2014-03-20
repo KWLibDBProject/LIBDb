@@ -284,61 +284,118 @@ function FE_SetSiteLanguage($lang)
 функция используется в аякс-ответах, в выгрузке полного списка авторов и выгрузке
 списка авторов по первой букве
 */
-//@todo: разделить на LOAD & PRINT!!!
-function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no')
+function DB_LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 {
-    $return = '';
+    $authors = array();
     // check for letter, '0' is ANY first letter
+    if ($letter == '') { $letter = '0'; }
     if ($letter != '0') {
-        $like = " AND authors.name_{$lang} LIKE '{$letter}%'";
+        $where_like = " AND authors.name_{$lang} LIKE '{$letter}%'";
     } else {
-        $like = '';
+        $where_like = '';
     }
+
+
     // check for 'is author in editorial stuff', default is 'no'
     if ($is_es != 'no') {
         $where_es = ' AND is_es=1 ';
     } else {
         $where_es = '';
     }
+    // optional parameter selfhood (for extended estuff)
+    if ($selfhood != -1 )
+    {
+        $where_selfhood = " AND selfhood=$selfhood";
+    } else {
+        $where_selfhood = '';
+    }
+
     $order = "ORDER BY authors.name_{$lang}";
-    $q = "SELECT * FROM authors WHERE `deleted`=0 {$where_es} {$like} {$order}";
+
+    //@todo: вообще-то тут можно вместо * перечислить поля в формате xx_lang AS yy и отвязаться от передачи $sitelanguage в функции FE_Print*()
+    //но для этого придется править все функции, которые используют этот лоаред...
+    $q = "SELECT * FROM `authors` WHERE `deleted`=0 {$where_es} {$where_selfhood} {$where_like} {$order}";
 
     $r = mysql_query($q) or Die(0);
+
+    if ( @mysql_num_rows($r) > 0 ) {
+        while ($i = mysql_fetch_assoc($r)) {
+            $authors[ $i['id'] ] = $i;
+        }
+    }
+    return $authors;
     // ФИО, научное звание/ученая степень
 
-    $return .= <<<LoadAuthorsSelectedByLetter_Start
-<ul class="authors-list">
-LoadAuthorsSelectedByLetter_Start;
+}
 
-    if ( @mysql_num_rows($r) > 0) {
-        while ($i = mysql_fetch_assoc($r)){
+/* печать загруженного списка авторов ($authors) в примитивной (простой строковой) форме */
+function FE_PrintAuthors_PlainList($authors, $lang)
+{
+    $return = '';
+    $return .= <<<PrintAuthorsSelectedByLetter_Start
+<ul class="authors-list">
+PrintAuthorsSelectedByLetter_Start;
+    if (sizeof($authors) > 0 )
+    {
+        foreach ($authors as $i => $an_author)
+        {
+            $id = $an_author['id'];
+            $name = $an_author['name_'.$lang];
+            $title = $an_author['title_'.$lang];
+            // $email = $an_author['email'];
             //@this: эктор-ссылка на /authors/info/(id) - работает, якорь для замены в модреврайт
-            $id = $i['id'];
-            $name = $i['name_'.$lang];
-            $title = $i['title_'.$lang];
-            $email = $i['email'];
-            $return .= <<<LoadAuthorsSelectedByLetter_Each
+            $return .= <<<PrintAuthorsSelectedByLetter_Each
 <li class="authors-list-item">
 <label>
 <a href="?fetch=authors&with=info&id={$id}">{$name}</a>, {$title}
 </label>
 </li>
-LoadAuthorsSelectedByLetter_Each;
-        } // while
+PrintAuthorsSelectedByLetter_Each;
+        }
     } else {
-        $return .= <<<LoadAuthorsSelectedByLetter_Nothing
+        $return .= <<<PrintAuthorsSelectedByLetter_Nothing
 Таких авторов нет!
-LoadAuthorsSelectedByLetter_Nothing;
-;
+PrintAuthorsSelectedByLetter_Nothing;
+    }
+    $return .= <<<PrintAuthorsSelectedByLetter_End
+</ul>
+PrintAuthorsSelectedByLetter_End;
+    return $return;
+}
+
+/* печать нужных авторов ($authors) в расширенной форме для /authors/estuff */
+/* функция НЕ оборачивает элементы списка в UL, поэтому её вывод надо вставлять
+во внутрь списка в шаблоне */
+function FE_PrintAuthors_EStuffList($authors, $lang)
+{
+    $return = '';
+    $return .= <<<fe_printauthors_estuff_start
+fe_printauthors_estuff_start;
+    if ( sizeof($authors) > 0 ) {
+        foreach ($authors as $i => $an_author ) {
+            $name = $an_author['name_'.$lang];
+            // первое слово в имени обернуть в <strong>
+            $name = preg_replace('/^([^\s]+)/','<span class="authors-estufflist-firstword">\1</span>',$name); // спасибо Мендору
+
+            $title = $an_author['title_'.$lang];
+            $title = ($title != '') ? ",<br><div class=\"smaller\">{$title}</div>" : "";
+
+            $workplace = $an_author['workplace_'.$lang];
+            $workplace = ($title != '') ? "<div class=\"smaller\">{$workplace}</div>" : "";
+
+            $email = ($an_author['email'] != '') ? "<strong>E-Mail: </strong>{$an_author['email']}" : '';
+            $return .= <<<fe_printauthors_estuff_each
+            <li><span class="authors-estufflist-name">{$name}</span>{$title}{$workplace}{$email}</li>\r\n
+fe_printauthors_estuff_each;
+        }
     }
 
-    $return .= <<<LoadAuthorsSelectedByLetter_End
-</ul>
-LoadAuthorsSelectedByLetter_End;
-;
-    return $return;
+    $return .= <<<fe_printauthors_estuff_end
+fe_printauthors_estuff_end;
 
+    return $return;
 }
+
 
 
 /* функции генерации селектов */
@@ -373,41 +430,73 @@ function DB_LoadFirstLettersForSelector($lang)
 /* построение универсального запроса */
 function DB_BuildQuery($get, $lang)
 {
-    $q = "SELECT DISTINCT
+    $q = '';
+    $q_select = " SELECT DISTINCT
 articles.id
+, articles.udc AS article_udc
+, articles.add_date AS article_add_date
 , articles.title_{$lang} AS article_title
 , articles.book
 , articles.topic
 , books.title AS book_title
-, topics.title_en AS topic_title
+, topics.title_{$lang} AS topic_title
 , books.year AS book_year
 , articles.pages AS article_pages
-, pdfid
-FROM
+, pdfid ";
+    // $q_select_expert = ", articles.keywords_{$lang}";
+
+    $q_from = " FROM
 articles
 , books, topics
 , cross_aa
-, authors
-WHERE
+, authors ";
+
+    $q_base_where = " WHERE
 authors.id = cross_aa.author AND
     articles.id = cross_aa.article AND
         books.id = articles.book AND
             topics.id = articles.topic AND
-                articles.deleted = 0 AND books.published=1 AND topics.deleted=0
-";
+                articles.deleted = 0 AND books.published=1 AND topics.deleted=0 ";
 
-    $q .= (IsSet($get['book']) && ($get['book'] != 0))          ? " AND articles.book = {$get['book']} " : "";
-    $q .= (IsSet($get['topic']) && ($get['topic'] != 0))        ? " AND articles.topic = {$get['topic']}" : "";
-    $q .= (IsSet($get['letter']) && ($get['letter'] != '0'))    ? " AND authors.name_{$lang} LIKE '{$get['letter']}%' " : "";
-    $q .= (IsSet($get['aid']) && ($get['aid'] != 0))            ? " AND authors.id = {$get['aid']} " : "";
-    $q .= (IsSet($get['year']) && ($get['year'] != 0))          ? " AND books.year = {$get['year']} " : "";
-    $q .= " GROUP BY articles.title_{$lang} ORDER BY articles.id ";
+    $q_final = " GROUP BY articles.title_{$lang} ORDER BY articles.id ";
+
+    /* Extended search conditions */
+    $q_extended = '';
+    $q_extended .= (IsSet($get['book']) && ($get['book'] != 0))          ? " AND articles.book = {$get['book']} " : "";
+    $q_extended .= (IsSet($get['topic']) && ($get['topic'] != 0))        ? " AND articles.topic = {$get['topic']}" : "";
+    $q_extended .= (IsSet($get['letter']) && ($get['letter'] != '0'))    ? " AND authors.name_{$lang} LIKE '{$get['letter']}%' " : "";
+    $q_extended .= (IsSet($get['aid']) && ($get['aid'] != 0))            ? " AND authors.id = {$get['aid']} " : "";
+    $q_extended .= (IsSet($get['year']) && ($get['year'] != 0))          ? " AND books.year = {$get['year']} " : "";
+
+    /* Expert search conditions */
+    $q_expert = '';
+    if ($get['actor'] == 'load_articles_expert_search') {
+        /* AND authors.name_en LIKE 'Mak%' */
+        /* AND articles.udc LIKE '%621%' */
+        /* AND articles.add_date LIKE '%2013' */
+        /* AND (articles.keywords_en LIKE '%robot%' OR ... OR ... )*/
+        $q_expert .= ($get['expert_name'] != '')             ? " AND authors.name_{$lang} LIKE '{$get['expert_name']}%' " : "";
+        $q_expert .= ($get['expert_udc'] != '')              ? " AND articles.udc LIKE '%{$get['expert_udc']}%' " : "";
+        $q_expert .= ($get['expert_add_date'] != '')    ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' " : "";
+
+        /* это оптимизированная достраивалка запроса на основе множественных keywords */
+        $keywords = explode(' ', $get['expert_keywords']);
+        $q_expert .= " AND ( ";
+        foreach ($keywords as $keyword) {
+            $q_expert .= " articles.keywords_{$lang} LIKE '%{$keyword}%' OR ";
+        }
+        $q_expert = substr($q_expert , 0 , (strlen($q_expert)-4));
+        $q_expert .= " ) ";
+    }
+
+    $q = $q_select . $q_from . $q_base_where . $q_extended . $q_expert . $q_final;
     return $q;
 }
 
-
 /*
 Загрузка статей по сложному запросу
+$with_email - передается в DB_LoadAuthorsByArticles, который отдает МАССИВ авторов по статье)
+этот массив обрабатывается в FE_Print-функции, использующей результаты этой функции.
 */
 function DB_LoadArticlesByQuery($get, $lang, $with_email = 'yes')
 {
@@ -517,7 +606,7 @@ PAL_S_End;
     return $return;
 }
 
-/* выводит СПИСОК статей в ПОЛНОЙ нотации (таблицу) (для отборочных скриптов)*/
+/* выводит СПИСОК статей в ПОЛНОЙ четырехколоночной нотации (таблицу) (для отборочных скриптов)*/
 function FE_PrintArticlesList_Extended($articles, $lang)
 {
     $return = '';
@@ -561,6 +650,39 @@ LoadArticlesList_SearchNoArticlesUA;
         // empty array
     }
     return $return;
+}
+
+/* выводит СПИСОК статей в ПОЛНОЙ двухколоночной нотации (таблицу) (для отборочных скриптов)*/
+function  FE_PrintArticlesList_Expert($articles, $lang)
+{
+
+}
+
+/* загружает в асс.массив новость с указанным id,
+usable: используется для pure-вставки в шаблон
+*/
+function DB_LoadNewsItem($id, $lang)
+{
+    $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, date_add FROM news where id={$id}";
+    if ($r = mysql_query($query)) {
+        if (@mysql_num_rows($r) > 0) {
+            $ret = mysql_fetch_assoc($r);
+        }
+    }
+    return $ret;
+}
+/* загружает список новостей в краткой форме (асс.массив)
+[id] => [id => '', title => '', date => '']
+используется в шаблоне */
+function DB_LoadNewsListTOC($lang)
+{
+    $query = "SELECT id, title_{$lang} AS title, date_add AS date FROM news";
+    if ($r = mysql_query($query)) {
+        while ($row = mysql_fetch_assoc($r)) {
+            $ret[ $row['id'] ] = $row;
+        }
+    }
+    return $ret;
 }
 
 

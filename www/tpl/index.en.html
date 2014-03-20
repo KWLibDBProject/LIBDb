@@ -11,10 +11,10 @@
 
     <script type="text/javascript" src="core/js/jquery-1.10.2.min.js"></script>
 
-    <link rel="stylesheet" href="core/css/jquery-ui-1.10.3.custom.min.css">
-    <script type="text/javascript" src="core/js/jquery-ui-1.10.3.custom.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
-    <script type="text/javascript" src="core/js/jquery.colorbox.js"></script>
+    <script type="text/javascript" src="core/js/jquery.colorbox-min.js"></script>
     <link rel="stylesheet" href="core/css/colorbox.css" />
 
 
@@ -46,6 +46,9 @@
         });
 
     </script>
+    <style type="text/css">
+        <!--{content_css}-->
+    </style>
 </head>
 <body>
 <div id="body">
@@ -62,7 +65,7 @@
                     ISSN Online 2221-3805</div>
                 <div id="langs-bar">
                     <a data-lang="ru" href="" class="actor-switch-language"><img src="images/rus.png"></a>
-                    <a data-lang="en" href="" class="lang-active actor-switch-language"><img src="../images/eng.png"></a>
+                    <a data-lang="en" href="" class="lang-active actor-switch-language"><img src="images/eng.png" class="hover_active_lang"></a>
                     <a data-lang="uk" href="" class="actor-switch-language"><img src="images/ukr.png"></a>
                 </div>
             </td>
@@ -77,22 +80,21 @@
                             <ul>
                                 <li><a href="?fetch=page&with=pubethics">Publishing ethics</a></li>
                                 <li><a href="?fetch=page&with=forauthors">Summary to the journal</a></li>
-                                <li><a href="?fetch=authors&with=estuff">Editorial stuff</a></li>
+                                <li><a href="?fetch=authors&with=estaff">Editorial staff</a></li>
                                 <li><a href="?fetch=page&with=details">Articles review</a></li>
                                 <li><a href="?fetch=page&with=imprint">Journal imprint</a></li>
                                 <li><a href="?fetch=page%with=contacts">Contacts</a></li>
                             </ul>
                         </li>
                         <li>
-                            <a href="">For authors</a>
+                            <a href="?fetch=page&with=default">For authors</a>
                             <ul>
                                 <li><a href="?fetch=page&with=tom">Requirements to registration</a></li>
                                 <li><a href="?fetch=page&with=format">Manuscript formatting rules</a></li>
                             </ul>
                         </li>
                         <li><a href="?fetch=authors&with=list">Our authors</a></li>
-    <!--                    <li><a href="?fetch=page&with=confs">Conference</a></li> -->
-                        <li><a href="?fetch=news">News</a></li>
+                        <li><a href="?fetch=news&with=list">News</a></li>
                     </ul>
                 </div>
             </td>
@@ -109,7 +111,7 @@
             </td>
             <td class="centerblock">
                 <div id="main_content">
-                    <!--{content}-->
+                    <!--{content_html}-->
                 </div>
             </td>
             <td class="rightblock">
