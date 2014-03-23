@@ -15,11 +15,31 @@
     <script type="text/javascript">
         // tinyMCE inits
         tinymce.init({
-            mode: 'specific_textareas',
-            editor_selector: 'tinymce_editable',
+            selector:'textarea#content_en',
+            forced_root_block : "",
+            plugins: [ "jbimages charmap link paste hr anchor preview print tabfocus table textcolor" ],
             force_br_newlines : true,
             force_p_newlines : false,
-            plugins: ["jbimages charmap link paste hr anchor preview print tabfocus table textcolor"],
+            language: 'ru',
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | jbimages",
+            relative_urls: false
+        });
+        tinymce.init({
+            selector:'textarea#content_ru',
+            forced_root_block : "",
+            plugins: [ "jbimages charmap link paste hr anchor preview print tabfocus table textcolor" ],
+            force_br_newlines : true,
+            force_p_newlines : false,
+            language: 'ru',
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | jbimages",
+            relative_urls: false
+        });
+        tinymce.init({
+            selector:'textarea#content_uk',
+            forced_root_block : "",
+            plugins: [ "jbimages charmap link paste hr anchor preview print tabfocus table textcolor" ],
+            force_br_newlines : true,
+            force_p_newlines : false,
             language: 'ru',
             toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | jbimages",
             relative_urls: false
