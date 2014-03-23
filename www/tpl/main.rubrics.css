@@ -24,7 +24,7 @@
 
 /* Заголовок в списке рубрик */
 .rubrics-list h3{
-    font-size:16px;
+    font-size:125%;
     color:navy;
     padding: 5px 20px 0px 20px;
     margin: 0;

@@ -17,19 +17,12 @@
     text-indent: -20px;
 }
 
-.books-list h3 {
-    font-size:16px;
-    color:navy;
-    padding: 5px 20px 0px 20px;
-    margin: 0;
-}
-
 .books-list-header {
-    font-size:16px;
+    font-size:125%;
     color:navy;
-    padding: 0;
+    padding: 5px 20px 10px 5px;
     margin: 0;
     font-weight: bold;
     display: block;
-    padding-bottom: 10px;
 }
+
