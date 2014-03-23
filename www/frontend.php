@@ -693,7 +693,7 @@ function FE_PrintBanners($data)
         $return .= <<<EACH_BANNER
                 <li class="banner-item">
                     <a href="{$row['data_url_href']}" target="_blank" class="banner-item-href">
-                        <img src="{$row['data_url_image']}">
+                        <img src="{$row['data_url_image']}" alt="{$row['data_alt']}">
                     </a>
                 </li>
 EACH_BANNER;
