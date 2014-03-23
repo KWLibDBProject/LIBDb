@@ -685,5 +685,35 @@ function DB_LoadNewsListTOC($lang)
     return $ret;
 }
 
+/* оформляет массив баннеров в LI-список (VIEW!) */
+function FE_PrintBanners($data)
+{
+    $return = '';
+    foreach ($data as $id=>$row) {
+        $return .= <<<EACH_BANNER
+                <li class="banner-item">
+                    <a href="{$row['data_url_href']}" target="_blank" class="banner-item-href">
+                        <img src="{$row['data_url_image']}">
+                    </a>
+                </li>
+EACH_BANNER;
+    }
+    return $return;
+}
+/* загружает массив отображаемых баннеров из базы (CONTROLLER?) */
+function DB_LoadBanners()
+{
+    $query = "SELECT * FROM banners WHERE data_is_visible=true";
+    $res = mysql_query($query) or die("mysql_query_error: ".$query);
+    $res_numrows = @mysql_num_rows($res);
+    if ($res_numrows > 0)
+    {
+        while ($row = mysql_fetch_assoc($res)) {
+            $ret[] = $row;
+        }
+    }
+    return $ret;
+}
+
 
 ?>

@@ -20,8 +20,10 @@ $tpl_index->contentstart();
 
 $link = ConnectDB();
 
+/* Override variables in INDEX.*.HTML template */
 $override['rubrics'] = FE_PrintTopics(DB_LoadTopics($site_language),$site_language);
 $override['books'] = FE_PrintBooks(DB_LoadBooks($site_language),$site_language);
+$override['banners'] = FE_PrintBanners(DB_LoadBanners());
 
 // Main switch
 

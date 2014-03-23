@@ -1,0 +1,19 @@
+/* Banners horizontal list */
+ul.banners-list {
+    margin: 0;
+    padding: 4px;
+}
+li.banner-item {
+    display: inline-table;
+    margin-right: 5px;
+    padding: 3px;
+}
+
+li.banner-item img.banner-item-image {
+    border: none;
+    outline: none;
+}
+li.banner-item img.banner-item-image a.banner-item-href {
+    border: none;
+    outline: none;
+}
