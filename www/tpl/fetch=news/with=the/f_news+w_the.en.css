@@ -8,6 +8,7 @@ div, .news-item {
     width: 80%;
     background-color: #f0fff0;
     font-weight: bold;
+    font-size: 125%;
 }
 .news-date {
     display: inline-block;
@@ -21,7 +22,7 @@ div, .news-item {
 }
 .news-text {
     clear: both;
-    background-color: #f5fffa;
+    /* background-color: #f5fffa; */
 
     padding-top: 15px
 }
