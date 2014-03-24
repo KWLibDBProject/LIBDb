@@ -4,7 +4,7 @@
     margin: 0;
     list-style-type:none;
 }
-.rubrics-list ul a{
+.rubrics-list ul a {
     color:#076f2f;
     font-size:14px;
     line-height:20px;
@@ -16,7 +16,10 @@
     text-transform:uppercase;
 }
 .rubrics-list ul a:hover{
-    background:#e5e5dc;
+    /* background:#e5e5dc; */
+    // background-color: white;
+    background-color: rgba(232, 240, 247, 1);
+    color: navy;
 }
 .rubrics-list ul li:first-child a{
     border-top:0;

@@ -1,13 +1,10 @@
-@import url("main.logo.css");
 @import url("main.rubrics.css");
 @import url("main.books.css");
 @import url("main.banners.css");
 
 /* modules styles */
 
-#main_content { /*контейнер с контентом*/
-
-}
+#main_content { /*контейнер с контентом*/ }
 
 /* search selectors */
 .search_selector {
@@ -29,7 +26,17 @@ fieldset.search_results {
     list-style-type: disc;
 }
 
-/* Last two news classes */
+/* LOGO Classes ======= @import url("main.logo.css"); ====================================================== */
+.t-logo-title { /* text-transform: uppercase; */ }
+.logo-title {
+    font-weight: bold;
+    font-size: 200%;
+    color: navy;
+    font-style: italic;
+}
+/* ==================================== END =================================== */
+
+/* Last two news classes ====================================================== */
 .last-two-news {
     list-style-type:none;
     padding: 5px 5px 0 0;
@@ -53,3 +60,4 @@ fieldset.search_results {
 .last-two-news li a:visited {
     color: navy;
 }
+/* ==================================== END =================================== */
