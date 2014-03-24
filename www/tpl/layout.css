@@ -1,19 +1,25 @@
-BODY { margin: 0; background: #f0f8ff; }
+BODY {
+    margin: 0;
+    background: white; /* #f0f8ff; */
+    background: url(/images/paper-background.jpg) scroll repeat;
+}
 #body {
     min-width: 540px;
     max-width: 1330px;
     width: 95%;
     margin: auto;
 }
+
+/* LAYOUT ===================================================================== */
 .layout { width: 100%; table-layout: fixed; }
 .layout TD {
     padding: 7px;
     vertical-align: top;
-    border: 1px solid #ffdab9;
+    border: 1px dotted #a9a9a9; /* #ffdab9 */
 }
 
 .t-header {
-    height: 0px;
+    height: 0;
 }
 .t-logo {
     width: 210px; /* left column width */
@@ -24,8 +30,7 @@ BODY { margin: 0; background: #f0f8ff; }
     text-align: center;
     /* height:100px; */ /* top bar height */
 }
-.t-logo-langs {
-    /* right column width*/
+.t-logo-langs { /* right column width*/
     width: 180px;
 }
 .t-logo-menu {
@@ -43,8 +48,9 @@ BODY { margin: 0; background: #f0f8ff; }
 .rightblock {
     vertical-align: top;
 }
+/* ==================================== END =================================== */
 
-/* панель языков*/
+/* панель языков ============================================================== */
 #langs-bar {
     position: relative;
     top: 0;right:0;
@@ -64,7 +70,9 @@ BODY { margin: 0; background: #f0f8ff; }
 #langs-bar .hover_active_lang {
     border: 2px solid green;
 }
-/* ISSN */
+/* ==================================== END =================================== */
+
+/* ISBN bar =================================================================== */
 #issn-bar {
     position: relative;
     top: 0; right: 0;
@@ -72,3 +80,8 @@ BODY { margin: 0; background: #f0f8ff; }
     text-align: right;
     padding: 2px;
 }
+/* ==================================== END =================================== */
+
+
+/* ============================================================================ */
+/* ==================================== END =================================== */

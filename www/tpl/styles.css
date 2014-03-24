@@ -28,3 +28,28 @@ fieldset.search_results {
 .articles-list-full {
     list-style-type: disc;
 }
+
+/* Last two news classes */
+.last-two-news {
+    list-style-type:none;
+    padding: 5px 5px 0 0;
+    margin: 0;
+}
+.last-two-news li {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid black;
+}
+.last-two-news li strong {
+    float: right;
+}
+.last-two-news li a {
+    text-decoration: none;
+    color: blue;
+}
+.last-two-news li a:hover {
+    border-bottom: 1px dotted red;
+}
+.last-two-news li a:visited {
+    color: navy;
+}

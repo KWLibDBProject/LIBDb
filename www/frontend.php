@@ -653,6 +653,7 @@ LoadArticlesList_SearchNoArticlesUA;
 }
 
 /* выводит СПИСОК статей в ПОЛНОЙ двухколоночной нотации (таблицу) (для отборочных скриптов)*/
+//@todo: написать и сделать актуальной функцией отображения
 function  FE_PrintArticlesList_Expert($articles, $lang)
 {
 
@@ -715,5 +716,45 @@ function DB_LoadBanners()
     return $ret;
 }
 
+/* загружает массив из заголовка+даты последних новостей */
+function DB_LoadLastNews($lang)
+{
+    $query = "SELECT id, title_{$lang} AS title, date_add FROM news ";
+    $res = mysql_query($query) or die("mysql_query_error: ".$query);
+    $res_numrows = @mysql_num_rows($res);
+    $i = 1;
+    if ($res_numrows > 0)
+    {
+        while ($row = mysql_fetch_assoc($res)) {
+            $ret[ $i ] = $row;
+            $i++;
+        }
+    }
+    return $ret;
+}
+/* возвращает для override-переменной последние $count новостей
+для правого блока (под сборниками)
+*/
+function FE_PrintLastNews($data, $count=2)
+{
+    $return = '';
+    for ($i=1; $i < max(count($data), $count); $i++) {
+        $row = $data[$i];
+        $date_add = date_parse($row['date_add']);
+        $return .= <<<PrintLastNews
+                        <li>
+                            <strong>{$row['date_add']} </strong>
+                            <br>
+                            <a href="?fetch=news&with=the&id={$row['id']}">{$row['title']}</a>
+                        </li>
+PrintLastNews;
+    }
+    return $return;
+}
 
+/* Конвертирует дату (строку) по языку ; @todo: move to core */
+function ConvertDate($date_as_string, $lang)
+{
+
+}
 ?>
