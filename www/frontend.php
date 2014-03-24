@@ -257,16 +257,21 @@ FE_PrintArticles_ByAuthor_End;
     return $ret;
 }
 
-/* смена и установка языка сайта -- НЕ ПАШЕТ */
+/* получение языка сайта из кукисов  */
+/* todo: устанавливать локаль! */
 function FE_GetSiteLanguage()
 {
     $lang = 'en';
     if (isset($_COOKIE['libdb_sitelanguage']) && $_COOKIE['libdb_sitelanguage'] != '') {
         switch ($_COOKIE['libdb_sitelanguage']) {
-            case 'en': { $lang = 'en'; break; }
+            /* case 'en': {
+                $lang = 'en';
+                break;
+            } */
             case 'ru': { $lang = 'ru'; break; }
             case 'uk': { $lang = 'uk'; break; }
-            default: {$lang = 'en'; break;}
+            case 'en':
+            default: {   $lang = 'en'; break; }
         }
     }
     // SetCookie('libdb_sitelanguage', $lang, 3600*24*366);
@@ -740,10 +745,10 @@ function FE_PrintLastNews($data, $count=2)
     $return = '';
     for ($i=1; $i < max(count($data), $count); $i++) {
         $row = $data[$i];
-        $date_add = date_parse($row['date_add']);
+        $date_add = ConvertDateByLang($row['date_add'],FE_GetSiteLanguage());
         $return .= <<<PrintLastNews
                         <li>
-                            <strong>{$row['date_add']} </strong>
+                            <strong>{$date_add} </strong>
                             <br>
                             <a href="?fetch=news&with=the&id={$row['id']}">{$row['title']}</a>
                         </li>
@@ -753,8 +758,23 @@ PrintLastNews;
 }
 
 /* Конвертирует дату (строку) по языку ; @todo: move to core */
-function ConvertDate($date_as_string, $lang)
+$TRANSLATED_MONTHS = array(
+    'en' => array("", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"),
+    'ru' => array("", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"),
+    'uk' => array("", "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"),
+);
+function ConvertDateByLang($date_as_string, $lang)
 {
+    /* $return = date("d M Y", strtotime($date_as_string)); */
+    global $TRANSLATED_MONTHS;
 
+    if (function_exists('date_parse_from_format')) {
+        $date_as_array = date_parse_from_format('d/m/Y',$date_as_string);
+        $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
+    } else {
+        $date_as_array = date_parse($date_as_string);
+        $return = "{$date_as_array['month']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['day'] ]} {$date_as_array['year']}";
+    }
+    return $return;
 }
 ?>

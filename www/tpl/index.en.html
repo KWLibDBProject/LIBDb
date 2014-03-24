@@ -27,6 +27,7 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $.ajaxSetup({cache: false});
+            // get site language from cookies, if language not defined - set "EN"
             if (!getCookie('libdb_sitelanguage')) {
                 setCookie('libdb_sitelanguage', 'en', 3600*24*30)
             }
@@ -37,6 +38,7 @@
             $(".hash_selectors").on('change', '.search_selector', function(){
                 setHashBySelectors();
             });
+            // Language switch
             $(".actor-switch-language").on('click', function(){
                 if (!$(this).hasClass('lang-active')) {
                     setCookie('libdb_sitelanguage', $(this).attr('data-lang'), 3600*24*30 );

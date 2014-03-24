@@ -1,7 +1,7 @@
 BODY {
     margin: 0;
     background: white; /* #f0f8ff; */
-    background: url(/images/paper-background.jpg) scroll repeat;
+    background: url(/images/paper_01.jpg) scroll repeat;
 }
 #body {
     min-width: 540px;
@@ -58,6 +58,7 @@ BODY {
     /* width: 10px; */
     text-align: right;
     background-color: rgba(95, 182, 255, 0.36);
+    /* background-color: rgba(232, 240, 247, 0.86); */
 }
 #langs-bar img {
     border: 2px solid transparent;

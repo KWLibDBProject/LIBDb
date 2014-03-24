@@ -1,3 +1,4 @@
+/* MENU ======================================================================= */
 #menu, #menu ul {
     margin: 0;
     padding: 0;
@@ -26,7 +27,8 @@
     border-top: 1px solid navy; /* верхняя и нижняя границы элементов меню */
     border-bottom: 1px solid navy;
     position: relative;
-    background-color: #dee6ed;
+    background-color: rgba(232, 240, 247, 0.45);
+    /* background-color: #dee6ed; */
 }
 #menu > li:first-child { /*первый LI в верхнем меню */
     border-left:1px solid navy;
@@ -41,7 +43,7 @@
     text-transform: uppercase;
     font: bold 16px Arial, Helvetica;
     text-decoration: none;
-    /*  text-shadow: 0 1px 0 #000; */
+    /* text-shadow: 1px 1px 0 #e8e6ff; */
 }
 #menu li:hover > a {
     color: #fafafa;
@@ -58,7 +60,7 @@
     top: 44px;
     left: 0;
     z-index: 9999;
-    background-color: #dee6ed;
+    background-color: rgba(232, 240, 247, 1);
     border: 1px solid navy;
 }
 #menu li:hover > ul {
@@ -133,14 +135,11 @@ border-radius: 6px;
 -moz-box-shadow: 0 1px 1px #777, 0 1px 0 #666 inset;
 -webkit-box-shadow: 0 1px 1px #777, 0 1px 0 #666 inset;
 box-shadow: 0 1px 1px #777, 0 1px 0 #666 inset; */
-    }
+}
 #menu:before,
-#menu:after {
-}
-#menu:after {
-}
-#menu {
-}
+#menu:after {}
+#menu:after {}
+#menu {}
 #menu li {
     /* -moz-box-shadow: 1px 0 0 #444;
     -webkit-box-shadow: 1px 0 0 #444;
@@ -222,4 +221,4 @@ box-shadow: 0 1px 1px #777, 0 1px 0 #666 inset; */
     -webkit-border-radius: 0 0 3px 3px;
     border-radius: 0 0 3px 3px; */
 }
-
+/* ============================================================================ */
