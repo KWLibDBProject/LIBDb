@@ -17,7 +17,6 @@
 }
 .rubrics-list ul a:hover{
     /* background:#e5e5dc; */
-    // background-color: white;
     background-color: rgba(232, 240, 247, 1);
     color: navy;
 }
@@ -29,6 +28,6 @@
 .rubrics-list h3{
     font-size:125%;
     color:navy;
-    padding: 5px 20px 0px 20px;
+    padding: 5px 20px 0 20px;
     margin: 0;
 }
