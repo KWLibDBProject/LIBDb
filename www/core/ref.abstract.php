@@ -13,7 +13,7 @@ Abstact table: {
 id PK AI
 data_int default 0
 data_str default `NULL`
-comment varchar 64
+data_comment varchar 64
 }
 
 */
@@ -27,6 +27,24 @@ if (isset($_GET['ref'])) {
     $link = ConnectDB();
 
     switch ($action) {
+        case 'get-comments': // get comments
+        {
+            $result = array();
+            $q = "SELECT column_name, column_comment FROM information_schema.COLUMNS
+WHERE TABLE_NAME = '{$reference}'";
+            $r = mysql_query($q);
+            $rn = @mysql_num_rows($r);
+            if ($rn > 0) {
+                while ($row = mysql_fetch_assoc($r)) {
+                    $result['data'][ $row['column_name'] ] = $row['column_comment'];
+                }
+                $result['state'] = 'ok';
+            } else {
+                $result['state'] = 'error';
+            }
+            $return = json_encode($result);
+            break;
+        } // case 'get-comments'
         case 'insert':
         {
             $q = array(
@@ -95,6 +113,60 @@ if (isset($_GET['ref'])) {
             $return = json_encode($result);
             break;
         } // case 'load'
+        case 'advlist':
+        {
+            $fields = array();
+            $rows = array();
+            $r_fields = mysql_query("SELECT column_name, column_comment FROM information_schema.COLUMNS WHERE TABLE_NAME = '{$reference}'");
+            while ($a_field = mysql_fetch_assoc($r_fields)) {
+                $fields [ $a_field['column_name'] ] = $a_field['column_comment'];
+            }
+            $fields['control'] = 'control';
+            foreach ($fields as $f_index=>$f_content ) {
+                $rows[0][ $f_index ] = ($f_content != '') ? $f_content : $f_index;
+            }
+
+            $return = '';
+            $r_data = mysql_query("SELECT * FROM $reference");
+
+
+            if (@mysql_num_rows($r_data) > 0)
+            {
+                while ($ref_record = mysql_fetch_assoc($r_data))
+                {
+                    $ref_record['control'] = <<<xxx
+<button class="action-edit button-edit" name="{$ref_record['id']}">Edit</button>
+xxx;
+                    $rows[] = $ref_record;
+                }
+            }
+            // printr($rows);die;
+            // визуализация
+            $return .= <<<ADV_TABLE_START
+<table border="1" width="100%">
+ADV_TABLE_START;
+            if (count($rows) > 1) {
+                foreach ($rows as $n => $row)
+                {
+                    $td_start = ($n == 0) ? '<th>' : "<td>\r\n";
+                    $td_end = ($n == 0) ? '</th>' : "</td>\r\n";
+                    $return .= "<tr>\r\n";
+
+                    foreach ($rows [ $n ] as $r_content) {
+                        $return .= <<<ADV_TABLE_TR
+    {$td_start} {$r_content} &nbsp; {$td_end}
+ADV_TABLE_TR;
+                    }
+
+                    $return .= "</tr>\r\n";
+                }
+            } else {
+                $return .= '<tr><td colspan="' . count($rows[0]) . '">Справочник пуст!</td></tr>';
+            }
+
+            $return .= "</table>\r\n";
+            break;
+        }
         case 'list':
         {
             $query = "SELECT * FROM $reference";
@@ -120,7 +192,7 @@ TABLE_START;
     <td>{$ref_record['data_int']}&nbsp;</td>
     <td>{$ref_record['data_str']}&nbsp;</td>
     <td>{$ref_record['data_comment']}&nbsp;</td>
-    <td class="centred_cell"><button class="actor-edit button-edit" name="{$ref_record['id']}">Edit</button></td>
+    <td class="centred_cell"><button class="action-edit button-edit" name="{$ref_record['id']}">Edit</button></td>
 </tr>
 TABLE_EACHROW;
                 }
@@ -132,55 +204,73 @@ TABLE_IS_EMPTY;
             break;
         } // case 'list'
         case 'no-action': {
-        ?>
-<html>
-<head>
-    <title>Работа с абстрактным справочником [<?php echo $reference ?>]</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+            ?>
+        <html>
+        <head>
+        <title>Работа с абстрактным справочником [<?php echo $reference ?>]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
+        <script src="js/jquery-1.10.2.min.js"></script>
+        <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
 
-    <style type="text/css">
-        body {
-            font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
-            font-size: 62.5%;
-        }
-        label, input { display:block; }
-        input.text {
-            margin-bottom:12px;
-            width:95%;
-            padding: .4em;
-        }
-        fieldset {
-            padding:0;
-            border:0;
-            margin-top:25px;
-        }
-        h1 {
-            font-size: 1.2em;
-            margin: .6em 0;
-        }
-        .ui-dialog .ui-state-error {
-            padding: .3em;
-        }
-        #ref_list {
-            height: 500px;
-            width: 99%;
-            border: 1px solid gray;
-            overflow-y: scroll;
-        }
-        .centred_cell, th {
-            text-align: center;
-        }
-        .button-large {
-            height: 60px;
-        }
-    </style>
-    <script type="text/javascript">
+        <style type="text/css">
+            body {
+                font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+                font-size: 62.5%;
+            }
+            label, input { display:block; }
+            input.text {
+                margin-bottom:12px;
+                width:95%;
+                padding: .4em;
+            }
+            fieldset {
+                padding:0;
+                border:0;
+                margin-top:25px;
+            }
+            h1 {
+                font-size: 1.2em;
+                margin: .6em 0;
+            }
+            .ui-dialog .ui-state-error {
+                padding: .3em;
+            }
+            #ref_list {
+                height: 500px;
+                width: 99%;
+                border: 1px solid gray;
+                overflow-y: scroll;
+            }
+            .centred_cell, th {
+                text-align: center;
+            }
+            .button-large {
+                height: 60px;
+            }
+        </style>
+        <script type="text/javascript">
         var ref_name = '<?php echo $reference ?>';
         var button_id = 0;
+
+        function Abstract_ReloadContent(target)
+        {
+            $(target).empty().load("?action=advlist&ref="+ref_name);
+        }
+
+        function Abstract_LoadFieldComments(reference)
+        {
+            var ret = {};
+            $.get('?action=get-comments&ref='+reference).done(function(data){
+                var result = $.parseJSON(data);
+                if (result['state'] != 'error') {
+                    ret = result['data'];
+                }
+            });
+
+            return ret;
+        }
 
         function ShowErrorMessage(message)
         {
@@ -198,10 +288,10 @@ TABLE_IS_EMPTY;
                 ref: ref_name
             } );
             getting.done(function(data){
-
                 result = $.parseJSON(data);
                 if (result['error']==0) {
-                    $("#ref_list").empty().load("?action=list&ref="+ref_name);
+                    Abstract_ReloadContent("#ref_list");
+                    // $("#ref_list").empty().load("?action=list&ref="+ref_name);
                     $( source ).dialog( "close" );
                 } else {
                     $( source ).dialog( "close" );
@@ -221,7 +311,8 @@ TABLE_IS_EMPTY;
             getting.done(function(data){
                 result = $.parseJSON(data);
                 if (result['error']==0) {
-                    $("#ref_list").empty().load("?action=list&ref="+ref_name);
+                    // $("#ref_list").empty().load("?action=list&ref="+ref_name);
+                    Abstract_ReloadContent("#ref_list");
                     $( source ).dialog( "close" );
                 } else {
                     $( source ).dialog( "close" ); // Some errors, show message!
@@ -239,7 +330,8 @@ TABLE_IS_EMPTY;
             getting.done(function(data){
                 result = $.parseJSON(data);
                 if (result['error'] == 0) {
-                    $('#ref_list').empty().load("?action=list&ref="+ref_name);
+                    // $('#ref_list').empty().load("?action=list&ref="+ref_name);
+                    Abstract_ReloadContent("#ref_list");
                     $( target ).dialog( "close" );
                 } else {
                     ShowErrorMessage(result['message']);
@@ -266,11 +358,27 @@ TABLE_IS_EMPTY;
                 }
             });
         }
+        function Abstract_SetFieldLabels(data)
+        {
+            if (typeof data !== 'undefined') {
+                if ( data['data_int'] != '') {
+                    $("#add_ref_data_int_label").html( data['data_int'] );
+                    $("#edit_ref_data_int_label").html( data['data_int'] );
+                }
+                if ( data['data_str'] != '') {
+                    $("#add_ref_data_str_label").html( data['data_str'] );
+                    $("#edit_ref_data_str_label").html( data['data_str'] );
+                }
+            }
+        }
 
         $(document).ready(function () {
             $.ajaxSetup({cache: false, async: false });
+            // var ref_field_comments = Abstract_LoadFieldComments();
+            Abstract_SetFieldLabels( Abstract_LoadFieldComments(ref_name) );
 
-            $("#ref_list").load("?action=list&ref="+ref_name);
+            // $("#ref_list").load("?action=list&ref="+ref_name);
+            Abstract_ReloadContent("#ref_list");
 
             /* вызов и обработчик диалога ADD-ITEM */
             $("#actor-add").on('click',function() {
@@ -316,7 +424,7 @@ TABLE_IS_EMPTY;
 
             /* вызов и обработчик диалога редактирования */
 
-            $('#ref_list').on('click', '.actor-edit', function() {
+            $('#ref_list').on('click', '.action-edit', function() {
                 button_id = $(this).attr('name');
 
                 Abstract_CallLoadItem("#edit_form", button_id);
@@ -356,48 +464,48 @@ TABLE_IS_EMPTY;
             });
 
         });
-    </script>
-</head>
-<body>
-<button type="button" class="button-large" id="actor-exit"><strong> <<< НАЗАД </strong></button>
-<button type="button" class="button-large" id="actor-add"><strong>Добавить запись в справочник</strong></button><br>
+        </script>
+        </head>
+        <body>
+        <button type="button" class="button-large" id="actor-exit"><strong> <<< НАЗАД </strong></button>
+        <button type="button" class="button-large" id="actor-add"><strong>Добавить запись в справочник</strong></button><br>
 
-<div id="add_form" title="Добавить запись в справочник [<?php echo $reference ?>]">
-    <form action="?action=insert">
-        <fieldset>
-            <label for="add_data_int">Числовое поле: </label>
-            <input type="text" name="add_data_int" id="add_data_int" class="text ui-widget-content ui-corner-all">
+        <div id="add_form" title="Добавить запись в справочник [<?php echo $reference ?>]">
+            <form action="?action=insert">
+                <fieldset>
+                    <label for="add_data_str" id="add_ref_data_str_label">Строковое поле:</label>
+                    <input type="text" name="add_data_str" id="add_data_str" class="text ui-widget-content ui-corner-all">
 
-            <label for="add_data_str">Строковое поле:</label>
-            <input type="text" name="add_data_str" id="add_data_str" class="text ui-widget-content ui-corner-all">
+                    <label for="add_data_int" id="add_ref_data_int_label">Числовое поле: </label>
+                    <input type="text" name="add_data_int" id="add_data_int" class="text ui-widget-content ui-corner-all">
 
-            <label for="add_data_comment">Комментарий:</label>
-            <input type="text" name="add_data_comment" id="add_data_comment" class="text ui-widget-content ui-corner-all">
+                    <label for="add_data_comment">Комментарий:</label>
+                    <input type="text" name="add_data_comment" id="add_data_comment" class="text ui-widget-content ui-corner-all">
+                </fieldset>
+            </form>
+        </div>
+        <div id="edit_form" title="Изменить запись в справочнике [<?php echo $reference ?>]">
+            <form action="?action=update">
+                <fieldset>
+                    <label for="edit_data_str" id="edit_ref_data_str_label">Строковое поле:</label>
+                    <input type="text" name="edit_data_str" id="edit_data_str" class="text ui-widget-content ui-corner-all">
+
+                    <label for="edit_data_int" id="edit_ref_data_int_label">Числовое поле: </label>
+                    <input type="text" name="edit_data_int" id="edit_data_int" class="text ui-widget-content ui-corner-all">
+
+                    <label for="edit_data_comment">Комментарий:</label>
+                    <input type="text" name="edit_data_comment" id="edit_data_comment" class="text ui-widget-content ui-corner-all">
+                </fieldset>
+            </form>
+        </div>
+        <hr>
+        <fieldset class="result-list">
+            <div id="ref_list">
+            </div>
         </fieldset>
-    </form>
-</div>
-<div id="edit_form" title="Изменить запись в справочнике [<?php echo $reference ?>]">
-    <form action="?action=update">
-        <fieldset>
-            <label for="edit_data_int">Числовое поле: </label>
-            <input type="text" name="edit_data_int" id="edit_data_int" class="text ui-widget-content ui-corner-all">
 
-            <label for="edit_data_str">Строковое поле:</label>
-            <input type="text" name="edit_data_str" id="edit_data_str" class="text ui-widget-content ui-corner-all">
-
-            <label for="edit_data_comment">Комментарий:</label>
-            <input type="text" name="edit_data_comment" id="edit_data_comment" class="text ui-widget-content ui-corner-all">
-        </fieldset>
-    </form>
-</div>
-<hr>
-<fieldset class="result-list">
-    <div id="ref_list">
-    </div>
-</fieldset>
-
-</body>
-</html>
+        </body>
+        </html>
         <?php
             break;
         }
