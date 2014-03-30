@@ -721,10 +721,12 @@ function DB_LoadBanners()
     return $ret;
 }
 
-/* загружает массив из заголовка+даты последних новостей */
-function DB_LoadLastNews($lang)
+/* возвращает для override-переменной последние $count новостей
+для правого блока (под сборниками):
+загружает массив из заголовка+даты последних новостей */
+function DB_LoadLastNews($lang, $count=2)
 {
-    $query = "SELECT id, title_{$lang} AS title, date_add FROM news ";
+    $query = "SELECT id, title_{$lang} AS title, date_add FROM news ORDER BY date_add DESC LIMIT {$count}";
     $res = mysql_query($query) or die("mysql_query_error: ".$query);
     $res_numrows = @mysql_num_rows($res);
     $i = 1;
@@ -737,22 +739,25 @@ function DB_LoadLastNews($lang)
     }
     return $ret;
 }
-/* возвращает для override-переменной последние $count новостей
-для правого блока (под сборниками)
+/* возвращает длинную строку с новостями на основе загруженных в
+$data данных (массив новостей) -- результат подставляется в override-переменную
+новостного блока справа (под сборниками)
 */
-function FE_PrintLastNews($data, $count=2)
+function FE_PrintLastNews($data)
 {
     $return = '';
-    for ($i=1; $i < max(count($data), $count); $i++) {
-        $row = $data[$i];
-        $date_add = ConvertDateByLang($row['date_add'],FE_GetSiteLanguage());
-        $return .= <<<PrintLastNews
+    if (count($data)>0) {
+        foreach ($data as $i => $row)
+        {
+            $date_add = ConvertDateByLang($row['date_add'],FE_GetSiteLanguage());
+            $return .= <<<PrintLastNews
                         <li>
                             <strong>{$date_add} </strong>
                             <br>
                             <a href="?fetch=news&with=the&id={$row['id']}">{$row['title']}</a>
                         </li>
 PrintLastNews;
+        }
     }
     return $return;
 }
@@ -760,7 +765,7 @@ PrintLastNews;
 /* Конвертирует дату (строку) по языку ; @todo: move to core */
 $TRANSLATED_MONTHS = array(
     'en' => array("", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"),
-    'ru' => array("", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"),
+    'ru' => array("", "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"),
     'uk' => array("", "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"),
 );
 function ConvertDateByLang($date_as_string, $lang)

@@ -24,7 +24,7 @@ $link = ConnectDB();
 $override['rubrics'] = FE_PrintTopics(DB_LoadTopics($site_language),$site_language);
 $override['books'] = FE_PrintBooks(DB_LoadBooks($site_language),$site_language);
 $override['banners'] = FE_PrintBanners(DB_LoadBanners());
-$override['last_news_shortlist'] = FE_PrintLastNews(DB_LoadLastNews($site_language),2);
+$override['last_news_shortlist'] = FE_PrintLastNews(DB_LoadLastNews($site_language,2));
 
 // Main switch
 
