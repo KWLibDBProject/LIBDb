@@ -9,11 +9,11 @@ $link = ConnectDB();
 
 $ref_name = 'books';
 
-$query = "SELECT books.id AS book_id, books.title, books.date, contentpages, published, file_cover, file_title, file_toc,
-COUNT(articles.book) AS book_articles_count
-FROM books LEFT JOIN articles ON
-books.id=articles.book
-GROUP BY books.id, books.title, books.year";
+$query = "SELECT books.id AS book_id, books.title, books.date, contentpages, published, file_cover, file_title, file_toc, file_toc_en,
+ COUNT(articles.book) AS book_articles_count
+ FROM books LEFT JOIN articles ON
+ books.id=articles.book
+ GROUP BY books.id, books.title, books.year";
 
 $res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$query);
 $ref_numrows = @mysql_num_rows($res) ;
@@ -65,6 +65,8 @@ if ($ref_numrows > 0)
         <a href="getfile.php?id={$book['file_title']}" class="icon-pdf icon">Титульник</a>
         <br>
         <a href="getfile.php?id={$book['file_toc']}" class="icon-pdf icon">Оглавление</a>
+        <br>
+        <a href="getfile.php?id={$book['file_toc_en']}" class="icon-pdf icon">Английское оглавление</a>
     </td>
     <td class="centred_cell"><button class="actor-edit button-edit" name="{$book['book_id']}">Edit</button></td>
 </tr>

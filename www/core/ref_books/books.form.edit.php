@@ -63,6 +63,20 @@ if ($id != -1)
             $book['file_toc_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
             $book['file_toc_data']['disabled_flag'] = 'disabled';
         }
+        // file_toc_en
+        if ($book['file_toc_en'] != -1 )
+        {
+            $q = "select id, username from $ref_filestorage WHERE id = {$book['file_toc_en']}";
+            $r = mysql_query($q) or Die("Death at: $q");
+            $f = mysql_fetch_assoc($r);
+            $book['file_toc_en_data']['id'] = $f['id'];
+            $book['file_toc_en_data']['username'] = $f['username'];
+            $book['file_toc_en_data']['disabled_flag'] = '';
+        } else {
+            $book['file_toc_en_data']['id'] = -1;
+            $book['file_toc_en_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_toc_en_data']['disabled_flag'] = 'disabled';
+        }
         $isBookExists = 1;
     } else {
         $isBookExists = 0;
@@ -89,9 +103,9 @@ if ($id != -1)
     <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
 
     <script src="../js/core.js"></script>
-    <script src="books.js"></script>
 
     <script type="text/javascript">
+        var we_can_delete_file = false;
         var isBookExists = <?php echo $isBookExists ?>;
         var is_published = {
             'error' : 0,
@@ -100,6 +114,10 @@ if ($id != -1)
                 '1' : 'Да (опубликован)'
             }
         };
+        function ShowErrorMessage(message)
+        {
+            alert(message);
+        }
 
         $(document).ready(function () {
             if (0 == isBookExists) {
@@ -113,22 +131,28 @@ if ($id != -1)
                 window.location.href = '../ref.books.show.php';
             });
             $("#button-remove").on('click',function(event){
-                // confirm!
-                window.location.href = 'books.action.remove.php?id='+<? echo $id ?>;
+                if (confirm("Вы уверены, что хотите удалить сборник?")) {
+                    window.location.href = 'books.action.remove.php?id='+<? echo $id ?>;
+                }
+
             });
 
             $("#form_book").submit(function(){
                 var bValid = true;
                 if (($('input[name=file_cover_changed]').val() == 1) && ($('input[name="file_cover"]').val() == '')) {
-                    alert('Обязательно укажите файл с обложкой (изображение в формате JPG/GIF/PNG) ! ');
+                    ShowErrorMessage('Обязательно укажите файл с обложкой (изображение в формате JPG/GIF/PNG) ! ');
                     bValid = false;
                 }
                 if (($('input[name=file_title_changed]').val() == 1) &&  !strpos($('input[name="file_title"]').val() , '.pdf')) {
-                    alert('Файл с титульным листом должен быть в формате PDF! ');
+                    ShowErrorMessage('Файл с титульным листом должен быть в формате PDF! ');
                     bValid = false;
                 }
-                if (($('input[name=file_toc]').val() == 1) &&  !strpos($('input[name="file_toc"]').val() , '.pdf')) {
-                    alert('Файл с оглавлением должен быть в формате PDF! ');
+                if (($('input[name=file_toc_changed]').val() == 1) &&  !strpos($('input[name="file_toc"]').val() , '.pdf')) {
+                    ShowErrorMessage('Файл с оглавлением должен быть в формате PDF! ');
+                    bValid = false;
+                }
+                if (($('input[name=file_toc_en_changed]').val() == 1) &&  !strpos($('input[name="file_toc_en"]').val() , '.pdf')) {
+                    ShowErrorMessage('Файл с английским оглавлением должен быть в формате PDF! ');
                     bValid = false;
                 }
                 return bValid;
@@ -157,23 +181,32 @@ if ($id != -1)
             });
 
             $(".current_file_remove").on('click', function(){
-                var div_id = $(this).attr('data-name');
-                var getting = $.get('../ref.filestorage/filestorage.action.remove.php', {
-                    id: $(this).attr('data-fileid'),
-                    caller: 'books',
-                    subcaller: div_id
-                });
-                getting.done(function(data){
-                    result = $.parseJSON(data);
-                    if (result['error'] == 0)
-                    {
-                        $('#'+div_id+"_newfile_input").removeProp("disabled");
-                        $('#'+div_id+'_new').show().find("input[name="+div_id+"_changed]").attr("value","1");
-                        $('#'+div_id+'_old').hide();
-                    } else {
-                        // alert('Ошибка удаления файла!');
-                    }
-                }); // getting.done
+                // запрос на удаление делаем ТОЛЬКО для тех полей, в которых файл вставлен
+                // (то есть атрибут 'disabled' кнопки "посмотреть" не установлен (точнее typeof атрибута === undefined)
+                if ( (typeof $(this).siblings('.current_file_show').attr('disabled')) === 'undefined' )
+                {
+                    we_can_delete_file = confirm(' Действительно удалить файл '+$(this).siblings('input').val() + ' ? ');
+                } else { we_can_delete_file = true;  }
+
+                if (we_can_delete_file) {
+                    var div_id = $(this).attr('data-name');
+                    var getting = $.get('../ref.filestorage/filestorage.action.remove.php', {
+                        id: $(this).attr('data-fileid'),
+                        caller: 'books',
+                        subcaller: div_id
+                    });
+                    getting.done(function(data){
+                        result = $.parseJSON(data);
+                        if (result['error'] == 0)
+                        {
+                            $('#'+div_id+"_newfile_input").removeProp("disabled");
+                            $('#'+div_id+'_new').show().find("input[name="+div_id+"_changed]").attr("value","1");
+                            $('#'+div_id+'_old').hide();
+                        } else {
+                            // alert('Ошибка удаления файла!');
+                        }
+                    }); // getting.done
+                }
             });
         });
     </script>
@@ -261,6 +294,22 @@ if ($id != -1)
             <input type="hidden" name="file_toc_changed" id="file_toc_changed" value="0">
         </div>
     </fieldset>
+
+    <fieldset>
+        <legend>Файл английского оглавления</legend>
+        <div id="file_toc_en_old">
+            <button type="button" class="current_file_show" data-fileid="<?php echo $book['file_toc_en_data']['id'];?>" <?echo $book['file_toc_en_data']['disabled_flag']?>>Посмотреть</button>
+            <label for="file_toc_en_old_text">Текущий файл</label>
+            <input type="text" size="60" id="file_toc_en_old_text" value="<?php echo $book['file_toc_en_data']['username']?>">
+            <button type="button" data-name="file_toc_en" class="current_file_remove" data-fileid="<?php echo $book['file_toc_en_data']['id'];?>">Удалить</button>
+        </div>
+        <div id="file_toc_en_new" class="hidden">
+            <label for="file_toc_en_newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
+            <input type="file" name="file_toc_en" id="file_toc_en_newfile_input" size="60" disabled>
+            <input type="hidden" name="file_toc_en_changed" id="file_toc_en_changed" value="0">
+        </div>
+    </fieldset>
+
     <div class="clear"></div>
 
     <fieldset class="fields_area rounded">

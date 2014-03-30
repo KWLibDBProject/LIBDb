@@ -27,7 +27,7 @@ if (isset($_FILES)) {
     // И, что самое главное, в EDIT - их "разлинковывали" и добавляли новые! См логику как в article.form.edit
 
     $book_file_rels = array();
-
+    // неважно сколько файлов пришло из формы - обработаем массив с ними в цикле
     foreach ($_FILES as $a_file => $a_file_data) {
         $insert_array = array(
             'username' => $a_file_data['name'],
@@ -42,7 +42,10 @@ if (isset($_FILES)) {
 
         mysql_query($q, $link) or Die("Death on $q");
         $book_file_rels[$a_file] = mysql_insert_id() or Die("Не удалось получить id последнего добавленного файла !");
-
+        //@todo: разделить вставку контента и простых данных на файл. При переезде сторэйджа в
+        //файловое хранение будет достаточно переписать 1 функцию
+        // a_file - одно из значений из перечисления идентификаторов файлов из инпута
+        // к примеру $book_file_rels['file_toc'] = id этого файла, только что вставленного в БД
     }
     $q_rels = MakeUpdate($book_file_rels, 'books', "WHERE id=$new_id ");
     mysql_query($q_rels, $link) or Die("Death on update books table with request: ".$q_rels);

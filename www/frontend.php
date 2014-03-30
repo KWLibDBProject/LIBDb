@@ -435,6 +435,13 @@ function DB_LoadFirstLettersForSelector($lang)
 /* построение универсального запроса */
 function DB_BuildQuery($get, $lang)
 {
+    // из админки может прийти вызов на показ статей из НЕОПУБЛИКОВАННОГО сборника
+    // в этом случае в GET будет ключ 'caller=admin', в этом случае не надо устанавливать переменную $query_show_published
+    // во всех остальных случаях она = 'AND books.published=1'
+    //@todo: важно - это костыль для просмотра неопубликованных сборников на главной сайта. На деле их надо показывать в специальной форме в админке
+    // правда костыль все равно не пашет, т.к. передается не весь массив $get, а только несколько параметров --> нужен отдельный вьювер статей из сборника
+
+    // $query_show_published = (IsSet($get['caller']) && ($get['caller'] === 'admin')) ? ' ' : 'AND books.published=1';
     $q = '';
     $q_select = " SELECT DISTINCT
 articles.id
@@ -461,7 +468,7 @@ authors.id = cross_aa.author AND
     articles.id = cross_aa.article AND
         books.id = articles.book AND
             topics.id = articles.topic AND
-                articles.deleted = 0 AND books.published=1 AND topics.deleted=0 ";
+                articles.deleted = 0 {$query_show_published} AND topics.deleted=0 ";
 
     $q_final = " GROUP BY articles.title_{$lang} ORDER BY articles.id ";
 

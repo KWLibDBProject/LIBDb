@@ -27,6 +27,7 @@ if (count($_FILES)>0) {
 
     $book_file_rels = array();
 
+    // неважно сколько файлов пришло из формы - обработаем массив с ними в цикле
     foreach ($_FILES as $a_file => $a_file_data) {
 
         $insert_array = array(
@@ -38,6 +39,8 @@ if (count($_FILES)>0) {
             'collection' => 'books'
         );
         $insert_array['content'] = mysql_escape_string(floadfile($insert_array['tempname']));
+        //@todo: разделить вставку контента и простых данных на файл. При переезде сторэйджа в
+        //файловое хранение будет достаточно переписать 1 функцию
 
         $q = MakeInsert($insert_array, $ref_filestorage);
 
@@ -66,14 +69,14 @@ if (isAjaxCall()) {
 } else {
     if ($result['error'] == 0) {
         $override = array(
-            'time' => 15,
+            'time' => 10,
             'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => 'Сборник обновлен'
         );
     } else {
         $override = array(
-            'time' => 15,
+            'time' => 10,
             'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => $result['message']

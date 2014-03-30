@@ -26,11 +26,12 @@ if (!IsSet($_GET['id'])) {
             $result['message'] = 'Нельзя удалять сборник (книгу), если в нем есть статьи!';
         } else {
             // статей нет, можно удалить
-            /* вот тут нужно удалить 3 файла из таблицы STORAGE!!! */
-            $book_files = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title, file_toc FROM books WHERE id=$id"));
+            /* вот тут нужно удалить 4 файла из таблицы STORAGE!!! */
+            $book_files = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title, file_toc,file_toc_en FROM books WHERE id=$id"));
             FileStorage::removeFile($book_files['file_cover']);
             FileStorage::removeFile($book_files['file_title']);
             FileStorage::removeFile($book_files['file_toc']);
+            FileStorage::removeFile($book_files['file_toc_en']);
 
             $q = "DELETE FROM $table WHERE (id=$id)";
 

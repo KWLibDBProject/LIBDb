@@ -10,7 +10,10 @@ class FileStorage {
 
     public static function removeFile($id)
     {
-        mysql_query("DELETE FROM filestorage WHERE id=$id");
+        if ($id != -1)
+        {
+            mysql_query("DELETE FROM filestorage WHERE id=$id");
+        }
     }
 
     public static function getFile($id)

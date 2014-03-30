@@ -13,7 +13,12 @@
     <script src="../js/core.js"></script>
 
     <script type="text/javascript">
-    $(document).ready(function () {
+        function ShowErrorMessage(message)
+        {
+            alert(message);
+        }
+
+        $(document).ready(function () {
         $("#button-exit").on('click',function(event){
             window.location.href = '../ref.books.show.php';
         });
@@ -24,15 +29,19 @@
         $("#form_book").submit(function(){
             var bValid = true;
             if ($('input[name="file_cover"]').val() == '') {
-                alert('Обязательно укажите файл с обложкой (изображение в формате JPG/GIF/PNG) ! ');
+                ShowErrorMessage('Обязательно укажите файл с обложкой (изображение в формате JPG/GIF/PNG) ! ');
                 bValid = false;
             }
             if (!strpos($('input[name="file_title"]').val() , '.pdf')) {
-                alert('Файл с титульным листом должен быть в формате PDF! ');
+                ShowErrorMessage('Файл с титульным листом должен быть в формате PDF! ');
                 bValid = false;
             }
             if (!strpos($('input[name="file_toc"]').val() , '.pdf')) {
-                alert('Файл с оглавлением должен быть в формате PDF! ');
+                ShowErrorMessage('Файл с оглавлением должен быть в формате PDF! ');
+                bValid = false;
+            }
+            if (!strpos($('input[name="file_toc_en"]').val() , '.pdf')) {
+                ShowErrorMessage('Файл с английским оглавлением должен быть в формате PDF! ');
                 bValid = false;
             }
             return bValid;
@@ -96,6 +105,11 @@
             <label for="file_toc">Оглавление (PDF-file)</label>
             <input type="file" name="file_toc" id="file_toc" size="40">
             <button class="file-unlink" name="file_toc" disabled>X</button>
+        </div>
+        <div class="field">
+            <label for="file_toc_en">Оглавление (PDF-file)</label>
+            <input type="file" name="file_toc_en" id="file_toc_en" size="40">
+            <button class="file-unlink" name="file_toc_en" disabled>X</button>
         </div>
     </fieldset>
     <fieldset class="fields_area rounded">
