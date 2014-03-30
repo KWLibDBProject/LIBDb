@@ -18,6 +18,7 @@ $q = array(
     'text_uk' => mysql_escape_string($_POST['text_uk']),
     'date_year' => substr(mysql_escape_string($_POST['date_add']),6,4)
 );
+$q['timestamp'] = ConvertDateToTimestamp($q['date_add']);
 
 $qstr = MakeUpdate($q, $ref_name, "WHERE id=$id");
 

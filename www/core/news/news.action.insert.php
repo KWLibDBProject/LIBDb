@@ -1,5 +1,4 @@
 <?php
-
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
@@ -18,6 +17,8 @@ $q = array(
     'text_uk' => mysql_escape_string($_POST['text_uk']),
     'date_year' => substr(mysql_escape_string($_POST['date_add']),6,4)
 );
+$q['timestamp'] = ConvertDateToTimestamp($q['date_add']);
+
 $qstr = MakeInsert($q, $ref_name);
 
 if ($res = mysql_query($qstr, $link)) {

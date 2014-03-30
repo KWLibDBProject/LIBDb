@@ -726,7 +726,7 @@ function DB_LoadBanners()
 загружает массив из заголовка+даты последних новостей */
 function DB_LoadLastNews($lang, $count=2)
 {
-    $query = "SELECT id, title_{$lang} AS title, date_add FROM news ORDER BY date_add DESC LIMIT {$count}";
+    $query = "SELECT id, title_{$lang} AS title, date_add FROM news ORDER BY `timestamp` DESC LIMIT {$count}";
     $res = mysql_query($query) or die("mysql_query_error: ".$query);
     $res_numrows = @mysql_num_rows($res);
     $i = 1;

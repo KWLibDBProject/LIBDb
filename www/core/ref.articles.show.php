@@ -24,6 +24,7 @@ if (!isLogged()) header('Location: /core/');
         var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
         var topicsList = preloadOptionsList('ref_topics/ref.topics.action.getoptionlist.php');
+        var url_extended = "ref_articles/articles.action.list.php";
 
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
@@ -37,17 +38,17 @@ if (!isLogged()) header('Location: /core/');
             });
 
             // если хэш установлен - нужно загрузить статьи согласно выбранным позициям
-            url_extended = "ref_articles/articles.action.list.php";
-
             wlh = (window.location.hash).substr(1);
             if (wlh !== '') {
-                // wlh = '?'+wlh;
                 query = "?";
                 query+="author="+$('select[name="with_author"]').val();
                 query+="&topic="+$('select[name="with_topic"]').val();
                 query+="&book="+$('select[name="with_book"]').val();
-                $("#articles_list").empty().load(url_extended+query);
+            } else {
+                query = '';
             }
+            // загружаем статьи согласно стартовым селекторам
+            $("#articles_list").empty().load(url_extended+query);
 
             $("#button-newarticle").on('click',function(){
                 location.href = 'ref_articles/articles.form.add.php';

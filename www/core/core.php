@@ -192,4 +192,31 @@ function returnNewsOptionString($row, $lang, $withoutid) // © Thomas Moroh
     return $id."$name $title";
 }
 
+/*
+sell also:
+http://www.tools4noobs.com/online_php_functions/date_parse/
+http://php.fnlist.com/date_time/mktime
+http://www.php.net/manual/ru/function.mktime.php
+*/
+
+function ConvertDateToArray($str_date)
+{
+    if (function_exists('date_parse_from_format')) {
+        $date_as_array = date_parse_from_format('d/m/Y',$str_date);
+    } else {
+        $date_as_array = date_parse($str_date);
+    }
+    return $date_as_array;
+}
+
+function ConvertDateToTimestamp($str_date, $format="d/m/Y")
+{
+    if (function_exists('date_parse_from_format')) {
+        $date_array = date_parse_from_format('d/m/Y',$str_date);
+    } else {
+        $date_array = date_parse($str_date);
+    }
+    return mktime($date_array['hour'], $date_array['minute'], $date_array['second'], $date_array['month'], $date_array['day'], $date_array['year']);
+}
+
 ?>
