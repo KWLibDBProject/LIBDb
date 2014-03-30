@@ -55,7 +55,7 @@ if ($ref_numrows > 0)
     <td class="centred_cell">{$book['contentpages']}    </td>
     <td class="centred_cell">{$book_ready}              </td>
     <td class="centred_cell">
-        <a href="/?fetch=articles&with=book&id={$book['book_id']}" target="_blank">
+        <a href="/core/ref.articles.show.php#with_book={$book['book_id']}" target="_blank">
             {$book['book_articles_count']}
         </a>
     </td>

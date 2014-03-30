@@ -15,6 +15,7 @@ if (!isLogged()) header('Location: /core/');
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/core.js"></script>
+    <script src="/tpl/frontend.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
@@ -30,7 +31,23 @@ if (!isLogged()) header('Location: /core/');
             BuildSelector('with_book',booksList,0);
             BuildSelector('with_topic',topicsList,0);
 
-            $("#articles_list").empty().load("ref_articles/articles.action.list.php");
+            setSelectorsByHash(".search_selector");
+            $(".hash_selectors").on('change', '.search_selector', function(){
+                setHashBySelectors();
+            });
+
+            // если хэш установлен - нужно загрузить статьи согласно выбранным позициям
+            url_extended = "ref_articles/articles.action.list.php";
+
+            wlh = (window.location.hash).substr(1);
+            if (wlh !== '') {
+                // wlh = '?'+wlh;
+                query = "?";
+                query+="author="+$('select[name="with_author"]').val();
+                query+="&topic="+$('select[name="with_topic"]').val();
+                query+="&book="+$('select[name="with_book"]').val();
+                $("#articles_list").empty().load(url_extended+query);
+            }
 
             $("#button-newarticle").on('click',function(){
                 location.href = 'ref_articles/articles.form.add.php';
@@ -51,16 +68,19 @@ if (!isLogged()) header('Location: /core/');
                 query+="author="+$('select[name="with_author"]').val();
                 query+="&topic="+$('select[name="with_topic"]').val();
                 query+="&book="+$('select[name="with_book"]').val();
-                $("#articles_list").empty().load("ref_articles/articles.action.list.php"+query);
+                $("#articles_list").empty().load(url_extended+query);
             });
+
             $("#button-reset-selection").on('click',function(){
                 $('select[name="with_author"]').val(0);
                 $('select[name="with_topic"]').val(0);
                 $('select[name="with_book"]').val(0);
             });
+
             $("#button-show-all").on('click',function(){
-                $("#articles_list").empty().load("ref_articles/articles.action.list.php");
+                $("#articles_list").empty().load(url_extended);
             });
+
 
         });
     </script>
@@ -70,20 +90,20 @@ if (!isLogged()) header('Location: /core/');
 <button id="button-exit" class="button-large button-bold"><<< НАЗАД </button>
 <button id="button-newarticle" class="button-large">Добавить статью </button>
 <hr>
-<fieldset>
+<fieldset class="hash_selectors">
     <legend>Критерии отбора</legend>
     <dl>
         <dt>Автор:</dt>
         <dd>
-            <select name="with_author"><option value="0">ЛЮБОЙ</option></option></select>
+            <select name="with_author" class="search_selector"><option value="0">ЛЮБОЙ</option></option></select>
         </dd>
         <dt>Тематический раздел: </dt>
         <dd>
-            <select name="with_topic"><option value="0">ЛЮБОЙ</option></select>
+            <select name="with_topic" class="search_selector"><option value="0">ЛЮБОЙ</option></select>
         </dd>
         <dt>Сборник (книга):</dt>
         <dd>
-            <select name="with_book"><option value="0">ЛЮБОЙ</option></select>
+            <select name="with_book" class="search_selector"><option value="0">ЛЮБОЙ</option></select>
         </dd>
     </dl>
     <button id="button-show-withselection" class="button-large">Показать выбранное</button>
