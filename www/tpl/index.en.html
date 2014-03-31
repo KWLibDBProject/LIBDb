@@ -114,7 +114,7 @@
                     </ul>
                 </div>
                 <!-- контакты тут -->
-                <div class="left-block-contacts">
+                <div id="left-block-contacts">
                     <hr>
                     <em>Assistant Editor</em><br>
                     <strong>Olga Borisovna Babiychuk</strong><br>
@@ -153,6 +153,11 @@
                     [ <a href="?fetch=articles&with=all">All articles</a> ]
                     [ <a href="?fetch=authors&with=all">All authors</a> ]
                 </small>
+                <br>
+                <div id="copyright">
+                    [© Одесский национальный политехнический университет, 2014.
+                    Любое использование информации со страниц сайта возможно только при условии указания ссылки на источник!]
+                </div>
             </td>
         </tr>
     </table>
@@ -160,5 +165,6 @@
 <div id="debug_section">
     <!--{debug}-->
 </div>
+<?php include_once("analyticstracking.php") ?>
 </body>
 </html>
