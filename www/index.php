@@ -368,16 +368,25 @@ switch ($fetch) {
     }
     default: {
         // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
-        // + ? последняя новость
         $filename = $tpl_path.'/default/default.'.$site_language;
         // default page
-        $r_last = mysql_fetch_assoc(mysql_query("SELECT id,title,DATE FROM books ORDER BY title desc"));
-        // out data
         $inner_html = new kwt($filename.".html");
         $inner_html->override( array (
-            'static_page_content' => FE_GetStaticPage('about', $site_language),
-            'last_book_content' => FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery(array('book'=> $r_last['id'], 'lang' => $site_language), $site_language, 'no'), $site_language)
+            'static_page_content'   => FE_GetStaticPage('about', $site_language)
         ));
+        // load last book
+        $r_last = DB_LoadLastBookInfo();
+        if (count($r_last) != 0) {
+            $inner_html->override( array(
+                'last_book_content'     => FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery(array('book'=> $r_last['id'], 'lang' => $site_language), $site_language, 'no'), $site_language),
+                'last_book_title_string'=> "{$r_last['title']}, {$r_last['year']}",
+                'last_book_cover_id'    => $r_last['file_cover'],
+                'last_book_title_id'    => $r_last['file_title'],
+                'last_book_toc_id'      => $r_last['file_toc'],
+                'last_book_toc_en_id'   => $r_last['file_toc_en'],
+            ));
+        }
+
         $inner_html->contentstart();
         $maincontent_html = $inner_html->getcontent();
 

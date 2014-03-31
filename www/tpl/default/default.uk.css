@@ -41,6 +41,9 @@
 /* books - сборники*/
 /* "main.articles.books.css"; */
 /* верхний блок с тремя картинками-ссылками - расширенная инфа о каждом сборнике */
+.books-extended-info{
+    border: none;
+}
 .books-extended-info ul{
     margin: 0; padding: 4px;
     text-align: center;
@@ -65,4 +68,10 @@
 }
 .books-extended-info a:visited {
     color: #483d8b
+}
+
+/* Заголовок последнего сборника */
+.last-book-title {
+    text-align: center;
+    color: navy;
 }

@@ -11,13 +11,19 @@ $id = IsSet($_GET['id']) ? $_GET['id'] : Die();
 $link = ConnectDB();
 
 $q = "SELECT `content`, `filesize`, `username` FROM $ref_filestorage WHERE `id`='$id'";
-$result = mysql_query($q, $link) or Die("On $q");
+$result = mysql_query($q, $link);// or Die("On $q");
 
-if (mysql_num_rows($result) == 1) {
-    $record = mysql_fetch_assoc($result);
-    $filename = $record['username'];
-    $filesize = $record['filesize'];
-    $filecontent = $record['content'];
+if ($result !== FALSE) {
+    if (mysql_num_rows($result) == 1) {
+        $record = mysql_fetch_assoc($result);
+        $filename = $record['username'];
+        $filesize = $record['filesize'];
+        $filecontent = $record['content'];
+    } else {
+        $filename = 'file not found.pdf';
+        $filesize = 632;
+        $filecontent = base64_decode($simple_pdf);
+    }
 } else {
     $filename = 'file not found.pdf';
     $filesize = 632;

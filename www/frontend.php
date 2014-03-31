@@ -782,4 +782,19 @@ function ConvertDateByLang($date_as_string, $lang)
     $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
     return $return;
 }
+
+/* возвращает асс.массив из базы с информацией о ПОСЛЕДНЕМ опубликованном сборнике
+возвращает пустой массив, если такого сборника нет!
+*/
+function DB_LoadLastBookInfo()
+{
+    $r = mysql_query("SELECT * FROM books WHERE published=1 ORDER BY timestamp desc LIMIT 1");
+    if (@mysql_num_rows($r)==1) {
+        $ret = mysql_fetch_assoc($r);
+    } else {
+        $ret = array();
+    }
+    return $ret;
+}
+
 ?>
