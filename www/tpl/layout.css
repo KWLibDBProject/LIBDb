@@ -35,10 +35,12 @@ BODY {
 }
 .t-logo-menu {
 }
+
 #menubar {
     position: relative;
     bottom: 0;
 }
+
 .leftblock {
     vertical-align: top;
 }
@@ -85,4 +87,7 @@ BODY {
 
 
 /* ============================================================================ */
+.left-block-contacts {
+    margin-top: 5em;
+}
 /* ==================================== END =================================== */

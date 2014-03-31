@@ -32,7 +32,6 @@ function FE_GetStaticPage($alias, $lang)
 /* загружает из базы рубрики, отдает ассоциативный массив вида [id -> title] */
 function DB_LoadTopics($lang)
 {
-    global $MESSAGES;
     $q = "SELECT `id`, `title_{$lang}` AS title FROM topics WHERE `deleted`=0";
     $r = mysql_query($q);
     $ret = array();
@@ -50,7 +49,6 @@ function DB_LoadTopics($lang)
 Принимает ассоциативный массив с данными и язык вывода */
 function FE_PrintTopics($data, $lang)
 {
-    global $MESSAGES;
     $ret = '';
     $ret .= <<<FE_PrintTopics_Start
 FE_PrintTopics_Start;
@@ -139,7 +137,6 @@ FE_PrintBooks_End;
 */
 function DB_LoadAuthorInformation_ById($id, $lang)
 {
-    global $MESSAGES_;
     $ret = '';
     $q = "SELECT * FROM `authors` WHERE id=$id";
     $r = mysql_query($q);
