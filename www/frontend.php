@@ -772,14 +772,14 @@ function ConvertDateByLang($date_as_string, $lang)
 {
     /* $return = date("d M Y", strtotime($date_as_string)); */
     global $TRANSLATED_MONTHS;
-
     if (function_exists('date_parse_from_format')) {
-        $date_as_array = date_parse_from_format('d/m/Y',$date_as_string);
-        $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
+        $date_as_array = date_parse_from_format('d.m.Y',$date_as_string);
+        // $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
     } else {
         $date_as_array = date_parse($date_as_string);
-        $return = "{$date_as_array['month']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['day'] ]} {$date_as_array['year']}";
+        // $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
     }
+    $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
     return $return;
 }
 ?>

@@ -8,17 +8,17 @@ $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 
 $link = ConnectDB();
 $q = array(
-    'date_add' => mysql_escape_string($_POST['date_add']),
-    'comment' => mysql_escape_string($_POST['comment']),
-    'title_en' => mysql_escape_string($_POST['title_en']),
-    'title_ru' => mysql_escape_string($_POST['title_ru']),
-    'title_uk' => mysql_escape_string($_POST['title_uk']),
-    'text_en' => mysql_escape_string($_POST['text_en']),
-    'text_ru' => mysql_escape_string($_POST['text_ru']),
-    'text_uk' => mysql_escape_string($_POST['text_uk']),
-    'date_year' => substr(mysql_escape_string($_POST['date_add']),6,4)
+    'date_add'      => mysql_escape_string($_POST['date_add']),
+    'comment'       => mysql_escape_string($_POST['comment']),
+    'title_en'      => mysql_escape_string($_POST['title_en']),
+    'title_ru'      => mysql_escape_string($_POST['title_ru']),
+    'title_uk'      => mysql_escape_string($_POST['title_uk']),
+    'text_en'       => mysql_escape_string($_POST['text_en']),
+    'text_ru'       => mysql_escape_string($_POST['text_ru']),
+    'text_uk'       => mysql_escape_string($_POST['text_uk']),
+    'date_year'     => substr(mysql_escape_string($_POST['date_add']),6,4),
+    'timestamp'     => ConvertDateToTimestamp(mysql_escape_string($_POST['date_add']))
 );
-$q['timestamp'] = ConvertDateToTimestamp($q['date_add']);
 
 $qstr = MakeUpdate($q, $ref_name, "WHERE id=$id");
 
