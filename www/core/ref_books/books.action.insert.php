@@ -10,12 +10,13 @@ $ref_filestorage = 'filestorage';
 $link = ConnectDB();
 
 $q = array(
-    'title' => mysql_escape_string($_POST['book_title']),
-    'date' => mysql_escape_string($_POST['book_date']),
-    'contentpages' => mysql_escape_string($_POST['book_contentpages']),
-    'published' => mysql_escape_string($_POST['is_book_ready']),
+    'title'         => mysql_escape_string($_POST['book_title']),
+    'date'          => mysql_escape_string($_POST['book_date']),
+    'contentpages'  => mysql_escape_string($_POST['book_contentpages']),
+    'published'     => mysql_escape_string($_POST['is_book_ready']),
+    'year'          => substr(mysql_escape_string($_POST['book_date']), 6, 4),
+    'timestamp'     => ConvertDateToTimestamp(mysql_escape_string($_POST['book_date']))
 );
-$q['year'] = substr($q['date'],6,4);
 
 $qstr = MakeInsert($q, $ref_name);
 $res = mysql_query($qstr, $link) or Die("Невозможно вставить данные в базу  ".$qstr);

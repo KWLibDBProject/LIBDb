@@ -212,11 +212,11 @@ function ConvertDateToArray($str_date)
 function ConvertDateToTimestamp($str_date, $format="d/m/Y")
 {
     if (function_exists('date_parse_from_format')) {
-        $date_array = date_parse_from_format('d/m/Y',$str_date);
+        $date_array = date_parse_from_format('d.m.Y',$str_date);
     } else {
         $date_array = date_parse($str_date);
     }
-    return mktime($date_array['hour'], $date_array['minute'], $date_array['second'], $date_array['month'], $date_array['day'], $date_array['year']);
+    return mktime(12, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 }
 
 ?>

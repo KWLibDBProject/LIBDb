@@ -161,9 +161,9 @@ if ($id != -1)
             $("#book_datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd/mm/yy',
-                minDate: '01/01/2003',
-                maxDate: '01/01/2020',
+                dateFormat: 'dd.mm.yy',
+                minDate: '01.01.2003',
+                maxDate: '01.01.2020',
                 showButtonPanel: true
             });
             $("#book_title").focus();

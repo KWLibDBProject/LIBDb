@@ -13,7 +13,8 @@ $query = "SELECT books.id AS book_id, books.title, books.date, contentpages, pub
  COUNT(articles.book) AS book_articles_count
  FROM books LEFT JOIN articles ON
  books.id=articles.book
- GROUP BY books.id, books.title, books.year";
+ GROUP BY books.id, books.title, books.year
+ ORDER BY books.title DESC";
 
 $res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$query);
 $ref_numrows = @mysql_num_rows($res) ;
