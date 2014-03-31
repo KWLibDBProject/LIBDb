@@ -380,16 +380,15 @@ fe_printauthors_estuff_start;
             $name = preg_replace('/^([^\s]+)/','<span class="authors-estufflist-firstword">\1</span>',$name); // спасибо Мендору
 
             $title = $an_author['title_'.$lang];
-            $title = ($title != '') ? ",<br><div class=\"smaller\">{$title}</div>" : "";
+            $title = (trim($title) != '') ? "<br><div class=\"smaller\">{$title}</div>" : ""; // перед <BR> была запятая, без нее красивее
 
             $workplace = $an_author['workplace_'.$lang];
             $workplace = ($title != '') ? "<div class=\"smaller\">{$workplace}</div>" : "";
 
             $email = ($an_author['email'] != '') ? "<strong>E-Mail: </strong>{$an_author['email']}" : '';
             $return .= <<<fe_printauthors_estuff_each
-            <li><a class="authors-estufflist-name" href=" href="/fetch=authors&with=info&id={$an_author['id']}">{$name}</a>{$title}{$workplace}{$email}</li>
+            <li><a class="authors-estufflist-name" href="/?fetch=authors&with=info&id={$an_author['id']}">{$name}</a>{$title}{$workplace}{$email}</li>
 fe_printauthors_estuff_each;
-            // <li><span class="authors-estufflist-name"><a href="/fetch=authors&with=info&id={$an_author['id']}">{$name}</a></span>{$title}{$workplace}{$email}</li>\r\n
         }
     }
 
