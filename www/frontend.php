@@ -387,8 +387,9 @@ fe_printauthors_estuff_start;
 
             $email = ($an_author['email'] != '') ? "<strong>E-Mail: </strong>{$an_author['email']}" : '';
             $return .= <<<fe_printauthors_estuff_each
-            <li><span class="authors-estufflist-name">{$name}</span>{$title}{$workplace}{$email}</li>\r\n
+            <li><a class="authors-estufflist-name" href=" href="/fetch=authors&with=info&id={$an_author['id']}">{$name}</a>{$title}{$workplace}{$email}</li>
 fe_printauthors_estuff_each;
+            // <li><span class="authors-estufflist-name"><a href="/fetch=authors&with=info&id={$an_author['id']}">{$name}</a></span>{$title}{$workplace}{$email}</li>\r\n
         }
     }
 

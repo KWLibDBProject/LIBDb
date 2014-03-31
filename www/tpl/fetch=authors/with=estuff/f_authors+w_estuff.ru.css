@@ -1,6 +1,23 @@
 /* "main.authors.estuff.css"; /* authors/estuff/ */
 .authors-list-as-estuff {}
 
+.authors-estufflist-name {
+    text-decoration: none;
+}
+.authors-estufflist-name:hover {
+    text-decoration: underline;
+}
+
+.authors-estufflist-name:visited {
+    text-decoration: none;
+    color: navy;
+}
+
+.authors-estufflist-firstword { /*выделение фамилии (первого слова в ФИО)*/
+    color: #2a8eb8;
+    font-weight: bold;
+}
+
 #estuff h1, h2, h3 {
     text-align: center;
 }
@@ -23,11 +40,6 @@
 }
 
 .authors-inlist-name {}
-
-.authors-estufflist-firstword { /*выделение фамилии (первого слова в ФИО)*/
-    color: #2a8eb8;
-    font-weight: bold;
-}
 
 #estuff p {
     margin: 0;
