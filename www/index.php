@@ -109,15 +109,15 @@ switch ($fetch) {
                 $inner_html->override( array (
                     // 'es_authors_list' => $all_authors_plainlist,
                     // главный редактор = 5
-                    'estuff_main_editor' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 5), $site_language),
+                    'estuff_main_editor'        => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 5), $site_language),
                     // замглавного редактора = 4
-                    'estuff_main_subeditors' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 4), $site_language),
+                    'estuff_main_subeditors'    => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 4), $site_language),
                     // редакционная коллегия = 3
-                    'estuff_local_editors' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 3), $site_language),
+                    'estuff_local_editors'      => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 3), $site_language),
                     // международная редакционная коллегия = 1
-                    'estuff_remote_editors' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 1), $site_language),
+                    'estuff_remote_editors'     => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 1), $site_language),
                     // редакторы = 6
-                    'estuff_simple_editors' => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 6), $site_language),
+                    'estuff_simple_editors'     => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 6), $site_language),
                 ));
                 $inner_html->contentstart();
                 $maincontent_html = $inner_html->getcontent();
@@ -205,12 +205,13 @@ switch ($fetch) {
 
                 $inner_html = new kwt($filename.'.html');
                 // load extended book fields by ID -- @todo: move to function !!!
-                $book_row = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title, file_toc FROM books WHERE id={$_GET['id']}"));
+                $book_row = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title, file_toc, file_toc_en FROM books WHERE id={$_GET['id']}"));
 
                 $inner_html->override( array (
-                    'file_cover' => $book_row['file_cover'],
-                    'file_title' => $book_row['file_title'],
-                    'file_toc' => $book_row['file_toc']
+                    'file_cover'    => $book_row['file_cover'],
+                    'file_title'    => $book_row['file_title'],
+                    'file_toc'      => $book_row['file_toc'],
+                    'file_toc_en'   => $book_row['file_toc_en']
                 ));
                 $inner_html->contentstart();
                 $maincontent_html = $inner_html->getcontent();
@@ -238,14 +239,14 @@ switch ($fetch) {
                 $article_authors = FE_PrintAuthors_ByArticle(DB_LoadAuthors_ByArticle($id, $site_language, 'yes'), $site_language);
 
                 $inner_html->override( array (
-                    'article-title' => $article_info['title_'.$site_language],
-                    'article-abstract' => $article_info['abstract_'.$site_language],
-                    'article-authors-list' => $article_authors, // список авторов, писавших статью
-                    'article-keywords' => $article_info['keywords_'.$site_language],
-                    'article-book-title' => $article_info['btitle'],
-                    'article-book-year' => $article_info['byear'],
-                    'article-pdfid' => $article_info['pdfid'],
-                    'article-refs' => $article_info['refs_'.$site_language]
+                    'article-title'         => $article_info['title_'.$site_language],
+                    'article-abstract'      => $article_info['abstract_'.$site_language],
+                    'article-authors-list'  => $article_authors, // список авторов, писавших статью
+                    'article-keywords'      => $article_info['keywords_'.$site_language],
+                    'article-book-title'    => $article_info['btitle'],
+                    'article-book-year'     => $article_info['byear'],
+                    'article-pdfid'         => $article_info['pdfid'],
+                    'article-refs'          => $article_info['refs_'.$site_language]
                 ));
                 $override['meta_keywords'] = $article_info['keywords_'.$site_language]; // GLOBAL KEYWORDS
 
@@ -322,9 +323,9 @@ switch ($fetch) {
                 $the_news_item = DB_LoadNewsItem($id, $site_language);
 
                 $inner_html->override( array (
-                    'news_item_title' => $the_news_item['title'],
-                    'news_item_date' => $the_news_item['date_add'],
-                    'news_item_text' => $the_news_item['text']
+                    'news_item_title'   => $the_news_item['title'],
+                    'news_item_date'    => $the_news_item['date_add'],
+                    'news_item_text'    => $the_news_item['text']
                 ));
                 $inner_html->contentstart();
                 $maincontent_html = $inner_html->getcontent();
