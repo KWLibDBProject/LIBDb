@@ -94,3 +94,8 @@ BODY {
     font-size: small;
 }
 /* ==================================== END =================================== */
+/* hide copyleft a-href */
+a.copyleft, a.copyleft:hover, a.copyleft:visited {
+    text-decoration: none;
+    color: black
+}

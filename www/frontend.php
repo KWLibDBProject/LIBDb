@@ -117,7 +117,9 @@ FE_PrintBooks_ItemStart;
         foreach ($year_books as $id => $book)
         {
             $ret .= <<<FE_PrintBooks_ItemEach
-<li class="books-list-eachbook"><a href="?fetch=articles&with=book&id={$id}"> {$book['title']}</a>  ({$book['count']})</li>
+<li class="books-list-eachbook">
+    <a href="?fetch=articles&with=book&id={$id}"> {$book['title']}</a>&nbsp;&nbsp;&nbsp;({$book['count']})
+</li>
 
 FE_PrintBooks_ItemEach;
         }
@@ -679,7 +681,7 @@ function DB_LoadNewsItem($id, $lang)
 используется в шаблоне */
 function DB_LoadNewsListTOC($lang)
 {
-    $query = "SELECT id, title_{$lang} AS title, date_add AS date FROM news";
+    $query = "SELECT id, title_{$lang} AS title, date_add AS date FROM news ORDER BY `timestamp` DESC LIMIT 15";
     if ($r = mysql_query($query)) {
         while ($row = mysql_fetch_assoc($r)) {
             $ret[ $row['id'] ] = $row;
@@ -793,5 +795,6 @@ function DB_LoadLastBookInfo()
     }
     return $ret;
 }
+
 
 ?>

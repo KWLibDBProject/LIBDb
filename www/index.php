@@ -24,7 +24,7 @@ $link = ConnectDB();
 $override['rubrics'] = FE_PrintTopics(DB_LoadTopics($site_language),$site_language);
 $override['books'] = FE_PrintBooks(DB_LoadBooks($site_language),$site_language);
 $override['banners'] = FE_PrintBanners(DB_LoadBanners());
-$override['last_news_shortlist'] = FE_PrintLastNews(DB_LoadLastNews($site_language,2));
+$override['last_news_shortlist'] = FE_PrintLastNews(DB_LoadLastNews($site_language,3));
 
 // Main switch
 
@@ -52,7 +52,7 @@ switch ($fetch) {
                     'author_workplace'      => $author_information['author_workplace'],
                     'author_bio'            => $author_information['author_bio'],
                     'author_photo_id'       => $author_information['author_photo_id'],
-                    'author_photo_link'     => ($author_information['author_photo_id'] == -1) ? "/images/no_photo.png" : "core/getimage.php?id={$author_information['author_photo_id']}"
+                    'author_photo_link'     => ($author_information['author_photo_id'] == -1) ? "/images/no_photo_{$site_language}.png" : "core/getimage.php?id={$author_information['author_photo_id']}"
                 ));
                 $inner_html->contentstart();
                 $maincontent_html = $inner_html->getcontent();
