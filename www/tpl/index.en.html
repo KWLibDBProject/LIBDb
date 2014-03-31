@@ -149,17 +149,21 @@
         </tr>
         <tr>
             <td colspan="3">
-                <small>
-                    [ <a href="/core" class="copyleft">©</a> KarelWintersky ]
-                    [ <a href="?fetch=articles&with=all">All articles</a> ]
-                    [ <a href="?fetch=authors&with=all">All authors</a> ]
-                </small>
-                <br>
-                <div id="copyright">
-                    [ © Одесский национальный политехнический университет, 2014.
-                    Любое использование информации со страниц сайта возможно только при условии указания ссылки на источник!]
+                <div class="yandexmetrika">
+                    <?php include_once("yandexmetrika.php") ?>
                 </div>
-                <?php include_once("yandexmetrika.php") ?>
+                <div class="copylefts">
+                    <small>
+                        [ <a href="/core" class="copyleft">©</a> KarelWintersky ]
+                        [ <a href="?fetch=articles&with=all">Всi статтi</a> ]
+                        [ <a href="?fetch=authors&with=all">Всi автори</a> ]
+                    </small>
+                    <br>
+                    <small>
+                        [ © Одесский национальный политехнический университет, 2014.
+                        Любое использование информации со страниц сайта возможно только при условии указания ссылки на источник!]
+                    </small>
+                </div>
             </td>
         </tr>
     </table>

@@ -90,12 +90,21 @@ BODY {
 #left-block-contacts {
     margin-top: 5em;
 }
-#copyright {
-    font-size: small;
-}
 /* ==================================== END =================================== */
 /* hide copyleft a-href */
 a.copyleft, a.copyleft:hover, a.copyleft:visited {
     text-decoration: none;
     color: black
+}
+/* Copyleft blocks */
+.yandexmetrika {
+    display: inline-table;
+    margin-right: 5px;
+    padding: 6px;
+    float: left;
+}
+.copylefts {
+    display: inline-table;
+    margin-right: 5px;
+    float: left;
 }
