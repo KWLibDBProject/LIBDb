@@ -98,7 +98,6 @@ switch ($fetch) {
 
                 break;
             } // end case all
-            //@todo: редколлегию переработать
             case 'estaff': {
                 $filename = $tpl_path.'/fetch=authors/with=estuff/f_authors+w_estuff.'.$site_language;
 

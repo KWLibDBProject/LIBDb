@@ -4,8 +4,6 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 require_once('../core.filestorage.php');
 
-$ref_filestorage = 'filestorage';
-
 $result['message'] = '';
 $result['error'] = 0;
 $id = IsSet($_GET['id']) ? $_GET['id'] : Die("No id!");

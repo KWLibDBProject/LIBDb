@@ -1,14 +1,10 @@
 <?php
-//@todo: ПЕРЕЙТИ НА filestorage.action.remove!!!
-
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 require_once('../core.filestorage.php');
 
 $id = IsSet($_GET['id']) ? $_GET['id'] : Die();
-
-$ref_filestorage = 'filestorage';
 
 // удалить из таблицы filestorage
 
