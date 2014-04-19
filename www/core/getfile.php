@@ -20,7 +20,7 @@ if ($result !== FALSE) {
         $filesize = $record['filesize'];
         $filecontent = $record['content'];
     } else {
-        $filename = 'file not found.pdf';
+        $filename = 'error_multiply_files_found.pdf';
         $filesize = 632;
         $filecontent = base64_decode($simple_pdf);
     }

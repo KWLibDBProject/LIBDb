@@ -2,12 +2,11 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.filestorage.php');
 
 $SID = session_id();
 if(empty($SID)) session_start();
 if (!isLogged()) header('Location: /core/');
-
-$ref_filestorage = 'filestorage';
 
 if (isset($_GET['id']))
 {
@@ -51,19 +50,17 @@ if ($numarticles == 1)
     $the_currentBook = $the_article['book'];
     $the_currentTopic = $the_article['topic'];
 
-// получаем ПДФ-файл
-    $qp = "SELECT id,username,filesize FROM $ref_filestorage WHERE relation=$id";
-    $rp = mysql_query($qp,$link);
-    $np = @mysql_num_rows($rp);
-    if ($np > 0) {
-        $the_file = mysql_fetch_assoc($rp);
-    }
+    // получаем ПДФ-файл
+    $the_file = FileStorage::getFileInfo($the_article['pdfid']);
 } else {
     $the_currAuthList = '{ }';
     $the_loadedAuthorsNum = 0;
     $the_currentBook = -1;
     $the_currentTopic = -1;
 }
+
+
+
 CloseDB($link);
 ?>
 <!DOCTYPE HTML>

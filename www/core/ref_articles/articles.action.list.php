@@ -2,12 +2,10 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
-
-$ref_filestorage = 'filestorage';
+require_once('../core.filestorage.php');
 
 /* файл вызывается черех аякс лоадер
 Варианты аргументов:
-
 author - показать статьи АВТОРА
 topic - показать статьи в топике
 book - показать статьи в сборнике
@@ -38,6 +36,7 @@ $query .= " ORDER BY articles.id";
 $res = mysql_query($query) or die("Death on : $query");
 $articles_count = @mysql_num_rows($res);
 
+$all_articles = array();
 if ($articles_count>0) {
     while ($an_article = mysql_fetch_assoc($res))
     {
@@ -45,15 +44,11 @@ if ($articles_count>0) {
         $all_articles[$id] = $an_article; // ВСЯ статья
 
         // получить информацию о связанной ПДФке
-        $qp = "SELECT id, username, filesize FROM $ref_filestorage WHERE relation = $id";
-        $rp = mysql_query($qp) or Die("Death on $qp");
-        if (@mysql_num_rows($rp) > 0)
-        {
-            $all_articles[$id]['pdffile'] = mysql_fetch_assoc($rp);
-        }
+
+        $all_articles[$id]['pdffile'] = FileStorage::getFileInfo($an_article['pdfid']);
 
         // получить информацию об авторах
-        $r_auths = mysql_query("SELECT authors.name_ru,authors.title_ru,authors.id FROM authors,cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
+        $r_auths = mysql_query("SELECT authors.name_ru, authors.title_ru, authors.id FROM authors, cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
         $r_auths_count = @mysql_num_rows($r_auths);
 
         if ($r_auths_count>0)

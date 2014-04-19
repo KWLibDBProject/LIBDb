@@ -17,7 +17,7 @@ $q = "DELETE FROM articles WHERE id=$id";
 mysql_query($q,$link) or Die("Death at $q");
 
 // удалить пдфку из пдфдата
-FileStorage::removeFileByRel($id);
+FileStorage::removeFileByRel($id, 'articles'); // обязательно указать коллекцию, иначе удалим не то
 
 // удалить соответствия из cross_aa
 $q = "DELETE FROM cross_aa WHERE article=$id";

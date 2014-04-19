@@ -2,12 +2,11 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.filestorage.php');
 
 $SID = session_id();
 if(empty($SID)) session_start();
 if (!isLogged()) header('Location: /core/');
-
-$ref_filestorage = 'filestorage';
 
 $result['message'] = '';
 $result['error'] = 0;
@@ -41,28 +40,12 @@ $q = array(
 // теперь нам нужно вставить данные в БАЗУ (пока что с учетом вставки файла в БЛОБ)
 $qstr = MakeInsert($q,'articles');
 $res = mysql_query($qstr, $link) or Die("Невозможно вставить данные в базу  ".$qstr);
-$new_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");
+$article_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");
 
 if (IsSet($_FILES)) {
 
-    $insert_data = array(
-        'username' => $pdf_username = $_FILES['pdffile']['name'],
-        'tempname' => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\',$_FILES['pdffile']['tmp_name']) : $_FILES['pdffile']['tmp_name'],
-        'filesize' => $_FILES['pdffile']['size'],
-        'relation' => $new_id,
-        'filetype' => $_FILES['pdffile']['type'],
-        'collection' => 'articles'
-    );
+    FileStorage::addFile($_FILES['pdffile'], $article_id, 'articles', 'pdfid');
 
-    $insert_data['content'] = mysql_escape_string(floadpdf($insert_data['tempname']));
-
-    $q = MakeInsert($insert_data, $ref_filestorage);
-
-    mysql_query($q, $link) or Die("Death on $q");
-    $pdf_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");
-
-    $q = "UPDATE articles SET pdfid=$pdf_id  WHERE id=$new_id";
-    mysql_query($q, $link) or Die("Death on $q");
 } else {
     $result['error'] = 1;
     $result['message'] .= "Не выбран файл для загрузки или ошибка передачи данных! <br>\r\n";
@@ -73,7 +56,7 @@ if (IsSet($_FILES)) {
 if (IsSet($_POST['authors'])) {
     $authors = $_POST['authors'];
     foreach ($authors as $n => $author) {
-        $qa = "INSERT INTO cross_aa (author,article) VALUES ($author, $new_id)";
+        $qa = "INSERT INTO cross_aa (author,article) VALUES ($author, $article_id)";
         mysql_query($qa , $link) or Die('error at '.$qa);
     }
 } else {

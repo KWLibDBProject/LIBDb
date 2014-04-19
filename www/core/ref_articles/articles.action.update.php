@@ -2,8 +2,7 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
-
-$ref_filestorage = 'filestorage';
+require_once('../core.filestorage.php');
 
 $result['message'] = '';
 $result['error'] = 0;
@@ -41,32 +40,11 @@ $is_newfile = $_POST['currfile_changed'];
 if ($is_newfile == 1) {
     // пдфку обновляли
     if (IsSet($_FILES)) {
-
-        $insert_data = array(
-            'username' => $pdf_username = $_FILES['pdffile']['name'],
-            'tempname' => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\',$_FILES['pdffile']['tmp_name']) : $_FILES['pdffile']['tmp_name'],
-            'filesize' => $_FILES['pdffile']['size'],
-            'relation' => $article_id,
-            'filetype' => $_FILES['pdffile']['type'],
-            'collection' => 'articles'
-        );
-
-        $insert_data['content'] = mysql_escape_string(floadpdf($insert_data['tempname']));
-
-        $q = MakeInsert($insert_data, $ref_filestorage);
-
-        mysql_query($q, $link) or Die("Death on $q");
-
-        $pdf_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");
-
-        $q = "UPDATE articles SET pdfid=$pdf_id WHERE id=$article_id";
-        mysql_query($q, $link) or Die("Death on $q");
+        FileStorage::addFile($_FILES['pdffile'], $article_id, 'articles', 'pdfid');
     } else {
         $result['error'] = 1;
         $result['message'] .= "Не выбран файл для загрузки или ошибка передачи данных! <br>\r\n";
     }
-} else {
-    // PDF-ка не менялась
 }
 
 // потом обновить кросс-таблицу
