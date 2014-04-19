@@ -93,22 +93,22 @@
         <legend>Файлы</legend>
         <div class="field">
             <label for="file_cover">Обложка (изображение)</label>
-            <input type="file" name="file_cover" id="file_cover" size="40">
+            <input type="file" name="file_cover" id="file_cover" size="80">
             <button class="file-unlink" name="file_cover" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_title">Титульный лист (PDF-file)</label>
-            <input type="file" name="file_title" id="file_title" size="40">
+            <input type="file" name="file_title" id="file_title" size="80">
             <button class="file-unlink" name="file_title" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_toc">Оглавление (PDF-file)</label>
-            <input type="file" name="file_toc" id="file_toc" size="40">
+            <input type="file" name="file_toc" id="file_toc" size="80">
             <button class="file-unlink" name="file_toc" disabled>X</button>
         </div>
         <div class="field">
-            <label for="file_toc_en">Оглавление (PDF-file)</label>
-            <input type="file" name="file_toc_en" id="file_toc_en" size="40">
+            <label for="file_toc_en">Table of contents (PDF-file)</label>
+            <input type="file" name="file_toc_en" id="file_toc_en" size="80">
             <button class="file-unlink" name="file_toc_en" disabled>X</button>
         </div>
     </fieldset>

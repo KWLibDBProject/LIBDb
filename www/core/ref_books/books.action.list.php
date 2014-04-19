@@ -19,6 +19,8 @@ $query = "SELECT books.id AS book_id, books.title, books.date, contentpages, pub
 $res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$query);
 $ref_numrows = @mysql_num_rows($res) ;
 
+$ref_list = array();
+
 if ($ref_numrows > 0) {
     while($ref_record = mysql_fetch_assoc($res)) {
         $ref_list[$ref_record['book_id']] = $ref_record;

@@ -16,7 +16,7 @@ if (!IsSet($_GET['id'])) {
     $link = ConnectDB();
     $id = $_GET["id"]; // айди удаляемой книжки
 
-    $qt = "SELECT COUNT(`book`) as `bcount` FROM articles WHERE `book`=$id";
+    $qt = "SELECT COUNT(book) as bcount FROM articles WHERE book=$id";
 
     if ($rt = mysql_query($qt)) {
         $bcount = mysql_fetch_assoc($rt);

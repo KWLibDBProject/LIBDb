@@ -121,6 +121,8 @@ class FileStorage {
      * таким образом делается перекрестное связывание:
      * в filestorage[id файла] хранит коллекцию и идентификатор владельца
      * в коллекции[id владельца] лежит идентификатор файла (либо -1, если файла нет)
+     *
+     * возвращает id файла, вставленного в базу или NULL
     */
     public static function addFile($file_array, $related_id, $collection, $related_field_in_table)
     {
@@ -142,7 +144,11 @@ class FileStorage {
 
             $q_api = MakeUpdate(array($related_field_in_table => $last_file_id), $collection, " WHERE id= $related_id ");
             mysql_query($q_api) or Die("Death on update {$collection} table with request: ".$q_api);
-        } else {}
+            $ret = $last_file_id;
+        } else {
+            $ret = null;
+        }
+        return $ret;
     }
 
 }

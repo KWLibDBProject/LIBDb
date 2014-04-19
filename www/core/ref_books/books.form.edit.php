@@ -2,12 +2,11 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.filestorage.php');
 
 $SID = session_id();
 if(empty($SID)) session_start();
 if (!isLogged()) header('Location: /core/');
-
-$ref_filestorage = 'filestorage';
 
 $id = IsSet($_GET['id']) ? $_GET['id'] : -1;
 
@@ -24,9 +23,8 @@ if ($id != -1)
         // file_cover
         if ($book['file_cover'] != -1 )
         {
-            $q = "select id, username from $ref_filestorage WHERE id = {$book['file_cover']}";
-            $r = mysql_query($q) or Die("Death at: $q");
-            $f = mysql_fetch_assoc($r);
+            $f = FileStorage::getFileInfo($book['file_cover']);
+
             $book['file_cover_data']['id'] = $f['id'];
             $book['file_cover_data']['username'] = $f['username'];
             $book['file_cover_data']['disabled_flag'] = '';
@@ -38,9 +36,8 @@ if ($id != -1)
         // file_title
         if ($book['file_title'] != -1 )
         {
-            $q = "select id, username from $ref_filestorage WHERE id = {$book['file_title']}";
-            $r = mysql_query($q) or Die("Death at: $q");
-            $f = mysql_fetch_assoc($r);
+            $f = FileStorage::getFileInfo($book['file_title']);
+
             $book['file_title_data']['id'] = $f['id'];
             $book['file_title_data']['username'] = $f['username'];
             $book['file_title_data']['disabled_flag'] = '';
@@ -52,9 +49,8 @@ if ($id != -1)
         // file_toc
         if ($book['file_toc'] != -1 )
         {
-            $q = "select id, username from $ref_filestorage WHERE id = {$book['file_toc']}";
-            $r = mysql_query($q) or Die("Death at: $q");
-            $f = mysql_fetch_assoc($r);
+            $f = FileStorage::getFileInfo($book['file_toc']);
+
             $book['file_toc_data']['id'] = $f['id'];
             $book['file_toc_data']['username'] = $f['username'];
             $book['file_toc_data']['disabled_flag'] = '';
@@ -66,9 +62,8 @@ if ($id != -1)
         // file_toc_en
         if ($book['file_toc_en'] != -1 )
         {
-            $q = "select id, username from $ref_filestorage WHERE id = {$book['file_toc_en']}";
-            $r = mysql_query($q) or Die("Death at: $q");
-            $f = mysql_fetch_assoc($r);
+            $f = FileStorage::getFileInfo($book['file_toc_en']);
+
             $book['file_toc_en_data']['id'] = $f['id'];
             $book['file_toc_en_data']['username'] = $f['username'];
             $book['file_toc_en_data']['disabled_flag'] = '';
