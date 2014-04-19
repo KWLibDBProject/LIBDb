@@ -2,6 +2,7 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.filestorage.php');
 
 $ref_filestorage = 'filestorage';
 
@@ -16,8 +17,7 @@ $q = "DELETE FROM articles WHERE id=$id";
 mysql_query($q,$link) or Die("Death at $q");
 
 // удалить пдфку из пдфдата
-$q = "DELETE FROM $ref_filestorage WHERE relation=$id";
-mysql_query($q,$link) or Die("Death at $q");
+FileStorage::removeFileByRel($id);
 
 // удалить соответствия из cross_aa
 $q = "DELETE FROM cross_aa WHERE article=$id";

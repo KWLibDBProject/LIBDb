@@ -13,34 +13,18 @@ if (empty($id)) {
 $caller = IsSet($_GET['caller']) ? $_GET['caller'] : Die(); // таблица, в которой ОБНОВЛЯЕМ релейшен объекта
 $field = IsSet($_GET['subcaller']) ? $_GET['subcaller'] : Die(); // поле, в которое записываем -1 для таблицы
 
-$ref_filestorage = 'filestorage';
-
-// удалить из таблицы filestorage
-
 if ($id != -1)
 {
     $result['message'] = '';
     $link = ConnectDB();
-    $q = "SELECT relation FROM $ref_filestorage WHERE id = $id";
-    $r = mysql_query($q) or die($q);
 
-    $file_record = mysql_fetch_assoc($r);
+    $file_related_to = FileStorage::getRelById($id);
 
-    $result['message'] .= "[ $q ]\r\n";
-
-    $q = "UPDATE {$caller} SET {$field}=-1 WHERE id={$file_record['relation']}";
-
-    $result['message'] .= "[ $q ]\r\n";
-
+    /* update related table with -1 in field*/
+    $q = "UPDATE {$caller} SET {$field}=-1 WHERE id={$file_related_to}";
     $a_result = mysql_query($q) or Die($q);
 
-    FileStorage::removeFile($id);
-
-    // $q = "DELETE FROM $ref_filestorage WHERE id=$id";
-
-    // $result['message'] .= "[ $q ]\r\n";
-
-    // mysql_query($q) or Die($q);
+    FileStorage::removeFileById($id);
 
     CloseDB($link);
     $result['error'] = 0;

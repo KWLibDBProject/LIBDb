@@ -2,17 +2,17 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
-
+require_once('../core.filestorage.php');
 
 // а) удалить автора, если у него есть статьи НЕЛЬЗЯ
-$id = $_GET["id"];
+$author_id = $_GET["id"];
 
 $table = 'authors';
 $result = array();
 
 $link = ConnectDB();
 
-$qt = "SELECT COUNT(`article`) AS `aha` FROM cross_aa WHERE `author`=$id";
+$qt = "SELECT COUNT(`article`) AS `aha` FROM cross_aa WHERE `author`={$author_id}";
 if ($rt = mysql_query($qt)) {
     $aha = mysql_fetch_assoc($rt);
     if ($aha['aha'] > 0) {
@@ -21,7 +21,17 @@ if ($rt = mysql_query($qt)) {
         $result['message'] = 'Нельзя удалять автора, если у него есть статьи!';
     } else {
         // статей нет, можно удалять автора
-        $q = "DELETE FROM $table WHERE (id = $id)";
+        // нужно получить информацию об авторе, в частности id его фотографии
+        // заменено "фичей" - удаляем информацию из хранилища по relation-полю, в котором
+        // лежит идентификатор автора.
+        if (FileStorage::getCollectionByRel($author_id) === 'authors') {
+            FileStorage::removeFileByRel($author_id);
+        } else {
+            // нарушение целостности базы: Filestorage[author_id]=>collection != authors
+        }
+
+        // удалить запись об авторе из таблицы AUTHORS
+        $q = "DELETE FROM $table WHERE (id = $author_id)";
         if ($r = mysql_query($q)) {
             // запрос удаление успешен
             $result["error"] = 0;
