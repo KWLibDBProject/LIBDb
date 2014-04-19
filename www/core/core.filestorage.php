@@ -88,15 +88,16 @@ class FileStorage {
     {
         $table = self::$storage_table;
         $ret = array();
+        // на самом деле тут нужна проверка, если $id = null или -1 -- сразу возвращаем null
         $qp = "SELECT id, username, filesize FROM {$table} WHERE id = $id";
-        $rp = mysql_query($qp) or Die("Death on $qp");
+        $rp = @mysql_query($qp);
         if ($rp) {
             if (@mysql_num_rows($rp) == 1) {
                 $ret = mysql_fetch_assoc($rp);
             } else {
                 $ret = null;
             }
-        }
+        } else $ret = null;
         return $ret;
     }
 

@@ -7,18 +7,20 @@ $link = ConnectDB();
 
 $ref_name = 'authors';
 
-$sort_order = isset($_GET['order_by_name']) ? "ORDER BY name_ru" : '';
+$sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru " : '';
 
 //function start (надо, наверное, эту функцию дергать из /frontend.php или из
 //библиотечного модуля, относящегося к справочнику (например authors.lib.php), куда
 // стоит отправить большинство имеющихся функций, описанных inline в коде.
 if ( (!isset($_GET['letter'])) || ($_GET['letter'] != '0') ) {
-    $like = " AND authors.name_ru LIKE '{$_GET['letter']}%'";
+    $like = " authors.name_ru LIKE '{$_GET['letter']}%'";
 } else {
     $like = '';
 }
 
-$query = "SELECT * FROM {$ref_name} WHERE deleted=0 {$like} {$sort_order}";
+$ref_list = array();
+
+$query = "SELECT * FROM {$ref_name} WHERE {$like} {$sort_order}";
 $res = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($res) ;
 
@@ -46,8 +48,9 @@ if ($ref_numrows > 0)
 {
     foreach ($ref_list as $row) {
         foreach ($row as $fid => $field) {
-            if (empty($field)) $row[$fid] = '--';
+            if (empty($field)) $row[$fid] = '';
         }
+        $is_link_disabled = ($row['photo_id'] == -1) ? 'action-aal-no-photo' : '';
         $return .= <<<core_authors_action_list_each
     <tr>
         <td>
@@ -62,7 +65,7 @@ if ($ref_numrows > 0)
             </div>
         </td>
         <td>
-            <a href="getimage.php?id={$row['photo_id']}" target="_blank" class="lightbox"> &lt;Show&gt; </a>
+            <a href="getimage.php?id={$row['photo_id']}" target="_blank" class="lightbox {$is_link_disabled}"> &lt;Show&gt; </a>
         </td>
         <td class="centred_cell">
             <button class="actor-edit button-edit" name="{$row['id']}">Edit</button>

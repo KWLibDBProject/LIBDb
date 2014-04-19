@@ -12,7 +12,7 @@ $result = array();
 
 $link = ConnectDB();
 
-$qt = "SELECT COUNT(`article`) AS `aha` FROM cross_aa WHERE `author`={$author_id}";
+$qt = "SELECT COUNT(article) AS aha FROM cross_aa WHERE author={$author_id}";
 if ($rt = mysql_query($qt)) {
     $aha = mysql_fetch_assoc($rt);
     if ($aha['aha'] > 0) {
@@ -23,11 +23,11 @@ if ($rt = mysql_query($qt)) {
         // статей нет, можно удалять автора
         // нужно получить информацию об авторе, в частности id его фотографии
         // заменено "фичей" - удаляем информацию из хранилища по relation-полю, в котором
-        // лежит идентификатор автора.
+        // лежит идентификатор автора и название коллекции.
         if (FileStorage::getCollectionByRel($author_id) === 'authors') {
-            FileStorage::removeFileByRel($author_id);
+            FileStorage::removeFileByRel($author_id, 'authors');
         } else {
-            // нарушение целостности базы: Filestorage[author_id]=>collection != authors
+            // нарушение целостности базы
         }
 
         // удалить запись об авторе из таблицы AUTHORS
