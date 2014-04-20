@@ -2,18 +2,23 @@
 require_once('core.php');
 
 class FileStorage {
-    private static $storage_table   = 'filestorage';
-    private static $storage_path    = '/files/storage/';
+    private static $config = array(
+        'table'             => 'filestorage',
+        'path'              => '/files/storage/',
+        'save_to_db'        => true,
+        'save_to_disk'      => true,
+        'return_data_from'  => 'table'
+    );
 
     /* возвращает blob-строку пустого PDF-файла */
-    public static function getEmptyPDF()
+    private  static function __getEmptyPDF()
     {
         $data = "JVBERi0xLjQNCjEgMCBvYmoNCjw8IC9UeXBlIC9DYXRhbG9nIC9PdXRsaW5lcyAyIDAgUiAvUGFnZXMgMyAwIFIgPj4NCmVuZG9iag0KMiAwIG9iag0KPDwgL1R5cGUgT3V0bGluZXMgL0NvdW50IDAgPj4NCmVuZG9iag0KMyAwIG9iag0KPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFs0IDAgUl0gL0NvdW50IDEgPj4NCmVuZG9iag0KNCAwIG9iag0KPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAzIDAgUiAvTWVkaWFCb3ggWzAgMCA2MTIgNzkyXSAvQ29udGVudHMgNSAwIFIgL1Jlc291cmNlcyA8PCAvUHJvY1NldCA2IDAgUiA+PiA+Pg0KZW5kb2JqDQo1IDAgb2JqDQo8PCAvTGVuZ3RoIDM1ID4+DQpzdHJlYW0NCoUgUGFnZS1tYXJraW5nIG9wZXJhdG9ycyCFDQplbmRzdHJlYW0gDQplbmRvYmoNCjYgMCBvYmoNClsvUERGXQ0KZW5kb2JqDQp4cmVmDQowIDcNCjAwMDAwMDAwMDAgNjU1MzUgZiANCjAwMDAwMDAwMDkgMDAwMDAgbiANCjAwMDAwMDAwNzQgMDAwMDAgbiANCjAwMDAwMDAxMTkgMDAwMDAgbiANCjAwMDAwMDAxNzYgMDAwMDAgbiANCjAwMDAwMDAyOTUgMDAwMDAgbiANCjAwMDAwMDAzNzYgMDAwMDAgbiANCnRyYWlsZXIgDQo8PCAvU2l6ZSA3IC9Sb290IDEgMCBSID4+DQpzdGFydHhyZWYNCjM5NA0KJSVFT0Y=";
         return base64_decode($data);
     }
 
     /* возвращает blob-строку картинки-плашки "нет изображения" */
-    public static function getEmptyIMG()
+    private  static function __getEmptyIMG()
     {
         // base64-строка для плашки "нет изображения" 240х180
         $noimg_240x180 = 'R0lGODlh8AC0ALMPAIiIiLu7u0RERBEREe7u7iIiIszMzN3d3TMzM2ZmZqqqqlVVVZmZmXd3dwAA';
@@ -44,83 +49,33 @@ class FileStorage {
         return base64_decode($noimg_240x180);
     }
 
-    /*
-     * удаляет из хранилища (таблицы) файл по соответствующему ID
-     * (и только - за изменения соотв. relations отвечают вызывающие скрипты)
-    */
-    public static function removeFileById($id)
+    /* возвращает имя таблицы хранилища */
+    private static function getSQLTable()
     {
-        $table = self::$storage_table;
-        if ($id != -1)
-        {
-            $query = "DELETE FROM {$table} WHERE id=$id";
-            return mysql_query($query) or die("Death on: ".$query);
-        } else {
-            return -1;
-        }
+        return self::$config['table'];
     }
 
-    /*
-     * Отдает значение ОТНОШЕНИЯ (relation), т.е. идентификатор владельца по указанному ID в хранилище.
-     * Предполагается, что название коллекции нам известно (или по крайней мере мы его
-     * проверим перед дальнейшим удалением):
-     * Эта информация используется для обновления поля владельца в соответствующей
-     * коллекции (books, authors, articles) на значение -1. Следом нужно удалить
-     * файл из хранилища соответствующим вызовом.
-    */
-    public static function getRelById($id)
+    /* возвращает абсолютный путь до файла, _имя_ которого переданно параметром */
+    private static function getRealFileName($filename)
     {
-        $table = self::$storage_table;
-        $q = "SELECT relation FROM {$table} WHERE id = $id";
-
-        $r = @mysql_query($q) or die($q);
-
-        if ($r) {
-            $record = mysql_fetch_assoc($r);
-            return $record['relation'];
-        } else {
-            return -1;
-        }
+        return $_SERVER['DOCUMENT_ROOT'].self::$config['path'].$filename;
     }
 
-    /*
-     * удаляет файл из хранилища по заданному relation.
-     * Используется в authors.action.remove
-    */
-    public static function removeFileByRel($rel, $collection)
+    /* построение внутреннего имени на основе информации о файле */
+    private static function getInternalFileName($fileinfo)
     {
-        $table = self::$storage_table;
-        if ($rel != -1)
-        {
-            $query = "DELETE FROM {$table} WHERE relation={$rel} AND collection = '{$collection}'";
-            return mysql_query($query) or die("Death on: ".$query);
-        } else {
-            return -1;
-        }
+        $a = explode('/',$fileinfo['filetype']);
+        $t = microtime();
+        $h = md5($fileinfo['username'].'_'.$t);
+        // mask: collection_relation_hash.extension
+        $ret = "{$fileinfo['collection']}_{$fileinfo['relation']}_{$h}.{$a[1]}";
+        return $ret;
     }
 
-    /* @property integer $rel
-     * @returns filestorage[rel]-> collection
-    */
-    public static function getCollectionByRel($rel)
+    /* выгрузка файла из базы */
+    private static function __getFileContent_db($id)
     {
-        $table = self::$storage_table;
-        $q = "SELECT collection FROM {$table} WHERE relation = {$rel}";
-
-        $r = @mysql_query($q) or die($q);
-
-        if ($r) {
-            $record = mysql_fetch_assoc($r);
-            return $record['collection'];
-        } else {
-            return -1;
-        }
-    }
-
-    /* возвращает контент файла по указанному идентификатору */
-    public static function getFileContent($id)
-    {
-        $table = self::$storage_table;
+        $table = self::getSQLTable();
         if (($id != null) && ($id != -1)) {
             $q = "SELECT content FROM {$table} WHERE id = {$id}";
             $r = @mysql_query($q);
@@ -136,11 +91,132 @@ class FileStorage {
         return $ret;
     }
 
-    /* возвращает служебную информацию по файлу из хранилища
+    /* выгрузка файла из хранилища на диске */
+    private static function __getFileContent_disk($id)
+    {
+        $table = self::getSQLTable();
+        if (($id != null) && ($id != -1)) {
+            $q = "SELECT filesize, internal_name FROM {$table} WHERE id = {$id}";
+            $r = @mysql_query($q);
+            if ($r) {
+                $d = mysql_fetch_assoc($r);
+                $h = fopen(self::getRealFileName($d['internal_name']), "rb");
+                $ret = fread($h, $d['filesize']);
+                fclose($h);
+            } else {
+                $ret = null;
+            }
+        } else {
+            $ret = null;
+        }
+        return $ret;
+    }
+
+    /* добавляет контент файла в хранилище */
+    private function appendFileContent($fileinfo, $fileid)
+    {
+        $file_content = floadfile($fileinfo['tempname']);
+
+        if (self::$config['save_to_disk']) {
+            // save to file
+            $filename = self::getRealFileName($fileinfo['internal_name']);
+            $fh = fopen($filename, "wb");
+            $return = fwrite($fh, $file_content);
+            fflush($fh);
+            fclose($fh);
+            usleep(100000);// sleep 0.1 sec
+        }
+
+        if (self::$config['save_to_db'])
+        {
+            $qc = MakeUpdate(array(
+                'content' => mysql_escape_string($file_content)
+            ), self::getSQLTable(), " WHERE id = {$fileid} ");
+            $return = mysql_query($qc);
+        }
+        return $return;
+    }
+
+
+
+
+    /* ========================== PUBLIC SECTION ======================= */
+
+    /* возвращает пустой файл для переданного Mime-типа */
+    public static function getEmptyFile($type)
+    {
+        $ret = '';
+        switch ($type) {
+            case 'pdf' : {
+                $ret = self::__getEmptyPDF();
+                break;
+            }
+            case 'image': {
+                $ret = self::__getEmptyIMG();
+                break;
+            }
+        } // switch
+        return $ret;
+    }
+
+
+    /* WRAPPER: возвращает контент файла по указанному идентификатору */
+    public static function getFileContent($id)
+    {
+        $ret = '';
+        if (self::$config['return_data_from'] == 'table') {
+            $ret = self::__getFileContent_db($id);
+        } else if (self::$config['return_data_from'] == 'disk') {
+            $ret = self::__getFileContent_disk($id);
+        } else $ret = null;
+        return $ret;
+    }
+
+    /* ========================  Работа со взаимосвязями =================== */
+    /* * @returns filestorage[rel]-> collection */
+    public static function getCollectionByRel($rel)
+    {
+        $table = self::getSQLTable();
+        $q = "SELECT collection FROM {$table} WHERE relation = {$rel}";
+        $r = @mysql_query($q) or die($q);
+
+        if ($r) {
+            $record = mysql_fetch_assoc($r);
+            return $record['collection'];
+        } else {
+            return -1;
+        }
+    }
+
+    /*
+     * Отдает значение ОТНОШЕНИЯ (relation), т.е. идентификатор владельца по указанному ID в хранилище.
+     * Предполагается, что название коллекции нам известно (или по крайней мере мы его
+     * проверим перед дальнейшим удалением):
+     * Эта информация используется для обновления поля владельца в соответствующей
+     * коллекции (books, authors, articles) на значение -1. Следом нужно удалить
+     * файл из хранилища соответствующим вызовом.
     */
+    public static function getRelById($id)
+    {
+        $table = self::getSQLTable();
+        $q = "SELECT relation FROM {$table} WHERE id = $id";
+
+        $r = @mysql_query($q) or die($q);
+
+        if ($r) {
+            $record = mysql_fetch_assoc($r);
+            return $record['relation'];
+        } else {
+            return -1;
+        }
+    }
+
+    /* =========================== ИНФОРМАЦИЯ О ФАЙЛЕ ======================== */
+
+    /* возвращает служебную информацию по файлу из хранилища */
     public static function getFileInfo($id)
     {
-        $table = self::$storage_table;
+        $table = self::getSQLTable();
 
         if (($id != null) && ($id != -1)) {
             $qp = "SELECT id, username, filesize, filetype, relation, collection FROM {$table} WHERE id = $id";
@@ -158,17 +234,10 @@ class FileStorage {
         return $ret;
     }
 
-    /* добавляет контент файла в соответствующее хранилище
-    в настоящее время - в таблицу.
-    */
-    private function appendFileContent($filename, $fileid)
-    {
-        $insert_content_array = array(
-            'content' => mysql_escape_string(floadfile($filename))
-        );
-        $qc = MakeUpdate($insert_content_array, self::$storage_table, " WHERE id = {$fileid}");
-        return mysql_query($qc);
-    }
+
+    /* =========================== ДОБАВЛЕНИЕ ФАЙЛОВ ========================= */
+
+
 
     /* Добавляет файл в базу.
      * $file_array  - Элемент массива $_FILES[<имя поля инпута>]
@@ -183,9 +252,9 @@ class FileStorage {
     */
     public static function addFile($file_array, $related_id, $collection, $related_field_in_table)
     {
-        if ($file_array['tmp_name']!='')
+        if ($file_array['tmp_name'] != '')
         {
-            $insert_data = array(
+            $file_info = array(
                 'username' => $file_array['name'],
                 'tempname' => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\', ($file_array['tmp_name'])) : ($file_array['tmp_name']),
                 'filesize' => $file_array['size'],
@@ -193,13 +262,18 @@ class FileStorage {
                 'filetype' => $file_array['type'],
                 'collection' => $collection
             );
-            $q = MakeInsert($insert_data, self::$storage_table);
+            $file_info['internal_name'] = self::getInternalFileName($file_info);
+
+            /* insert fileinfo to DB */
+            $q = MakeInsert($file_info, self::getSQLTable());
             mysql_query($q) or Die("Death on $q");
             $last_file_id = mysql_insert_id() or Die("Не удалось получить id последнего добавленного файла !");
 
-            self::appendFileContent($insert_data['tempname'], $last_file_id);
+            self::appendFileContent($file_info, $last_file_id);
 
-            $q_api = MakeUpdate(array($related_field_in_table => $last_file_id), $collection, " WHERE id= $related_id ");
+            $q_api = MakeUpdate(array(
+                    $related_field_in_table => $last_file_id),
+                $collection, " WHERE id= $related_id ");
             mysql_query($q_api) or Die("Death on update {$collection} table with request: ".$q_api);
             $ret = $last_file_id;
         } else {
@@ -208,6 +282,69 @@ class FileStorage {
         return $ret;
     }
 
-}
+
+
+    /* =========================== УДАЛЕНИЕ ФАЙЛОВ =========================== */
+
+    /*  удаляет из хранилища (таблицы) файл по соответствующему ID
+     * (и только - за изменения соотв. relations отвечают вызывающие скрипты) */
+    public static function removeFileById($id)
+    {
+        $table = self::getSQLTable();
+
+        if ($id != -1)
+        {
+            // get intenal filename
+            $qr = mysql_fetch_assoc(mysql_query("SELECT id, internal_name FROM {$table} WHERE id = {$id}"));
+            $internal_name = $qr['internal_name'];
+
+            // remove fileinfo (and content) from DB
+            $query = "DELETE FROM {$table} WHERE id={$id}";
+            $ret = mysql_query($query) or die("Death on: ".$query);
+
+            // remove file from disk (пусть лучше пытается удалить файл всегда)
+            // if (self::$config['save_to_disk']) { }
+            $fn = self::getRealFileName($internal_name);
+            if (file_exists($fn)) {
+                unlink($fn);
+            }
+        } else {
+            $ret = -1;
+        }
+        return $ret;
+    }
+
+
+    /* удаляет файл из хранилища по заданному relation.
+     * Используется в authors.action.remove - возможно избыточна */
+    public static function removeFileByRel($rel, $collection)
+    {
+        $table = self::getSQLTable();
+        if ($rel != -1)
+        {
+            // get intenal filename
+            $q = "SELECT id, internal_name FROM {$table} WHERE relation={$rel} AND collection = '{$collection}' ";
+            $qr = mysql_query($q) or Die("Death on: {$q}");
+            $qf = mysql_fetch_assoc($qr);
+            $internal_name = $qf['internal_name'];
+            $id = $qf['id'];
+
+            // remove fileinfo (and content) from DB
+            $query = "DELETE FROM {$table} WHERE id={$id}";
+            $ret = mysql_query($query) or die("Death on: ".$query);
+
+            // remove file from disk
+            $fn = self::getRealFileName($internal_name);
+            if (file_exists($fn)) {
+                unlink($fn);
+            }
+
+            return $ret;
+        } else {
+            return -1;
+        }
+    }
+
+} // class
 
 ?>

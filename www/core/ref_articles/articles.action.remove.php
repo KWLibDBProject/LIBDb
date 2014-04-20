@@ -11,11 +11,18 @@ $id = IsSet($_GET['id']) ? $_GET['id'] : Die("No id!");
 $link = ConnectDB();
 
 // удалить статью из артиклез
-$q = "DELETE FROM articles WHERE id=$id";
-mysql_query($q,$link) or Die("Death at $q");
+
+$q = "SELECT id, pdfid FROM articles WHERE id = {$id}";
+$qr = mysql_query($q);
+$qf = mysql_fetch_assoc($qr);
+$pdfid = $qf['pdfid'];
+
+$q = "DELETE FROM articles WHERE id= $id";
+mysql_query($q, $link) or Die("Death at $q");
 
 // удалить пдфку из пдфдата
-FileStorage::removeFileByRel($id, 'articles'); // обязательно указать коллекцию, иначе удалим не то
+// FileStorage::removeFileByRel($id, 'articles'); // обязательно указать коллекцию, иначе удалим не то
+FileStorage::removeFileById($pdfid);
 
 // удалить соответствия из cross_aa
 $q = "DELETE FROM cross_aa WHERE article=$id";

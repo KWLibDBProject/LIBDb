@@ -35,7 +35,7 @@ if ($id != -1) {
     } else {
         header("Content-type: image/gif");
 
-        print(FileStorage::getEmptyIMG());
+        print(FileStorage::getEmptyFile('image'));
 
         flush();
     }
@@ -43,7 +43,7 @@ if ($id != -1) {
 {
     header("Content-type: image/gif");
 
-    print(FileStorage::getEmptyIMG());
+    print(FileStorage::getEmptyFile('image'));
 
     flush();
 };

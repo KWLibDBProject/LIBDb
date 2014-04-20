@@ -40,7 +40,23 @@ $is_newfile = $_POST['currfile_changed'];
 if ($is_newfile == 1) {
     // пдфку обновляли
     if (IsSet($_FILES)) {
-        FileStorage::addFile($_FILES['pdffile'], $article_id, 'articles', 'pdfid');
+
+        /* @todo: вставить эту проверку в остальные случаи загрузки данных через $_FILES ! */
+        switch ($_FILES['pdffile']['error']) {
+            case UPLOAD_ERR_INI_SIZE: {
+                $result['error_message'] = " Однако возникла ошибка. Размер загружаемого файла больше ".ini_get('upload_max_filesize')." байт!";
+                break;
+            }
+            case UPLOAD_ERR_FORM_SIZE : {
+                $result['error_message'] = " Однако возникла ошибка. Размер загружаемого файла больше ".$_POST['MAX_FILE_SIZE']." байт!";
+                break;
+            }
+            case UPLOAD_ERR_OK: {
+                FileStorage::addFile($_FILES['pdffile'], $article_id, 'articles', 'pdfid');
+                break;
+            }
+        }
+
     } else {
         $result['error'] = 1;
         $result['message'] .= "Не выбран файл для загрузки или ошибка передачи данных! <br>\r\n";
@@ -73,7 +89,7 @@ if ($result['error'] == 0) {
         'time' => 10,
         'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
-        'message' => 'Информация о статье в базе обновлена'
+        'message' => 'Информация о статье в базе обновлена... '.$result['error_message']
     );
 } else {
     $override = array(

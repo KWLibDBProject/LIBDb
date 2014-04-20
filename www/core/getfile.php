@@ -12,7 +12,7 @@ $file_info = FileStorage::getFileInfo($id);
 if (!$file_info) {
     $file_info['username'] = 'file not found.pdf';
     $file_info['filesize'] = 632;
-    $file_info['content'] = FileStorage::getEmptyPDF();
+    $file_info['content'] = FileStorage::getEmptyFile('pdf');
 } else {
     $file_info['content'] = FileStorage::getFileContent($id);
 }
