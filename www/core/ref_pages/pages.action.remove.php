@@ -11,8 +11,7 @@ $result = array();
 
 $link = ConnectDB();
 
-
-$q = "UPDATE $table SET deleted=1 WHERE (id=$id)";
+$q = " DELETE FROM {$table} WHERE (id = {$id}) ";
 if ($r = mysql_query($q)) {
     // запрос удаление успешен
     $result["error"] = 0;

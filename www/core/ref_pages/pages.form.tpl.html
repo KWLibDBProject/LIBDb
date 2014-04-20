@@ -3,62 +3,34 @@
     <title>/**page_title**/</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/tinymce.min.js"></script>
-    <script src="../js/tinymce.ru.js"></script>
+    <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../js/tinymce.config.js"></script>
 
     <link rel="stylesheet" type="text/css" href="pages.css">
     <style type="text/css"></style>
 
-    <script src="../js/core.js"></script>
     <script src="ref.pages.js"></script>
 
     <script type="text/javascript">
-        // tinyMCE inits
-        tinymce.init({
-            selector:'textarea#content_en',
-            forced_root_block : "",
-            plugins: [ "jbimages charmap link paste hr anchor preview print tabfocus table textcolor" ],
-            force_br_newlines : true,
-            force_p_newlines : false,
-            language: 'ru',
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | jbimages",
-            relative_urls: false
-        });
-        tinymce.init({
-            selector:'textarea#content_ru',
-            forced_root_block : "",
-            plugins: [ "jbimages charmap link paste hr anchor preview print tabfocus table textcolor" ],
-            force_br_newlines : true,
-            force_p_newlines : false,
-            language: 'ru',
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | jbimages",
-            relative_urls: false
-        });
-        tinymce.init({
-            selector:'textarea#content_uk',
-            forced_root_block : "",
-            plugins: [ "jbimages charmap link paste hr anchor preview print tabfocus table textcolor" ],
-            force_br_newlines : true,
-            force_p_newlines : false,
-            language: 'ru',
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | jbimages",
-            relative_urls: false
-        });
-
         $(document).ready(function () {
+            /* onload */
+            tinify(tiny_config['full'], 'content_en');
+            tinify(tiny_config['full'], 'content_ru');
+            tinify(tiny_config['full'], 'content_uk');
+
             page_id = /**page_id**/;
 
-        if (page_id != -1) {
-            Pages_LoadRecord("#form_edit_page", page_id, 'content_en', 'content_ru', 'content_uk');
-            $("#button-remove").show();
-        }
+            if (page_id != -1) {
+                Pages_LoadRecord("#form_edit_page", page_id, 'content_en', 'content_ru', 'content_uk');
+                $("#button-remove").show();
+            }
 
-        $("#button-exit").on('click',function(event){
-            window.location.href = '../ref.pages.show.php';
-        });
-        $("#button-remove").on('click',function(event){
-            window.location.href = 'pages.action.remove.php?id='+page_id;
-        });
+            $("#button-exit").on('click',function(event){
+                window.location.href = '../ref.pages.show.php';
+            });
+            $("#button-remove").on('click',function(event){
+                window.location.href = 'pages.action.remove.php?id='+page_id;
+            });
 
         });
     </script>
