@@ -1,14 +1,8 @@
 <?php
 require_once('core.php');
+require_once('config/config.filestorage.php');
 
-class FileStorage {
-    private static $config = array(
-        'table'             => 'filestorage',
-        'path'              => '/files/storage/',
-        'save_to_db'        => true,
-        'save_to_disk'      => true,
-        'return_data_from'  => 'table'
-    );
+class FileStorage extends FileStorageConfig {
 
     /* возвращает blob-строку пустого PDF-файла */
     private  static function __getEmptyPDF()
@@ -52,13 +46,13 @@ class FileStorage {
     /* возвращает имя таблицы хранилища */
     private static function getSQLTable()
     {
-        return self::$config['table'];
+        return parent::$config['table'];
     }
 
     /* возвращает абсолютный путь до файла, _имя_ которого переданно параметром */
     private static function getRealFileName($filename)
     {
-        return $_SERVER['DOCUMENT_ROOT'].self::$config['path'].$filename;
+        return $_SERVER['DOCUMENT_ROOT'].parent::$config['path'].$filename;
     }
 
     /* построение внутреннего имени на основе информации о файле */
@@ -117,7 +111,7 @@ class FileStorage {
     {
         $file_content = floadfile($fileinfo['tempname']);
 
-        if (self::$config['save_to_disk']) {
+        if (parent::$config['save_to_disk']) {
             // save to file
             $filename = self::getRealFileName($fileinfo['internal_name']);
             $fh = fopen($filename, "wb");
@@ -127,7 +121,7 @@ class FileStorage {
             usleep(100000);// sleep 0.1 sec
         }
 
-        if (self::$config['save_to_db'])
+        if (parent::$config['save_to_db'])
         {
             $qc = MakeUpdate(array(
                 'content' => mysql_escape_string($file_content)
@@ -164,9 +158,9 @@ class FileStorage {
     public static function getFileContent($id)
     {
         $ret = '';
-        if (self::$config['return_data_from'] == 'table') {
+        if (parent::$config['return_data_from'] == 'table') {
             $ret = self::__getFileContent_db($id);
-        } else if (self::$config['return_data_from'] == 'disk') {
+        } else if (parent::$config['return_data_from'] == 'disk') {
             $ret = self::__getFileContent_disk($id);
         } else $ret = null;
         return $ret;
@@ -303,7 +297,7 @@ class FileStorage {
             $ret = mysql_query($query) or die("Death on: ".$query);
 
             // remove file from disk (пусть лучше пытается удалить файл всегда)
-            // if (self::$config['save_to_disk']) { }
+            // if (parent::$config['save_to_disk']) { }
             $fn = self::getRealFileName($internal_name);
             if (file_exists($fn)) {
                 unlink($fn);
