@@ -286,7 +286,7 @@ class FileStorage extends FileStorageConfig {
     {
         $table = self::getSQLTable();
 
-        if ($id != -1)
+        if (($id != -1) && ($id != null))
         {
             // get intenal filename
             $qr = mysql_fetch_assoc(mysql_query("SELECT id, internal_name FROM {$table} WHERE id = {$id}"));
