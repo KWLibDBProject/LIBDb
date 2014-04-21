@@ -7,9 +7,9 @@ $link = ConnectDB();
 
 $ref_name = 'news';
 
-$year = isset($_GET['year']) ? "AND date_year=".$_GET['year'] : '';
+$year = isset($_GET['year']) ? "AND date_year={$_GET['year']} " : '';
 
-$query = "SELECT id, title_ru, date_add FROM $ref_name WHERE 1=1";
+$query = "SELECT id, title_ru, date_add FROM $ref_name WHERE 1=1 ";
 $res = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($res) ;
 

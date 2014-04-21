@@ -1,3 +1,5 @@
+
+/* useless */
 var ref_name = 'news';
 function News_LoadRecord(destination, id, tt_en, tt_ru, tt_uk) // номер записи, целевая форма
 {

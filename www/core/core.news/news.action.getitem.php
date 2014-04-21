@@ -1,9 +1,7 @@
 <?php
 require_once('../core.php');
 require_once('../core.db.php');
-// require_once('../core.kwt.php');
 
-// с помощью этого скрипта мы загружаем данные и проставляем их в поля формы редактирования, используя JS
 $link = ConnectDB();
 
 $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'news';
@@ -20,7 +18,7 @@ if ($item_id != -1) {
         $data['message'] = '';
     } else {
         $data['error'] = 1;
-        $data['message'] = 'Новости в базе данных не найдены, добавьте хотя бы одного!';
+        $data['message'] = 'Новости в базе данных не найдены, добавьте хотя бы одну!';
     }
     print(json_encode($data));
 } else {

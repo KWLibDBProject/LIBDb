@@ -16,7 +16,6 @@ $q = array(
     'text_ru'       => mysql_escape_string($_POST['text_ru']),
     'text_uk'       => mysql_escape_string($_POST['text_uk']),
     'date_year'     => substr(mysql_escape_string($_POST['date_add']),6,4),
-    'timestamp'     => ConvertDateToTimestamp(mysql_escape_string($_POST['date_add']))
 );
 $q['timestamp'] = ConvertDateToTimestamp($q['date_add']);
 
