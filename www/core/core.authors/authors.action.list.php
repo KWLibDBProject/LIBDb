@@ -68,7 +68,7 @@ if ($ref_numrows > 0)
             <a href="getimage.php?id={$row['photo_id']}" target="_blank" class="lightbox {$is_link_disabled}"> &lt;Show&gt; </a>
         </td>
         <td class="centred_cell">
-            <button class="actor-edit button-edit" name="{$row['id']}">Edit</button>
+            <button class="action-edit button-edit" name="{$row['id']}">Edit</button>
         </td>
 
     </tr>

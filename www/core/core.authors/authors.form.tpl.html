@@ -3,15 +3,14 @@
     <title>{%page_title%}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/tinymce.min.js"></script>
-    <script src="../js/tinymce.ru.js"></script>
+    <script src="../js/tinymce/tinymce.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="authors.css">
     <style type="text/css"></style>
 
     <script src="../js/core.js"></script>
-    <script src="ref.authors.js"></script>
+    <script src="authors.js"></script>
 
     <script src="../js/jquery.colorbox.js"></script>
     <link rel="stylesheet" href="../css/colorbox.css" />
@@ -33,8 +32,7 @@
             } else {
                 $("select[name='selfhood']").prop('disabled', true); // значение селекта 'selfhood' для нового автора
             }
-            $("#form_edit_author").show();
-            /* флажки установим (полностью отвязывая блок с файлами от оверрайда шаблона
+            /* флажки установим (полностью отвязывая блок с файлами от оверрайда шаблона)
             для ADD (author_id == -1) - true, EDIT: false */
             $("button[name='file_current_id_show']").prop('disabled', (author_id == -1) );
 
@@ -55,8 +53,8 @@
 
             /* photo actors */
             $(".actor-file-current-remove").on('click', function(){
-                var getting = $.get('../ref.filestorage/filestorage.action.remove.php', {
-                    id: $(this).attr('data-fileid'), // тут почему то Undefined
+                var getting = $.get('../core.filestorage/filestorage.action.remove.php', {
+                    id: $(this).attr('data-fileid'),
                     caller: 'authors',
                     subcaller: 'photo_id'
                 });
@@ -84,60 +82,50 @@
             //
 
             tinymce.init({
-                selector:'textarea#bio_en',forced_root_block : "",
-                force_br_newlines : true,
-                force_p_newlines : false,
-                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+                selector:'textarea#bio_en', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
+                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
             });
             tinymce.init({
-                selector:'textarea#bio_ru',forced_root_block : "",
-                force_br_newlines : true,
-                force_p_newlines : false,
-                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+                selector:'textarea#bio_ru', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
+                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
             });
             tinymce.init({
-                selector:'textarea#bio_uk',forced_root_block : "",
-                force_br_newlines : true,
-                force_p_newlines : false,
-                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+                selector:'textarea#bio_uk', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
+                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
             });
             tinymce.init({
-                selector:'textarea#workplace_en',forced_root_block : "",
-                force_br_newlines : true,
-                force_p_newlines : false,
-                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+                selector:'textarea#workplace_en', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
+                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
             });
             tinymce.init({
-                selector:'textarea#workplace_ru',forced_root_block : "",
-                force_br_newlines : true,
-                force_p_newlines : false,
-                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+                selector:'textarea#workplace_ru', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
+                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
             });
             tinymce.init({
-                selector:'textarea#workplace_uk',forced_root_block : "",
-                force_br_newlines : true,
-                force_p_newlines : false,
-                plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ]
+                selector:'textarea#workplace_uk', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
+                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
             });
             $("#name_en").focus();
             // вставить проверку заполненности фамилий на всех языках
-            $("#form_edit_author").submit(function(){
-                var bValid = true;
-                if ($('input[name="name_en"]').val() == '') {
-                    alert('Обязательно укажите фамилию автора на английском языке');
-                    bValid = false;
-                }
-                if ($('input[name="name_ru"]').val() == '') {
-                    alert('Обязательно укажите фамилию автора на русском языке');
-                    bValid = false;
-                }
-                if ($('input[name="name_uk"]').val() == '') {
-                    alert('Обязательно укажите фамилию автора на украинском языке');
-                    bValid = false;
-                }
-                return bValid;
-            }); // .submit
-        });
+            $("#form_edit_author")
+                    .submit(function(){
+                        var bValid = true;
+                        if ($('input[name="name_en"]').val() == '') {
+                            alert('Обязательно укажите фамилию автора на английском языке');
+                            bValid = false;
+                        }
+                        if ($('input[name="name_ru"]').val() == '') {
+                            alert('Обязательно укажите фамилию автора на русском языке');
+                            bValid = false;
+                        }
+                        if ($('input[name="name_uk"]').val() == '') {
+                            alert('Обязательно укажите фамилию автора на украинском языке');
+                            bValid = false;
+                        }
+                        return bValid;
+                    })
+                    .show();
+        })
     </script>
 </head>
 <body>

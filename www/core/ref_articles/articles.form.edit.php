@@ -175,7 +175,7 @@ CloseDB($link);
             });
 
             $("#currfile_del").on('click',function(){
-                var getting = $.get('../ref.filestorage/filestorage.action.remove.php', {
+                var getting = $.get('../core.filestorage/filestorage.action.remove.php', {
                     id: $(this).attr('data-fileid'),
                     caller: 'articles',
                     subcaller: 'pdfid'

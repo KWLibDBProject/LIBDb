@@ -25,15 +25,6 @@ var tiny_config = {
         filemanager_title:"Responsive Filemanager" ,
         external_plugins: { "filemanager" : "/core/js/filemanager/plugin.js"}
     },
-    'was-pages' : {
-        forced_root_block : "",
-        plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
-        force_br_newlines : true,
-        force_p_newlines : false,
-        language: 'ru',
-        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image ",
-        relative_urls: false
-    },
     'no-menu' : {
         forced_root_block : "",
         plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
@@ -43,7 +34,7 @@ var tiny_config = {
         language: 'ru',
         toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image ",
     },
-    'was-other' : {
+    'simple' : {
         forced_root_block : "",
         plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
         force_br_newlines : true,

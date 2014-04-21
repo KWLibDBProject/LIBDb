@@ -7,7 +7,7 @@ $SID = session_id();
 if(empty($SID)) session_start();
 if (!isLogged()) header('Location: /core/');
 
-$tpl = new kwt('authors.form.tpl');
+$tpl = new kwt('authors.form.tpl.html');
 
 if (isset($_GET['id'])) {
     // EDIT

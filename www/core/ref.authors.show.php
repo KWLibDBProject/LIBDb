@@ -18,10 +18,10 @@ if (!isLogged()) header('Location: /core/');
     <link rel="stylesheet" type="text/css" href="css/colorbox.css" />
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
-    <link rel="stylesheet" type="text/css" href="ref_authors/authors.css">
+    <link rel="stylesheet" type="text/css" href="core.authors/authors.css">
 
     <script src="js/core.js"></script>
-    <script src="ref_authors/ref.authors.js"></script>
+    <script src="core.authors/authors.js"></script>
     <script type="text/javascript" src="/tpl/frontend.js"></script>
 
     <script type="text/javascript">
@@ -40,20 +40,20 @@ if (!isLogged()) header('Location: /core/');
             });
 
             // onload
-            $("#authors_list").load("ref_authors/authors.action.list.php");
+            $("#authors_list").load("core.authors/authors.action.list.php");
 
             // bind exit actor
-            $(".actor-exit").on('click',function(event){
+            $("#actor-exit").on('click',function(event){
                 window.location.href = '/core/';
             });
             // bind add actor
-            $(".actor-add-item").on('click',function(event){
-                window.location.href = 'ref_authors/authors.form.php';
+            $("#actor-add-item").on('click',function(event){
+                window.location.href = 'core.authors/authors.form.php';
             });
             // bind lightbox and edit action
             $('#authors_list')
-                    .on('click','.actor-edit',function(){
-                        window.location.href = 'ref_authors/authors.form.php?id='+$(this).attr('name');
+                    .on('click','.action-edit',function(){
+                        window.location.href = 'core.authors/authors.form.php?id='+$(this).attr('name');
                     })
                     .on('click','.lightbox',function(){
                         $.colorbox({
@@ -63,34 +63,34 @@ if (!isLogged()) header('Location: /core/');
                         return false;
                     });
             // search criteria bindings
-            $(".actor-show-withselection").on('click',function(){
+            $("#actor-show-withselection").on('click',function(){
                 var query = "&";
                 query+="letter="+$('select[name="letter"]').val();
-                $("#authors_list").empty().load('ref_authors/authors.action.list.php?'+siteLanguage+query);
+                $("#authors_list").empty().load('core.authors/authors.action.list.php?'+siteLanguage+query);
             });
 
-            $(".actor-show-all").on('click',function(){
+            $("#actor-show-all").on('click',function(){
                 // reset search selector
                 $('select[name="letter"]').val(0);
                 setHashBySelectors();
-                $("#authors_list").empty().load('ref_authors/authors.action.list.php?'+siteLanguage);
+                $("#authors_list").empty().load('core.authors/authors.action.list.php?'+siteLanguage);
             });
-            $(".actor-show-abc").on('click', function(){
-                $("#authors_list").empty().load('ref_authors/authors.action.list.php?order_by_name=yes&'+siteLanguage);
+            $("#actor-show-abc").on('click', function(){
+                $("#authors_list").empty().load('core.authors/authors.action.list.php?order_by_name=yes&'+siteLanguage);
             });
         });
     </script>
 </head>
 <body>
-<button type="button" class="button-large actor-exit"><strong><<< НАЗАД </strong></button>
-<button type="button" class="button-large actor-add-item">Добавить автора</button><br>
+<button type="button" class="button-large" id="actor-exit"><strong><<< НАЗАД </strong></button>
+<button type="button" class="button-large" id="actor-add-item">Добавить автора</button><br>
 <hr>
 <fieldset>
     <legend>Критерии поиска</legend>
-    <button class="actor-show-abc">Отсортировать по фамилии</button>
-    <button class="actor-show-all">Показать всех</button>
+    <button id="actor-show-abc">Отсортировать по фамилии</button>
+    <button id="actor-show-all">Показать всех</button>
     Первая буква имени: <form class="hash_selectors inline_form"><select name="letter" class="search_selector"><option value="0">ANY</option></select></form>
-    <button class="actor-show-withselection">Показать выбранных</button>
+    <button id="actor-show-withselection">Показать выбранных</button>
 
 
 </fieldset>

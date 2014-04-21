@@ -185,7 +185,7 @@ if ($id != -1)
 
                 if (we_can_delete_file) {
                     var div_id = $(this).attr('data-name');
-                    var getting = $.get('../ref.filestorage/filestorage.action.remove.php', {
+                    var getting = $.get('../core.filestorage/filestorage.action.remove.php', {
                         id: $(this).attr('data-fileid'),
                         caller: 'books',
                         subcaller: div_id
