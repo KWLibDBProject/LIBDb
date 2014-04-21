@@ -22,11 +22,11 @@ if (!isLogged()) header('Location: /core/');
     <link rel="stylesheet" type="text/css" href="css/core.ui.css">
 
     <script src="js/core.js"></script>
-    <script src="ref_users/ref.users.js"></script>
+    <script src="core.users/users.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            $("#ref_list").load("ref_users/ref.users.action.list.php?ref="+ref_name);
+            $("#ref_list").load("core.users/users.action.list.php?ref="+ref_name);
 
             /* вызов и обработчик диалога ADD-ITEM */
             $("#actor-add").on('click',function() {
@@ -118,7 +118,7 @@ if (!isLogged()) header('Location: /core/');
 <button type="button" class="button-large" id="actor-add">Добавить пользователя</button><br>
 
 <div id="add-form" title="Добавить пользователя">
-    <form action="ref_users/ref.users.action.insert.php">
+    <form action="core.users/users.action.insert.php">
         <fieldset>
             <label for="add_name">Ф.И.О. (полностью)</label>
             <input type="text" name="add_name" id="add_name" class="text ui-widget-content ui-corner-all">
@@ -136,7 +136,7 @@ if (!isLogged()) header('Location: /core/');
     </form>
 </div>
 <div id="edit_form" title="Изменить пользователя">
-    <form action="ref_users/ref.users.action.update.php">
+    <form action="core.users/users.action.update.php">
         <fieldset>
             <label for="edit_name">Ф.И.О. (полностью)</label>
             <input type="text" name="edit_name" id="edit_name" class="text ui-widget-content ui-corner-all">

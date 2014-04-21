@@ -20,7 +20,7 @@ function Users_CallAddItem(source)
 
         result = $.parseJSON(data);
         if (result['error']==0) { // update list
-            $("#ref_list").empty().load("ref_users/ref.users.action.list.php?ref="+ref_name);
+            $("#ref_list").empty().load("core.users/users.action.list.php?ref="+ref_name);
             $( source ).dialog( "close" );
         } else {
             // Some errors, show message!
@@ -30,7 +30,7 @@ function Users_CallAddItem(source)
 }
 function Users_CallLoadItem(destination, id) // номер записи, целевая форма
 {
-    url = 'ref_users/ref.users.action.getitem.php';
+    url = 'core.users/users.action.getitem.php';
     var getting = $.get(url, {
         id: id,
         ref: ref_name
@@ -71,7 +71,7 @@ function Users_CallUpdateItem(source, id)
     posting.done(function(data){
         result = $.parseJSON(data);
         if (result['error']==0) { // update list
-            $("#ref_list").empty().load("ref_users/ref.users.action.list.php?ref="+ref_name);
+            $("#ref_list").empty().load("core.users/users.action.list.php?ref="+ref_name);
             $( source ).dialog( "close" );
         } else {
             // Some errors, show message!
@@ -81,7 +81,7 @@ function Users_CallUpdateItem(source, id)
 }
 function Users_CallRemoveItem(target, id)
 {
-    url = 'ref_users/ref.users.action.removeitem.php?ref='+ref_name;
+    url = 'core.users/users.action.removeitem.php?ref='+ref_name;
     var getting = $.get(url, {
         ref_name: ref_name,
         id: id
@@ -89,7 +89,7 @@ function Users_CallRemoveItem(target, id)
     getting.done(function(data){
         result = $.parseJSON(data);
         if (result['error'] == 0) {
-            $('#ref_list').empty().load("ref_users/ref.users.action.list.php?ref="+ref_name);
+            $('#ref_list').empty().load("core.users/users.action.list.php?ref="+ref_name);
             $( target ).dialog( "close" );
         } else {
             // alert about error (try delete admin)
