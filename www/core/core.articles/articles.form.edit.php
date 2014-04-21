@@ -96,7 +96,7 @@ CloseDB($link);
         var isArticleExists = <?php echo $numarticles ?>;
         var authorsList = preloadOptionsList('../core.authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('../core.books/ref.books.action.getoptionlist.php');
-        var topicsList = preloadOptionsList('../ref_topics/ref.topics.action.getoptionlist.php');
+        var topicsList = preloadOptionsList('../core.topics/ref.topics.action.getoptionlist.php');
 
         var mode = 'edit';
         // loaded values for 'EDIT' mode

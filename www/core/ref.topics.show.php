@@ -19,12 +19,12 @@ if (!isLogged()) header('Location: /core/');
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
 
-    <script src="ref_topics/ref.topics.js"></script>
+    <script src="core.topics/topics.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            $("#topics_list").load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
+            $("#topics_list").load("core.topics/topics.action.list.php?ref="+ref_name);
 
             /* вызов и обработчик диалога ADD-ITEM */
             $("#actor-add").on('click',function() {
@@ -117,7 +117,7 @@ if (!isLogged()) header('Location: /core/');
 <button type="button" id="actor-add"  class="button-large">Добавить тематический раздел</button><br>
 
 <div id="add_form" title="Добавить тематический раздел">
-    <form action="ref_topics/ref.topics.action.insert.php">
+    <form action="core.topics/topics.action.insert.php">
         <fieldset>
             <label for="add_title_en">Topic: </label>
             <input type="text" name="add_title_en" id="add_title_en" class="text ui-widget-content ui-corner-all">
@@ -130,7 +130,7 @@ if (!isLogged()) header('Location: /core/');
     </form>
 </div>
 <div id="edit_form" title="Изменить тематический раздел">
-    <form action="ref_topics/ref.topics.action.update.php">
+    <form action="core.topics/topics.action.update.php">
         <fieldset>
             <label for="edit_title_en">Topic: </label>
             <input type="text" name="edit_title_en" id="edit_title_en" class="text ui-widget-content ui-corner-all">

@@ -23,7 +23,7 @@ if (!isLogged()) header('Location: /core/');
     <script type="text/javascript">
         var authorsList = preloadOptionsList('core.authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('core.books/ref.books.action.getoptionlist.php');
-        var topicsList = preloadOptionsList('ref_topics/ref.topics.action.getoptionlist.php');
+        var topicsList = preloadOptionsList('core.topics/ref.topics.action.getoptionlist.php');
         var url_extended = "core.articles/articles.action.list.php";
 
         $(document).ready(function () {

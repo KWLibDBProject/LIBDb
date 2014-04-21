@@ -19,7 +19,7 @@ function Topics_CallAddItem(source, result_area)
     posting.done(function(data){
         result = $.parseJSON(data);
         if (result['error']==0) { // update list
-            $(result_area).empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("core.topics/topics.action.list.php?ref="+ref_name);
             $( source ).dialog( "close" );
         } else {
             // Some errors, show message!
@@ -30,7 +30,7 @@ function Topics_CallAddItem(source, result_area)
 
 function Topics_CallLoadItem(destination, id) // номер записи, целевая форма
 {
-    url = 'ref_topics/ref.topics.action.getitem.php';
+    url = 'core.topics/topics.action.getitem.php';
     var getting = $.get(url, {
         id: id,
         ref: ref_name
@@ -65,7 +65,7 @@ function Topics_CallUpdateItem(source, id, result_area)
     posting.done(function(data){
         result = $.parseJSON(data);
         if (result['error']==0) { // update list
-            $(result_area).empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("core.topics/topics.action.list.php?ref="+ref_name);
             $( source ).dialog( "close" );
         } else {
             // Some errors, show message!
@@ -76,7 +76,7 @@ function Topics_CallUpdateItem(source, id, result_area)
 
 function Topics_CallRemoveItem(target, id, result_area)
 {
-    url = 'ref_topics/ref.topics.action.removeitem.php?ref='+ref_name;
+    url = 'core.topics/topics.action.removeitem.php?ref='+ref_name;
     var getting = $.get(url, {
         ref_name: ref_name,
         id: id
@@ -84,7 +84,7 @@ function Topics_CallRemoveItem(target, id, result_area)
     getting.done(function(data){
         result = $.parseJSON(data);
         if (result['error'] == 0) {
-            $(result_area).empty().load("ref_topics/ref.topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("core.topics/topics.action.list.php?ref="+ref_name);
             $( target ).dialog( "close" );
         } else {
             // удаление невозможно
