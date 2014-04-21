@@ -102,8 +102,8 @@ if ($articles_count > 0) {
 <td><small>{$row['title_ru']}</small></td>
 <td class="center_cell"><small>{$row['add_date']}</small></td>
 <td>
-    <button class="actor-download-pdf button-download-icon" name="{$row['pdffile']['id']}" data-text="Show PDF"></button>
-    <button class="actor-edit button-edit-icon" name="{$row['id']}" data-text="Edit"></button>
+    <button class="action-download-pdf button-download-icon" name="{$row['pdffile']['id']}" data-text="Show PDF"></button>
+    <button class="action-edit button-edit-icon" name="{$row['id']}" data-text="Edit"></button>
 </td>
 </tr>
 ArticlesAL_Each;

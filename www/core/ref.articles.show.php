@@ -18,13 +18,13 @@ if (!isLogged()) header('Location: /core/');
     <script src="/tpl/frontend.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
-    <link rel="stylesheet" type="text/css" href="ref_articles/articles.css">
+    <link rel="stylesheet" type="text/css" href="core.articles/articles.css">
 
     <script type="text/javascript">
-        var authorsList = preloadOptionsList('ref_authors/ref.authors.action.getoptionlist.php');
+        var authorsList = preloadOptionsList('core.authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('ref_books/ref.books.action.getoptionlist.php');
         var topicsList = preloadOptionsList('ref_topics/ref.topics.action.getoptionlist.php');
-        var url_extended = "ref_articles/articles.action.list.php";
+        var url_extended = "core.articles/articles.action.list.php";
 
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
@@ -51,17 +51,17 @@ if (!isLogged()) header('Location: /core/');
             $("#articles_list").empty().load(url_extended+query);
 
             $("#button-newarticle").on('click',function(){
-                location.href = 'ref_articles/articles.form.add.php';
+                location.href = 'core.articles/articles.form.add.php';
             });
             $("#button-exit").on('click',function(){
                 location.href = '/core/';
             });
             $('#articles_list')
-                    .on('click','.actor-download-pdf',function(){
+                    .on('click','.action-download-pdf',function(){
                         window.location.href="getfile.php?id="+$(this).attr('name')
                     })
-                    .on('click','.actor-edit',function(){
-                        location.href = 'ref_articles/articles.form.edit.php?id='+$(this).attr('name');
+                    .on('click','.action-edit',function(){
+                        location.href = 'core.articles/articles.form.edit.php?id='+$(this).attr('name');
                     });
 
             $("#button-show-withselection").on('click',function(){

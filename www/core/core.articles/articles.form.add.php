@@ -13,21 +13,21 @@ if (!isLogged()) header('Location: /core/');
 <head>
     <title>Добавление новой статьи</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="../js/jquery.ui.datepicker.rus.js"></script>
-    <script src="../js/tinymce.min.js"></script>
-    <script src="../js/tinymce.ru.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.ui.datepicker.rus.js"></script>
+    <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../js/tinymce.config.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
 
-    <script src="../js/core.js"></script>
-    <script src="ref.articles.js"></script>
+    <script type="text/javascript" src="../js/core.js"></script>
+    <script type="text/javascript" src="ref.articles.js"></script>
     <script type="text/javascript">
-        var authorsList = preloadOptionsList('../ref_authors/ref.authors.action.getoptionlist.php');
+        var authorsList = preloadOptionsList('../core.authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
         var topicsList = preloadOptionsList('../ref_topics/ref.topics.action.getoptionlist.php');
 
@@ -40,28 +40,13 @@ if (!isLogged()) header('Location: /core/');
         var currentBook = 1;
         var currentTopic = 1;
 
-
         // tinyMCE inits
-        tinymce.init({selector:'textarea#abstract_en',forced_root_block : "",
-            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
-            force_br_newlines : true,
-            force_p_newlines : false});
-        tinymce.init({selector:'textarea#abstract_ru',forced_root_block : "",
-            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
-            force_br_newlines : true,
-            force_p_newlines : false});
-        tinymce.init({selector:'textarea#abstract_uk',forced_root_block : "",
-            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
-            force_br_newlines : true,
-            force_p_newlines : false});
-        tinymce.init({selector:'textarea#refs_en',forced_root_block : "",
-            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
-            force_br_newlines : true,
-            force_p_newlines : false});
-        tinymce.init({selector:'textarea#refs_ru',forced_root_block : "",
-            plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor" ],
-            force_br_newlines : true,
-            force_p_newlines : false});
+        tinify(tiny_config['simple'], 'abstract_en');
+        tinify(tiny_config['simple'], 'abstract_ru');
+        tinify(tiny_config['simple'], 'abstract_uk');
+
+        tinify(tiny_config['simple'], 'refs_en');
+        tinify(tiny_config['simple'], 'refs_ru');
 
         $(document).ready(function () {
             // onload

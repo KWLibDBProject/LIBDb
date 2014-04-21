@@ -67,7 +67,7 @@ if ($is_newfile == 1) {
 // в едите нужно удалить старые значения, потом добавить новые
 if (IsSet($_POST['authors'])) {
     // удаляем старые соответствия
-    $q_del = "DELETE FROM `cross_aa` WHERE `article`=$article_id";
+    $q_del = "DELETE FROM cross_aa WHERE article=$article_id";
     mysql_query($q_del);
     // добавляем новых
     $authors = $_POST['authors'];
