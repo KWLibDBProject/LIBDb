@@ -20,7 +20,7 @@ $q = array(
     'content_uk' => mysql_escape_string($_POST['content_uk']),
 );
 
-$qstr = MakeUpdate($q, $ref_name, "WHERE id=$id");
+$qstr = MakeUpdate($q, $ref_name, " WHERE id=$id ");
 
 if ($res = mysql_query($qstr, $link)) {
     $result['message'] = $qstr;

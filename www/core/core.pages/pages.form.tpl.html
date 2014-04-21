@@ -7,9 +7,8 @@
     <script type="text/javascript" src="../js/tinymce.config.js"></script>
 
     <link rel="stylesheet" type="text/css" href="pages.css">
-    <style type="text/css"></style>
 
-    <script src="ref.pages.js"></script>
+    <script src="pages.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -21,7 +20,6 @@
             page_id = /**page_id**/;
 
             if (page_id != -1) {
-                Pages_LoadRecord("#form_edit_page", page_id, 'content_en', 'content_ru', 'content_uk');
                 $("#button-remove").show();
             }
 
@@ -42,33 +40,33 @@
     <button type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СТРАНИЦУ</strong></button>
     <button type="submit" class="button-large" ><strong>/**submit_button_text**/</strong></button>
     <hr>
-    <input type="hidden" name="id">
+    <input type="hidden" name="id" value="/**page_id**/">
     <fieldset>
         <legend>Техническая информация</legend>
         <label>Алиас (служебное имя страницы, не уверен - не меняй!)</label><br>
-        <input type="text" name="alias" id="alias" size=40 value=""><br>
+        <input type="text" name="alias" id="alias" size=40 value="/**alias**/"><br>
         <br>
 
         <label>Комментарий (не обязательно)</label><br>
-        <input type="text" name="comment" id="comment" size=40 value="">
+        <input type="text" name="comment" id="comment" size=40 value="/**comment**/">
     </fieldset>
     <fieldset>
         <legend>Страница на английском языке</legend>
-        <input type="text" name="title_en" id="title_en" size=60 value="" disabled><br>
-        <textarea name="content_en" id="content_en" cols="90" rows="7" class="tinymce_editable"></textarea>
+        <input type="text" name="title_en" id="title_en" size=60 value="/**title_en**/" disabled><br>
+        <textarea name="content_en" id="content_en" cols="90" rows="7" class="tinymce_editable">/**content_en**/</textarea>
     </fieldset>
     <fieldset>
         <legend>Страница на русском языке</legend>
-        <input type="text" name="title_ru" id="title_ru" size=60 value="" disabled><br>
-        <textarea name="content_ru" id="content_ru" cols="90" rows="7" class="tinymce_editable"></textarea>
+        <input type="text" name="title_ru" id="title_ru" size=60 value="/**title_ru**/" disabled><br>
+        <textarea name="content_ru" id="content_ru" cols="90" rows="7" class="tinymce_editable">/**content_ru**/</textarea>
     </fieldset>
     <fieldset>
         <legend>Страница на украинском языке</legend>
-        <input type="text" name="title_uk" id="title_uk" size=60 value="" disabled><br>
-        <textarea name="content_uk" id="content_uk" cols="90" rows="7" class="tinymce_editable"></textarea>
+        <input type="text" name="title_uk" id="title_uk" size=60 value="/**title_uk**/" disabled><br>
+        <textarea name="content_uk" id="content_uk" cols="90" rows="7" class="tinymce_editable">/**content_uk**/</textarea>
     </fieldset>
 
-<button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
+    <button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
 </form>
 
 </body>

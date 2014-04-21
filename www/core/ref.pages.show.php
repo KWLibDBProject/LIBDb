@@ -9,31 +9,30 @@ if (!isLogged()) header('Location: /core/');
 ?>
 <html>
 <head>
-    <title>Справочник: Статические страницы</title>
+    <title>Модуль: Статические страницы</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <script src="js/jquery-1.10.2.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
-    <link rel="stylesheet" type="text/css" href="ref_pages/pages.css">
+    <link rel="stylesheet" type="text/css" href="core.pages/pages.css">
 
     <script src="js/core.js"></script>
-    <script src="ref_pages/ref.pages.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            $("#pages_list").load("ref_pages/pages.action.list.php");
+            $("#pages_list").load("core.pages/pages.action.list.php");
 
             $("#actor-exit").on('click',function(event){
                 window.location.href = '/core/';
             });
             $("#actor-add").on('click',function(event){
-                window.location.href = 'ref_pages/pages.form.php';
+                window.location.href = 'core.pages/pages.form.php';
             });
             $('#pages_list')
-                    .on('click','.actor-edit',function(){
-                        window.location.href = 'ref_pages/pages.form.php?id='+$(this).attr('name');
+                    .on('click','.action-edit',function(){
+                        window.location.href = 'core.pages/pages.form.php?id='+$(this).attr('name');
                     });
         });
     </script>

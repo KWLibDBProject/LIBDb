@@ -38,7 +38,7 @@ CloseDB($link);
         <td>{$row['id']}</td>
         <td>{$row['alias']}</td>
         <td>{$row['comment']}</td>
-        <td class="centred_cell"><button class="actor-edit button-edit" name="{$row['id']}">Edit</button></td>
+        <td class="centred_cell"><button class="action-edit button-edit" name="{$row['id']}">Edit</button></td>
     </tr>
 REF_ONEROW;
         } //foreach
