@@ -28,7 +28,7 @@ if (!isLogged()) header('Location: /core/');
     <script type="text/javascript" src="ref.articles.js"></script>
     <script type="text/javascript">
         var authorsList = preloadOptionsList('../core.authors/ref.authors.action.getoptionlist.php');
-        var booksList = preloadOptionsList('../ref_books/ref.books.action.getoptionlist.php');
+        var booksList = preloadOptionsList('../core.books/ref.books.action.getoptionlist.php');
         var topicsList = preloadOptionsList('../ref_topics/ref.topics.action.getoptionlist.php');
 
         var mode = 'new';

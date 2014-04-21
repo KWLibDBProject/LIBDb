@@ -15,7 +15,7 @@ if (!isLogged()) header('Location: /core/');
     <script src="js/jquery-1.10.2.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
-    <link rel="stylesheet" type="text/css" href="ref_books/books.css">
+    <link rel="stylesheet" type="text/css" href="core.books/books.css">
 
     <script type="text/javascript" src="js/core.js"></script>
 
@@ -26,7 +26,7 @@ if (!isLogged()) header('Location: /core/');
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
             $("#books_list")
-                    .load("ref_books/books.action.list.php")
+                    .load("core.books/books.action.list.php")
                     .on('click','.lightbox-image',function(){
                         $.colorbox({
                             photo: true,
@@ -39,11 +39,11 @@ if (!isLogged()) header('Location: /core/');
                 window.location.href = '/core/';
             });
             $("#actor-add").on('click',function(event){
-                window.location.href = 'ref_books/books.form.add.php';
+                window.location.href = 'core.books/books.form.add.php';
             });
             $('#books_list')
-                    .on('click','.actor-edit',function(){
-                        window.location.href = 'ref_books/books.form.edit.php?id='+$(this).attr('name');
+                    .on('click','.action-edit',function(){
+                        window.location.href = 'core.books/books.form.edit.php?id='+$(this).attr('name');
                     });
         });
     </script>

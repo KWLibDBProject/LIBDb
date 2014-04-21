@@ -54,9 +54,6 @@
             minDate: '01.01.2003',
             maxDate: '01.01.2020',
             showButtonPanel: true
-            // showOn: "both",
-            // buttonImageOnly: true,
-            // buttonImage: "../css/images/calendar.gif"
         });
         $("#book_title").focus();
 
