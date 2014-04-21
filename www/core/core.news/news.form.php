@@ -4,14 +4,14 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 
 $data = json_decode(file_get_contents("http://".$_SERVER['HTTP_HOST'].'/core/core.news/news.action.getitem.php?id='.$_GET['id']), true);
+$news_id = isset($_GET['id']) ? $_GET['id'] : -1;
 
 $tpl = new kwt('news.form.tpl.html');
 
 $tpl -> config('/**','**/');
 
 $over = array(
-    // 'page_id' => isset($_GET['id']) ? $_GET['id'] : -1,
-    'page_id'   => $data['data']['id'],
+    'news_id'   => $news_id,
     'form_call_script' => isset($_GET['id']) ? 'news.action.update.php' : 'news.action.insert.php',
     'submit_button_text' => isset($_GET['id']) ? 'СОХРАНИТЬ ИЗМЕНЕНИЯ' : 'ДОБАВИТЬ',
     'page_title' => isset($_GET['id']) ? 'Новости -- редактирование' : 'Новости -- добавление',

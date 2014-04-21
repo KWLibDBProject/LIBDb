@@ -669,11 +669,12 @@ usable: используется для pure-вставки в шаблон
 function DB_LoadNewsItem($id, $lang)
 {
     $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, date_add FROM news where id={$id}";
-    if ($r = mysql_query($query)) {
+    $r = @mysql_query($query);
+    if ($r) {
         if (@mysql_num_rows($r) > 0) {
             $ret = mysql_fetch_assoc($r);
         }
-    }
+    } else $ret = null;
     return $ret;
 }
 /* загружает список новостей в краткой форме (асс.массив)
@@ -682,11 +683,12 @@ function DB_LoadNewsItem($id, $lang)
 function DB_LoadNewsListTOC($lang)
 {
     $query = "SELECT id, title_{$lang} AS title, date_add AS date FROM news ORDER BY `timestamp` DESC LIMIT 15";
-    if ($r = mysql_query($query)) {
+    $r = @mysql_query($query);
+    if ($r) {
         while ($row = mysql_fetch_assoc($r)) {
             $ret[ $row['id'] ] = $row;
         }
-    }
+    } else $ret = null;
     return $ret;
 }
 
@@ -694,15 +696,17 @@ function DB_LoadNewsListTOC($lang)
 function FE_PrintBanners($data)
 {
     $return = '';
-    foreach ($data as $id=>$row) {
-        $return .= <<<EACH_BANNER
+    if (count($data)) {
+        foreach ($data as $id=>$row) {
+            $return .= <<<EACH_BANNER
                 <li class="banner-item">
                     <a href="{$row['data_url_href']}" target="_blank" class="banner-item-href">
                         <img src="{$row['data_url_image']}" alt="{$row['data_alt']}">
                     </a>
                 </li>
 EACH_BANNER;
-    }
+        }
+    } else $return = null;
     return $return;
 }
 /* загружает массив отображаемых баннеров из базы (CONTROLLER?) */
@@ -716,7 +720,7 @@ function DB_LoadBanners()
         while ($row = mysql_fetch_assoc($res)) {
             $ret[] = $row;
         }
-    }
+    } else $ret = null;
     return $ret;
 }
 

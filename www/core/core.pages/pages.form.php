@@ -4,14 +4,14 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 
 $data = json_decode(file_get_contents("http://".$_SERVER['HTTP_HOST'].'/core/core.pages/pages.action.getitem.php?id='.$_GET['id']), true);
+$page_id = isset($_GET['id']) ? $_GET['id'] : -1;
 
 $tpl = new kwt('pages.form.tpl.html');
 
 $tpl -> config('/**','**/');
 
 $over = array(
-    // 'page_id' => isset($_GET['id']) ? $_GET['id'] : -1,
-    'page_id' => $data['data']['id'],
+    'page_id' => $page_id,
     'form_call_script' => isset($_GET['id']) ? 'pages.action.update.php' : 'pages.action.insert.php',
     'submit_button_text' => isset($_GET['id']) ? 'СОХРАНИТЬ ИЗМЕНЕНИЯ' : 'СОХРАНИТЬ СТРАНИЦУ',
     'page_title' => isset($_GET['id']) ? 'Страницы -- редактирование' : 'Страницы -- добавление',

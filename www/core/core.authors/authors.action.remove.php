@@ -22,14 +22,13 @@ if ($rt = mysql_query($qt)) {
     } else {
         // статей нет, можно удалять автора
         // нужно получить информацию об авторе, в частности id его фотографии
-        // заменено "фичей" - удаляем информацию из хранилища по relation-полю, в котором
-        // лежит идентификатор автора и название коллекции.
 
-        if (FileStorage::getCollectionByRel($author_id) === 'authors') {
-            FileStorage::removeFileByRel($author_id, 'authors');
-        } else {
-            die('Нарушение целостности базы');
-        }
+        $q = "SELECT id, photo_id FROM {$table} WHERE id = {$author_id}";
+        $qr = mysql_query($q);
+        $qf = mysql_fetch_assoc($qr);
+        $photo_id = $qf['photo_id'];
+
+        FileStorage::removeFileById($photo_id);
 
         // удалить запись об авторе из таблицы AUTHORS
         $q = "DELETE FROM $table WHERE (id = $author_id)";

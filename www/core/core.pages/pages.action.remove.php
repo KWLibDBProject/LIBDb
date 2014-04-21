@@ -15,7 +15,7 @@ $q = " DELETE FROM {$table} WHERE (id = {$id}) ";
 if ($r = mysql_query($q)) {
     // запрос удаление успешен
     $result["error"] = 0;
-    $result['message'] = 'Страница помечена на удаление.';
+    $result['message'] = 'Статичная страница удалена!';
 
 } else {
     // DB error again
@@ -32,7 +32,7 @@ if (isAjaxCall()) {
     $override = array(
         'time' => 15,
         'target' => '../ref.pages.show.php',
-        'buttonmessage' => 'Вернуться к списку статических страниц',
+        'buttonmessage' => 'Вернуться к списку статичных страниц',
         'message' => $result['message']
     );
     $tpl = new kwt('../ref.all.timed.callback.tpl');
