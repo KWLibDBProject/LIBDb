@@ -21,7 +21,8 @@ if (!isLogged()) header('Location: /core/');
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
 
-    <script src="js/core.js"></script>
+    <script type="text/javascript" src="js/core.js"></script>
+    <script type="text/javascript" src="js/core.excel.js"></script>
     <script type="text/javascript" src="/tpl/frontend.js"></script>
 
     <script type="text/javascript">
@@ -66,6 +67,9 @@ if (!isLogged()) header('Location: /core/');
                 setHashBySelectors();
                 $("#files_list").empty().load('core.filestorage/filestorage.action.list.php');
             });
+            $("#actor-export-excel").on('click', function(){
+                tableToExcel('exportable', 'export');
+            })
         });
     </script>
     <style type="text/css">
@@ -80,6 +84,9 @@ if (!isLogged()) header('Location: /core/');
         }
         #actor-exit {
             float:right;
+        }
+        .hint {
+            display: none;
         }
 
     </style>
@@ -96,7 +103,11 @@ if (!isLogged()) header('Location: /core/');
         <option value="books">Сборники</option>
     </select></form>
     <button id="actor-show-withselection" disabled>Показать выбранных</button>
+    <button id="actor-export-excel">Export to Excel</button>
     <button type="button" id="actor-exit"><strong><<< НАЗАД </strong></button>
+    <div class="hint">
+        <hr>
+    </div>
 </fieldset>
 
 <fieldset class="result-list table-hl-rows">

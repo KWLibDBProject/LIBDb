@@ -68,8 +68,14 @@
         .admin-button-small {
             width: 150px;
         }
+        .button-have-submenu {
+            color: blue;
+        }
         .actor-button-sub {
             width: 150px;
+        }
+        button[disabled] {
+            color: gray;
         }
 
     </style>
@@ -108,22 +114,20 @@
                     <button data-href="ref.banners.php" class="admin-button-large action-is-href">Баннеры</button>
                 </li>
                 <li class="have-top-border">
-                    <button type="button" class="admin-button-small action-have-submenu" data-submenu-id="submenu-tools">Администратору:</button>
+                    <button type="button" class="admin-button-small button-have-submenu action-have-submenu" data-submenu-id="submenu-tools">Администратору:</button>
                     <ul id="submenu-tools" class="hidden submenu-border">
                         <li>
-                            <button data-href="ref.users.show.php" class="admin-button-large action-is-href">ПОЛЬЗОВАТЕЛИ</button>
+                            <button data-href="ref.users.show.php" class="admin-button-small action-is-href">ПОЛЬЗОВАТЕЛИ</button>
                         </li>
                         <li>
-                            <button data-href="list.filestorage.php" class="admin-button-large action-is-href">Filestorage<br>viewer</button>
+                            <button data-href="list.filestorage.php" class="admin-button-large action-is-href">Filestorage</button>
                         </li>
                         <li>
-                            <button data-href="/files/storage/" class="admin-button-large action-is-href-blank">/files/storage/</button>
+                            <button data-href="/files/storage/" class="admin-button-small action-is-href-blank">/files/storage/</button>
                         </li>
-                        <!--
                         <li>
-                            <button data-href="statistics.show.php" class="admin-button-large actor-button" disabled>Статистика</button>
+                            <button data-href="list.statistics.php" class="admin-button-small actor-button" disabled>Статистика</button>
                         </li>
-                        -->
                         <li class="menu-header">
                             Справочники:
                         </li>

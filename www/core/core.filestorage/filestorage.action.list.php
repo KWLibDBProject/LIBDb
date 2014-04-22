@@ -58,7 +58,7 @@ CloseDB($link);
 <style>
 
 </style>
-<table class="" border="1" width="100%">
+<table class="" border="1" width="100%" id="exportable">
     <caption></caption>
     <tr>
         <th>icon</th>
