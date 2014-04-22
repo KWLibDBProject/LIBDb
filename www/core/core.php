@@ -219,4 +219,9 @@ function ConvertDateToTimestamp($str_date, $format="d/m/Y")
     return mktime(12, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 }
 
+function ConvertToHumanBytes($size) {
+    $filesizename = array(" Bytes", " K", " M", " G", " T", " P", " E", " Z", " Y");
+    return $size ? round($size / pow(1024, ($i = floor(log($size, 1024)))), 0) . $filesizename[$i] : '0 Bytes';
+}
+
 ?>
