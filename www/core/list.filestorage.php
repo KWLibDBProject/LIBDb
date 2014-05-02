@@ -64,6 +64,7 @@ if (!isLogged()) header('Location: /core/');
             $("#actor-show-all").on('click',function(){
                 // reset search selector
                 $('select[name="collection"]').val('all');
+                $("#actor-show-withselection").prop('disabled', true);
                 setHashBySelectors();
                 $("#files_list").empty().load('core.filestorage/filestorage.action.list.php');
             });
@@ -102,7 +103,7 @@ if (!isLogged()) header('Location: /core/');
         <option value="authors">Авторы</option>
         <option value="books">Сборники</option>
     </select></form>
-    <button id="actor-show-withselection" disabled>Показать выбранных</button>
+    <button id="actor-show-withselection" disabled>Показать выбранную коллекцию</button>
     <button id="actor-export-excel">Export to Excel</button>
     <button type="button" id="actor-exit"><strong><<< НАЗАД </strong></button>
     <div class="hint">

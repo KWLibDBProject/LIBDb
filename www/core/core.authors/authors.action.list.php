@@ -18,9 +18,11 @@ if ( (!isset($_GET['letter'])) || ($_GET['letter'] != '0') ) {
     $like = '';
 }
 
+if ($like != '') $where = " WHERE {$like}";
+
 $ref_list = array();
 
-$query = "SELECT * FROM {$ref_name} WHERE {$like} {$sort_order}";
+$query = "SELECT * FROM {$ref_name} {$where} {$sort_order}";
 $res = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($res) ;
 
@@ -51,6 +53,23 @@ if ($ref_numrows > 0)
             if (empty($field)) $row[$fid] = '';
         }
         $is_link_disabled = ($row['photo_id'] == -1) ? 'action-aal-no-photo' : '';
+
+        /* $tpl = new kwt('authors.action.list.onerow.html');
+        $tpl->override(array(
+            'id'            =>  $row['id'],
+            'name_ru'       =>  $row['name_ru'],
+            'workplace_ru'  =>  $row['workplace_ru'],
+            'email'         =>  $row['email'],
+            'phone'         =>  $row['phone'],
+            'photo_id'      =>  $row['photo_id'],
+            'is_link_disabled' => ($row['photo_id'] == -1) ? 'action-aal-no-photo' : '',
+        ));
+        $tpl -> contentstart();
+
+        $return .= $tpl->getcontent();
+
+        unset($tpl);
+*/
         $return .= <<<core_authors_action_list_each
     <tr>
         <td>

@@ -10,9 +10,9 @@ $ref_name = 'authors';
 $link = ConnectDB();
 
 $q = array(
-    'name_ru' => mysql_escape_string($_POST['name_ru']),
-    'name_en' => mysql_escape_string($_POST['name_en']),
-    'name_uk' => mysql_escape_string($_POST['name_uk']),
+    'name_ru' => mysql_escape_string(trim($_POST['name_ru'], ' ')),
+    'name_en' => mysql_escape_string(trim($_POST['name_en'], ' ')),
+    'name_uk' => mysql_escape_string(trim($_POST['name_uk'], ' ')),
     'title_ru' => mysql_escape_string($_POST['title_ru']),
     'title_en' => mysql_escape_string($_POST['title_en']),
     'title_uk' => mysql_escape_string($_POST['title_uk']),
