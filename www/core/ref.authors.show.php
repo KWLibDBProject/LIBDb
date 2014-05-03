@@ -40,7 +40,8 @@ if (!isLogged()) header('Location: /core/');
             });
 
             // onload
-            $("#authors_list").load("core.authors/authors.action.list.php");
+            // $("#authors_list").load("core.authors/authors.action.list.php");
+            $("#authors_list").empty().load('core.authors/authors.action.list.php?'+siteLanguage+"&"+"letter="+$('select[name="letter"]').val());
 
             // bind exit actor
             $("#actor-exit").on('click',function(event){

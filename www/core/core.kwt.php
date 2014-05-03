@@ -1,55 +1,44 @@
 <?php
-// kw templates
 
-/* использовать
-ассоциативный массив для замены:
-{ ... ключ => строка ... }
-ищем строку <%key%> и тупо меняем на содержимое ключа
-
-*/
-/* @todo: инструкция по пользованию */
-class KWT
+class kwt
 {
+    private $file;
     private $tag_open = '{%';
     private $tag_close = '%}';
-
-    private $file;
     private $overrides = array();
+    private $content;
 
-    // Конструктор класса, задает файл с шаблоном
-    public function __construct($file)
+    private function get_include_contents($filename) {
+        if (is_file($filename)) {
+            ob_start();
+            include $filename;
+            return ob_get_clean();
+        }
+        return false;
+    }
+
+    // функция-обработчик. заменяет переменные в файле согласно массиву overrides
+    private function kwt_callback(&$buffer)
+    {
+        $buf = $buffer;
+        foreach ($this->overrides as $key => $value)
+        {
+            $skey = $this->tag_open.$key.$this->tag_close;
+            $buf = str_replace($skey, $value, $buf);
+        }
+        return $buf;
+    }
+
+    // создаем экземпляр шаблона: инициализируем переменные и загружаем шаблон
+    public function __construct($file, $open = '{%', $close = '%}')
     {
         $this->file = dirname($_SERVER['SCRIPT_FILENAME']).'/'.$file;
-        ob_start(array(&$this,'callback'));
+        $this->tag_open = $open;
+        $this->tag_close = $close;
+        $this->content = $this->get_include_contents($this->file);
     }
 
-    // вызов требуется, если мы хотим что-то вывести через обычный echo (прямо "в теле" скрипта)
-    public function contentstart()
-    {
-        ob_start(array(&$this,'callback'));
-    }
-
-    // вызов требуется, когда мы заканчиваем выводить что-то выводить в теле скрипта
-    // принимает имя поля вставки
-    public function contentend($target,$clear=true)
-    {
-        if (!isset($clear)) $clear = true;
-        $target = strtolower($target);
-        $this->overrides["$target"] = ob_get_contents();
-        if ($clear) ob_end_clean();
-    }
-
-    // вызываем, когда надо отдать все с сервера, обычно в конце
-    public function out()
-    {
-        if (is_readable($this->file)) {
-            include($this->file);
-        }
-        ob_end_flush();
-    }
-
-    // загружает ассоциативный массив с заменами в обработчик шаблона
-    // использовать можно в любое время
+    // создает (или дополняет) массив замещаемых переменных в шаблоне
     public function override($arr)
     {
         if (!empty($arr)) {
@@ -57,39 +46,23 @@ class KWT
                 if (!array_key_exists(strtolower($ki), $this->overrides)) $this->overrides[strtolower($ki)] = $kv;
             }
         } else {
-
             $this->overrides = array_merge($this->overrides,$arr);
         }
-
     }
 
-    // функция-обработчик. выполняет всю работу
-    public function callback($buffer)
+    // возвращает обработанный шаблон в переменную для использования в шаблонах верхнего уровня
+    public function get()
     {
-        $buf = $buffer;
-        foreach ($this->overrides as $key => $value) {
-            $skey = $this->tag_open.$key.$this->tag_close;
-            $buf = str_replace($skey, $value, $buf);
-        }
-        return $buf;
-    }
-
-    // функция записывает весь вывод в переменную и её возвразает. Использовать для вложенных шаблонов так:
-    // new, override(), потом
-    // $t2 -> contentstart(); <--- вызывать обязательно, если мы делаем какие-то оверрайды во вложенном шаблоне !!!!
-    // $message = $t2->apply(); и используем как хотим :)
-    public function getcontent($clear=true)
-    {
-        if (!isset($clear)) $clear = true;
-        if (is_readable($this->file)) {
-            include($this->file);
-        }
-        $return = ob_get_contents();
-
-        if ($clear) ob_end_clean();
+        $return = $this->kwt_callback($this->content);
         return $return;
     }
-    // а еще нужна функция, которая тупо инклюдит файл в переменную (возможно, даже , тупо через read)
+
+    // выводит шаблон в буфер вывода
+    public function flush()
+    {
+        // print $this->content;
+        print $this->kwt_callback($this->content);
+    }
 
     // изменяет параметры ограничений переменных, принимает строки
     public function config($start,$end)
@@ -98,8 +71,20 @@ class KWT
         $this->tag_close = $end;
     }
 
+    /* wrappers functions */
 
+    public function out()
+    {
+        $this->flush();
+    }
 
+    public function getcontent()
+    {
+        return $this->get();
+    }
+
+    public function contentstart()
+    {}
 
 }
 ?>

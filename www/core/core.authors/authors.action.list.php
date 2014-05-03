@@ -54,7 +54,7 @@ if ($ref_numrows > 0)
         }
         $is_link_disabled = ($row['photo_id'] == -1) ? 'action-aal-no-photo' : '';
 
-        /* $tpl = new kwt('authors.action.list.onerow.html');
+        $tpl = new kwt('authors.action.list.onerow.html');
         $tpl->override(array(
             'id'            =>  $row['id'],
             'name_ru'       =>  $row['name_ru'],
@@ -62,36 +62,10 @@ if ($ref_numrows > 0)
             'email'         =>  $row['email'],
             'phone'         =>  $row['phone'],
             'photo_id'      =>  $row['photo_id'],
-            'is_link_disabled' => ($row['photo_id'] == -1) ? 'action-aal-no-photo' : '',
+            'is_link_disabled' => ($row['photo_id'] == -1) ? 'action-aal-no-photo' : ''
         ));
-        $tpl -> contentstart();
-
+        $tpl->contentstart();
         $return .= $tpl->getcontent();
-
-        unset($tpl);
-*/
-        $return .= <<<core_authors_action_list_each
-    <tr>
-        <td>
-            {$row['id']}
-        </td>
-        <td>
-            <div class="aal-author-name">
-                {$row['name_ru']}
-            </div>
-            <div class="aal-author-info">
-                {$row['workplace_ru']} , {$row['email']} , {$row['phone']}
-            </div>
-        </td>
-        <td>
-            <a href="getimage.php?id={$row['photo_id']}" target="_blank" class="lightbox {$is_link_disabled}"> &lt;Show&gt; </a>
-        </td>
-        <td class="centred_cell">
-            <button class="action-edit button-edit" name="{$row['id']}">Edit</button>
-        </td>
-
-    </tr>
-core_authors_action_list_each;
     }
 } else {
     $return .= <<<core_authors_action_list_noauthors
@@ -105,6 +79,6 @@ core_authors_action_list_noauthors;
 $return .= <<<AAA_END
 </table>
 AAA_END;
-
+// $tpl->out();
 print $return;
 ?>
