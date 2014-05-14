@@ -1,0 +1,20 @@
+<ul class="news-list">
+
+<?php
+global $news_list_toc;
+foreach ($news_list_toc as $i => $d) {
+echo <<<NI_ITEM
+    <li class="news-list-item">
+        <div class="news-list-item-date">
+            {$d['date']}
+        </div>
+        <div class="news-list-item-title">
+            <a href="?fetch=news&with=the&id={$i}">{$d['title']}</a>
+        </div>
+    </li>
+NI_ITEM;
+
+}
+?>
+
+</ul>
