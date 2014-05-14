@@ -15,7 +15,7 @@ if (!isLogged()) header('Location: /core/');
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/core.js"></script>
-    <script src="/tpl/frontend.js"></script>
+    <script src="/frontend.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="core.articles/articles.css">

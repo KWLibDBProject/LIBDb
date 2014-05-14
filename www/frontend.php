@@ -216,6 +216,10 @@ topics.deleted=0 {$query_show_published} ";
 
     $q_final = " GROUP BY articles.title_{$lang} ORDER BY articles.id ";
 
+    /* condition for single article request */
+
+    $q_base_where .= (IsSet($get['article_id']) && ($get['article_id'] != 0))          ? " AND articles.id = {$get['article_id']} " : "";
+
     /* Extended search conditions */
     $q_extended = '';
     $q_extended .= (IsSet($get['book']) && ($get['book'] != 0))          ? " AND articles.book = {$get['book']} " : "";
@@ -386,29 +390,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 // возвращает базовую информацию о статье как асс.массив (single-версия LoadArticlesByQuery() )
 function LoadArticleInformation_ById($id, $lang)
 {
-/* заменено на вызов уже существующей функции
- *      $q = "
-    SELECT
-    articles.id AS id,
-    articles.title_{$lang} AS title,
-    articles.keywords_{$lang} AS keywords,
-    articles.pdfid AS pdfid,
-    articles.refs_{$lang} AS refs,
-    articles.udc AS udc,
-    articles.abstract_{$lang} AS abstract,
-    books.title AS book_title,
-    books.year AS book_year
-    FROM articles, books
-    WHERE articles.id=$id AND books.id=articles.book
-    ";
-
-    $ret = array();
-    if ($r = mysql_query($q)) {
-        if (mysql_num_rows($r)>0) {
-            $ret = mysql_fetch_assoc($r);
-        }
-    } */
-    $ret = reset(LoadArticles_ByQuery(array('aid' => $id ) , $lang));
+    $ret = reset(LoadArticles_ByQuery(array('article_id' => $id ) , $lang));
     return $ret;
 }
 

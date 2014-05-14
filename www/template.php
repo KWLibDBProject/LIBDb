@@ -118,6 +118,7 @@ PrintLastNews;
 
             foreach ($articles as $an_article_id => $an_article) {
                 $authors_list = $this->getAuthors_InArticlesList($an_article['authors']);
+
                 $t_a = new kwt($this->template_path.'/_internal/item_in_articles_list.html', '<!--{', '}-->');
                 $t_a->override(array(
                     'book_title'        => $an_article['book_title'],
@@ -144,10 +145,10 @@ PrintLastNews;
     {
         $ret = '';
         // $authors = LoadAuthors_ByArticle($id, $this->site_language);
-        foreach ($authors as $an_author)
+        foreach ($authors as $author_id => $an_author)
         {
             // Иванов И.И., др.тех.наук
-            if ($with_email != '') {
+            if (($with_email != '') && ($an_author['author_email'] != '')) {
                 $an_author['author_email'] = ' ('.$an_author['author_email'].')';
             } else { $an_author['author_email'] = ''; }
 

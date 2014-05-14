@@ -4,9 +4,7 @@
 require_once('core/core.php');
 require_once('core/core.db.php');
 require_once('frontend.php');
-require_once('template.php');
-
-$tpl_path = 'tpl'; // change for different template engines
+require_once('template.table.php');
 
 $actor = isset($_GET['actor']) ? $_GET['actor'] : '';
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';

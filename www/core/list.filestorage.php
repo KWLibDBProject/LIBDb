@@ -23,7 +23,7 @@ if (!isLogged()) header('Location: /core/');
 
     <script type="text/javascript" src="js/core.js"></script>
     <script type="text/javascript" src="js/core.excel.js"></script>
-    <script type="text/javascript" src="/tpl/frontend.js"></script>
+    <script type="text/javascript" src="/frontend.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

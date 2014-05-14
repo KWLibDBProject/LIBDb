@@ -94,14 +94,18 @@ class FileStorage extends FileStorageConfig {
             $r = @mysql_query($q);
             if ($r) {
                 $d = mysql_fetch_assoc($r);
-                $h = fopen(self::getRealFileName($d['internal_name']), "rb");
-                $ret = fread($h, $d['filesize']);
-                fclose($h);
+                if (is_file($d['internal_name'])) {
+                    $h = fopen(self::getRealFileName($d['internal_name']), "rb");
+                    $ret = fread($h, $d['filesize']);
+                    fclose($h);
+                } else {
+                    $ret = null; // catch file not found in storage directory
+                }
             } else {
-                $ret = null;
+                $ret = null; // catch error quering fileinfo from DB
             }
         } else {
-            $ret = null;
+            $ret = null; // catch unknown file id
         }
         return $ret;
     }

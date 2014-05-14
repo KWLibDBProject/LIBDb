@@ -5,8 +5,9 @@ require_once('core/core.kwt.php');
 require_once('frontend.php');
 require_once('template.table.php');
 
+// $tpl_path = 'template.table'; // defined in template.*.php file
 $site_language = GetSiteLanguage();
-$tpl_path = 'tpl';
+
 
 // init
 // defaults fields and variables
@@ -22,8 +23,8 @@ $tpl_index = new kwt($tpl_path."/index.{$site_language}.html", '<!--{', '}-->' )
 $link = ConnectDB();
 
 $template_engine = new TemplateTable($tpl_path, $site_language); // этот же экземпляр придется создавать в ajax.php - чтобы получить доступ к функциям
-
 /* Override variables in INDEX.*.HTML template */
+$override['template_path'] = $tpl_path; // template directory name (not a path!)
 $override['rubrics']    = $template_engine->getTopics();
 $override['books']      = $template_engine->getBooks();
 $override['banners']    = $template_engine->getBanners();
@@ -195,10 +196,8 @@ switch ($fetch) {
                 $filename = $tpl_path.'/fetch=articles/with=info/f_articles+w_info.'.$site_language;
 
                 $article_info = LoadArticleInformation_ById($id, $site_language); // EQ $article_info = LoadArticles_ByQuery(array('aid' => $id ) , $site_language);
-
                 $article_authors = $template_engine->getAuthors_InArticle($article_info['authors'], 'with-email');
                 //@warning: мы вставили в BuildQuery еще несколько полей (article_abstract, article_refs, article_keywords), при поиске по keywords может (!) возникнуть бага -- тесты!
-
                 $inner_html = new kwt($filename.'.html');
                 $inner_html->override( array (
                     'article-title'         => $article_info['article_title'],
@@ -208,7 +207,7 @@ switch ($fetch) {
                     'article-book-title'    => $article_info['book_title'],
                     'article-book-year'     => $article_info['book_year'],
                     'article-pdfid'         => $article_info['pdfid'],
-                    'article-refs'          => $article_info['refs']
+                    'article-refs'          => $article_info['article_refs']
                 ));
                 $override['meta_keywords'] = $article_info['keywords']; // GLOBAL KEYWORDS
                 $maincontent_html = $inner_html->get();

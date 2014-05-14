@@ -1,5 +1,6 @@
 <?php
 require_once('template.php');
+$tpl_path = 'template.table';
 
 class TemplateTable extends Template {
 

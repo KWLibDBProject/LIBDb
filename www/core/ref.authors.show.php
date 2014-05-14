@@ -22,7 +22,7 @@ if (!isLogged()) header('Location: /core/');
 
     <script src="js/core.js"></script>
     <script src="core.authors/authors.js"></script>
-    <script type="text/javascript" src="/tpl/frontend.js"></script>
+    <script type="text/javascript" src="/frontend.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

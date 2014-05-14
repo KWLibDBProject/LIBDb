@@ -2,21 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-    <title>Сайт журнала «Электротехнические и компьютерные системы»
-        Одесский национальный политехнический университет</title>
-    <link rel="stylesheet" type="text/css" href="tpl/menu.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="tpl/layout.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="tpl/styles.css" media="screen" />
+    <link rel="icon" href="<!--{template_path}-->/images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="<!--{template_path}-->/images/favicon.ico" type="image/x-icon" />
+    <title>ELECTROTECHNIC AND COMPUTER SYSTEMS,
+        Odessa national polytechnic university</title>
+    <link rel="stylesheet" type="text/css" href="<!--{template_path}-->/menu.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<!--{template_path}-->/layout.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<!--{template_path}-->/styles.css" media="screen" />
 
-    <script type="text/javascript" src="tpl/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="tpl/jquery.colorbox-min.js"></script>
-    <script type="text/javascript" src="tpl/jquery-ui-1.10.4.min.js"></script>
-    <link rel="stylesheet" href="tpl/colorbox.css" />
-    <link rel="stylesheet" href="tpl/jquery-ui-1.10.4.custom.min.css" />
+    <script type="text/javascript" src="<!--{template_path}-->/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="<!--{template_path}-->/jquery.colorbox-min.js"></script>
+    <script type="text/javascript" src="<!--{template_path}-->/jquery-ui-1.10.4.min.js"></script>
+    <link rel="stylesheet" href="<!--{template_path}-->/colorbox.css" />
+    <link rel="stylesheet" href="<!--{template_path}-->/jquery-ui-1.10.4.custom.min.css" />
 
-    <script type="text/javascript" src="tpl/frontend.min.js"></script>
+    <script type="text/javascript" src="frontend.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -53,20 +53,20 @@
     <table class="layout" cellspacing="0">
         <tr class="t-header">
             <td class="t-logo" rowspan="2">
-                <a href="/"><img src="/images/sova_106x150.png" width="106" height="150" border="0"></a>
+                <a href="/"><img src="<!--{template_path}-->/images/sova_106x150.png" width="106" height="150" border="0" alt="Sova"></a>
             </td>
             <td class="t-logo-title">
-                <span class="logo-title">Научно-технический журнал
+                <span class="logo-title">Scientiific and Technical Journal
                     <br>
-                    <br>ЭЛЕКТРОТЕХНИЧЕСКИЕ И КОМПЬЮТЕРНЫЕ СИСТЕМЫ</span>
+                    <br>ELECTROTECHNIC AND COMPUTER SYSTEMS</span>
             </td>
             <td class="t-logo-langs">
                 <div id="issn-bar">ISSN Print 2221-3805<br>
                     ISSN Online 2221-3937</div>
                 <div id="langs-bar">
-                    <a data-lang="ru" href="" class="lang-active actor-switch-language"><img src="images/rus.png" class="hover_active_lang"></a>
-                    <a data-lang="en" href="" class="actor-switch-language"><img src="images/eng.png"></a>
-                    <a data-lang="uk" href="" class="actor-switch-language"><img src="images/ukr.png"></a>
+                    <a data-lang="ru" href="" class="actor-switch-language"><img src="<!--{template_path}-->/images/rus.png" alt="rus"></a>
+                    <a data-lang="en" href="" class="lang-active actor-switch-language"><img src="<!--{template_path}-->/images/eng.png" class="hover_active_lang" alt="en"></a>
+                    <a data-lang="uk" href="" class="actor-switch-language"><img src="<!--{template_path}-->/images/ukr.png" alt="ua"></a>
                 </div>
             </td>
         </tr>
@@ -80,7 +80,7 @@
         <tr>
             <td class="leftblock">
                 <div class="rubrics-list">
-                    <h3>Все рубрики</h3>
+                    <h3>All categories</h3>
                     <ul>
                         <!--{rubrics}-->
                     </ul>
@@ -88,9 +88,9 @@
                 <!-- контакты тут -->
                 <div id="left-block-contacts">
                     <hr>
-                    <em>Ответственный секретарь</em><br>
-                    <strong>Бабийчук Ольга Борисовна</strong><br>
-                    <small></small>тел/факс  +38 (048) 722-33-69,<br>
+                    <em>Assistant Editor</em><br>
+                    <strong>Olga Borisovna Babiychuk</strong><br>
+                    <small></small>phone:  +38 (048) 722-33-69,<br>
                     E-mail: <a href="mailto:babiychuk@ukr.net">babiychuk@ukr.net</a>
                 </div>
             </td>
@@ -100,7 +100,7 @@
                 </div>
             </td>
             <td class="rightblock">
-                <h3 class="books-list-header">Все журналы</h3>
+                <h3 class="books-list-header">All books</h3>
                 <div id="books-accordion" class="books-list">
                     <!--{books}-->
                 </div>
@@ -109,7 +109,6 @@
                         <!--{last_news_shortlist}-->
                     </ul>
                 </div>
-
             </td>
         </tr>
         <tr>
@@ -117,6 +116,7 @@
                 <ul class="banners-list">
                     <!--{banners}-->
                 </ul>
+                <!-- <hr width="40%"> -->
             </td>
         </tr>
         <tr>
@@ -127,18 +127,21 @@
                 <div class="copylefts">
                     <small>
                         [ <a href="/core" class="copyleft">©</a> KarelWintersky ]
-                        [ <a href="?fetch=articles&with=all">Все статьи</a> ]
-                        [ <a href="?fetch=authors&with=all">Все авторы</a> ]
+                        [ <a href="?fetch=articles&with=all">All articles</a> ]
+                        [ <a href="?fetch=authors&with=all">All authors</a> ]
                     </small>
                     <br>
                     <small>
-                        [ © Одесский национальный политехнический университет, 2014.
-                        Любое использование информации со страниц сайта возможно только при условии указания ссылки на источник!]
+                        [ © Odessa National Polytechnic University, 2014. Any use of information from the site is possible only under the condition that the source link!]
                     </small>
                 </div>
             </td>
         </tr>
     </table>
 </div>
-<?php include_once("_analyticstracking.php") ?></body>
+<div id="debug_section">
+    <!--{debug}-->
+</div>
+<?php include_once("_analyticstracking.php") ?>
+</body>
 </html>

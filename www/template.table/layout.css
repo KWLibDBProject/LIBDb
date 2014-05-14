@@ -1,7 +1,7 @@
 BODY {
     margin: 0;
     background: white; /* #f0f8ff; */
-    background: url(/images/paper_01.jpg) scroll repeat;
+    background: url(/template.table/images/paper_01.jpg) scroll repeat;
 }
 #body {
     min-width: 540px;
