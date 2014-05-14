@@ -61,3 +61,7 @@ fieldset.search_results {
     color: navy;
 }
 /* ==================================== END =================================== */
+
+.hidden {
+    display: none;
+}

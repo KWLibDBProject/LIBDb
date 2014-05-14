@@ -4,6 +4,9 @@
 require_once('core/core.php');
 require_once('core/core.db.php');
 require_once('frontend.php');
+require_once('template.php');
+
+$tpl_path = 'tpl'; // change for different template engines
 
 $actor = isset($_GET['actor']) ? $_GET['actor'] : '';
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
@@ -11,16 +14,18 @@ $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
 $return = '';
 $link = ConnectDB();
 
+$engine = new Template($tpl_path, $lang);
+
 switch ($actor) {
     case 'get_letters_as_optionlist' : {
         /* загрузить первые буквы авторов и отдать JSON-объект для построения селекта */
-        $return = json_encode(DB_LoadFirstLettersForSelector($lang));
+        $data = LoadFirstLettersForSelector($lang);
+        $return = json_encode($data);
         break;
     }
     case 'get_books_as_optionlist' : {
         /* загрузить сборники и отдать JSON-объект для построения селекта */
         $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
-        // $withoutid = 1;
         $q = "SELECT * FROM books WHERE deleted=0 AND published=1";
         $r = mysql_query($q) or die($q);
         $n = @mysql_num_rows($r) ;
@@ -36,15 +41,12 @@ switch ($actor) {
             $data['data'][1] = "Добавьте книги (сборники) в базу!!!";
             $data['error'] = 1;
         }
-
         $return = json_encode($data);
         break;
     }
     case 'get_topics_as_optionlist' : {
         /* загрузить категории и отдать JSON-объект для построения селекта */
         $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
-        // $withoutid = 1;
-
         $query = "SELECT * FROM topics WHERE deleted=0";
         $result = mysql_query($query) or die($query);
         $ref_numrows = @mysql_num_rows($result) ;
@@ -60,26 +62,24 @@ switch ($actor) {
             $data['data'][1] = "Добавьте темы (топики) в базу!!!";
             $data['error'] = 1;
         }
-
         $return = json_encode($data);
         break;
     }
-    /* called by:
-    f_articles+w_extended.en.js ->
-    */
+
     case 'load_articles_by_query' : {
         // Поиск статей - расширенный (/articles/extended/)
-        $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
+        // called by:     f_articles+w_extended.en.js ->
+        $return = $engine-> getArticlesList($_GET);         // $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
         break;
     }
 
     case 'load_authors_selected_by_letter': {
-        $return = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter($_GET['letter'], $lang, 'no'), $lang);
+        $return = $engine -> getAuthors_PlainList($_GET['letter']); // $return = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter($_GET['letter'], $lang, 'no'), $lang);
         break;
     }
     case 'load_articles_expert_search': {
         // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
-        $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
+        $return = $engine-> getArticlesList($_GET);  // $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
         break;
     }
 
@@ -92,6 +92,6 @@ CloseDB($link);
 if (isAjaxCall()) {
     print($return);
 } else {
-    printr($return);
+    print_r($return);
 }
 ?>

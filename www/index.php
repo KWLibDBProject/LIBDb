@@ -3,28 +3,33 @@ require_once('core/core.php');
 require_once('core/core.db.php');
 require_once('core/core.kwt.php');
 require_once('frontend.php');
+require_once('template.table.php');
 
-$site_language = FE_GetSiteLanguage(); // на самом деле получаем из куки
+$site_language = GetSiteLanguage();
 $tpl_path = 'tpl';
 
-// init defaults fields and variables
+// init
+// defaults fields and variables
 $maincontent_html = '';
 $maincontent_js = '';
 $maincontent_css = '';
-$override = array(); // template override array
+// template override array
+$override = array();
 
 // load default template, based on language
-$tpl_index = new kwt($tpl_path."/index.{$site_language}.html"); // файлы шаблонов различны для разных языков + файл переводов
-$tpl_index->config('<!--{','}-->');
-$tpl_index->contentstart();
+$tpl_index = new kwt($tpl_path."/index.{$site_language}.html", '<!--{', '}-->' );
 
 $link = ConnectDB();
 
+$template_engine = new TemplateTable($tpl_path, $site_language); // этот же экземпляр придется создавать в ajax.php - чтобы получить доступ к функциям
+
 /* Override variables in INDEX.*.HTML template */
-$override['rubrics'] = FE_PrintTopics(DB_LoadTopics($site_language),$site_language);
-$override['books'] = FE_PrintBooks(DB_LoadBooks($site_language),$site_language);
-$override['banners'] = FE_PrintBanners(DB_LoadBanners());
-$override['last_news_shortlist'] = FE_PrintLastNews(DB_LoadLastNews($site_language,3));
+$override['rubrics']    = $template_engine->getTopics();
+$override['books']      = $template_engine->getBooks();
+$override['banners']    = $template_engine->getBanners();
+$override['last_news_shortlist'] = $template_engine->getLastNews(3);
+/* insert menu from template */
+$override['main_menu_content'] = $template_engine->getMenu();
 
 // Main switch
 
@@ -35,170 +40,133 @@ switch ($fetch) {
     case 'authors' : {
         /* секция обработки авторов - информация или список */
         switch ($with) {
-            case 'info' : {
+            case 'info': {
                 /*расширенная информация по автору + список его статей + фото */
                 $filename = $tpl_path.'/fetch=authors/with=info/f_authors+w_info.'.$site_language;
                 $id = $_GET['id'];
-
-                $author_information = DB_LoadAuthorInformation_ById($id, $site_language);
-                $a_articles = FE_PrintArticles_ByAuthor(DB_LoadArticles_ByAuthor($id, $site_language), $site_language);
+                $author_information = LoadAuthorInformation_ById($id, $site_language);
+                $author_publications = $template_engine->getArticles_ByAuthor($id);
                 /* HTML Template */
                 $inner_html = new kwt($filename.".html");
                 $inner_html->override( array(
-                    'author_publications'   => $a_articles,
+                    'author_publications'   => $author_publications,
+                    'author_publications_display_class' => (empty($author_publications)) ? ' hidden ' : ' ',
                     'author_name'           => $author_information['author_name'],
                     'author_title'          => $author_information['author_title'],
                     'author_email'          => $author_information['author_email'],
                     'author_workplace'      => $author_information['author_workplace'],
                     'author_bio'            => $author_information['author_bio'],
+                    'author_bio_display_class' => (empty($author_information['author_bio'])) ? ' hidden ' : ' ',
                     'author_photo_id'       => $author_information['author_photo_id'],
                     'author_photo_link'     => ($author_information['author_photo_id'] == -1) ? "/images/no_photo_{$site_language}.png" : "core/getimage.php?id={$author_information['author_photo_id']}"
                 ));
-                $inner_html->contentstart();
-                $maincontent_html = $inner_html->getcontent();
+                $maincontent_html = $inner_html->get();
 
                 /* JS Template */
                 $inner_js = new kwt($filename.".js");
                 $inner_js->override( array(
-                    "author_is_es" => ($author_information['author_is_es'])==1 ? 'block' : 'none' )
+                        "author_is_es" => ($author_information['author_is_es'])==1 ? 'block' : 'none' )
                 );
-                $inner_js->contentstart();
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_js = $inner_js->get();
 
                 /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
-                $maincontent_css = $inner_css->getcontent();
+                $maincontent_css = $inner_css->get();
                 break;
-            } // end case info
+            }
             case 'all' : {
                 // список ВСЕХ авторов - для поисковых систем
                 // фио, титул, email -> link to author page
                 $filename = $tpl_path.'/fetch=authors/with=all/f_authors+w_all.'.$site_language;
 
-                $all_authors_list = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter('', $site_language, 'no'), $site_language);
+                $all_authors_list = $template_engine->getAuthors_PlainList('');
 
-                /* HTML Template */
                 $inner_html = new kwt($filename.".html");
                 $inner_html->override( array (
                     'all_authors_list' => $all_authors_list
                 ));
-                $inner_html->contentstart();
-                $maincontent_html = $inner_html->getcontent();
+                $maincontent_html = $inner_html->get();
 
-                /* JS Template */
                 $inner_js = new kwt($filename.".js");
-                $inner_js->contentstart();
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_js = $inner_js->get();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
-                $maincontent_css = $inner_css->getcontent();
-
+                $maincontent_css = $inner_css->get();
                 break;
-            } // end case all
-            case 'estaff': {
+            }
+            case 'estaff' : {
                 $filename = $tpl_path.'/fetch=authors/with=estuff/f_authors+w_estuff.'.$site_language;
-
-                // $all_authors_plainlist = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes'), $site_language);
 
                 /* HTML Template */
                 $inner_html = new kwt($filename.".html");
                 $inner_html->override( array (
-                    // 'es_authors_list' => $all_authors_plainlist,
                     // главный редактор = 5
-                    'estuff_main_editor'        => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 5), $site_language),
+                    'estuff_main_editor'        => $template_engine->getAuthors_EStaffList(5),
                     // замглавного редактора = 4
-                    'estuff_main_subeditors'    => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 4), $site_language),
+                    'estuff_main_subeditors'    => $template_engine->getAuthors_EStaffList(4),
                     // редакционная коллегия = 3
-                    'estuff_local_editors'      => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 3), $site_language),
+                    'estuff_local_editors'      => $template_engine->getAuthors_EStaffList(3),
                     // международная редакционная коллегия = 1
-                    'estuff_remote_editors'     => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 1), $site_language),
+                    'estuff_remote_editors'     => $template_engine->getAuthors_EStaffList(1),
                     // редакторы = 6
-                    'estuff_simple_editors'     => FE_PrintAuthors_EStuffList(DB_LoadAuthors_ByLetter('0',$site_language, 'yes', 6), $site_language),
+                    'estuff_simple_editors'     => $template_engine->getAuthors_EStaffList(6),
                 ));
-                $inner_html->contentstart();
                 $maincontent_html = $inner_html->getcontent();
 
                 /* JS Template */
                 $inner_js = new kwt($filename.".js");
-                $inner_js->contentstart();
                 $maincontent_js = $inner_js->getcontent();
 
                 /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
                 $maincontent_css = $inner_css->getcontent();
                 break;
-            } // end case estuff
+            }
             case 'list' : {
-
                 $filename = $tpl_path.'/fetch=authors/with=list/f_authors+w_list.'.$site_language;
 
                 $inner_html = new kwt($filename.".html");
-                $inner_html->contentstart();
-                $maincontent_html = $inner_html->getcontent();
+                $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.".js");
-                $inner_js->contentstart();
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_js = $inner_js->get();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
-                $maincontent_css = $inner_css->getcontent();
-
+                $maincontent_css = $inner_css->get();
                 break;
-            } // end case list
-        }; // end $with authors switch
+            }
+        } // end $with authors switch
         break;
-    }
-    case 'articles': {
-        /* секция вывода статей по критерию поиска, информации по статье */
+    } // end /authors/* case
+    case 'articles' : {
         switch ($with) {
-            case 'extended': {
+            case 'extended' : {
                 $filename = $tpl_path.'/fetch=articles/with=extended/f_articles+w_extended.'.$site_language;
 
                 $inner_html = new kwt($filename.'.html');
-                // $inner_html->override( array ());
-                $inner_html->contentstart();
-                $maincontent_html = $inner_html->getcontent();
+                $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.'.js');
-                // $inner_js->override( array() );
-                $inner_js->contentstart();
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_js = $inner_js->get();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
-                $maincontent_css = $inner_css->getcontent();
-
+                $maincontent_css = $inner_css->get();
                 break;
-            } // end case extended
-            case 'topic': {
+            }
+            case 'topic' : {
                 $filename = $tpl_path.'/fetch=articles/with=topic/f_articles+w_topic.'.$site_language;
 
                 $inner_html = new kwt($filename.'.html');
-                // $inner_html->override( array ());
-                $inner_html->contentstart();
-                $maincontent_html = $inner_html->getcontent();
+                $maincontent_html = $inner_html->get();
 
-                $inner_js = new kwt($filename.'.js');
-
-                $inner_js->config('/*','*/');
+                $inner_js = new kwt($filename.'.js', '/*' ,'*/');
                 $inner_js->override( array( "plus_topic_id" => "+".$_GET['id'] ) );
-                $inner_js->contentstart();
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_js = $inner_js->get();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
-                $maincontent_css = $inner_css->getcontent();
-
+                $maincontent_css = $inner_css->get();
                 break;
-            } // end case topic
+            }
             case 'book' : {
                 $filename = $tpl_path.'/fetch=articles/with=book/f_articles+w_book.'.$site_language;
 
@@ -212,104 +180,82 @@ switch ($fetch) {
                     'file_toc'      => $book_row['file_toc'],
                     'file_toc_en'   => $book_row['file_toc_en']
                 ));
-                $inner_html->contentstart();
-                $maincontent_html = $inner_html->getcontent();
+                $maincontent_html = $inner_html->get();
 
-                $inner_js = new kwt($filename.'.js');
-                $inner_js->config('/*','*/');
+                $inner_js = new kwt($filename.'.js', '/*', '*/');
                 $inner_js->override( array( "plus_book_id" => "+".$_GET['id'] ) );
-                $inner_js->contentstart();
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_js = $inner_js->get();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
-                $maincontent_css = $inner_css->getcontent();
-
+                $maincontent_css = $inner_css->get();
                 break;
-            } // end case book
+            }
             case 'info' : {
                 $id = $_GET['id'];
                 $filename = $tpl_path.'/fetch=articles/with=info/f_articles+w_info.'.$site_language;
 
+                $article_info = LoadArticleInformation_ById($id, $site_language); // EQ $article_info = LoadArticles_ByQuery(array('aid' => $id ) , $site_language);
+
+                $article_authors = $template_engine->getAuthors_InArticle($article_info['authors'], 'with-email');
+                //@warning: мы вставили в BuildQuery еще несколько полей (article_abstract, article_refs, article_keywords), при поиске по keywords может (!) возникнуть бага -- тесты!
+
                 $inner_html = new kwt($filename.'.html');
-
-                $article_info = DB_LoadArticleInformation_ById($id, $site_language);
-                $article_authors = FE_PrintAuthors_ByArticle(DB_LoadAuthors_ByArticle($id, $site_language, 'yes'), $site_language);
-
                 $inner_html->override( array (
-                    'article-title'         => $article_info['title_'.$site_language],
-                    'article-abstract'      => $article_info['abstract_'.$site_language],
+                    'article-title'         => $article_info['article_title'],
+                    'article-abstract'      => $article_info['article_abstract'],
                     'article-authors-list'  => $article_authors, // список авторов, писавших статью
-                    'article-keywords'      => $article_info['keywords_'.$site_language],
-                    'article-book-title'    => $article_info['btitle'],
-                    'article-book-year'     => $article_info['byear'],
+                    'article-keywords'      => $article_info['article_keywords'],
+                    'article-book-title'    => $article_info['book_title'],
+                    'article-book-year'     => $article_info['book_year'],
                     'article-pdfid'         => $article_info['pdfid'],
-                    'article-refs'          => $article_info['refs_'.$site_language]
+                    'article-refs'          => $article_info['refs']
                 ));
-                $override['meta_keywords'] = $article_info['keywords_'.$site_language]; // GLOBAL KEYWORDS
+                $override['meta_keywords'] = $article_info['keywords']; // GLOBAL KEYWORDS
+                $maincontent_html = $inner_html->get();
 
-                $inner_html->contentstart();
-                $maincontent_html = $inner_html->getcontent();
-
-                $inner_js = new kwt($filename.'.js');
-
-                $inner_js->config('/*','*/');
+                $inner_js = new kwt($filename.'.js', '/*', '*/');
                 $inner_js->override( array( "plus_book_id" => "+".$_GET['id'] ) );
-                $inner_js->contentstart();
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_js = $inner_js->get();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
-                $maincontent_css = $inner_css->getcontent();
-
+                $maincontent_css = $inner_css->get();
                 break;
-            } // end case info
+            }
             case 'all' : {
-                // список ВСЕХ СТАТЕЙ - для поисковых систем
-                // фио, титул, email -> link to author page
+                // список ВСЕХ СТАТЕЙ - для поисковых систем -- фио, титул, email -> link to author page
                 $filename = $tpl_path.'/fetch=articles/with=all/f_articles+w_all.'.$site_language;
                 $inner_html = new kwt($filename.".html");
-
                 $inner_html->override( array (
-                    'all_articles_list' => FE_PrintArticlesList_Simple(DB_LoadArticlesByQuery(array(), $site_language, 'no') ,$lang)
+                    'all_articles_list' => $template_engine->getArticles_PlainList(array())
                 ));
-                $inner_html->contentstart();
-                $maincontent_html = $inner_html->getcontent();
+                $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.".js");
-                $inner_js->contentstart();
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_js = $inner_js->get();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
-                $maincontent_css = $inner_css->getcontent();
-
+                $maincontent_css = $inner_css->get();
                 break;
-            }// end case all
+            }
         } // end $with articles switch
         break;
-    }
+    } // end /articles/* case
     case 'page' : {
         /* секция вывода статических или условно-статических страниц */
         $page_alias = ($with === '') ? 'default' : $with;
-        // если никакую страницу не запрашиваем - выводим контент страницы с алиасом DEFAULT
-        $maincontent_html = FE_GetStaticPage($page_alias, $site_language);
+        $maincontent_html = $template_engine->getStaticPage($page_alias);
 
         /* CSS Template */
+        $filename = $tpl_path.'/fetch=page/page.'.$site_language;
         $inner_css = new kwt($filename.".css");
-        $inner_css->contentstart();
-        $maincontent_css = $inner_css->getcontent();
-
+        $maincontent_css = $inner_css->get();
         break;
-    }
-    case 'news': {
+    } // case /page
+    case 'news' : {
         /* секция вывода новостей */
         switch ($with) {
-            case 'the': {
-                /* вывод конкретной новости */
+            case 'the' : {
+                $id = 0;
                 if (isset($_GET['id'])) {
                     $id = intval($_GET['id']);
                 } else {
@@ -319,95 +265,82 @@ switch ($fetch) {
                 $filename = $tpl_path.'/fetch=news/with=the/f_news+w_the.'.$site_language;
                 $inner_html = new kwt($filename.".html");
 
-                $the_news_item = DB_LoadNewsItem($id, $site_language);
+                $the_news_item = LoadNewsItem($id, $site_language);
 
                 $inner_html->override( array (
                     'news_item_title'   => $the_news_item['title'],
                     'news_item_date'    => $the_news_item['date_add'],
                     'news_item_text'    => $the_news_item['text']
                 ));
-                $inner_html->contentstart();
                 $maincontent_html = $inner_html->getcontent();
 
                 $inner_js = new kwt($filename.".js");
-                $inner_js->contentstart();
                 $maincontent_js = $inner_js->getcontent();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
                 $maincontent_css = $inner_css->getcontent();
-
                 break;
-            } // end case 'the'
-            case 'list': {
+            }
+            case 'list' : {
                 /* список новостей */
                 $filename = $tpl_path.'/fetch=news/with=list/f_news+w_list.'.$site_language;
 
-                $news_list_toc = DB_LoadNewsListTOC($site_language);
+                $news_list_toc = LoadNewsListTOC($site_language);
+                // $news_list_toc will be used in php-section of template loaded file
 
                 $inner_html = new kwt($filename.'.html');
-                // $inner_html->override( array ());
-                $inner_html->contentstart();
                 $maincontent_html = $inner_html->getcontent();
 
                 $inner_js = new kwt($filename.'.js');
-                // $inner_js->override( array() );
-                $inner_js->contentstart();
                 $maincontent_js = $inner_js->getcontent();
 
-                /* CSS Template */
                 $inner_css = new kwt($filename.".css");
-                $inner_css->contentstart();
                 $maincontent_css = $inner_css->getcontent();
 
                 break;
-            } // end case 'list'
-        } // end switch with
+            }
+        } // /switch $with
         break;
-    }
-    default: {
+    } // end /news/* case
+    default : {
         // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
         $filename = $tpl_path.'/default/default.'.$site_language;
-        // default page
         $inner_html = new kwt($filename.".html");
-        $inner_html->override( array (
-            'static_page_content'   => FE_GetStaticPage('about', $site_language)
+        $inner_html->override( array(
+            'static_page_content'   => $template_engine->GetStaticPage('about')
         ));
         // load last book
-        $r_last = DB_LoadLastBookInfo();
-        if (count($r_last) != 0) {
+        $last_book = LoadLastBookInfo();
+        if (count($last_book) != 0) {
             $inner_html->override( array(
-                'last_book_content'     => FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery(array('book'=> $r_last['id'], 'lang' => $site_language), $site_language, 'no'), $site_language),
-                'last_book_title_string'=> "{$r_last['title']}, {$r_last['year']}",
-                'last_book_cover_id'    => $r_last['file_cover'],
-                'last_book_title_id'    => $r_last['file_title'],
-                'last_book_toc_id'      => $r_last['file_toc'],
-                'last_book_toc_en_id'   => $r_last['file_toc_en'],
+                'last_book_content'     => $template_engine->getArticlesList(
+                    array(
+                        'book'  =>  $last_book['id']
+                    ), 'no'),
+                'last_book_title_string'=> "{$last_book['title']}, {$last_book['year']}",
+                'last_book_cover_id'    => $last_book['file_cover'],
+                'last_book_title_id'    => $last_book['file_title'],
+                'last_book_toc_id'      => $last_book['file_toc'],
+                'last_book_toc_en_id'   => $last_book['file_toc_en'],
             ));
         }
-
-        $inner_html->contentstart();
-        $maincontent_html = $inner_html->getcontent();
+        $maincontent_html = $inner_html->get();
 
         $inner_js = new kwt($filename.".js");
-        $inner_js->contentstart();
-        $maincontent_js = $inner_js->getcontent();
+        $maincontent_js = $inner_js->get();
 
         /* CSS Template */
         $inner_css = new kwt($filename.".css");
-        $inner_css->contentstart();
-        $maincontent_css = $inner_css->getcontent();
-    }
-}; // end $fetch all switch
-
+        $maincontent_css = $inner_css->get();
+        break;
+    } // end default case
+} // end global (fetch) switch
 
 $override['content_jquery'] = $maincontent_js;
 $override['content_html'] = $maincontent_html;
 $override['content_css'] = $maincontent_css;
 
 $tpl_index->override($override);
-$tpl_index->contentstart(); // если есть вложенные темплейты, этот вызов обязателен!!!!!!
 $tpl_index->out();
 
 ?>

@@ -14,7 +14,7 @@ class kwt
             include $filename;
             return ob_get_clean();
         }
-        return false;
+        return null; // was false
     }
 
     // функция-обработчик. заменяет переменные в файле согласно массиву overrides
@@ -30,6 +30,7 @@ class kwt
     }
 
     // создаем экземпляр шаблона: инициализируем переменные и загружаем шаблон
+    // <!--{}--> for html
     public function __construct($file, $open = '{%', $close = '%}')
     {
         $this->file = dirname($_SERVER['SCRIPT_FILENAME']).'/'.$file;

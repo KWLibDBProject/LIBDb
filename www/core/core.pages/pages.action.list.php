@@ -25,7 +25,7 @@ CloseDB($link);
 <table border="1" width="100%">
     <tr>
         <th width="5%"> ID </th>
-        <th width="15%">Alias </th>
+        <th width="15%">Alias <br><small>click to view in another window</small></th>
         <th>Comment</th>
         <th width="10%">&nbsp;</th>
     </tr>
@@ -36,7 +36,7 @@ CloseDB($link);
             echo <<<REF_ONEROW
     <tr>
         <td>{$row['id']}</td>
-        <td>{$row['alias']}</td>
+        <td><a href="/?fetch=page&with={$row['alias']}" target="_blank">{$row['alias']}</a></td>
         <td>{$row['comment']}</td>
         <td class="centred_cell"><button class="action-edit button-edit" name="{$row['id']}">Edit</button></td>
     </tr>

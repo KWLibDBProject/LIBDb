@@ -1,9 +1,10 @@
+<ul class="news-list">
+
 <?php
 global $news_list_toc;
-$q = '';
 foreach ($news_list_toc as $i => $d) {
-$q .= <<<NI_ITEM
-<li class="news-list-item">
+echo <<<NI_ITEM
+    <li class="news-list-item">
         <div class="news-list-item-date">
             {$d['date']}
         </div>
@@ -12,9 +13,8 @@ $q .= <<<NI_ITEM
         </div>
     </li>
 NI_ITEM;
+
 }
 ?>
 
-<ul class="news-list">
-    <?php echo $q; ?>
 </ul>

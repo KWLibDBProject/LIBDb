@@ -10,12 +10,12 @@
         <p class="author_workplace">{%author_workplace%}</p>
     </div>
 </fieldset>
-<fieldset class="author_bio">
+<fieldset class="author_bio {%author_bio_display_class%}">
     <legend>Биография</legend>
     <span class="author_bio">{%author_bio%}</span>
 </fieldset>
 
-<fieldset class="author-publications">
+<fieldset class="author-publications {%author_publications_display_class%}">
     <legend>Публикации</legend>
     <div id="articles_list">
         {%author_publications%}
