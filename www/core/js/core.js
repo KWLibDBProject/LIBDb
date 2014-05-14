@@ -22,9 +22,8 @@ function BuildSelector(target, data, currentid) // currentid is 1 for NEW
         $.each(data['data'], function(id, value){
             $(_target).append('<option value="'+id+'">'+value+'</option>');
         });
-        var currentid = (typeof currentid != 'undefined') ? currentid : 1;
-        $("select[name="+target+"] option[value="+ currentid +"]").prop("selected",true);
-        // $("select[name="+target+"]").prop('disabled',false);
+        var _currentid = (typeof currentid != 'undefined') ? currentid : 1;
+        $("select[name="+target+"] option[value="+ _currentid +"]").prop("selected",true);
     } else {
         $("select[name="+target+"]").prop('disabled',true);
     }
@@ -33,4 +32,14 @@ function BuildSelector(target, data, currentid) // currentid is 1 for NEW
 function strpos (haystack, needle, offset) {
     var i = (haystack+'').indexOf(needle, (offset || 0));
     return i === -1 ? false : i;
+}
+
+/* Привязывает стили и действия к элементу "scroll to top" */
+function bindScrollTopAction(target)
+{
+    $(target).css('float','right').attr('title', 'Наверх').on('click', function(){
+        // window.scroll(0,0);
+        $('html, body').animate({scrollTop:0}, 'slow');
+        return false;
+    });
 }

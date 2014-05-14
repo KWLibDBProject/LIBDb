@@ -339,6 +339,7 @@ CloseDB($link);
     <button type="submit" class="button-large" id="button-save"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
     <button type="button" class="button-large" id="button-delete" name="<?php echo $id; ?>"><strong>УДАЛИТЬ СТАТЬЮ</strong></button>
     <button type="button" class="button-large button-exit"><strong>ОТМЕНИТЬ</strong></button>
+    <a href="#" id="actor-scroll-top">Наверх страницы</a>
 </form>
 
 </body>

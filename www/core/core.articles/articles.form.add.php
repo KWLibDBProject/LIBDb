@@ -133,6 +133,7 @@ if (!isLogged()) header('Location: /core/');
                 return bValid;
             });
 
+            bindScrollTopAction("#actor-scroll-top");
         });
     </script>
 </head>
@@ -236,6 +237,7 @@ if (!isLogged()) header('Location: /core/');
     <input type="hidden" name="caller" value="articles.new">
     <button class="button-large" id="button-exit"><strong>ОТМЕНИТЬ</strong></button>
     <button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
+    <a href="#" id="actor-scroll-top">Наверх страницы</a>
 </form>
 
 </body>
