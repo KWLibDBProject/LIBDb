@@ -18,7 +18,13 @@
     font-weight: bold;
 }
 
-#estuff h1, h2, h3 {
+#estuff > h1 {
+    text-align: center;
+}
+#estuff > h2 {
+    text-align: center;
+}
+#estuff > h3 {
     text-align: center;
 }
 

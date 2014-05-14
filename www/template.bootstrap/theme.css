@@ -9,6 +9,10 @@ a:focus {
     outline: none;
 }
 
+.panel-heading {
+    text-align: center;
+}
+
 .panel-heading > h4 {
     cursor: pointer;
 }

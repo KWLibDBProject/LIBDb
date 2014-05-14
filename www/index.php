@@ -98,21 +98,21 @@ switch ($fetch) {
                 break;
             }
             case 'estaff' : {
-                $filename = $tpl_path.'/fetch=authors/with=estuff/f_authors+w_estuff.'.$site_language;
+                $filename = $tpl_path.'/fetch=authors/with=estaff/f_authors+w_estaff.'.$site_language;
 
                 /* HTML Template */
                 $inner_html = new kwt($filename.".html");
                 $inner_html->override( array (
                     // главный редактор = 5
-                    'estuff_main_editor'        => $template_engine->getAuthors_EStaffList(5),
+                    'estaff_main_editor'        => $template_engine->getAuthors_EStaffList(5),
                     // замглавного редактора = 4
-                    'estuff_main_subeditors'    => $template_engine->getAuthors_EStaffList(4),
+                    'estaff_main_subeditors'    => $template_engine->getAuthors_EStaffList(4),
                     // редакционная коллегия = 3
-                    'estuff_local_editors'      => $template_engine->getAuthors_EStaffList(3),
+                    'estaff_local_editors'      => $template_engine->getAuthors_EStaffList(3),
                     // международная редакционная коллегия = 1
-                    'estuff_remote_editors'     => $template_engine->getAuthors_EStaffList(1),
+                    'estaff_remote_editors'     => $template_engine->getAuthors_EStaffList(1),
                     // редакторы = 6
-                    'estuff_simple_editors'     => $template_engine->getAuthors_EStaffList(6),
+                    'estaff_simple_editors'     => $template_engine->getAuthors_EStaffList(6),
                 ));
                 $maincontent_html = $inner_html->getcontent();
 
