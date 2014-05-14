@@ -92,6 +92,21 @@ function LoadStaticPage($alias, $lang)
     return $return;
 }
 
+/* загружает из базы информацию об одной рубрике в зависимости от языка */
+function LoadTopicInfo($id, $lang)
+{
+    $q = "SELECT id, title_{$lang} AS title FROM topics WHERE id={$id}";
+    $r = mysql_query($q);
+    $ret = '';
+
+    if (@mysql_num_rows($r) == 1)
+    {
+        $topic = mysql_fetch_assoc($r);
+        $ret = $topic['title'];
+    }
+    return $ret;
+}
+
 /* загружает из базы рубрики, отдает ассоциативный массив вида [id -> title] */
 function LoadTopics($lang)
 {
@@ -161,6 +176,19 @@ function LoadLastNews($lang, $count=2)
             $ret[ $i ] = $row;
             $i++;
         }
+    }
+    return $ret;
+}
+
+/* возвращает массив с информацией об указанном сборнике */
+function LoadBookInfo($id)
+{
+    $query = "SELECT books.title AS book_title, books.year AS book_year, file_cover, file_title, file_toc, file_toc_en FROM books WHERE id={$id}";
+    $r = mysql_query($query) or die($query);
+    if (@mysql_num_rows($r)==1) {
+        $ret = mysql_fetch_assoc($r);
+    } else {
+        $ret = array();
     }
     return $ret;
 }

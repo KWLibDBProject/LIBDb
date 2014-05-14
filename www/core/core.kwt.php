@@ -1,6 +1,6 @@
 <?php
 /*
-KarelWintersky's Template simple engine
+KarelWintersky's Template simple engine ver 1.2
 */
 
 class kwt

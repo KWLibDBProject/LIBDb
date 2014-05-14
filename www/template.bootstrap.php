@@ -56,7 +56,16 @@ FE_PrintBooksBS_End;
         return $ret;
     }
 
-
+    public function getTopicTitle($id)
+    {
+        $topic = LoadTopicInfo($id, $this->site_language);
+        /* switch ($this->site_language) {
+            case 'en': { $ret = 'Search criteria'; break; }
+            case 'ru': { $ret = 'Критерии поиска'; break; }
+            case 'uk': { $ret = 'Критерiï пошуку'; break; }
+        } // end switch*/
+        return $topic;
+    }
 
 
 

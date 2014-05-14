@@ -60,6 +60,18 @@ FE_PrintBooks_End;
         return $ret;
     }
 
+    /* Выводит заголовок сборника на страницу /articles/topic/xx */
+    /* для табличного шаблона это "критерии поиска на разных языках*/
+    public function getTopicTitle($id)
+    {
+        $ret = '';
+        switch ($this->site_language) {
+            case 'en': { $ret = 'Search criteria'; break; }
+            case 'ru': { $ret = 'Критерии поиска'; break; }
+            case 'uk': { $ret = 'Критерiï пошуку'; break; }
+        } // end switch
+        return $ret;
+    }
 
 
 

@@ -158,8 +158,12 @@ switch ($fetch) {
             }
             case 'topic' : {
                 $filename = $tpl_path.'/fetch=articles/with=topic/f_articles+w_topic.'.$site_language;
+                $id = $_GET['id'];
 
                 $inner_html = new kwt($filename.'.html');
+                $inner_html->override(array(
+                    'topic_title' => $template_engine->getTopicTitle($id)
+                ));
                 $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.'.js', '/*' ,'*/');
@@ -171,17 +175,19 @@ switch ($fetch) {
                 break;
             }
             case 'book' : {
+                $id = $_GET['id'];
                 $filename = $tpl_path.'/fetch=articles/with=book/f_articles+w_book.'.$site_language;
 
                 $inner_html = new kwt($filename.'.html');
-                // load extended book fields by ID -- @todo: move to function !!!
-                $book_row = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title, file_toc, file_toc_en FROM books WHERE id={$_GET['id']}"));
+                $book_row = LoadBookInfo($id);
 
                 $inner_html->override( array (
                     'file_cover'    => $book_row['file_cover'],
                     'file_title'    => $book_row['file_title'],
                     'file_toc'      => $book_row['file_toc'],
-                    'file_toc_en'   => $book_row['file_toc_en']
+                    'file_toc_en'   => $book_row['file_toc_en'],
+                    'book_title'    => $book_row['book_title'],
+                    'book_year'     => $book_row['book_year']
                 ));
                 $maincontent_html = $inner_html->get();
 
