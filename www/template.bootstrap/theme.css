@@ -5,6 +5,10 @@ body {
     background: url(/template.bootstrap/images/paper_01.jpg) scroll repeat;
 }
 
+a {
+    color: #264BBD;
+}
+
 a:focus {
     outline: none;
 }
