@@ -67,20 +67,19 @@ switch ($actor) {
     case 'load_articles_by_query' : {
         // Поиск статей - расширенный (/articles/extended/)
         // called by:     f_articles+w_extended.en.js ->
-        $return = $engine-> getArticlesList($_GET);         // $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
+        $return = $engine-> getArticlesList($_GET);
         break;
     }
 
     case 'load_authors_selected_by_letter': {
-        $return = $engine -> getAuthors_PlainList($_GET['letter']); // $return = FE_PrintAuthors_PlainList(DB_LoadAuthors_ByLetter($_GET['letter'], $lang, 'no'), $lang);
+        $return = $engine -> getAuthors_PlainList($_GET['letter']);
         break;
     }
     case 'load_articles_expert_search': {
         // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
-        $return = $engine-> getArticlesList($_GET);  // $return = FE_PrintArticlesList_Extended(DB_LoadArticlesByQuery($_GET, $lang, 'no'), $lang);
+        $return = $engine-> getArticlesList($_GET);
         break;
     }
-
 
 } // switch
 

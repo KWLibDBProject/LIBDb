@@ -2,7 +2,7 @@
 require_once('template.php');
 $tpl_path = 'template.table';
 
-class TemplateTable extends Template {
+class Template extends __Template {
 
     /* выводит рубрики: принимает язык вывода */
     public function getTopics()
@@ -62,15 +62,6 @@ FE_PrintBooks_End;
 
 
 
-
-    /* ========================================================================== */
-/*
-    public function _GetAuthors_PlainList($letter, $lang, $is_es='no', $selfhood=-1)
-    {
-        return parent::__GetAuthors_PlainList($letter, $lang, $is_es, $selfhood);
-    }
-
-*/
 
 }
 ?>

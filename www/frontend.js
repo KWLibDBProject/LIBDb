@@ -1,3 +1,7 @@
+/*
+Функции работы с хэш-url, хэш-достраиваемыми селекторами, куками, построение загруженных списков
+в деплое рекомендуется использовать frontend.min.js
+*/
 String.prototype.trim = String.prototype.trim || function(){return this.replace(/^\s+|\s+$/g, ''); };
 String.prototype.ltrim = String.prototype.ltrim || function(){return this.replace(/^\s+/,''); };
 String.prototype.rtrim = String.prototype.rtrim || function(){return this.replace(/\s+$/,''); };
@@ -62,16 +66,18 @@ function setSelectorsByHash(target)
     } );
 }
 
+/* IDE считает, что функции не используются. Врёт. Они дёргаются в шаблонах :) */
 function getCookie(name){
-    var pattern = RegExp(name + "=.[^;]*")
-    matched = document.cookie.match(pattern)
+    var pattern = RegExp(name + "=.[^;]*");
+    matched = document.cookie.match(pattern);
     if(matched){
-        var cookie = matched[0].split('=')
+        var cookie = matched[0].split('=');
         return cookie[1]
     }
     return false
 }
 
+/* IDE считает, что функции не используются. Врёт. Они дёргаются в шаблонах :) */
 function setCookie (name, value, expires, path, domain, secure) {
     document.cookie = name + "=" + escape(value) +
         ((expires) ? "; expires=" + expires : "") +
@@ -104,8 +110,8 @@ function BuildSelector(target, data, currentid) // currentid is 1 for NEW
         $.each(data['data'], function(id, value){
             $(_target).append('<option value="'+id+'">'+value+'</option>');
         });
-        var currentid = (typeof currentid != 'undefined') ? currentid : 1;
-        $("select[name="+target+"] option[value="+ currentid +"]").prop("selected",true);
+        var _currentid = (typeof currentid != 'undefined') ? currentid : 1;
+        $("select[name="+target+"] option[value="+ _currentid +"]").prop("selected",true);
         // $("select[name="+target+"]").prop('disabled',false);
     } else {
         $("select[name="+target+"]").prop('disabled',true);

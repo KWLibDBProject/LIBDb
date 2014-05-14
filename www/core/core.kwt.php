@@ -1,4 +1,7 @@
 <?php
+/*
+KarelWintersky's Template simple engine
+*/
 
 class kwt
 {
@@ -8,7 +11,8 @@ class kwt
     private $overrides = array();
     private $content;
 
-    private function get_include_contents($filename) {
+    private function get_include_contents($filename)
+    {
         if (is_file($filename)) {
             ob_start();
             include $filename;
@@ -29,8 +33,8 @@ class kwt
         return $buf;
     }
 
-    // создаем экземпляр шаблона: инициализируем переменные и загружаем шаблон
-    // <!--{}--> for html
+    // constructor: создаем экземпляр класса.
+    // загружаем шаблон из $file, $open & $close - строки, обрамляющие заменяемые переменные
     public function __construct($file, $open = '{%', $close = '%}')
     {
         $this->file = dirname($_SERVER['SCRIPT_FILENAME']).'/'.$file;
@@ -51,39 +55,41 @@ class kwt
         }
     }
 
-    // возвращает обработанный шаблон в переменную для использования в шаблонах верхнего уровня
+    // возвращает обработанный шаблон в переменную (для использования в шаблонах верхнего уровня)
     public function get()
     {
         $return = $this->kwt_callback($this->content);
         return $return;
     }
 
-    // выводит шаблон в буфер вывода
-    public function flush()
+    // выводит шаблон в буфер вывода, то есть в stdout (эквивалент функции flush() )
+    public function out()
     {
-        // print $this->content;
         print $this->kwt_callback($this->content);
     }
 
-    // изменяет параметры ограничений переменных, принимает строки
+    // переопределяет параметры экранирования заменяемых переменных, принимает строки
     public function config($start,$end)
     {
         $this->tag_open = $start;
         $this->tag_close = $end;
     }
 
-    /* wrappers functions */
+    /* функции-обертки */
 
-    public function out()
+    /* вывод в stdout */
+    public function flush()
     {
-        $this->flush();
+        $this->out();
     }
 
+    /* вывод в переменную */
     public function getcontent()
     {
         return $this->get();
     }
 
+    /* обертка, которая где-то (в ядре) вызывается, но функционально не нужна */
     public function contentstart()
     {}
 

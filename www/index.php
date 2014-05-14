@@ -3,28 +3,30 @@ require_once('core/core.php');
 require_once('core/core.db.php');
 require_once('core/core.kwt.php');
 require_once('frontend.php');
+/*  вызов нужного шаблона и его движка. ВАЖНО: такую же строчку надо поменять в ajax.php
+    путь до каталога шаблонов определяется во включаемом файле движка шаблона */
 require_once('template.table.php');
 
-// $tpl_path = 'template.table'; // defined in template.*.php file
 $site_language = GetSiteLanguage();
-
 
 // init
 // defaults fields and variables
 $maincontent_html = '';
 $maincontent_js = '';
 $maincontent_css = '';
-// template override array
+// init template override array
 $override = array();
 
-// load default template, based on language
+// load default index file for template, based on language
 $tpl_index = new kwt($tpl_path."/index.{$site_language}.html", '<!--{', '}-->' );
 
 $link = ConnectDB();
 
-$template_engine = new TemplateTable($tpl_path, $site_language); // этот же экземпляр придется создавать в ajax.php - чтобы получить доступ к функциям
+// init template engine
+$template_engine = new Template($tpl_path, $site_language);
+
 /* Override variables in INDEX.*.HTML template */
-$override['template_path'] = $tpl_path; // template directory name (not a path!)
+$override['template_path'] = $tpl_path; // template directory name (not a path!), defined in template.xxx.php
 $override['rubrics']    = $template_engine->getTopics();
 $override['books']      = $template_engine->getBooks();
 $override['banners']    = $template_engine->getBanners();

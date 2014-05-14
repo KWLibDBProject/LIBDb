@@ -1,5 +1,4 @@
 <?php
-require_once('core/core.kwt.php');
 /* ------------------------------- Служебные функции ----------------------------- */
 
 function debug($data)
@@ -34,6 +33,7 @@ $TRANSLATED_MONTHS = array(
 );
 function ConvertDateByLang($date_as_string, $lang)
 {
+    // в PHP младше 5.2 date_parse() не определена. Смотри stewarddb.
     /* $return = date("d M Y", strtotime($date_as_string)); */
     global $TRANSLATED_MONTHS;
     if (function_exists('date_parse_from_format')) {
@@ -48,7 +48,7 @@ function ConvertDateByLang($date_as_string, $lang)
 }
 
 // возврат массива "первых букв" для списка авторов для указанного языка
-// используется для аякс-запроса
+// используется в ajax.php
 function LoadFirstLettersForSelector($lang)
 {
     $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0 ORDER BY name_{$lang}";
@@ -108,7 +108,7 @@ function LoadTopics($lang)
     return $ret;
 }
 
-/* загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом*/
+/* загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом */
 function LoadBooks()
 {
     $all_books = array();
@@ -147,7 +147,7 @@ function LoadBanners()
 }
 
 /* возвращает для override-переменной последние $count новостей для правого блока (под сборниками): */
-/* загружает массив из заголовка+даты последних новостей */
+/* отдает массив [id новости] => [id, title, date] */
 function LoadLastNews($lang, $count=2)
 {
     $ret = array();
@@ -192,6 +192,7 @@ articles.id
 , books.year AS book_year
 , articles.pages AS article_pages
 , pdfid ";
+/* дополнительные поля (для /article/info ) */
     $q_select .= "
 , articles.abstract_{$lang} AS article_abstract
 , articles.refs_{$lang} AS article_refs
@@ -231,10 +232,10 @@ topics.deleted=0 {$query_show_published} ";
     /* Expert search conditions */
     $q_expert = '';
     if ($get['actor'] == 'load_articles_expert_search') {
-        /* AND authors.name_en LIKE 'Mak%' */
-        /* AND articles.udc LIKE '%621%' */
-        /* AND articles.add_date LIKE '%2013' */
-        /* AND (articles.keywords_en LIKE '%robot%' OR ... OR ... )*/
+        /* пример: AND authors.name_en LIKE 'Mak%' */
+        /* пример: AND articles.udc LIKE '%621%' */
+        /* пример: AND articles.add_date LIKE '%2013' */
+        /* пример: AND (articles.keywords_en LIKE '%robot%' OR ... OR ... )*/
         $q_expert .= ($get['expert_name'] != '')             ? " AND authors.name_{$lang} LIKE '{$get['expert_name']}%' " : "";
         $q_expert .= ($get['expert_udc'] != '')              ? " AND articles.udc LIKE '%{$get['expert_udc']}%' " : "";
         $q_expert .= ($get['expert_add_date'] != '')    ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' " : "";
@@ -249,12 +250,13 @@ topics.deleted=0 {$query_show_published} ";
         $q_expert .= " ) ";
     }
 
+    // склейка строки запроса
     $q = $q_select . $q_from . $q_base_where . $q_extended . $q_expert . $q_final;
     return $q;
 }
 
 /* Загрузка статей по сложному запросу ($with_email - передается в LoadAuthorsByArticle, который отдает МАССИВ авторов по статье) */
-/* ВАЖНО: если мы получили ОДНОГО автора - мы получим массив только его инфой, безиндексный */
+/* ВАЖНО: если мы получили ОДНОГО автора - его можно будет получить вызовом: reset(...) */
 function LoadArticles_ByQuery($get, $lang)
 {
     $query = BuildQuery($get, $lang);
@@ -291,6 +293,7 @@ function LoadNewsListTOC($lang)
 /* загружает в асс.массив новость с указанным id, usable: используется для pure-вставки в шаблон */
 function LoadNewsItem($id, $lang)
 {
+    $ret = '';
     $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, date_add FROM news where id={$id}";
     $r = @mysql_query($query);
     if ($r) {

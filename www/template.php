@@ -1,7 +1,21 @@
 <?php
+require_once('core/core.kwt.php');
 require_once('frontend.php');
 
-class Template
+/*
+Prototype_Template Class
+
+extends with Template class in template.{name}.php
+
+ВАЖНО: В классах-наследниках функции могут переопределяться.
+Класс __Template описывает базовые методы вывода данных в шаблон(ы). В классах-наследниках
+это поведение можно переопределить.
+
+Эти классы запрашивают функции из frontend.php - там должны быть функции работы с базой -
+только получение результатов, никаких отображений
+*/
+
+class __Template
 {
     public $template_path = '';
     public $site_language = '';
@@ -361,6 +375,15 @@ PAL_S_End;
         return $return;
     }
 
+    function getTopics()
+    {
+        return null;
+    }
+
+    function getBooks()
+    {
+        return null;
+    }
 
 
 }
