@@ -142,7 +142,8 @@ PrintLastNews;
                     'article_id'        => $an_article['id'],
                     'article_title'     => $an_article['article_title'],
                     'authors_list'      => $authors_list,
-                    'book_year'         => $an_article['book_year']
+                    'book_year'         => $an_article['book_year'],
+                    'pdf_filename'      => $an_article['pdf_filename']
                 ));
                 $return .= $t_a->get();
                 unset($t_a);

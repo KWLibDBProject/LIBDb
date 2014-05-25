@@ -219,7 +219,8 @@ articles.id
 , topics.title_{$lang} AS topic_title
 , books.year AS book_year
 , articles.pages AS article_pages
-, pdfid ";
+, pdfid
+, filestorage.username AS pdf_filename ";
 /* дополнительные поля (для /article/info ) */
     $q_select .= "
 , articles.abstract_{$lang} AS article_abstract
@@ -235,10 +236,12 @@ articles.id
 articles
 , books, topics
 , cross_aa
-, authors ";
+, authors
+, filestorage ";
 
     $query_show_published = '';
     $q_base_where = " WHERE
+articles.pdfid = filestorage.id AND
 authors.id = cross_aa.author AND
 articles.id = cross_aa.article AND
 books.id = articles.book AND

@@ -319,3 +319,10 @@ legend {
     height:132px;
     background-color: transparent;
 }
+
+[href*=".pdf"]:before {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: -50%;
+    content: url(/files/pdf16x16.png)
+}
