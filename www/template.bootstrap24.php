@@ -2,6 +2,7 @@
 require_once('template.php');
 $tpl_path = 'template.bootstrap24';
 
+
 class Template extends __Template
 {
     function getTopics()
