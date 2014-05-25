@@ -256,11 +256,13 @@ legend {
 /articles/topic/* ; /articles/book/* ; /articles/extended/ ; etc */
 
 .articles-list { /* стиль основной таблицы статей */
-    border-color: #BFBFBF
+    border: 3px double #BFBFBF;
+    border-collapse: collapse;
+    width: 100%;
 }
 
 .articles-list td {
-    border-color: #BFBFBF;
+    border: 1px solid #BFBFBF;
 }
 
 .articles-list-row-book-title { /* стиль ячейки "название сборника", страницы, год */

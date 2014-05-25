@@ -125,7 +125,7 @@ PrintLastNews;
         if (count($articles) > 0)
         {
             // печатаем хедер таблицы
-            $return .= '<table class="articles-list" border="1" width="100%">';
+            $return .= '<table class="articles-list">';
 
             // в цикле загружаем шаблон и передаем в него строки таблицы
             // и результат функции "печать списка авторов на основе $articles['authors'] "
