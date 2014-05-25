@@ -4,7 +4,7 @@
 require_once('core/core.php');
 require_once('core/core.db.php');
 require_once('frontend.php');
-require_once('template.bootstrap.php');
+require_once('template.bootstrap24.php');
 
 $actor = isset($_GET['actor']) ? $_GET['actor'] : '';
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
@@ -67,7 +67,7 @@ switch ($actor) {
     case 'load_articles_by_query' : {
         // Поиск статей - расширенный (/articles/extended/)
         // called by:     f_articles+w_extended.en.js ->
-        $return = $engine-> getArticlesList($_GET);
+        $return = $engine -> getArticlesList($_GET);
         break;
     }
 
@@ -77,7 +77,7 @@ switch ($actor) {
     }
     case 'load_articles_expert_search': {
         // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
-        $return = $engine-> getArticlesList($_GET);
+        $return = $engine -> getArticlesList($_GET);
         break;
     }
 

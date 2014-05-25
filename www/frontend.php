@@ -227,6 +227,9 @@ articles.id
 , articles.keywords_{$lang} AS article_keywords
 ";
     // $q_select_expert = ", articles.keywords_{$lang}";
+    $q_select .= "
+, books.id AS book_id
+    ";
 
     $q_from = " FROM
 articles

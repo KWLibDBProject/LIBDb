@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ELECTROTECHNIC AND COMPUTER SYSTEMS,
+        Odessa national polytechnic university</title>
+
+    <link rel="stylesheet" href="/<!--{template_path}-->/_bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/<!--{template_path}-->/_bootstrap/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/<!--{template_path}-->/colorbox.min.css" />
+    <link rel="stylesheet" href="/<!--{template_path}-->/theme.css">
+
+    <script src="/<!--{template_path}-->/jquery-1.11.0.min.js"></script>
+    <script src="/<!--{template_path}-->/_bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/<!--{template_path}-->/jquery.colorbox-min.js"></script>
+
+    <script type="text/javascript" src="/frontend.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajaxSetup({cache: false});
+            // get site language from cookies, if language not defined - set "EN"
+            if (!getCookie('libdb_sitelanguage')) { setCookie('libdb_sitelanguage', 'en', 3600*24*30) }
+
+            <!--{content_jquery}-->
+
+            setSelectorsByHash(".search_selector");
+            $(".hash_selectors").on('change', '.search_selector', function(){
+                setHashBySelectors();
+            });
+            // Language switch
+            $(".action-switch-language").on('click', function(){
+                if (!$(this).hasClass('lang-active')) {
+                    setCookie('libdb_sitelanguage', $(this).attr('data-lang'), 3600*24*30 );
+                    location.reload();
+                }
+                return false;
+            });
+        });
+
+    </script>
+    <style type="text/css">
+        <!--{content_css}-->
+    </style>
+
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<!--{main_menu_content}-->
+</div>
+
+<div class="container">
+    <div class="jumbotron etks-header">
+        <div class="row">
+            <div class="col-md-4 left etks-header-logo">
+                <img src="/files/sova_106x150.png" alt="" title="" style="_width: 80px; height: 113px;"/>
+            </div>
+            <div class="col-md-16">
+                <h3 class="etks-header-title">Scientific and Technical Journal</h3>
+                <h3 class="etks-header-title">ELECTROTECHNIC AND COMPUTER SYSTEMS</h3>
+            </div>
+            <div class="col-md-4 right etks-header-issn">
+                <h6 class="etks-issn">ISSN Print 2221-3937</h6>
+                <h6 class="etks-issn">ISSN Online 2221-3805</h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">All categories</h3>
+                </div>
+                <div class="list-group etks-topics-list">
+                    <!-- topics list -->
+                    <!--{rubrics}-->
+                    <!-- /topics list -->
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Assistant Editor</h3>
+                </div>
+                <div class="panel-body etks-assist-editor">
+                    <span> Olga Borisovna Babiychuk </span>
+                    <br><br>
+                    <abbr title="phone">+38 (048) 722-33-69</abbr><br><br>
+                    <abbr title="E-Mail"><a href="mailto:babiychuk@ukr.net">babiychuk@ukr.net</a></abbr>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- CONTENT::START -->
+        <div class="col-md-16 maincontent">
+
+
+            <!--{content_html}-->
+
+
+        </div>
+        <!-- CONTENT::END -->
+
+        <!-- right block - сборники -->
+        <div class="col-md-4">
+            <div class="panel-group etks-panel-books" id="accordion">
+                <div class="panel panel-default panel-books-header">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            All books
+                        </h3>
+                    </div>
+                </div>
+
+                <!--{books}-->
+
+            </div>
+
+            <hr>
+            <!-- last news -->
+            <div class="panel panel-default etks-lastnews-list">
+                <div class="panel-heading">Last news</div>
+                <ul class="list-group etks-lastnews-ul">
+                    <!-- last news list -->
+                    <!--{last_news_shortlist}-->
+                    <!-- /last news list -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="container">
+    <div class="panel panel-default etks-banners">
+        <div class="panel-body text-center">
+            <ul class="list-inline">
+                <!--{banners}-->
+            </ul>
+        </div>
+        <div class="panel-body text-left">
+            [ <a href="/core" class="copyleft">©</a> KarelWintersky ]
+            [ <a href="?fetch=articles&with=all">All articles</a> ]
+            [ <a href="?fetch=authors&with=all">All authors</a> ]
+            <br>
+            [ © Odessa National Polytechnic University, 2014. Any use of information from the site is possible only under the condition that the source link! ]
+        </div>
+    </div>
+
+</div>
+
+<?php include_once("_yandexmetrika.php") ?>
+<?php include_once("_analyticstracking.php") ?>
+</body>
+</html>

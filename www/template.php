@@ -125,7 +125,7 @@ PrintLastNews;
         if (count($articles) > 0)
         {
             // печатаем хедер таблицы
-            $return .= '<table class="articles-list-by-query" border="1" width="100%">';
+            $return .= '<table class="articles-list" border="1" width="100%">';
 
             // в цикле загружаем шаблон и передаем в него строки таблицы
             // и результат функции "печать списка авторов на основе $articles['authors'] "
@@ -133,7 +133,7 @@ PrintLastNews;
             foreach ($articles as $an_article_id => $an_article) {
                 $authors_list = $this->getAuthors_InArticlesList($an_article['authors']);
 
-                $t_a = new kwt($this->template_path.'/_internal/item_in_articles_list.html', '<!--{', '}-->');
+                $t_a = new kwt($this->template_path.'/_internal/row_in_articles_list.html', '<!--{', '}-->');
                 $t_a->override(array(
                     'book_title'        => $an_article['book_title'],
                     'lal_e_bi'          => $this->page_prefix,
@@ -141,7 +141,8 @@ PrintLastNews;
                     'pdfid'             => $an_article['pdfid'],
                     'article_id'        => $an_article['id'],
                     'article_title'     => $an_article['article_title'],
-                    'authors_list'      => $authors_list
+                    'authors_list'      => $authors_list,
+                    'book_year'         => $an_article['book_year']
                 ));
                 $return .= $t_a->get();
                 unset($t_a);
@@ -167,7 +168,7 @@ PrintLastNews;
             } else { $an_author['author_email'] = ''; }
 
             // выводит каждый элемент по формату шаблона
-            $t_a = new kwt($this->template_path.'/_internal/item_in_authors_in_article_info.html', '<!--{', '}-->');
+            $t_a = new kwt($this->template_path.'/_internal/an_author_in_article_info.html', '<!--{', '}-->');
             $t_a->override( array(
                 'author_id' => $an_author['author_id'],
                 'site_lang' => $this->site_language,
@@ -193,7 +194,7 @@ PrintLastNews;
             } else { $an_author['author_email'] = ''; }
 
             // выводит каждый элемент по формату шаблона
-            $t_a = new kwt($this->template_path.'/_internal/item_in_authors_in_article_info.html', '<!--{', '}-->');
+            $t_a = new kwt($this->template_path.'/_internal/an_author_in_articles_list.html', '<!--{', '}-->');
             $t_a->override( array(
                 'author_id' => $an_author['author_id'],
                 'site_lang' => $this->site_language,
@@ -221,7 +222,7 @@ FE_PrintArticles_ByAuthor_Start;
 
             // Каждая строка "статья у автора" - из шаблона
             foreach ($articles as $aid => $article) {
-                $t_a = new kwt($this->template_path.'/_internal/item_in_articles_by_author_list.html', '<!--{', '}-->');
+                $t_a = new kwt($this->template_path.'/_internal/an_article_by_author.html', '<!--{', '}-->');
                 $t_a->override( array(
                     'btitle'    => $article['btitle'],
                     'pdfid'     => $article['pdfid'],
@@ -277,7 +278,7 @@ PrintAuthorsSelectedByLetter_Start;
         {
             foreach ($authors as $i => $an_author)
             {
-                $t_a = new kwt($this->template_path.'/_internal/item_in_authors_plain_list.html', '<!--{', '}-->');
+                $t_a = new kwt($this->template_path.'/_internal/plainlist_author_row.html', '<!--{', '}-->');
                 $t_a->override( array(
                     'id'    => $an_author['id'],
                     'name'  => $an_author['name'],
@@ -357,7 +358,7 @@ PAL_S_Start;
                 $authors_string = implode("; ", $authors);
 
                 // выводит каждый элемент по формату шаблона
-                $t_a = new kwt($this->template_path.'/_internal/item_in_articles_plain_list.html', '<!--{', '}-->');
+                $t_a = new kwt($this->template_path.'/_internal/plainlist_article_row.html', '<!--{', '}-->');
                 $t_a->override( array(
                     'id'                => $an_article['id'],
                     'article_title'     => $an_article['article_title'],
