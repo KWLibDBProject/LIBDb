@@ -5,7 +5,7 @@ require_once('core/core.kwt.php');
 require_once('frontend.php');
 /*  вызов нужного шаблона и его движка. ВАЖНО: такую же строчку надо поменять в ajax.php
     путь до каталога шаблонов определяется во включаемом файле движка шаблона */
-require_once('template.bootstrap.php');
+require_once('template.bootstrap24.php');
 
 $site_language = GetSiteLanguage();
 

@@ -1,0 +1,22 @@
+row_in_articles_list.html
+    шаблон 1 строки в таблице статей (выдаваемых по запросу)
+    используется в getArticlesList()
+
+an_author_in_article_info.html
+    шаблон 1 строки в списке авторов в информации по статье ?fetch=articles&with=info&id=153
+    раздел Authors
+    используется в getAuthors_InArticle()
+
+an_author_in_articles_list.html
+    шаблон 1 строки в списке авторов в таблице статей (по запросу)
+    используется в getAuthors_InArticlesList()
+
+an_article_by_author.html
+    шаблон 1 строки со статьей в списке "статьи у автора"
+    используется в getArticles_ByAuthor()
+
+plainlist_article_row.html
+    шаблон одной строки статьи в getArticles_PlainList()
+
+plainlist_author_row.html
+    шаблон одной строки автора в getAuthors_PlainList()
