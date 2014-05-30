@@ -246,6 +246,10 @@ CloseDB($link);
 
         <label for="datepicker">Дата:</label>
         <input type="text" id="datepicker" name="add_date" value="<?php echo $the_article['add_date']; ?>">
+
+        <br>
+        <label for="doi">DOI: </label>
+        <input type="text" id="doi" name="doi" value="<?php echo $the_article['doi']; ?>" size="40">
     </fieldset>
 
     <fieldset>

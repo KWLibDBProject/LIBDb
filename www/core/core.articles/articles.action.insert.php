@@ -34,7 +34,8 @@ $q = array(
     'book' => mysql_escape_string($_POST['book']),
     'add_date' => mysql_escape_string($_POST['add_date']),
     'topic' => mysql_escape_string($_POST['topic']),
-    'pages' => mysql_escape_string($_POST['pages'])
+    'pages' => mysql_escape_string($_POST['pages']),
+    'doi' => mysql_escape_string($_POST['doi'])
 );
 
 // теперь нам нужно вставить данные в БАЗУ (пока что с учетом вставки файла в БЛОБ)

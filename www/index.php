@@ -215,7 +215,8 @@ switch ($fetch) {
                     'article-book-title'    => $article_info['book_title'],
                     'article-book-year'     => $article_info['book_year'],
                     'article-pdfid'         => $article_info['pdfid'],
-                    'article-refs'          => $article_info['article_refs']
+                    'article-refs'          => $article_info['article_refs'],
+                    'article-doi'           => $article_info['doi']
                 ));
                 $override['meta_keywords'] = $article_info['keywords']; // GLOBAL KEYWORDS
                 $maincontent_html = $inner_html->get();
@@ -224,7 +225,10 @@ switch ($fetch) {
                 $inner_js->override( array( "plus_book_id" => "+".$_GET['id'] ) );
                 $maincontent_js = $inner_js->get();
 
-                $inner_css = new kwt($filename.".css");
+                $inner_css = new kwt($filename.".css", '/*', '*/');
+                $inner_css->override( array(
+                    'article-doi-visibility' => ($article_info['doi']=='') ? 'display:none;' : ''
+                ));
                 $maincontent_css = $inner_css->get();
                 break;
             }

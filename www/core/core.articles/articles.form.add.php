@@ -155,6 +155,9 @@ if (!isLogged()) header('Location: /core/');
         <select name="book" id="the_book"></select>
         <label for="datepicker">Дата приема на публикацию:</label>
         <input type="text" id="datepicker" name="add_date">
+        <br>
+        <label for="doi">DOI: </label>
+        <input type="text" id="doi" name="doi" size="40">
     </fieldset>
     <fieldset>
         <legend>PDF-file</legend>

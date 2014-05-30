@@ -117,6 +117,7 @@ ul.etks-books-list > li > a {
 
 .etks-lastnews-list li {
     margin: 5px 0 10px 0;
+    overflow: hidden;
 }
 
 .etks-lastnews-list li:not(:first-child) {

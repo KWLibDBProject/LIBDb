@@ -220,6 +220,7 @@ articles.id
 , books.year AS book_year
 , articles.pages AS article_pages
 , pdfid
+, doi
 , filestorage.username AS pdf_filename ";
 /* дополнительные поля (для /article/info ) */
     $q_select .= "
