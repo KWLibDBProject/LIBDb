@@ -206,7 +206,7 @@ switch ($fetch) {
                 $article_info = LoadArticleInformation_ById($id, $site_language); // EQ $article_info = LoadArticles_ByQuery(array('aid' => $id ) , $site_language);
                 $article_authors = $template_engine->getAuthors_InArticle($article_info['authors'], 'with-email');
                 //@warning: мы вставили в BuildQuery еще несколько полей (article_abstract, article_refs, article_keywords), при поиске по keywords может (!) возникнуть бага -- тесты!
-                $inner_html = new kwt($filename.'.html');
+                $inner_html = new kwt($filename.'.html', '<!--{%', '%}-->');
                 $inner_html->override( array (
                     'article-title'         => $article_info['article_title'],
                     'article-abstract'      => $article_info['article_abstract'],
