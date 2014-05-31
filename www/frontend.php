@@ -6,6 +6,20 @@ function debug($data)
     print('<pre>'.print_r($data, true).'</pre>');
 }
 
+function GetRequestLanguage($request_string)
+{
+    $lang = 'en';
+    if (isset($request_string)) {
+        switch ($request_string) {
+            case 'ru' : {$lang = 'ru'; break;}
+            case 'en' : {$lang = 'en'; break;}
+            case 'uk' : {$lang = 'uk'; break;}
+            case 'ua' : {$lang = 'uk'; break;}
+        }
+    }
+    return $lang;
+}
+
 /* получение языка сайта из куки  */
 function GetSiteLanguage()
 {
@@ -258,6 +272,7 @@ topics.deleted=0 {$query_show_published} ";
 
     /* Extended search conditions */
     $q_extended = '';
+    /*@todo: critical: intval() this values: possible SQL injection and script crush! */
     $q_extended .= (IsSet($get['book']) && ($get['book'] != 0))          ? " AND articles.book = {$get['book']} " : "";
     $q_extended .= (IsSet($get['topic']) && ($get['topic'] != 0))        ? " AND articles.topic = {$get['topic']}" : "";
     $q_extended .= (IsSet($get['letter']) && ($get['letter'] != '0'))    ? " AND authors.name_{$lang} LIKE '{$get['letter']}%' " : "";
@@ -271,6 +286,8 @@ topics.deleted=0 {$query_show_published} ";
         /* пример: AND articles.udc LIKE '%621%' */
         /* пример: AND articles.add_date LIKE '%2013' */
         /* пример: AND (articles.keywords_en LIKE '%robot%' OR ... OR ... )*/
+        /*@todo: critical: экранировать значения: possible SQL injection and script crush! */
+
         $q_expert .= ($get['expert_name'] != '')             ? " AND authors.name_{$lang} LIKE '{$get['expert_name']}%' " : "";
         $q_expert .= ($get['expert_udc'] != '')              ? " AND articles.udc LIKE '%{$get['expert_udc']}%' " : "";
         $q_expert .= ($get['expert_add_date'] != '')    ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' " : "";

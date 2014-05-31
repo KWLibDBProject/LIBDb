@@ -7,7 +7,7 @@ require_once('frontend.php');
 require_once('template.bootstrap24.php');
 
 $actor = isset($_GET['actor']) ? $_GET['actor'] : '';
-$lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
+$lang = isset($_GET['lang']) ? GetRequestLanguage($_GET['lang']) : 'en';
 
 $return = '';
 $link = ConnectDB();

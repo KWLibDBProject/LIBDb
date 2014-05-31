@@ -46,7 +46,7 @@ switch ($fetch) {
             case 'info': {
                 /*расширенная информация по автору + список его статей + фото */
                 $filename = $tpl_path.'/fetch=authors/with=info/f_authors+w_info.'.$site_language;
-                $id = $_GET['id'];
+                $id = intval($_GET['id']);
                 $author_information = LoadAuthorInformation_ById($id, $site_language);
                 $author_publications = $template_engine->getArticles_ByAuthor($id);
                 /* HTML Template */
@@ -158,7 +158,7 @@ switch ($fetch) {
             }
             case 'topic' : {
                 $filename = $tpl_path.'/fetch=articles/with=topic/f_articles+w_topic.'.$site_language;
-                $id = $_GET['id'];
+                $id = intval($_GET['id']);
 
                 $inner_html = new kwt($filename.'.html');
                 $inner_html->override(array(
@@ -167,7 +167,7 @@ switch ($fetch) {
                 $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.'.js', '/*' ,'*/');
-                $inner_js->override( array( "plus_topic_id" => "+".$_GET['id'] ) );
+                $inner_js->override( array( "plus_topic_id" => "+".$id ) );
                 $maincontent_js = $inner_js->get();
 
                 $inner_css = new kwt($filename.".css");
@@ -175,7 +175,7 @@ switch ($fetch) {
                 break;
             }
             case 'book' : {
-                $id = $_GET['id'];
+                $id = intval($_GET['id']);
                 $filename = $tpl_path.'/fetch=articles/with=book/f_articles+w_book.'.$site_language;
 
                 $inner_html = new kwt($filename.'.html');
@@ -192,7 +192,7 @@ switch ($fetch) {
                 $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.'.js', '/*', '*/');
-                $inner_js->override( array( "plus_book_id" => "+".$_GET['id'] ) );
+                $inner_js->override( array( "plus_book_id" => "+".$id ) );
                 $maincontent_js = $inner_js->get();
 
                 $inner_css = new kwt($filename.".css");
@@ -200,7 +200,7 @@ switch ($fetch) {
                 break;
             }
             case 'info' : {
-                $id = $_GET['id'];
+                $id = intval($_GET['id']);
                 $filename = $tpl_path.'/fetch=articles/with=info/f_articles+w_info.'.$site_language;
 
                 $article_info = LoadArticleInformation_ById($id, $site_language); // EQ $article_info = LoadArticles_ByQuery(array('aid' => $id ) , $site_language);
@@ -222,7 +222,7 @@ switch ($fetch) {
                 $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.'.js', '/*', '*/');
-                $inner_js->override( array( "plus_book_id" => "+".$_GET['id'] ) );
+                $inner_js->override( array( "plus_book_id" => "+".$id ) );
                 $maincontent_js = $inner_js->get();
 
                 $inner_css = new kwt($filename.".css", '/*', '*/');
