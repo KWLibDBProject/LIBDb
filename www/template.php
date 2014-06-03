@@ -216,9 +216,9 @@ PrintLastNews;
         $articles = LoadArticles_ByAuthor($id, $this->site_language);
 
         if (count($articles) > 0) {
-            // Начало строки статей у автора
+            // Начало блока (таблицы) статей у автора
             $ret .= <<<FE_PrintArticles_ByAuthor_Start
-<table class="articles_by-author-table">
+<table class="articles-by-author-table">
 FE_PrintArticles_ByAuthor_Start;
 
             // Каждая строка "статья у автора" - из шаблона

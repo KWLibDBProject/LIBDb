@@ -31,17 +31,17 @@
 .author_bio {}
 
 /* стили таблицы СТАТЬИ у АВТОРА */
-.articles_by-author-table {
+.articles-by-author-table {
     width: 100%;
 }
-.articles_by-author-table td {
+.articles-by-author-table td {
     vertical-align: middle;
     border: 1px dotted #a9a9a9;
     padding: 7px;
 }
-.articles_by-author-table-book-title {}
-.articles_by-author-table-pdficon {
+.articles-by-author-table-book-title {}
+.articles-by-author-table-pdficon {
     width: 32px;
 }
-.articles_by-author-table-title {}
-.articles_by-author-table-book-year {}
+.articles-by-author-table-title {}
+.articles-by-author-table-book-year {}

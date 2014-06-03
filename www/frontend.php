@@ -322,7 +322,7 @@ function LoadArticles_ByQuery($get, $lang)
             $id = $an_article['id'];
             $all_articles[$id] = $an_article;
             $all_articles[$id]['authors'] = LoadAuthors_ByArticle($id, $lang);
-            //@todo: для того чтобы обойтись без дополнительного селекта - надо переписать полностью BuildQuery() чтобы она отдавала еще и ВСЕХ авторов пофамильно. Надо ли? У нас не миллион запросов... пока что.
+            //@todo: REFACTORING + OVER-OPTIMISATION : для того чтобы обойтись без дополнительного селекта - надо переписать полностью BuildQuery() чтобы она отдавала еще и ВСЕХ авторов пофамильно. Надо ли? У нас не миллион запросов... пока что.
         } //end while
     }
     return $all_articles;
