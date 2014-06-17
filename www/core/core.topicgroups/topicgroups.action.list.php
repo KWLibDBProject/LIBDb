@@ -50,7 +50,7 @@ if ($ref_numrows > 0)
 REF_TAL_EACH;
     }
 } else {
-    $return .= '<tr><td colspan="5">Пока не добавили ни один тематический раздел.</td></tr></table>';
+    $return .= '<tr><td colspan="5">Пока не добавили ни одну группу тематических разделов.</td></tr></table>';
 }
 $return .= <<<REF_TAL_END
 </table>

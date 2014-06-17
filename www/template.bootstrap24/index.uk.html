@@ -14,21 +14,27 @@
 
     <script type="text/javascript" src="/<!--{template_path}-->/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="/<!--{template_path}-->/_bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/<!--{template_path}-->/jquery.colorbox-min.js"></script>
+    <script type="text/javascript" src="/<!--{template_path}-->/jquery.colorbox.min.js"></script>
+    <script type="text/javascript" src="/<!--{template_path}-->/jquery.cookie.min.js"></script>
+
     <script type="text/javascript" src="/frontend.js"></script>
     <script type="text/javascript" src="/frontend.options.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
             $.ajaxSetup({cache: false});
+
+            // get site language from cookies, if language not defined - set "EN"
             if (!getCookie('libdb_sitelanguage')) { setCookie('libdb_sitelanguage', 'en', 3600*24*30) }
 
             <!--{content_jquery}-->
 
+            // set Selectors state
             setSelectorsByHash(".search_selector");
             $(".hash_selectors").on('change', '.search_selector', function(){
                 setHashBySelectors();
             });
+
             // Language switch
             $(".action-switch-language").on('click', function(){
                 if (!$(this).hasClass('lang-active')) {
@@ -37,6 +43,32 @@
                 }
                 return false;
             });
+
+            // load active accordion state
+            var lastbook=$.cookie('activeBookGroup');
+            if (lastbook != null) {
+                //remove default collapse settings
+                $("#accordion .panel-collapse").removeClass('in');
+                // show last visible group
+                $("#" + lastbook).addClass("in");
+            }
+            // save accordion state
+            $("#accordion").on('show.bs.collapse', function(e) {
+                $.cookie('activeBookGroup', $(e.target).attr('id'));
+            });
+
+            var lasttopic=$.cookie('activeTopicGroup');
+            if (lasttopic != null) {
+                //remove default collapse settings
+                $("#taccordion .panel-collapse").removeClass('in');
+                // show last visible group
+                $("#" + lasttopic).addClass("in");
+            }
+            // save accordion state
+            $("#taccordion").on('show.bs.collapse', function(e) {
+                $.cookie('activeTopicGroup', $(e.target).attr('id'));
+            });
+
         });
 
     </script>

@@ -84,6 +84,10 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
     overflow: hidden;
 }
 
+.etks-panel-topics {
+    overflow: hidden;
+}
+
 .etks-panel-topics a.list-group-item:hover {
     background-color: #e8f0f7;
     color: #00008b;
