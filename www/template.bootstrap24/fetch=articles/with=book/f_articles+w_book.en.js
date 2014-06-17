@@ -1,7 +1,7 @@
 var siteLanguage = '&lang=en';
-var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optionlist'+siteLanguage);
+var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optgroup_list'+siteLanguage);
 
-BuildSelector('topics', topicsList, 0);
+BuildSelectorExtended('topics', topicsList, 'ANY', 0);
 
 url = "ajax.php?actor=load_articles_by_query&book="/*plus_book_id*/+siteLanguage;
 

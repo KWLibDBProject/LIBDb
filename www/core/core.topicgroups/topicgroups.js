@@ -1,4 +1,4 @@
-var ref_name = "topics";
+var ref_name = "topicgroups";
 var button_id = 0;
 
 function ShowErrorMessage(message)
@@ -6,7 +6,7 @@ function ShowErrorMessage(message)
     alert(message);
 }
 
-function Topics_CallAddItem(source, result_area)
+function Topicgroups_CallAddItem(source, result_area)
 {
     var $form = $(source).find('form');
     url = $form.attr("action");
@@ -14,24 +14,22 @@ function Topics_CallAddItem(source, result_area)
         title_en: $form.find("input[name='add_title_en']").val(),
         title_ru: $form.find("input[name='add_title_ru']").val(),
         title_uk: $form.find("input[name='add_title_uk']").val(),
-        rel_group: $form.find("input[name='add_group']").val(),
         ref_name: ref_name
     } );
     posting.done(function(data){
         result = $.parseJSON(data);
         if (result['error']==0) { // update list
-            $(result_area).empty().load("core.topics/topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("core.topicgroups/topicgroups.action.list.php?ref="+ref_name);
             $( source ).dialog( "close" );
         } else {
-            // Some errors, show message!
             $( source ).dialog( "close" );
         }
     });
 }
 
-function Topics_CallLoadItem(destination, id) // номер записи, целевая форма
+function Topicgroups_CallLoadItem(destination, id) // номер записи, целевая форма
 {
-    url = 'core.topics/topics.action.getitem.php';
+    url = 'core.topicgroups/topicgroups.action.getitem.php';
     var getting = $.get(url, {
         id: id,
         ref: ref_name
@@ -46,14 +44,13 @@ function Topics_CallLoadItem(destination, id) // номер записи, цел
             $form.find("input[name='edit_title_en']").val( result['data']['title_en'] );
             $form.find("input[name='edit_title_ru']").val( result['data']['title_ru'] );
             $form.find("input[name='edit_title_uk']").val( result['data']['title_uk'] );
-            $form.find("input[name='edit_group']").val( result['data']['rel_group'] );
         } else {
             // ошибка загрузки
         }
     });
 }
 
-function Topics_CallUpdateItem(source, id, result_area)
+function Topicgroups_CallUpdateItem(source, id, result_area)
 {
     var $form = $(source).find('form');
     url = $form.attr("action");
@@ -61,14 +58,13 @@ function Topics_CallUpdateItem(source, id, result_area)
         title_en: $form.find("input[name='edit_title_en']").val(),
         title_ru: $form.find("input[name='edit_title_ru']").val(),
         title_uk: $form.find("input[name='edit_title_uk']").val(),
-        rel_group: $form.find("input[name='edit_group']").val(),
         ref_name: ref_name,
         id: id
     } );
     posting.done(function(data){
         result = $.parseJSON(data);
         if (result['error']==0) { // update list
-            $(result_area).empty().load("core.topics/topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("core.topicgroups/topicgroups.action.list.php?ref="+ref_name);
             $( source ).dialog( "close" );
         } else {
             // Some errors, show message!
@@ -77,21 +73,21 @@ function Topics_CallUpdateItem(source, id, result_area)
     });
 }
 
-function Topics_CallRemoveItem(target, id, result_area)
+function Topicgroups_CallRemoveItem(target, id, result_area)
 {
-    url = 'core.topics/topics.action.removeitem.php?ref='+ref_name;
+    url = 'core.topicgroups/topicgroups.action.removeitem.php';
     var getting = $.get(url, {
-        ref_name: ref_name,
-        id: id
+        id: id,
+        ref_name: ref_name
     });
     getting.done(function(data){
         result = $.parseJSON(data);
         if (result['error'] == 0) {
-            $(result_area).empty().load("core.topics/topics.action.list.php?ref="+ref_name);
+            $(result_area).empty().load("core.topicgroups/topicgroups.action.list.php");
             $( target ).dialog( "close" );
         } else {
             // удаление невозможно
-            ShowErrorMessage(result['message']); // Невозможно удалить топик, вероятно в нем есть статьи!
+            ShowErrorMessage(result['message']); // Невозможно удалить группу топиков, вероятно в нем есть статьи!
             $( target ).dialog( "close" );
         }
     });

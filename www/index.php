@@ -27,7 +27,7 @@ $template_engine = new Template($tpl_path, $site_language);
 
 /* Override variables in INDEX.*.HTML template */
 $override['template_path'] = $tpl_path; // template directory name (not a path!), defined in template.xxx.php
-$override['rubrics']    = $template_engine->getTopics();
+$override['rubrics']    = $template_engine->getTopicsTree();
 $override['books']      = $template_engine->getBooks();
 $override['banners']    = $template_engine->getBanners();
 $override['last_news_shortlist'] = $template_engine->getLastNews(3);

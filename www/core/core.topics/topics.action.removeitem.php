@@ -24,7 +24,6 @@ if (!IsSet($_GET['ref_name'])) {
             // статей нет, можно удалить
 
             $q = "DELETE FROM {$table} WHERE id = {$id} ";
-            // $q = "UPDATE $table SET deleted=1 WHERE (id=$id)";
             if ($r = mysql_query($q)) {
                 // запрос удаление успешен
                 $result["error"] = 0;

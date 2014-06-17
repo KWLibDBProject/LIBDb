@@ -24,7 +24,7 @@ switch ($actor) {
     case 'get_books_as_optionlist' : {
         /* загрузить сборники и отдать JSON-объект для построения селекта */
         $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
-        $q = "SELECT * FROM books WHERE deleted=0 AND published=1";
+        $q = "SELECT * FROM books WHERE published = 1";
         $r = mysql_query($q) or die($q);
         $n = @mysql_num_rows($r) ;
 
@@ -42,24 +42,32 @@ switch ($actor) {
         $return = json_encode($data);
         break;
     }
-    case 'get_topics_as_optionlist' : {
+    case 'get_topics_as_option_list' : {
         /* загрузить категории и отдать JSON-объект для построения селекта */
         $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
-        $query = "SELECT * FROM topics WHERE deleted=0";
-        $result = mysql_query($query) or die($query);
-        $ref_numrows = @mysql_num_rows($result) ;
 
-        if ($ref_numrows > 0)
-        {
+        $data['data'] = LoadTopics($lang);
+
+        if (sizeof($data['data'])) {
             $data['error'] = 0;
-            while ($row = mysql_fetch_assoc($result))
-            {
-                $data['data'][ $row['id'] ] = returnTopicsOptionString($row,$lang,$withoutid); // see CORE.PHP
-            }
+            $data['state'] = 'ok';
         } else {
-            $data['data'][1] = "Добавьте темы (топики) в базу!!!";
+            $data['data'][1] = "Добавьте тематические разделы в базу!!!";
             $data['error'] = 1;
         }
+        $return = json_encode($data);
+        break;
+    }
+    case 'get_topics_as_optgroup_list' : {
+        /* загрузить категории и отдать JSON-объект для построения селекта c группировкой */
+        $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
+
+        $data = LoadTopicsTree($lang, $withoutid);
+        if ($data['data'][1]['value'] != -1 ) {
+            $data['state'] = 'ok';
+            $data['error'] = 0;
+        }
+
         $return = json_encode($data);
         break;
     }
@@ -78,6 +86,10 @@ switch ($actor) {
     case 'load_articles_expert_search': {
         // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
         $return = $engine -> getArticlesList($_GET);
+        break;
+    }
+    default: {
+        $return = 'Unknown request method!';
         break;
     }
 

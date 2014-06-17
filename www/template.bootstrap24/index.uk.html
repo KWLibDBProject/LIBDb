@@ -12,11 +12,11 @@
     <link rel="stylesheet" href="/<!--{template_path}-->/colorbox.min.css" />
     <link rel="stylesheet" href="/<!--{template_path}-->/theme.css">
 
-    <script src="/<!--{template_path}-->/jquery-1.11.0.min.js"></script>
-    <script src="/<!--{template_path}-->/_bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/<!--{template_path}-->/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/<!--{template_path}-->/_bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/<!--{template_path}-->/jquery.colorbox-min.js"></script>
-
     <script type="text/javascript" src="/frontend.js"></script>
+    <script type="text/javascript" src="/frontend.options.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -71,15 +71,15 @@
 
     <div class="row">
         <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Усi рубрики</h3>
+            <div class="panel-group etks-panel-topics" id="taccordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Усi рубрики</h3>
+                    </div>
                 </div>
-                <div class="list-group etks-topics-list">
-                    <!-- topics list -->
-                    <!--{rubrics}-->
-                    <!-- /topics list -->
-                </div>
+                <!-- topics list -->
+                <!--{rubrics}-->
+                <!-- /topics list -->
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">

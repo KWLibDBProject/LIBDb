@@ -124,7 +124,7 @@ function LoadTopicInfo($id, $lang)
 /* загружает из базы рубрики, отдает ассоциативный массив вида [id -> title] */
 function LoadTopics($lang)
 {
-    $q = "SELECT id, title_{$lang} AS title FROM topics WHERE deleted=0";
+    $q = "SELECT id, title_{$lang} AS title FROM topics ORDER BY title_{$lang}";
     $r = mysql_query($q);
     $ret = array();
 
@@ -137,6 +137,61 @@ function LoadTopics($lang)
     return $ret;
 }
 
+/* загружает из базы рубрики в древовидном представлении, отдает ассоциативный массив вида [id -> title] */
+function LoadTopicsTree($lang, $withoutid=1)
+{
+    $withoutid = $withoutid || 1;
+
+    $query = "
+SELECT
+topics.id,
+topics.title_{$lang} AS title_topic,
+topicgroups.title_{$lang}  AS title_group
+FROM topics
+LEFT JOIN topicgroups ON topicgroups.id = topics.rel_group
+ORDER BY topicgroups.title_{$lang}, topics.title_{$lang}
+";
+
+    $r = mysql_query($query);
+    $data = array();
+
+    if (@mysql_num_rows($r) > 0)
+    {
+        $group = '';
+        $i = 1;
+        while ($row = mysql_fetch_assoc($r))
+        {
+            if ($group != $row['title_group']) {
+                // send new optiongroup
+                $group_id = 'g_'.$row['id'];
+
+                $data['data'][ $i] = array(
+                    'type'      => 'group',
+                    'value'     => $group_id,
+                    'text'      => $row['title_group']
+                );
+                $i++;
+                $group = $row['title_group'];
+            }
+            $data['data'][ $i ] = array(
+                'type'      => 'option',
+                'value'     => $row['id'],
+                'text'      => (($withoutid==1) ? '' : "[{$row['id']}] ").(($row['title_topic'] != '') ? $row['title_topic'] : '< NONAME >')
+            );
+            // send option
+            $i++;
+        }
+    } else {
+        $data['data'][1] = array(
+            'type'      => 'option',
+            'value'     => -1,
+            'text'      => "Добавьте темы (топики) в базу!!!"
+        );
+        $data['error'] = 1;
+    }
+    return $data;
+}
+
 /* загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом */
 function LoadBooks()
 {
@@ -146,8 +201,7 @@ function LoadBooks()
 FROM books, articles
 WHERE
 articles.book = books.id AND
-books.published = 1 AND
-books.deleted = 0
+books.published = 1
 GROUP BY books.title
 ORDER BY books.title";
 

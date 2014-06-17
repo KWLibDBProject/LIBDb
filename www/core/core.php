@@ -146,25 +146,23 @@ function returnTopicsOptionString($row, $lang, $withoutid)
 {
     // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
     // по идее можно и с шаблоном, но ну нафиг
+    $title = '';
     switch ($lang) {
         case 'en': {
-            // $name = $row['name_en'];
             $title = $row['title_en'];
             break;
         }
         case 'ru': {
-            // $name = $row['name_ru'];
             $title = $row['title_ru'];
             break;
         }
         case 'uk': {
-            // $name = $row['name_uk'];
             $title = $row['title_uk'];
             break;
         }
     }
     $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
-    $title = ($title != '') ? $title : '<NONAME>';
+    $title = ($title != '') ? $title : '< NONAME >';
 
     return $id.$title;
 }

@@ -5,7 +5,7 @@ require_once('../core.kwt.php');
 
 $link = ConnectDB();
 
-$ref_name = 'topics';
+$ref_name = 'topicgroups';
 $item_id = IsSet($_GET['id']) ? $_GET['id'] : 1;
 
 $query = "SELECT * FROM $ref_name WHERE id=$item_id";
@@ -18,7 +18,7 @@ if ($ref_numrows != 0) {
     $data['message'] = '';
 } else {
     $data['error'] = 1;
-    $data['message'] = 'Категория статей не найдена, скорее всего ошибка базы данных!';
+    $data['message'] = 'Топик не найден, скорее всего ошибка базы данных!';
 }
 
 CloseDB($link);

@@ -13,6 +13,7 @@ $q = array(
     'title_en' => mysql_escape_string($_POST['title_en']),
     'title_ru' => mysql_escape_string($_POST['title_ru']),
     'title_uk' => mysql_escape_string($_POST['title_uk']),
+    'rel_group' => mysql_escape_string($_POST['rel_group']),
 );
 $qstr = MakeInsert($q,$_POST['ref_name']);
 $res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);

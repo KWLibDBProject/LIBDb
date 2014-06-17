@@ -103,7 +103,7 @@ function preloadOptionsList(url) // Загружает данные (кэшир�
 
 // формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
 // target - ИМЯ селектора
-function BuildSelector(target, data, currentid) // currentid is 1 for NEW
+function BuildSelector__OLD(target, data, currentid) // currentid is 1 for NEW
 {
     if (data['error'] == 0) {
         var _target = "select[name='"+target+"']";
@@ -112,7 +112,6 @@ function BuildSelector(target, data, currentid) // currentid is 1 for NEW
         });
         var _currentid = (typeof currentid != 'undefined') ? currentid : 1;
         $("select[name="+target+"] option[value="+ _currentid +"]").prop("selected",true);
-        // $("select[name="+target+"]").prop('disabled',false);
     } else {
         $("select[name="+target+"]").prop('disabled',true);
     }

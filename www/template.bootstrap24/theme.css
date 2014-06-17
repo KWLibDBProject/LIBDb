@@ -73,14 +73,26 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
     background-image: none;
 }
 
-/*                                     Левая колонка со сборниками                     */
-.etks-topics-list > a:hover {
-    background-color: #e8f0f7;
+/* доп стилизация панелей */
+.panel-title:hover {
+    cursor: default;
 }
+
+
+/*                                     Левая колонка со сборниками                     */
+.etks-topics-list {
+    overflow: hidden;
+}
+
+.etks-panel-topics a.list-group-item:hover {
+    background-color: #e8f0f7;
+    color: #00008b;
+}
+
 .etks-assist-editor {
     font-size: small;
 }
-.etks-assist-editor>span {
+.etks-assist-editor > span {
     font-weight: bold;
 }
 
@@ -96,7 +108,7 @@ ul.etks-books-list > li > a {
 }
 
 .books a:hover, .books a:focus {
-    color: #0B331B;
+    color: #00008b;;
     font-weight: bold;
     text-decoration: none;
 }
@@ -137,7 +149,6 @@ ul.etks-books-list > li > a {
     padding-bottom: 0;
     padding-top: 0;
 }
-
 
 /*--                                        Подвал                             --*/
 
