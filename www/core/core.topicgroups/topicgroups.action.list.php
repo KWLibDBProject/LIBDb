@@ -31,6 +31,7 @@ $return .= <<<REF_TGAL_TH
         <th>Английское название</th>
         <th>Русское название</th>
         <th>Украинское название</th>
+        <th>Порядок отображения<br><small>(чем меньше - тем раньше)</small></th>
         <th width="7%">Управление</th>
     </tr>
 REF_TGAL_TH;
@@ -45,12 +46,13 @@ if ($ref_numrows > 0)
 <td>{$row['title_en']}</td>
 <td>{$row['title_ru']}</td>
 <td>{$row['title_uk']}</td>
+<td>{$row['display_order']}</td>
 <td class="centred_cell"><button class="action-edit button-edit" name="{$row['id']}">Edit</button></td>
 </tr>
 REF_TAL_EACH;
     }
 } else {
-    $return .= '<tr><td colspan="5">Пока не добавили ни одну группу тематических разделов.</td></tr></table>';
+    $return .= '<tr><td colspan="6">Пока не добавили ни одну группу тематических разделов.</td></tr></table>';
 }
 $return .= <<<REF_TAL_END
 </table>

@@ -149,7 +149,7 @@ topics.title_{$lang} AS title_topic,
 topicgroups.title_{$lang}  AS title_group
 FROM topics
 LEFT JOIN topicgroups ON topicgroups.id = topics.rel_group
-ORDER BY topicgroups.title_{$lang}, topics.title_{$lang}
+ORDER BY topicgroups.display_order, topics.title_{$lang}
 ";
 
     $r = mysql_query($query);

@@ -1,5 +1,4 @@
 <?php
-// удалить рубрику (топик), если в ней есть статьи НЕЛЬЗЯ
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
@@ -18,10 +17,10 @@ if (!IsSet($_GET['ref_name'])) {
     $q = "DELETE FROM {$table} WHERE id = {$id} ";
     if ($r = mysql_query($q)) {
             $result["error"] = 0;
-            $result['message'] = 'Тематический раздел удален из базы данных!';
+            $result['message'] = 'Группа тематических разделов удалена из базы данных!';
         } else {
             $result["error"] = 1;
-            $result['message'] = 'Ошибка удаления тематического раздела из базы данных!';
+            $result['message'] = 'Ошибка удаления группы тематических разделов из базы данных!';
         }
     CloseDB($link);
     };

@@ -10,7 +10,7 @@ $withoutid = isset($_GET['id']) ? 1 : 0;
 $link = ConnectDB();
 
 $query = "
-SELECT id, title_ru AS title
+SELECT id, title_ru, display_order AS title
 FROM topicgroups
 ORDER BY title_{$lang}
 ";

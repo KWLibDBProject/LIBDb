@@ -14,6 +14,7 @@ function Topicgroups_CallAddItem(source, result_area)
         title_en: $form.find("input[name='add_title_en']").val(),
         title_ru: $form.find("input[name='add_title_ru']").val(),
         title_uk: $form.find("input[name='add_title_uk']").val(),
+        display_order: $form.find("input[name='add_display_order']").val(),
         ref_name: ref_name
     } );
     posting.done(function(data){
@@ -44,6 +45,7 @@ function Topicgroups_CallLoadItem(destination, id) // номер записи, �
             $form.find("input[name='edit_title_en']").val( result['data']['title_en'] );
             $form.find("input[name='edit_title_ru']").val( result['data']['title_ru'] );
             $form.find("input[name='edit_title_uk']").val( result['data']['title_uk'] );
+            $form.find("input[name='edit_display_order']").val( result['data']['display_order'] );
         } else {
             // ошибка загрузки
         }
@@ -58,6 +60,7 @@ function Topicgroups_CallUpdateItem(source, id, result_area)
         title_en: $form.find("input[name='edit_title_en']").val(),
         title_ru: $form.find("input[name='edit_title_ru']").val(),
         title_uk: $form.find("input[name='edit_title_uk']").val(),
+        display_order: $form.find("input[name='edit_display_order']").val(),
         ref_name: ref_name,
         id: id
     } );
