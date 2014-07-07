@@ -4,3 +4,9 @@ AddCharset UTF-8 .html .php .tpl
 #<FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf|pdf)$">
 #  Header set Cache-Control "max-age=2592000"
 #</FilesMatch>
+RewriteEngine On
+RewriteRule ^404/?$ /index.php [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteRule ^ / [L,R]

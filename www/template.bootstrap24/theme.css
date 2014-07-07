@@ -64,7 +64,10 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
     color: navy;
     font-style: italic;
 }
-.etks-header .etks-header-issn { /* issn classes */ }
+.etks-header .etks-header-issn {
+    padding-top: 10px;
+/* issn classes */
+}
 
 /* меню */
 .dropdown-menu > li > a:hover,

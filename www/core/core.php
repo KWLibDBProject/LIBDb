@@ -114,6 +114,7 @@ function returnAuthorsOptionString($row, $lang, $withoutid)
 {
     // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
     // по идее можно и с шаблоном, но ну нафиг
+    $name = ''; $title = '';
     $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
     switch ($lang) {
         case 'en': {
@@ -132,8 +133,7 @@ function returnAuthorsOptionString($row, $lang, $withoutid)
             break;
         }
     }
-    return $id."$name $title";
-
+    return $id.$name." , ".$title;
 }
 
 /**
