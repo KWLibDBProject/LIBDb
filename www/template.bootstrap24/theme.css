@@ -60,6 +60,11 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 
 .etks-header {}
 
+.etks-header-logo > img {
+    margin-top: 20px;
+    height: 60px;
+}
+
 .etks-header h3 {
     color: navy;
     font-style: italic;
