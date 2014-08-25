@@ -1,10 +1,10 @@
 var siteLanguage = '&lang=uk';
 var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optgroup_list'+siteLanguage);
-var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist'+siteLanguage);
+var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist_extended'+siteLanguage);
 var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist'+siteLanguage);
 
 BuildSelector('letter', lettersList, 'ANY', 0);
-BuildSelector('book', booksList, 'ANY', 0);
+BuildSelectorExtended('book', booksList, 'ANY', 0);
 BuildSelectorExtended('topic', topicsList, 'ANY', 0);
 
 url_extended = "ajax.php?actor=load_articles_by_query"+siteLanguage;
