@@ -10,7 +10,7 @@ $withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
 $link = ConnectDB();
 
-$query = "SELECT * FROM books WHERE deleted=0";
+$query = "SELECT * FROM books WHERE deleted=0 ORDER BY SUBSTRING(title, 6, 2)";
 $result = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($result) ;
 

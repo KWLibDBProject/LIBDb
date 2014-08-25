@@ -344,6 +344,15 @@ class FileStorage extends FileStorageConfig {
         }
     }
 
+    public static function statUpdateDownloadCounter($id)
+    {
+        $table = self::getSQLTable();
+        $query = "update {$table}
+        set stat_download_counter = stat_download_counter + 1
+where id = {$id}";
+        $rp = @mysql_query($query);
+    }
+
 } // class
 
 ?>

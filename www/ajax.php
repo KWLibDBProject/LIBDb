@@ -24,7 +24,7 @@ switch ($actor) {
     case 'get_books_as_optionlist' : {
         /* загрузить сборники и отдать JSON-объект для построения селекта */
         $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
-        $q = "SELECT * FROM books WHERE published = 1";
+        $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";
         $r = mysql_query($q) or die($q);
         $n = @mysql_num_rows($r) ;
 

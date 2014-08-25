@@ -15,6 +15,8 @@ if (!$file_info) {
     $file_info['content'] = FileStorage::getEmptyFile('pdf');
 } else {
     $file_info['content'] = FileStorage::getFileContent($id);
+    FileStorage::statUpdateDownloadCounter($id);
+    /* update stat_download_counter */
 }
 
 CloseDB($link);
