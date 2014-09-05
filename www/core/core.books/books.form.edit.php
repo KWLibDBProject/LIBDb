@@ -30,34 +30,48 @@ if ($id != -1)
             $book['file_cover_data']['disabled_flag'] = '';
         } else {
             $book['file_cover_data']['id'] = -1;
-            $book['file_cover_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_cover_data']['username'] = 'Файл еще не указан!!! Нажмите `удалить` и загрузите файл!';
             $book['file_cover_data']['disabled_flag'] = 'disabled';
         }
-        // file_title
-        if ($book['file_title'] != -1 )
+        // file_title ru
+        if ($book['file_title_ru'] != -1 )
         {
-            $f = FileStorage::getFileInfo($book['file_title']);
+            $f = FileStorage::getFileInfo($book['file_title_ru']);
 
-            $book['file_title_data']['id'] = $f['id'];
-            $book['file_title_data']['username'] = $f['username'];
-            $book['file_title_data']['disabled_flag'] = '';
+            $book['file_title_ru_data']['id'] = $f['id'];
+            $book['file_title_ru_data']['username'] = $f['username'];
+            $book['file_title_ru_data']['disabled_flag'] = '';
         } else {
-            $book['file_title_data']['id'] = -1;
-            $book['file_title_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
-            $book['file_title_data']['disabled_flag'] = 'disabled';
+            $book['file_title_ru_data']['id'] = -1;
+            $book['file_title_ru_data']['username'] = 'Файл еще не указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_title_ru_data']['disabled_flag'] = 'disabled';
         }
-        // file_toc
-        if ($book['file_toc'] != -1 )
+        // file_title en
+        if ($book['file_title_en'] != -1 )
         {
-            $f = FileStorage::getFileInfo($book['file_toc']);
+            $f = FileStorage::getFileInfo($book['file_title_en']);
 
-            $book['file_toc_data']['id'] = $f['id'];
-            $book['file_toc_data']['username'] = $f['username'];
-            $book['file_toc_data']['disabled_flag'] = '';
+            $book['file_title_en_data']['id'] = $f['id'];
+            $book['file_title_en_data']['username'] = $f['username'];
+            $book['file_title_en_data']['disabled_flag'] = '';
         } else {
-            $book['file_toc_data']['id'] = -1;
-            $book['file_toc_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
-            $book['file_toc_data']['disabled_flag'] = 'disabled';
+            $book['file_title_en_data']['id'] = -1;
+            $book['file_title_en_data']['username'] = 'Файл еще не указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_title_en_data']['disabled_flag'] = 'disabled';
+        }
+
+        // file_toc_ru
+        if ($book['file_toc_ru'] != -1 )
+        {
+            $f = FileStorage::getFileInfo($book['file_toc_ru']);
+
+            $book['file_toc_ru_data']['id'] = $f['id'];
+            $book['file_toc_ru_data']['username'] = $f['username'];
+            $book['file_toc_ru_data']['disabled_flag'] = '';
+        } else {
+            $book['file_toc_ru_data']['id'] = -1;
+            $book['file_toc_ru_data']['username'] = 'Файл еще не указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_toc_ru_data']['disabled_flag'] = 'disabled';
         }
         // file_toc_en
         if ($book['file_toc_en'] != -1 )
@@ -69,7 +83,7 @@ if ($id != -1)
             $book['file_toc_en_data']['disabled_flag'] = '';
         } else {
             $book['file_toc_en_data']['id'] = -1;
-            $book['file_toc_en_data']['username'] = 'Файл еще указан!!! Нажмите `удалить` и загрузите файл!';
+            $book['file_toc_en_data']['username'] = 'Файл еще не указан!!! Нажмите `удалить` и загрузите файл!';
             $book['file_toc_en_data']['disabled_flag'] = 'disabled';
         }
         $isBookExists = 1;
@@ -138,12 +152,16 @@ if ($id != -1)
                     ShowErrorMessage('Обязательно укажите файл с обложкой (изображение в формате JPG/GIF/PNG) ! ');
                     bValid = false;
                 }
-                if (($('input[name=file_title_changed]').val() == 1) &&  !strpos($('input[name="file_title"]').val() , '.pdf')) {
-                    ShowErrorMessage('Файл с титульным листом должен быть в формате PDF! ');
+                if (($('input[name=file_title_ru_changed]').val() == 1) &&  !strpos($('input[name="file_title_ru"]').val() , '.pdf')) {
+                    ShowErrorMessage('Файл с кириллическим титульным листом должен быть в формате PDF! ');
                     bValid = false;
                 }
-                if (($('input[name=file_toc_changed]').val() == 1) &&  !strpos($('input[name="file_toc"]').val() , '.pdf')) {
-                    ShowErrorMessage('Файл с оглавлением должен быть в формате PDF! ');
+                if (($('input[name=file_title_en_changed]').val() == 1) &&  !strpos($('input[name="file_title_en"]').val() , '.pdf')) {
+                    ShowErrorMessage('Файл с английским титульным листом должен быть в формате PDF! ');
+                    bValid = false;
+                }
+                if (($('input[name=file_toc_ru_changed]').val() == 1) &&  !strpos($('input[name="file_toc_ru"]').val() , '.pdf')) {
+                    ShowErrorMessage('Файл с кириллическим оглавлением должен быть в формате PDF! ');
                     bValid = false;
                 }
                 if (($('input[name=file_toc_en_changed]').val() == 1) &&  !strpos($('input[name="file_toc_en"]').val() , '.pdf')) {
@@ -246,7 +264,7 @@ if ($id != -1)
     <div class="clear"></div>
 
     <fieldset>
-        <legend>Файл обложки</legend>
+        <legend>Файл обложки (image)</legend>
         <div id="file_cover_old">
             <button type="button" class="current_file_lightbox" data-fileid="<?php echo $book['file_cover_data']['id'];?>" <?echo $book['file_cover_data']['disabled_flag']?>>Посмотреть</button>
             <label for="file_cover_old_text">Текущий файл</label>
@@ -261,37 +279,52 @@ if ($id != -1)
     </fieldset>
 
     <fieldset>
-        <legend>Файл титульного листа</legend>
-        <div id="file_title_old">
-            <button type="button" class="current_file_show" data-fileid="<?php echo $book['file_title_data']['id'];?>" <?echo $book['file_title_data']['disabled_flag']?>>Посмотреть</button>
-            <label for="file_title_old_text">Текущий файл</label>
-            <input type="text" size="60" id="file_title_old_text" value="<?php echo $book['file_title_data']['username']?>">
-            <button type="button" data-name="file_title" class="current_file_remove" data-fileid="<?php echo $book['file_title_data']['id'];?>">Удалить</button>
+        <legend>Файл кириллического титульного листа (pdf)</legend>
+        <div id="file_title_ru_old">
+            <button type="button" class="current_file_show" data-fileid="<?php echo $book['file_title_ru_data']['id'];?>" <?echo $book['file_title_ru_data']['disabled_flag']?>>Посмотреть</button>
+            <label for="file_title_ru_old_text">Текущий файл</label>
+            <input type="text" size="60" id="file_title_ru_old_text" value="<?php echo $book['file_title_ru_data']['username']?>">
+            <button type="button" data-name="file_title_ru" class="current_file_remove" data-fileid="<?php echo $book['file_title_ru_data']['id'];?>">Удалить</button>
         </div>
-        <div id="file_title_new" class="hidden">
-            <label for="file_title_newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
-            <input type="file" name="file_title" id="file_title_newfile_input" size="60" disabled>
-            <input type="hidden" name="file_title_changed" id="file_title_changed" value="0">
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend>Файл оглавления</legend>
-        <div id="file_toc_old">
-            <button type="button" class="current_file_show" data-fileid="<?php echo $book['file_toc_data']['id'];?>" <?echo $book['file_toc_data']['disabled_flag']?>>Посмотреть</button>
-            <label for="file_toc_old_text">Текущий файл</label>
-            <input type="text" size="60" id="file_toc_old_text" value="<?php echo $book['file_toc_data']['username']?>">
-            <button type="button" data-name="file_toc" class="current_file_remove" data-fileid="<?php echo $book['file_toc_data']['id'];?>">Удалить</button>
-        </div>
-        <div id="file_toc_new" class="hidden">
-            <label for="file_toc_newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
-            <input type="file" name="file_toc" id="file_toc_newfile_input" size="60" disabled>
-            <input type="hidden" name="file_toc_changed" id="file_toc_changed" value="0">
+        <div id="file_title_ru_new" class="hidden">
+            <label for="file_title_ru_newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
+            <input type="file" name="file_title_ru" id="file_title_ru_newfile_input" size="60" disabled>
+            <input type="hidden" name="file_title_ru_changed" id="file_title_ru_changed" value="0">
         </div>
     </fieldset>
 
     <fieldset>
-        <legend>Файл английского оглавления</legend>
+        <legend>Файл английского титульного листа (pdf)</legend>
+        <div id="file_title_en_old">
+            <button type="button" class="current_file_show" data-fileid="<?php echo $book['file_title_en_data']['id'];?>" <?echo $book['file_title_en_data']['disabled_flag']?>>Посмотреть</button>
+            <label for="file_title_en_old_text">Текущий файл</label>
+            <input type="text" size="60" id="file_title_en_old_text" value="<?php echo $book['file_title_en_data']['username']?>">
+            <button type="button" data-name="file_title_en" class="current_file_remove" data-fileid="<?php echo $book['file_title_en_data']['id'];?>">Удалить</button>
+        </div>
+        <div id="file_title_en_new" class="hidden">
+            <label for="file_title_en_newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
+            <input type="file" name="file_title_en" id="file_title_en_newfile_input" size="60" disabled>
+            <input type="hidden" name="file_title_en_changed" id="file_title_en_changed" value="0">
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Файл кириллического оглавления (pdf)</legend>
+        <div id="file_toc_ru_old">
+            <button type="button" class="current_file_show" data-fileid="<?php echo $book['file_toc_ru_data']['id'];?>" <?echo $book['file_toc_ru_data']['disabled_flag']?>>Посмотреть</button>
+            <label for="file_toc_ru_old_text">Текущий файл</label>
+            <input type="text" size="60" id="file_toc_ru_old_text" value="<?php echo $book['file_toc_ru_data']['username']?>">
+            <button type="button" data-name="file_toc_ru" class="current_file_remove" data-fileid="<?php echo $book['file_toc_ru_data']['id'];?>">Удалить</button>
+        </div>
+        <div id="file_toc_ru_new" class="hidden">
+            <label for="file_toc_ru_newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
+            <input type="file" name="file_toc_ru" id="file_toc_ru_newfile_input" size="60" disabled>
+            <input type="hidden" name="file_toc_ru_changed" id="file_toc_ru_changed" value="0">
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Файл английского оглавления (pdf)</legend>
         <div id="file_toc_en_old">
             <button type="button" class="current_file_show" data-fileid="<?php echo $book['file_toc_en_data']['id'];?>" <?echo $book['file_toc_en_data']['disabled_flag']?>>Посмотреть</button>
             <label for="file_toc_en_old_text">Текущий файл</label>

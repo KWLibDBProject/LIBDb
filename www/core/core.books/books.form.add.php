@@ -19,10 +19,10 @@
         }
 
         $(document).ready(function () {
-        $("#button-exit").on('click',function(event){
+        $("#actor-exit").on('click',function(event){
             window.location.href = '../ref.books.show.php';
         });
-        $("#button-remove").on('click',function(event){
+        $("#actor-remove").on('click',function(event){
             // window.location.href = 'books.action.remove.php?id='+author_id;
             alert('false');
         });
@@ -32,12 +32,16 @@
                 ShowErrorMessage('Обязательно укажите файл с обложкой (изображение в формате JPG/GIF/PNG) ! ');
                 bValid = false;
             }
-            if (!strpos($('input[name="file_title"]').val() , '.pdf')) {
-                ShowErrorMessage('Файл с титульным листом должен быть в формате PDF! ');
+            if (!strpos($('input[name="file_title_ru"]').val() , '.pdf')) {
+                ShowErrorMessage('Файл с кириллическим титульным листом должен быть в формате PDF! ');
                 bValid = false;
             }
-            if (!strpos($('input[name="file_toc"]').val() , '.pdf')) {
-                ShowErrorMessage('Файл с оглавлением должен быть в формате PDF! ');
+            if (!strpos($('input[name="file_title_en"]').val() , '.pdf')) {
+                ShowErrorMessage('Файл с английским титульным листом должен быть в формате PDF! ');
+                bValid = false;
+            }
+            if (!strpos($('input[name="file_toc_ru"]').val() , '.pdf')) {
+                ShowErrorMessage('Файл с кириллическим оглавлением должен быть в формате PDF! ');
                 bValid = false;
             }
             if (!strpos($('input[name="file_toc_en"]').val() , '.pdf')) {
@@ -94,14 +98,19 @@
             <button class="file-unlink" name="file_cover" disabled>X</button>
         </div>
         <div class="field">
-            <label for="file_title">Титульный лист (PDF-file)</label>
-            <input type="file" name="file_title" id="file_title" size="80">
-            <button class="file-unlink" name="file_title" disabled>X</button>
+            <label for="file_title_ru">Титульный лист, кириллический (PDF-file)</label>
+            <input type="file" name="file_title_ru" id="file_title_ru" size="80">
+            <button class="file-unlink" name="file_title_ru" disabled>X</button>
         </div>
         <div class="field">
-            <label for="file_toc">Оглавление (PDF-file)</label>
-            <input type="file" name="file_toc" id="file_toc" size="80">
-            <button class="file-unlink" name="file_toc" disabled>X</button>
+            <label for="file_title_en">Титульный лист, английский (PDF-file)</label>
+            <input type="file" name="file_title_en" id="file_title_en" size="80">
+            <button class="file-unlink" name="file_title_en" disabled>X</button>
+        </div>
+        <div class="field">
+            <label for="file_toc_ru">Оглавление (PDF-file)</label>
+            <input type="file" name="file_toc_ru" id="file_toc_ru" size="80">
+            <button class="file-unlink" name="file_toc_ru" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_toc_en">Table of contents (PDF-file)</label>
@@ -111,9 +120,9 @@
     </fieldset>
     <fieldset class="fields_area rounded">
         <legend>Управление</legend>
-        <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
-        <button disabled type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СБОРНИК</strong></button>
-        <button type="submit" class="button-large" ><strong>ДОБАВИТЬ СБОРНИК</strong></button>
+        <button type="button" class="button-large" id="actor-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
+        <button disabled type="button" class="button-large" id="actor-remove"><strong>УДАЛИТЬ СБОРНИК</strong></button>
+        <button type="submit" class="button-large"><strong>ДОБАВИТЬ СБОРНИК</strong></button>
     </fieldset>
 </form>
 

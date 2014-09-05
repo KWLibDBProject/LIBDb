@@ -183,8 +183,9 @@ switch ($fetch) {
 
                 $inner_html->override( array (
                     'file_cover'    => $book_row['file_cover'],
-                    'file_title'    => $book_row['file_title'],
-                    'file_toc'      => $book_row['file_toc'],
+                    'file_title_ru' => $book_row['file_title_ru'],
+                    'file_title_en' => $book_row['file_title_en'],
+                    'file_toc_ru'   => $book_row['file_toc_ru'],
                     'file_toc_en'   => $book_row['file_toc_en'],
                     'book_title'    => $book_row['book_title'],
                     'book_year'     => $book_row['book_year']
@@ -330,8 +331,9 @@ switch ($fetch) {
                     ), 'no'),
                 'last_book_title_string'=> "{$last_book['title']}, {$last_book['year']}",
                 'last_book_cover_id'    => $last_book['file_cover'],
-                'last_book_title_id'    => $last_book['file_title'],
-                'last_book_toc_id'      => $last_book['file_toc'],
+                'last_book_title_ru_id'    => $last_book['file_title_ru'],
+                'last_book_title_en_id'    => $last_book['file_title_en'],
+                'last_book_toc_ru_id'      => $last_book['file_toc_ru'],
                 'last_book_toc_en_id'   => $last_book['file_toc_en'],
             ));
         }

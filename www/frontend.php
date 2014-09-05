@@ -251,7 +251,7 @@ function LoadLastNews($lang, $count=2)
 /* возвращает массив с информацией об указанном сборнике */
 function LoadBookInfo($id)
 {
-    $query = "SELECT books.title AS book_title, books.year AS book_year, file_cover, file_title, file_toc, file_toc_en FROM books WHERE id={$id}";
+    $query = "SELECT books.title AS book_title, books.year AS book_year, file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en FROM books WHERE id={$id}";
     $r = mysql_query($query) or die($query);
     if (@mysql_num_rows($r)==1) {
         $ret = mysql_fetch_assoc($r);

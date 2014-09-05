@@ -9,7 +9,7 @@ $link = ConnectDB();
 
 $ref_name = 'books';
 
-$query = "SELECT books.id AS book_id, books.title, books.date, contentpages, published, file_cover, file_title, file_toc, file_toc_en,
+$query = "SELECT books.id AS book_id, books.title, books.date, contentpages, published, file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en,
  COUNT(articles.book) AS book_articles_count
  FROM books LEFT JOIN articles ON books.id=articles.book
  GROUP BY books.id, books.title, books.year
@@ -64,9 +64,11 @@ if ($ref_numrows > 0)
     <td>
         <a href="getimage.php?id={$book['file_cover']}" class="icon-jpg icon lightbox-image">Обложка</a>
         <br>
-        <a href="getfile.php?id={$book['file_title']}" class="icon-pdf icon">Титульник</a>
+        <a href="getfile.php?id={$book['file_title_ru']}" class="icon-pdf icon">Титульник (рус)</a>
         <br>
-        <a href="getfile.php?id={$book['file_toc']}" class="icon-pdf icon">Оглавление</a>
+        <a href="getfile.php?id={$book['file_title_en']}" class="icon-pdf icon">Титульник (англ)</a>
+        <br>
+        <a href="getfile.php?id={$book['file_toc_ru']}" class="icon-pdf icon">Оглавление (рус)</a>
         <br>
         <a href="getfile.php?id={$book['file_toc_en']}" class="icon-pdf icon">Английское оглавление</a>
     </td>
