@@ -383,8 +383,6 @@ where id = {$id}";
             'total_files_error'     => 0,
             'log'             => array()
         );
-        $total_found = 0;
-        $total_fixed = 0;
         $table = self::getSQLTable();
         $query = "SELECT id, username, filetype, internal_name, filesize FROM {$table}";
         $r = @mysql_query($query);
@@ -396,7 +394,7 @@ where id = {$id}";
                 if ( $newfilesize === FALSE ) {
                     // file not found
                     $result['total_files_error']++;
-                    $result['files_log'][] = array(
+                    $result['log'][] = array(
                         'id'        => $filerecord['id'],
                         'username'  => $filerecord['username'],
                         'internal_name' => $filerecord['internal_name'],
@@ -413,7 +411,7 @@ where id = {$id}";
                         mysql_query("LOCK TABLES {$table}");
                         mysql_query($query);
                         mysql_query("UNLOCK TABLES");
-                        $result['files_log'][] = array(
+                        $result['log'][] = array(
                             'id'        => $filerecord['id'],
                             'username'  => $filerecord['username'],
                             'internal_name' => $filerecord['internal_name'],

@@ -20,6 +20,9 @@ $result = FileStorage::recalcFilesSize();
     .stats {
         font-size: 120%;
     }
+    .center {
+        text-align: center;
+    }
 </style>
 <div class="stats">
     Просканировано файлов: <span class="warning"><?=$result['total_files_found']?></span> <br/>
@@ -44,7 +47,7 @@ $result = FileStorage::recalcFilesSize();
         <td class="center"><img src="<?=$file['icon']?>"></td>
         <td><?=$file['username']?></td>
         <td><?=$file['internal_name']?></td>
-        <td><?=$file['filesize_old']?></td>
+        <td class="center"><?=$file['filesize_old']?></td>
         <td class="center">
             <span class="note"><?=$file['status']?>
         </td>
