@@ -49,7 +49,7 @@ class FileStorage extends FileStorageConfig {
         return parent::$config['table'];
     }
 
-    /* возвращает абсолютный путь до файла, _имя_ которого переданно параметром */
+    /* возвращает абсолютный путь до файла, _имя_ которого передано параметром */
     private static function getRealFileName($filename)
     {
         return $_SERVER['DOCUMENT_ROOT'].parent::$config['path'].$filename;
@@ -97,7 +97,8 @@ class FileStorage extends FileStorageConfig {
                 $internal_file_name = self::getRealFileName($d['internal_name']);
                 if (file_exists($internal_file_name)) {
                     $h = fopen($internal_file_name, "rb");
-                    $ret = fread($h, $d['filesize']);
+                    // $ret = fread($h, $d['filesize']);
+                    $ret = fread($h, filesize($internal_file_name));
                     fclose($h);
                 } else {
                     $ret = null; // catch file not found in storage directory
@@ -344,6 +345,7 @@ class FileStorage extends FileStorageConfig {
         }
     }
 
+    /* =========================== MAINTENANCE =========================== */
     public static function statUpdateDownloadCounter($id)
     {
         $table = self::getSQLTable();
@@ -353,6 +355,90 @@ where id = {$id}";
         $rp = @mysql_query($query);
     }
 
+    /* static function for file icons */
+    public static function getIconFile($type)
+    {
+        $path = '/files/';
+        $ext_a = explode('/',$type);
+        switch ($ext_a[1]) {
+            case 'pdf': {
+                $icon = 'fav-document-pdf.png'; break;
+            }
+            case 'jpeg': {
+                $icon = 'fav-image-jpeg.png'; break;
+            }
+            default: {
+            $icon = 'fav-image-jpeg.png'; break;
+            }
+        }
+        return $path.$icon;
+    }
+
+    /* пересчет размеров файлов в базе (используется при пересжатии PDF-ок на стороннем сервисе */
+    public static function recalcFilesSize()
+    {
+        $result = array(
+            'total_files_found'   => 0,
+            'total_files_fixed'     => 0,
+            'total_files_error'     => 0,
+            'log'             => array()
+        );
+        $total_found = 0;
+        $total_fixed = 0;
+        $table = self::getSQLTable();
+        $query = "SELECT id, username, filetype, internal_name, filesize FROM {$table}";
+        $r = @mysql_query($query);
+        if ($r) {
+            while ($filerecord = mysql_fetch_assoc($r))
+            {
+                $filename = self::getRealFileName($filerecord['internal_name']);
+                $newfilesize = @filesize($filename);
+                if ( $newfilesize === FALSE ) {
+                    // file not found
+                    $result['total_files_error']++;
+                    $result['files_log'][] = array(
+                        'id'        => $filerecord['id'],
+                        'username'  => $filerecord['username'],
+                        'internal_name' => $filerecord['internal_name'],
+                        'filesize_new'  =>  0,
+                        'filesize_old'  =>  $filerecord['filesize'],
+                        'icon'  => '',
+                        'status'    => 'File not found on disk or disk error! '
+                    );
+                } else {
+                    $result['total_files_found']++;
+                    if ($filerecord['filesize'] != $newfilesize) {
+                        $result['total_files_fixed']++;
+                        $query = "UPDATE {$table} SET filesize = {$newfilesize} WHERE id = {$filerecord['id']}";
+                        mysql_query("LOCK TABLES {$table}");
+                        mysql_query($query);
+                        mysql_query("UNLOCK TABLES");
+                        $result['files_log'][] = array(
+                            'id'        => $filerecord['id'],
+                            'username'  => $filerecord['username'],
+                            'internal_name' => $filerecord['internal_name'],
+                            'filesize_new'  =>  $newfilesize,
+                            'filesize_old'  =>  $filerecord['filesize'],
+                            'icon'  => self::getIconFile($filerecord['filetype']),
+                            'status'    => 'Filesize changed! New size = '.$newfilesize
+                        );
+                    } // if inner
+                } // is filesize NOT false (i.e. file exists)
+            } // end while
+        }
+        return $result;
+    }
+
+
 } // class
 
+
+
+//@TODO: полноценный filestorage maintanance
+/*
+список файлов
+пересчет размера
+оповещение о "лишних" записях о файлах в базе (не найден на диске)
+оповещение о "лишних" файлах на диске (не найден в базе)
+*/
 ?>
