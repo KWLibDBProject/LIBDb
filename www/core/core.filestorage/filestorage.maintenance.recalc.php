@@ -9,21 +9,27 @@ $link = ConnectDB();
 $result = FileStorage::recalcFilesSize();
 
 ?>
-<title>Recalc file sizes</title>
-<style>
-    .note {
-        color: blue;
-    }
-    .warning {
-        color: red;
-    }
-    .stats {
-        font-size: 120%;
-    }
-    .center {
-        text-align: center;
-    }
-</style>
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <title>Recalc file sizes</title>
+    <style>
+        .note {
+            color: blue;
+        }
+        .warning {
+            color: red;
+        }
+        .stats {
+            font-size: 120%;
+        }
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
 <div class="stats">
     Просканировано файлов: <span class="warning"><?=$result['total_files_found']?></span> <br/>
     Исправлено записей в БД: <span class="warning"><?=$result['total_files_fixed']?></span> <br/>
@@ -59,3 +65,5 @@ $result = FileStorage::recalcFilesSize();
 
 <hr>
 <a href="/core/"><<< Назад в административный раздел</a>
+</body>
+</html>
