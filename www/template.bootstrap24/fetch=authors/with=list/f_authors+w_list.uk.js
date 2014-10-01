@@ -1,3 +1,8 @@
+function calledOnSwitchLanguage()
+{
+    window.location.hash = '';
+}
+
 var siteLanguage = '&lang=uk';
 // load data
 var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist'+siteLanguage);

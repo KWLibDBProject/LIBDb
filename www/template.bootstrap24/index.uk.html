@@ -42,6 +42,7 @@
             $(".action-switch-language").on('click', function(){
                 if (!$(this).hasClass('lang-active')) {
                     setCookie('libdb_sitelanguage', $(this).attr('data-lang'), 3600*24*30 );
+                    calledOnSwitchLanguage();
                     location.reload();
                 }
                 return false;
