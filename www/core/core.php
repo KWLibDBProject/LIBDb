@@ -217,9 +217,14 @@ function ConvertDateToTimestamp($str_date, $format="d/m/Y")
     return mktime(12, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 }
 
-function ConvertToHumanBytes($size) {
+/*
+Converts value (filesize) to human-friendly view like '5.251 M', 339.645 K or 4.216 K
+$value : converted value
+$closeness : number of digits after dot, default 0
+*/
+function ConvertToHumanBytes($value, $closeness = 0) {
     $filesizename = array(" Bytes", " K", " M", " G", " T", " P", " E", " Z", " Y");
-    return $size ? round($size / pow(1024, ($i = floor(log($size, 1024)))), 0) . $filesizename[$i] : '0 Bytes';
+    return $value ? round($value / pow(1024, ($i = (int)floor(log($value, 1024)))), $closeness) . $filesizename[$i] : '0 Bytes';
 }
 
 ?>

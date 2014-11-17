@@ -6,11 +6,15 @@ require_once('../core.filestorage.php');
 
 $link = ConnectDB();
 
-$where = (isset($_GET['collection']) && ($_GET['collection'] !='all')) ? " WHERE collection = '{$_GET['collection']}'" : " ";
+$where      = (isset($_GET['collection']) && ($_GET['collection'] !='all')) ? " WHERE collection = '{$_GET['collection']}'" : " ";
+$sortorder  = (isset($_GET['sort-order']) && ($_GET['sort-order'] !='ASC')) ? " DESC " : " ASC ";
+$sortby = (isset($_GET['sort-type']) && ($_GET['sort-type'] != 'id')) ? " ORDER BY {$_GET['sort-type']} {$sortorder} " : ' ';
 
 $fs_table = FileStorageConfig::$config['table'];
 
-$q = "SELECT id, username, internal_name, filesize, relation, collection, filetype FROM {$fs_table} {$where}";
+$q = "
+SELECT id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter
+FROM {$fs_table} {$where} {$sortby}";
 $r = @mysql_query($q);
 
 $fs = array();
@@ -23,6 +27,7 @@ if ($r) {
                 $qr = mysql_fetch_assoc(mysql_query("SELECT title FROM books WHERE id = {$f['relation']}"));
                 $qt = $qr['title'];
                 $f['external_link'] = "{$qt}";
+                $f['external_link'] = '→ <a href="/?fetch=articles&with=book&id='.$f['relation'].'" target="_blank"> '.$qt.'</a>';
                 break;
             }
             case 'articles': {
@@ -34,7 +39,7 @@ if ($r) {
                 break;
             }
         }
-        $f['size'] = ConvertToHumanBytes($f['filesize']);
+        $f['size'] = ConvertToHumanBytes($f['filesize'], 2);
         $f['ext'] = $ext_a[1];
         switch ($f['ext']) {
             case 'pdf' : {
@@ -53,11 +58,8 @@ if ($r) {
     }
 }
 CloseDB($link);
-
 ?>
-<style>
 
-</style>
 <table class="" border="1" width="100%" id="exportable">
     <caption></caption>
     <tr>
@@ -67,6 +69,7 @@ CloseDB($link);
         <!-- <th>Date upload</th> -->
         <th>Size</th>
         <th>Collection</th>
+        <th> <img title="Сколько раз скачивали" alt="↓" src="/core/core.filestorage/download.png" /> </th>
         <th>Link</th>
     </tr>
 
@@ -77,6 +80,7 @@ CloseDB($link);
         <td><?=$file['internal_name_link']?></td>
         <td class="center"><?=$file['size']?></td>
         <td class="center"><?=$file['collection']?></td>
+        <td class="center"><small> <?=$file['stat_download_counter'] ?> </small></td>
         <td class="center"><?=$file['external_link']?></td>
     </tr>
     <?php } ?>

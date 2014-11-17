@@ -27,19 +27,26 @@ if (!isLogged()) header('Location: /core/');
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
 
-            setSelectorsByHash(".search_selector");
-            $(".hash_selectors").on('change', '.search_selector', function(){
-                setHashBySelectors();
+            // setSelectorsByHash(".search-selector"); // not required!
+
+            // on change search selectors SET new window-hash
+            $(".hash-selectors").on('change', '.search-selector', function(){
+                var flag = !!($('select[name="collection"]').val() == 'all');
+                flag = flag && !!($('select[name="sort-type"]').val() == 'id');
+                flag = flag && !!($('select[name="sort-order"]').val() == 'ASC');
+                $("#actor-show-selection").prop('disabled', flag);
+
+                setHashBySelectors('.search-selector');
             });
 
-            // onload
+            // onload full list
             $("#files_list").load("core.filestorage/filestorage.action.list.php");
 
             // bind exit actor
             $("#actor-exit").on('click',function(event){
                 window.location.href = '/core/';
             });
-            // bind lightbox and edit action
+            // bind lightbox action
             $('#files_list')
                     .on('click','.lightbox',function(){
                         $.colorbox({
@@ -48,22 +55,21 @@ if (!isLogged()) header('Location: /core/');
                         });
                         return false;
                     });
+
             // search criteria bindings
-            $("#actor-show-withselection").on('click', function() {
-                var query = "collection="+$('select[name="collection"]').val();
+            $("#actor-show-selection").on('click', function() {
+                var query = "collection=" + $('select[name="collection"]').val();
+                    query+= "&sort-type="  + $('select[name="sort-type"]').val();
+                    query+= "&sort-order=" + $('select[name="sort-order"]').val();
+                clearHash();
                 $("#files_list").empty().load('core.filestorage/filestorage.action.list.php?'+query);
             });
 
-            $("#actor-select-collection").on('change', function() {
-                var flag = !!($('select[name="collection"]').val() == 'all' );
-                $("#actor-show-withselection").prop('disabled', flag);
-            });
-
-            $("#actor-show-all").on('click',function(){
-                // reset search selector
+            $("#actor-show-all").on('click' , function() {
                 $('select[name="collection"]').val('all');
-                $("#actor-show-withselection").prop('disabled', true);
-                setHashBySelectors();
+                $('select[name="sort-type"]').val('id');
+                $('select[name="sort-order"]').val('ASC');
+                clearHash();
                 $("#files_list").empty().load('core.filestorage/filestorage.action.list.php');
             });
             $("#actor-export-excel").on('click', function(){
@@ -75,40 +81,48 @@ if (!isLogged()) header('Location: /core/');
         .center {
             text-align: center;
         }
-        form.inline_form {
-            display: inline;
-        }
         button[disabled] {
             color: gray;
         }
-        #actor-exit {
-            float:right;
-        }
-        .hint {
-            display: none;
+        .float-right {
+            float: right;
         }
 
     </style>
 </head>
 <body>
 <fieldset>
-    <legend>Критерии поиска</legend>
-    <button id="actor-show-all">Показать всё</button>
-    Коллекция: <form class="hash_selectors inline_form">
-    <select id="actor-select-collection" name="collection" class="search_selector">
-        <option value="all">&nbsp;</option>
-        <option value="articles">Статьи</option>
-        <option value="authors">Авторы</option>
-        <option value="books">Сборники</option>
-    </select></form>
-    <button id="actor-show-withselection" disabled>Показать выбранную коллекцию</button>
-    <button id="actor-export-excel">Export to Excel</button>
-    <button type="button" id="actor-exit"><strong><<< НАЗАД </strong></button>
-    <div class="hint">
-        <hr>
-    </div>
+    <legend>Критерии поиска и сортировки</legend>
+    <form class="hash-selectors inline-form">
+        <button id="actor-show-all">Показать всё</button>
+        <button type="button" id="actor-exit" class="float-right"><strong><<< НАЗАД </strong></button>
+        <hr/>
+        Коллекция:
+        <select id="actor-select-collection" name="collection" class="search-selector">
+            <option value="all">&nbsp;</option>
+            <option value="articles">Статьи</option>
+            <option value="authors">Авторы</option>
+            <option value="books">Сборники</option>
+        </select>
+        Критерий сортировки:
+        <select id="actor-select-sort-type" name="sort-type" class="search-selector">
+            <option value="id">&nbsp;</option>
+            <option value="username">Пользовательское имя</option>
+            <option value="uploaddate" disabled>Дата загрузки</option>
+            <option value="filesize">Размер</option>
+            <option value="relation">Связь (relation)</option>
+            <option value="stat_download_counter">Количество загрузок</option>
+        </select>
+        Порядок сортировки:
+        <select id="actor-select-sort-order" name="sort-order" class="search-selector">
+            <option value="ASC">По возрастанию А..Я</option>
+            <option value="DESC">По убыванию Я..А</option>
+        </select>
+        <hr/>
+        <button type="button" id="actor-show-selection" disabled>Показать выбранное</button>
+        <button type="button" id="actor-export-excel" class="float-right">Export to Excel</button>
+    </form>
 </fieldset>
-
 <fieldset class="result-list table-hl-rows">
     <legend>Результаты поиска</legend>
     <div id="files_list">

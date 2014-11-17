@@ -21,15 +21,16 @@ function getQuery( queryString , limiter)
     return arr;
 }
 
-function setHashBySelectors()
+function setHashBySelectors(search_selector)
 {
     // see http://stackoverflow.com/a/5340658
     // оптимизация, создавать временный массив не обязательно, можно наращивать выходную строку сразу в
     // цикле перебора селектов. Только не забыть убрать конечный "&".
     // для русских букв возможно потребуется экранирование
+    var real_search_selector = search_selector || ".search_selector";
     var hashstr = '';
     var arr = {};
-    $.each( $(".search_selector") , function(id, data) {
+    $.each( $(real_search_selector) , function(id, data) {
         var val = $(data).val();
         var name = $(data).attr('name');
         if (val != '0')
@@ -50,6 +51,15 @@ function setHashBySelectors()
         } else {
             window.location.hash = '';
         }
+    }
+}
+
+function clearHash()
+{
+    if ('pushState' in history) { window.
+        history.pushState('', window.title, window.location.pathname + window.location.search);
+    } else {
+        window.location.hash = '';
     }
 }
 

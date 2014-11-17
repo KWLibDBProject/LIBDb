@@ -15,8 +15,16 @@ if (!$file_info) {
     $file_info['content'] = FileStorage::getEmptyFile('pdf');
 } else {
     $file_info['content'] = FileStorage::getFileContent($id);
-    FileStorage::statUpdateDownloadCounter($id);
-    /* update stat_download_counter */
+    if ($file_info['content'] == null) {
+        $file_info['content'] = FileStorage::getEmptyFile('pdf');
+        $file_info['username'] = 'file not found.pdf';
+        $file_info['filesize'] = 632;
+    }
+
+    /* update stat_download_counter
+    but only for really downloaded files, not fetched via control panel */
+    if (strpos($_SESSION['HTTP_REFERER'], '/core/') == false )
+        FileStorage::statUpdateDownloadCounter($id);
 }
 
 CloseDB($link);
