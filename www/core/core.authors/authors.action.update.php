@@ -27,6 +27,8 @@ $q = array(
     'bio_uk' => mysql_escape_string($_POST['bio_uk']),
     /* самость */
     'selfhood' => mysql_escape_string($_POST['selfhood']),
+    /* stat */
+    'stat_date_update'      => ConvertTimestampToDate()
 );
 
 $qstr = MakeUpdate($q, $ref_name, "WHERE id=$id");

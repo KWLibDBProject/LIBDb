@@ -19,7 +19,8 @@ $post = array(
     'login' => mysql_escape_string($_POST['login']),
     'password' => mysql_escape_string($_POST['password']),
     'phone' => mysql_escape_string($_POST['phone']),
-    'md5password' => md5(mysql_escape_string($_POST['password']))
+    'md5password' => md5(mysql_escape_string($_POST['password'])),
+    'stat_date_insert' => ConvertTimestampToDate()
 );
 
 $q = "SELECT `id` FROM $table WHERE `login` LIKE '$post[login]'";

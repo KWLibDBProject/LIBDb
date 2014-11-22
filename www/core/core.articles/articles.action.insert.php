@@ -35,16 +35,16 @@ $q = array(
     'add_date' => mysql_escape_string($_POST['add_date']),
     'topic' => mysql_escape_string($_POST['topic']),
     'pages' => mysql_escape_string($_POST['pages']),
-    'doi' => mysql_escape_string($_POST['doi'])
+    'doi' => mysql_escape_string($_POST['doi']),
+    'stat_date_insert' => ConvertTimestampToDate()
 );
 
-// теперь нам нужно вставить данные в БАЗУ (пока что с учетом вставки файла в БЛОБ)
+// теперь нам нужно вставить данные в БАЗУ
 $qstr = MakeInsert($q,'articles');
 $res = mysql_query($qstr, $link) or Die("Невозможно вставить данные в базу  ".$qstr);
 $article_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");
 
 if (IsSet($_FILES)) {
-
     switch ($_FILES['pdffile']['error']) {
         case UPLOAD_ERR_INI_SIZE: {
             $result['error_message'] = " Однако возникла ошибка. Размер загружаемого файла больше ".ini_get('upload_max_filesize')." байт!";

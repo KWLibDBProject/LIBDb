@@ -29,7 +29,8 @@ $q = array(
     'add_date' => mysql_escape_string($_POST['add_date']),
     'topic' => mysql_escape_string($_POST['topic']),
     'pages' => mysql_escape_string($_POST['pages']),
-    'doi' => mysql_escape_string($_POST['doi'])
+    'doi' => mysql_escape_string($_POST['doi']),
+    'stat_date_update'      => ConvertTimestampToDate()
 );
 
 // теперь нам нужно вставить данные в БАЗУ (пока что с учетом вставки файла в БЛОБ)

@@ -24,7 +24,6 @@ if (!IsSet($_GET['ref_name'])) {
         if ($permission != 255) {
             // можно удалять
             $q = "DELETE FROM {$table} WHERE id = {$id} ";
-            // $q = "UPDATE $table SET deleted=1 WHERE (id=$id)";
             $r = mysql_query($q) or Die($q);
             $result["error"] = 0;
             $result['message'] = 'Record marked as "deleted"';

@@ -217,6 +217,11 @@ function ConvertDateToTimestamp($str_date, $format="d/m/Y")
     return mktime(12, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 }
 
+function ConvertTimestampToDate($format = '%Y-%m-%d %H:%M:%S')
+{
+    return strftime($format, time());
+}
+
 /*
 Converts value (filesize) to human-friendly view like '5.251 M', 339.645 K or 4.216 K
 $value : converted value

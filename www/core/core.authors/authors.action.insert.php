@@ -25,6 +25,8 @@ $q = array(
     'bio_uk' => mysql_escape_string($_POST['bio_uk']),
     /* самость */
     'selfhood' => mysql_escape_string($_POST['selfhood']),
+    /* stats */
+    'stat_date_insert' => ConvertTimestampToDate()
 );
 $qstr = MakeInsert($q, $ref_name);
 $res = mysql_query($qstr, $link) or die("Error at $qstr");

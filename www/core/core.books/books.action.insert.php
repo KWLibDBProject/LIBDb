@@ -14,7 +14,8 @@ $q = array(
     'contentpages'  => mysql_escape_string($_POST['book_contentpages']),
     'published'     => mysql_escape_string($_POST['is_book_ready']),
     'year'          => substr(mysql_escape_string($_POST['book_date']), 6, 4),
-    'timestamp'     => ConvertDateToTimestamp(mysql_escape_string($_POST['book_date']))
+    'timestamp'     => ConvertDateToTimestamp(mysql_escape_string($_POST['book_date'])),
+    'stat_date_insert' => ConvertTimestampToDate()
 );
 
 $qstr = MakeInsert($q, $ref_name);

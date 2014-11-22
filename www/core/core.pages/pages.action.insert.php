@@ -18,6 +18,7 @@ $q = array(
     'content_en' => mysql_escape_string($_POST['content_en']),
     'content_ru' => mysql_escape_string($_POST['content_ru']),
     'content_uk' => mysql_escape_string($_POST['content_uk']),
+    'stat_date_insert' => ConvertTimestampToDate()
 );
 $qstr = MakeInsert($q, $ref_name);
 

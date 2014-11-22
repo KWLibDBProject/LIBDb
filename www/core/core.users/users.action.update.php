@@ -21,7 +21,8 @@ $q = array(
     'login' => mysql_escape_string($_POST['login']),
     'password' => mysql_escape_string($_POST['password']),
     'phone' => mysql_escape_string($_POST['phone']),
-    'md5password' => md5(mysql_escape_string($_POST['password']))
+    'md5password' => md5(mysql_escape_string($_POST['password'])),
+    'stat_date_update' => ConvertTimestampToDate()
 );
 
 $qstr = MakeUpdate($q, $_POST['ref_name'], "WHERE id=$id");
