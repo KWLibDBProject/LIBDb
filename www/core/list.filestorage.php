@@ -108,7 +108,7 @@ if (!isLogged()) header('Location: /core/');
         <select id="actor-select-sort-type" name="sort-type" class="search-selector">
             <option value="id">&nbsp;</option>
             <option value="username">Пользовательское имя</option>
-            <option value="uploaddate" disabled>Дата загрузки</option>
+            <option value="stat_date_insert">Дата загрузки</option>
             <option value="filesize">Размер</option>
             <option value="relation">Связь (relation)</option>
             <option value="stat_download_counter">Количество загрузок</option>
@@ -118,8 +118,8 @@ if (!isLogged()) header('Location: /core/');
             <option value="ASC">По возрастанию А..Я</option>
             <option value="DESC">По убыванию Я..А</option>
         </select>
-        <hr/>
         <button type="button" id="actor-show-selection" disabled>Показать выбранное</button>
+        <hr/>
         <button type="button" id="actor-export-excel" class="float-right">Export to Excel</button>
     </form>
 </fieldset>

@@ -13,7 +13,7 @@ $sortby = (isset($_GET['sort-type']) && ($_GET['sort-type'] != 'id')) ? " ORDER 
 $fs_table = FileStorageConfig::$config['table'];
 
 $q = "
-SELECT id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter
+SELECT id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter, stat_date_insert
 FROM {$fs_table} {$where} {$sortby}";
 $r = @mysql_query($q);
 
@@ -53,6 +53,7 @@ if ($r) {
 
         }
         $f['internal_name_link'] = '<a href="/files/storage/'.$f['internal_name'].'" target="_blank">'.$f['internal_name'].'</a>';
+        $f['stat_date_insert'] = date('d/m/Y', strtotime($f['stat_date_insert']));
 
         $fs[ $f['id'] ] = $f;
     }
@@ -66,7 +67,7 @@ CloseDB($link);
         <th>icon</th>
         <th>User filename</th>
         <th>Internal filename</th>
-        <!-- <th>Date upload</th> -->
+        <th>Date upload</th>
         <th>Size</th>
         <th>Collection</th>
         <th> <img title="Сколько раз скачивали" alt="↓" src="/core/core.filestorage/download.png" /> </th>
@@ -78,6 +79,7 @@ CloseDB($link);
         <td class="center"><?=$file['ext']?></td>
         <td><?=$file['filelink']?></td>
         <td><?=$file['internal_name_link']?></td>
+        <td class="center"><?=$file['stat_date_insert']?></td>
         <td class="center"><?=$file['size']?></td>
         <td class="center"><?=$file['collection']?></td>
         <td class="center"><small> <?=$file['stat_download_counter'] ?> </small></td>

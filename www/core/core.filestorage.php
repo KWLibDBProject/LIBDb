@@ -124,13 +124,13 @@ class FileStorage extends FileStorageConfig {
             $return = fwrite($fh, $file_content);
             fflush($fh);
             fclose($fh);
-            usleep(100000);// sleep 0.1 sec
+            usleep(50000);// sleep 0.05 sec
         }
 
         if (parent::$config['save_to_db'])
         {
             $qc = MakeUpdate(array(
-                'content' => mysql_escape_string($file_content)
+                'content' => mysql_real_escape_string($file_content)
             ), self::getSQLTable(), " WHERE id = {$fileid} ");
             $return = mysql_query($qc);
         }
@@ -260,7 +260,8 @@ class FileStorage extends FileStorageConfig {
                 'filesize' => $file_array['size'],
                 'relation' => $related_id,
                 'filetype' => $file_array['type'],
-                'collection' => $collection
+                'collection' => $collection,
+                'stat_date_insert' => ConvertTimestampToDate()
             );
             $file_info['internal_name'] = self::getInternalFileName($file_info);
 

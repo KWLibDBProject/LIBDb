@@ -12,6 +12,8 @@ if ($id != -1) {
 
     $file_info = FileStorage::getFileInfo($id);
 
+    FileStorage::statUpdateDownloadCounter($id);
+
     if ($file_info) {
         header ("HTTP/1.1 200 OK");
         header ("X-Powered-By: PHP/" . phpversion());
