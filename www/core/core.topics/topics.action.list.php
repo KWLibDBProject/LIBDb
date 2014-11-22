@@ -9,7 +9,7 @@ require_once('../core.kwt.php');
 $link = ConnectDB();
 $ref_name = 'topics';
 
-$query = "SELECT * FROM $ref_name WHERE deleted=0";
+$query = "SELECT * FROM topics";
 $res = mysql_query($query) or die('$msg->say("errors/mysql_query_error",$query)');
 
 $ref_numrows = @mysql_num_rows($res) ;

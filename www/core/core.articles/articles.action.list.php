@@ -21,8 +21,6 @@ from articles, cross_aa,topics,books
 WHERE
 cross_aa.article=articles.id
 AND
-articles.deleted=0
-AND
 topics.id=articles.topic
 AND
 books.id=articles.book";

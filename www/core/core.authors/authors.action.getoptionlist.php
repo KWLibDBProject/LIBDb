@@ -11,7 +11,7 @@ $withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
 $link = ConnectDB();
 
-$query = "SELECT * FROM authors WHERE deleted=0";
+$query = "SELECT * FROM authors";
 if ($result = mysql_query($query)) {
     $ref_numrows = @mysql_num_rows($result) ;
 

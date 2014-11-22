@@ -7,7 +7,7 @@ $link = ConnectDB();
 
 $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'staticpages';
 
-$query = "SELECT * FROM $ref_name WHERE deleted=0";
+$query = "SELECT * FROM {$ref_name}";
 $res = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($res) ;
 

@@ -8,7 +8,7 @@ $link = ConnectDB();
 $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'users';
 $ref_prompt = IsSet($_GET["prompt"]) ? ($_GET["prompt"]) : 'Работа с пользователем';
 
-$query = "SELECT * FROM $ref_name WHERE deleted=0";
+$query = "SELECT * FROM $ref_name ";
 $res = mysql_query($query); // or die("Невозможно получить содержимое справочника! ".$ref_name);
 $ref_numrows = @mysql_num_rows($res) ;
 
