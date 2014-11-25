@@ -66,7 +66,7 @@ function DBLoginCheck($login, $password)
                 'message' => 'User credentials correct! ',
                 'id' => $user['id'],
                 'permissions' => $user['permissions'],
-                'url' => 'admin.html'
+                'url' => 'admin.php'
             );
         } else {
             // пароль неверен

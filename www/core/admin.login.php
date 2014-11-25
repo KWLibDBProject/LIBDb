@@ -7,7 +7,7 @@ $SID = session_id();
 if(empty($SID)) session_start();
 
 if (isLogged()) {
-    Redirect('admin.html');
+    Redirect('admin.php');
 } else {
     // скрипт или обработка входа
     if (isAjaxCall()) {
@@ -33,7 +33,7 @@ if (isLogged()) {
                 $_SESSION['u_permissions'] = $return['permissions'];
                 setcookie('u_libdb_logged',$return['id']);
                 setcookie('u_libdb_permissions',$return['permissions']);
-                Redirect('admin.html');
+                Redirect('admin.php');
             } else {
                 // странно, почему же неверный логин или пароль, хотя мы его проверили аяксом? взлом?
                 Redirect($_SERVER['PHP_SELF']);
