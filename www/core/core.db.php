@@ -1,6 +1,7 @@
 <?php
 // функции работы с базой (@todo: синглтон класс)
 require_once('config/config.php');
+require_once('core.kwlogging.php');
 
 function ConnectDB()
 {
@@ -16,12 +17,6 @@ function CloseDB($link) // useless
     mysql_close($link) or Die("Не удается закрыть соединение с базой данных.");
 }
 
-function isConnectedDB()
-{
-    global $CONFIG;
-    return $CONFIG['flag_dbconnected'];
-}
-
 function MakeInsert($arr, $table, $where="")
 {
     $str = "INSERT INTO $table ";
@@ -29,19 +24,19 @@ function MakeInsert($arr, $table, $where="")
     $keys = "(";
     $vals = "(";
     foreach ($arr as $key => $val) {
-        $keys .= $key . ",";
+        $keys .= "`" . $key . "`" . ",";
         $vals .= "'".$val."',";
     }
     $str .= trim($keys,",") . ") VALUES " . trim($vals,",") . ") ".$where;
     return $str;
 }
 
-function MakeUpdate($arr,$table,$where="")
+function MakeUpdate($arr, $table, $where="")
 {
     $str = "UPDATE $table SET ";
     foreach ($arr as $key=>$val)
     {
-        $str.= $key."='".$val."', ";
+        $str.= "`".$key."` = '".$val."', ";
     };
     $str = substr($str,0,(strlen($str)-2)); // обрезаем последнюю ","
     $str.= " ".$where;
