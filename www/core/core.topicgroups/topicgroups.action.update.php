@@ -12,7 +12,7 @@ if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 }
 
-$reference = 'topicgroups';
+$table = 'topicgroups';
 $id = $_POST['id'];
 
 $link = ConnectDB();
@@ -24,10 +24,10 @@ $q = array(
     'display_order' => mysql_real_escape_string($_POST['display_order']),
 );
 
-$qstr = MakeUpdate($q, $reference, "WHERE id=$id");
+$qstr = MakeUpdate($q, $table, "WHERE id=$id");
 $res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
 
-kwLogger::logEvent('Update', $reference, $id, "Group of topics updated, id = {$id}");
+kwLogger::logEvent('Update', $table, $id, "Group of topics updated, id = {$id}");
 
 $result['message'] = $qstr;
 $result['error'] = 0;

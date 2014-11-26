@@ -19,7 +19,7 @@ if (!IsSet($_GET['ref_name'])) {
     if ($r = mysql_query($q)) {
             $result["error"] = 0;
             $result['message'] = 'Группа тематических разделов удалена из базы данных!';
-            kwLogger::logEvent('Delete', $reference, $id, "Group of topics deleted, id was {$id}");
+            kwLogger::logEvent('Delete', $table, $id, "Group of topics deleted, id was {$id}");
         } else {
             $result["error"] = 1;
             $result['message'] = 'Ошибка удаления группы тематических разделов из базы данных!';

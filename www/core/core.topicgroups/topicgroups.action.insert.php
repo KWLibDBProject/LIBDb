@@ -20,13 +20,13 @@ $q = array(
     'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
     'display_order' => mysql_real_escape_string($_POST['display_order']),
 );
-$reference = 'topicgroups';
+$table = 'topicgroups';
 
-$qstr = MakeInsert($q, $reference);
+$qstr = MakeInsert($q, $table);
 $res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
 $new_id = mysql_insert_id() or Die("Unable to get last insert id!");
 
-kwLogger::logEvent('Add', $reference, $new_id, "Group of topics added, id = {$new_id}");
+kwLogger::logEvent('Add', $table, $new_id, "Group of topics added, id = {$new_id}");
 
 $result['message'] = $qstr;
 $result['error'] = 0;
