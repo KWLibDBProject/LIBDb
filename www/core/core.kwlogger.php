@@ -61,7 +61,6 @@ class kwLogger extends kwLoggerConfig
         );
         $query = self::makeInsertStatement($entry);
         mysql_query( $query ) or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
-        // mysql_query( $query ) or self::log_to_file('Error addind data to eventlog table, query data saved to error.log : ' . $query);
         return mysql_errno();
     }
 

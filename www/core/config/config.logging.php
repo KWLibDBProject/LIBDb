@@ -9,7 +9,7 @@ class kwLoggerConfig
     public static $log_file    =   '/core/config/errors.log';
 
     // key in $_SESSION for logging informaton about logged user
-    public static $log_userid_key_in_session    = 'u_id';
+    public static $log_userid_key_in_session    = 'u_username';
 
     // formatting rule for converting timestamp to datetime
     public static $log_datetime_format = '%Y-%m-%d %H:%M:%S';

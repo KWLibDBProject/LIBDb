@@ -4,14 +4,18 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 require_once('../core.filestorage.php');
 
+$SID = session_id();
+if(empty($SID)) session_start();
+if (!isLogged()) header('Location: /core/');
+
 $link = ConnectDB();
 
 $result = FileStorage::recalcFilesSize();
 
 kwLogger::logEvent('Maintenance', 'filestorage', '*',
-    "{$result['total_files_found']} records in FILESTORAGE scanned.
-    Fixed: {$result['total_files_fixed']} files.
-    Errors: {$result['total_files_error']}.");
+    "{$result['total_files_found']} records in FILESTORAGE scanned. " .
+    "Fixed: {$result['total_files_fixed']} files. " .
+    "Errors: {$result['total_files_error']}. ");
 
 ?>
 <!DOCTYPE HTML>
