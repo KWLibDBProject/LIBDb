@@ -41,6 +41,8 @@ if (!IsSet($_GET['id'])) {
                 $result["error"] = 0;
                 $result['message'] = 'Сборник удален из базы данных.';
 
+                kwLogger::logEvent('Delete', 'books', $id, "Book removed from DB, id was {$id}");
+
             } else {
                 // DB error again
                 $result["error"] = 1;

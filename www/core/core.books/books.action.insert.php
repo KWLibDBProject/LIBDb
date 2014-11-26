@@ -9,12 +9,12 @@ $ref_name = 'books';
 $link = ConnectDB();
 
 $q = array(
-    'title'         => mysql_escape_string($_POST['book_title']),
-    'date'          => mysql_escape_string($_POST['book_date']),
-    'contentpages'  => mysql_escape_string($_POST['book_contentpages']),
-    'published'     => mysql_escape_string($_POST['is_book_ready']),
-    'year'          => substr(mysql_escape_string($_POST['book_date']), 6, 4),
-    'timestamp'     => ConvertDateToTimestamp(mysql_escape_string($_POST['book_date'])),
+    'title'         => mysql_real_escape_string($_POST['book_title']),
+    'date'          => mysql_real_escape_string($_POST['book_date']),
+    'contentpages'  => mysql_real_escape_string($_POST['book_contentpages']),
+    'published'     => mysql_real_escape_string($_POST['is_book_ready']),
+    'year'          => substr(mysql_real_escape_string($_POST['book_date']), 6, 4),
+    'timestamp'     => ConvertDateToTimestamp(mysql_real_escape_string($_POST['book_date'])),
     'stat_date_insert' => ConvertTimestampToDate()
 );
 
@@ -39,6 +39,7 @@ if (count($_FILES)>0) {
     $result['message'] .= "Не выбраны файлы для загрузки или ошибка передачи данных! <br>\r\n";
 }
 
+kwLogger::logEvent('Add', 'books', $book_id, "Added book, new id = {$book_id}");
 
 CloseDB($link);
 
