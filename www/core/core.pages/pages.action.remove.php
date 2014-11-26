@@ -2,6 +2,7 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.kwlogger.php');
 
 
 $id = $_GET["id"];
@@ -16,6 +17,7 @@ if ($r = mysql_query($q)) {
     // запрос удаление успешен
     $result["error"] = 0;
     $result['message'] = 'Статичная страница удалена!';
+    kwLogger::logEvent('Delete', 'pages', $id, "Static page updated, id = {$id}");
 
 } else {
     // DB error again
