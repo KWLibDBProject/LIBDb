@@ -2,6 +2,7 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.kwlogger.php');
 
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 
@@ -13,13 +14,13 @@ $table = $_POST['ref_name'];
 $link = ConnectDB();
 
 $post = array(
-    'name' => mysql_escape_string($_POST['name']),
-    'email' => mysql_escape_string($_POST['email']),
-    'permissions' => mysql_escape_string($_POST['permissions']),
-    'login' => mysql_escape_string($_POST['login']),
-    'password' => mysql_escape_string($_POST['password']),
-    'phone' => mysql_escape_string($_POST['phone']),
-    'md5password' => md5(mysql_escape_string($_POST['password'])),
+    'name'          => mysql_real_escape_string($_POST['name']),
+    'email'         => mysql_real_escape_string($_POST['email']),
+    'permissions'   => mysql_real_escape_string($_POST['permissions']),
+    'login'         => mysql_real_escape_string($_POST['login']),
+    'password'      => mysql_real_escape_string($_POST['password']),
+    'phone'         => mysql_real_escape_string($_POST['phone']),
+    'md5password'   => md5(mysql_real_escape_string($_POST['password'])),
     'stat_date_insert' => ConvertTimestampToDate()
 );
 
@@ -37,8 +38,12 @@ if (mysql_errno($link)==0)
         $result['query'] = $q;
         $result['message'] = 'Adding complete: '.$q;
         $result['error'] = 0;
+
+        kwLogger::logEvent('Add', 'users', $new_id, "User added, id = {$new_id}");
+
     } else {
         $result['message'] = 'Trying to duplicate user! : '.$q;
+        kwLogger::logEvent('Error', 'users', $post['login'], "Trying duplicate user");
         $result['error'] = 1;
     }
 } else {

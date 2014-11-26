@@ -2,6 +2,7 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.kwlogger.php');
 
 
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
@@ -26,15 +27,18 @@ if (!IsSet($_GET['ref_name'])) {
             $q = "DELETE FROM {$table} WHERE id = {$id} ";
             $r = mysql_query($q) or Die($q);
             $result["error"] = 0;
-            $result['message'] = 'Record marked as "deleted"';
+            $result['message'] = 'User deleted from DB';
+            kwLogger::logEvent('Delete', 'users', $id, "User deleted, id was {$id}.");
         } else {
             // нельзя удалять админа
             $result["error"] = 255;
             $result['message'] = 'Unable remove root from database';
+            kwLogger::logEvent('Error', 'users', $id, "Attempt remove root from DB.");
         }
     } else {
         $result["error"] = 1;
         $result['message'] = 'User not found';
+        kwLogger::logEvent('Error', 'users', $id, "User with id {$id} not found.");
         // пользователь не найден
     }
     CloseDB($link);

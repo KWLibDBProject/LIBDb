@@ -8,13 +8,13 @@ function Users_CallAddItem(source)
     url = $form.attr("action");
     //@ validate user information! - вопрос только, что именно нужно валидировать? Емейл?
     var posting = $.post(url, {
-        name: $form.find("input[name='add_name']").val(),
-        ref_name: ref_name,
-        email: $form.find("input[name='add_email']").val(),
-        permissions: $form.find("input[name='add_permissions']").val(),
-        login: $form.find("input[name='add_login']").val(),
-        phone: $form.find("input[name='add_phone']").val(),
-        password: $form.find("input[name='add_password']").val()
+        name:           $form.find("input[name='add_name']").val(),
+        ref_name:       ref_name,
+        email:          $form.find("input[name='add_email']").val(),
+        permissions:    $form.find("input[name='add_permissions']").val(),
+        login:          $form.find("input[name='add_login']").val(),
+        phone:          $form.find("input[name='add_phone']").val(),
+        password:       $form.find("input[name='add_password']").val()
     } );
     posting.done(function(data){
 
