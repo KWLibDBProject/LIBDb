@@ -8,6 +8,11 @@ $link = ConnectDB();
 
 $result = FileStorage::recalcFilesSize();
 
+kwLogger::logEvent('Maintenance', 'filestorage', '*',
+    "{$result['total_files_found']} records in FILESTORAGE scanned.
+    Fixed: {$result['total_files_fixed']} files.
+    Errors: {$result['total_files_error']}.");
+
 ?>
 <!DOCTYPE HTML>
 <html>
