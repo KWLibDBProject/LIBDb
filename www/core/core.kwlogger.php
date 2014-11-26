@@ -3,6 +3,22 @@ require_once('config/config.logging.php');
 
 class kwLogger extends kwLoggerConfig
 {
+    /* convert query record to SQL statement */
+    private static function makeInsertStatement($record, $where="")
+    {
+        $table = self::$log_table;
+        $query = "INSERT INTO $table ";
+
+        $keys = " ( ";
+        $vals = " ( ";
+        foreach ($record as $key => $val) {
+            $keys .= "`" . $key . "`" . ", ";
+            $vals .= "'".$val."', ";
+        }
+        $query .= trim($keys,", ") . ") VALUES " . trim($vals,", ") . ") ".$where;
+        return $query;
+    }
+
     /*
     prepare event record for export to specific format: db|json|csv
     */
@@ -18,7 +34,7 @@ class kwLogger extends kwLoggerConfig
             foreach( $array as $key => $value )
                 $return [ $key ] = mysql_real_escape_string( $value );
         } elseif ($target == 'json' || $target == 'file') {
-            $return = json_encode($array);
+            $return = json_encode($array) . "\r\n";
         } elseif ($target == 'csv') {
             // see http://stackoverflow.com/a/16353448
             $fp = fopen('php://temp', 'r+');
@@ -41,10 +57,11 @@ class kwLogger extends kwLoggerConfig
             'comment'       =>  $comment,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
             'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  (isset($_SESSION[ self::$log_userid_key_in_session ])) ? $_SESSION[ self::$log_userid_key_in_session ] : 0
+            'user'          =>  (isset($_SESSION[ self::$log_userid_key_in_session ])) ? $_SESSION[ self::$log_userid_key_in_session ] : -1
         );
-        $query = MakeInsert($entry, self::$log_table);
+        $query = self::makeInsertStatement($entry);
         mysql_query( $query ) or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
+        // mysql_query( $query ) or self::log_to_file('Error addind data to eventlog table, query data saved to error.log : ' . $query);
         return mysql_errno();
     }
 
@@ -83,7 +100,7 @@ class kwLogger extends kwLoggerConfig
             'element'       =>  $affected_element,
             'comment'       =>  $comment,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
-            'datetime'      =>  ConvertTimestampToDate(),
+            'datetime'      =>  self::ConvertTimestampToDate(),
             'user'          =>  (isset($_SESSION['u_id'])) ? $_SESSION['u_id'] : 0
         );
         $f = fopen( $_SERVER['DOCUMENT_ROOT'].self::$log_file , 'a+' );
@@ -99,7 +116,7 @@ class kwLogger extends kwLoggerConfig
             'element'       =>  $affected_element,
             'comment'       =>  $comment,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
-            'datetime'      =>  ConvertTimestampToDate(),
+            'datetime'      =>  self::ConvertTimestampToDate(),
             'user'          =>  (isset($_SESSION['u_id'])) ? $_SESSION['u_id'] : 0
         );
         $f = fopen( $_SERVER['DOCUMENT_ROOT'].self::$log_file , 'a+' );
@@ -115,7 +132,7 @@ class kwLogger extends kwLoggerConfig
             'element'       =>  $affected_element,
             'comment'       =>  $comment,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
-            'datetime'      =>  ConvertTimestampToDate(),
+            'datetime'      =>  self::ConvertTimestampToDate(),
             'user'          =>  (isset($_SESSION['u_id'])) ? $_SESSION['u_id'] : 0
         );
         return self::prepare( $entry, 'csv' );

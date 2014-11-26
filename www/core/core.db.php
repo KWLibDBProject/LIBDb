@@ -1,7 +1,6 @@
 <?php
 // функции работы с базой (@todo: синглтон класс)
 require_once('config/config.php');
-require_once('core.kwlogging.php');
 
 function ConnectDB()
 {
@@ -19,7 +18,7 @@ function CloseDB($link) // useless
 
 function MakeInsert($arr, $table, $where="")
 {
-    $str = "INSERT INTO $table ";
+    $query = "INSERT INTO $table ";
 
     $keys = "(";
     $vals = "(";
@@ -27,20 +26,21 @@ function MakeInsert($arr, $table, $where="")
         $keys .= "`" . $key . "`" . ",";
         $vals .= "'".$val."',";
     }
-    $str .= trim($keys,",") . ") VALUES " . trim($vals,",") . ") ".$where;
-    return $str;
+    $query .= trim($keys,",") . ") VALUES " . trim($vals,",") . ") ".$where;
+    return $query;
 }
 
 function MakeUpdate($arr, $table, $where="")
 {
-    $str = "UPDATE $table SET ";
+    $query = "UPDATE $table SET ";
     foreach ($arr as $key=>$val)
     {
-        $str.= "`".$key."` = '".$val."', ";
+        $query.= "`".$key."` = '".$val."', ";
     };
-    $str = substr($str,0,(strlen($str)-2)); // обрезаем последнюю ","
-    $str.= " ".$where;
-    return $str;
+    // $str = substr($str,0,(strlen($str)-2)); // обрезаем последнюю ","
+    $query = rtrim( $query , ", ");
+    $query.= " ".$where;
+    return $query;
 }
 
 function DBLoginCheck($login, $password)
@@ -62,25 +62,29 @@ function DBLoginCheck($login, $password)
         if ($password == $user['md5password']) {
             // пароль верен
             $return = array(
-                'error' => 0,
-                'message' => 'User credentials correct! ',
-                'id' => $user['id'],
-                'permissions' => $user['permissions'],
-                'url' => 'admin.php'
+                'error'         => 0,
+                'message'       => 'User credentials correct! ',
+                'id'            => $user['id'],
+                'permissions'   => $user['permissions'],
+                'url'           => 'admin.php',
+                'username'      => $userlogin
             );
+            kwLogger::logEvent('login', 'userlist', $userlogin, 'User logged!');
         } else {
             // пароль неверен
             $return = array(
-                'error' => 1,
-                'message' => 'Пароль не указан или неверен! Проверьте раскладку клавиатуры! '
+                'error'         => 1,
+                'message'       => 'Пароль не указан или неверен! Проверьте раскладку клавиатуры! ',
             );
+            kwLogger::logEvent('login', 'userlist', $userlogin, 'Error: password incorrect');
         }
     } else {
         // логин не существует
         $return = array(
-            'error' => 2,
-            'message' => 'Пользователь с логином '.$login.' в системе не обнаружен! '
+            'error'         => 2,
+            'message'       => 'Пользователь с логином '.$login.' в системе не обнаружен! '
         );
+        kwLogger::logEvent('login', 'userlist', $userlogin, 'Error: unknown user!');
     }
     return $return;
 }
