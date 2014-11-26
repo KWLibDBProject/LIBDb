@@ -111,7 +111,7 @@ if (!isLogged()) header('Location: /core/');
     <button id="button-reset-selection" class="button-large">Сбросить критерии</button>
     <button id="button-show-all" class="button-large hidden">Показать ВСЕ статьи</button>
 </fieldset>
-<fieldset class="result-list">
+<fieldset class="result-list table-hl-rows">
     <legend>Результаты поиска</legend>
     <div id="articles_list">
     </div>

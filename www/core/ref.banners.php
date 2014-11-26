@@ -31,11 +31,11 @@ switch ($action) {
     case 'insert':
     {
         $q = array(
-            'data_url_image' => mysql_escape_string($_GET['data_url_image']),
-            'data_url_href' => mysql_escape_string($_GET['data_url_href']),
-            'data_alt' => mysql_escape_string($_GET['data_alt']),
-            'data_is_visible' => mysql_escape_string($_GET['data_is_visible']),
-            'data_comment' => mysql_escape_string($_GET['data_comment']),
+            'data_url_image' => mysql_real_escape_string($_GET['data_url_image']),
+            'data_url_href' => mysql_real_escape_string($_GET['data_url_href']),
+            'data_alt' => mysql_real_escape_string($_GET['data_alt']),
+            'data_is_visible' => mysql_real_escape_string($_GET['data_is_visible']),
+            'data_comment' => mysql_real_escape_string($_GET['data_comment']),
         );
         $qstr = MakeInsert($q, $reference);
         $res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
@@ -50,11 +50,11 @@ switch ($action) {
     {
         $id = $_GET['id'];
         $q = array(
-            'data_url_image' => mysql_escape_string($_GET['data_url_image']),
-            'data_url_href' => mysql_escape_string($_GET['data_url_href']),
-            'data_alt' => mysql_escape_string($_GET['data_alt']),
-            'data_is_visible' => mysql_escape_string($_GET['data_is_visible']),
-            'data_comment' => mysql_escape_string($_GET['data_comment']),
+            'data_url_image' => mysql_real_escape_string($_GET['data_url_image']),
+            'data_url_href' => mysql_real_escape_string($_GET['data_url_href']),
+            'data_alt' => mysql_real_escape_string($_GET['data_alt']),
+            'data_is_visible' => mysql_real_escape_string($_GET['data_is_visible']),
+            'data_comment' => mysql_real_escape_string($_GET['data_comment']),
         );
 
         $qstr = MakeUpdate($q, $reference, "WHERE id=$id");

@@ -42,7 +42,7 @@ if (!isLogged()) header('Location: /core/');
 <button type="button" class="button-large" id="actor-exit"><strong><<< НАЗАД </strong></button>
 <button type="button" class="button-large" id="actor-add">Добавить новость</button><br>
 <hr>
-<fieldset class="result-list">
+<fieldset class="result-list table-hl-rows">
     <div id="news_list">
     </div>
 </fieldset>
