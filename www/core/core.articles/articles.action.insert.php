@@ -18,24 +18,24 @@ if (!IsSet($_POST['caller'])) {
 $link = ConnectDB();
 
 $q = array(
-    'udc' => str_replace(" ","",mysql_escape_string($_POST['udc'])),
-    'title_en' => mysql_escape_string($_POST['title_en']),
-    'title_ru' => mysql_escape_string($_POST['title_ru']),
-    'title_uk' => mysql_escape_string($_POST['title_uk']),
-    'abstract_en' => mysql_escape_string($_POST['abstract_en']),
-    'abstract_ru' => mysql_escape_string($_POST['abstract_ru']),
-    'abstract_uk' => mysql_escape_string($_POST['abstract_uk']),
-    'keywords_en' => mysql_escape_string($_POST['keywords_en']),
-    'keywords_ru' => mysql_escape_string($_POST['keywords_ru']),
-    'keywords_uk' => mysql_escape_string($_POST['keywords_uk']),
-    'refs_ru' => mysql_escape_string($_POST['refs_ru']),
-    'refs_en' => mysql_escape_string($_POST['refs_en']),
-    'refs_uk' => mysql_escape_string($_POST['refs_ru']),
-    'book' => mysql_escape_string($_POST['book']),
-    'add_date' => mysql_escape_string($_POST['add_date']),
-    'topic' => mysql_escape_string($_POST['topic']),
-    'pages' => mysql_escape_string($_POST['pages']),
-    'doi' => mysql_escape_string($_POST['doi']),
+    'udc'           => str_replace(" ", "", mysql_real_escape_string($_POST['udc'])),
+    'title_en'      => mysql_real_escape_string($_POST['title_en']),
+    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
+    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
+    'abstract_en'   => mysql_real_escape_string($_POST['abstract_en']),
+    'abstract_ru'   => mysql_real_escape_string($_POST['abstract_ru']),
+    'abstract_uk'   => mysql_real_escape_string($_POST['abstract_uk']),
+    'keywords_en'   => mysql_real_escape_string($_POST['keywords_en']),
+    'keywords_ru'   => mysql_real_escape_string($_POST['keywords_ru']),
+    'keywords_uk'   => mysql_real_escape_string($_POST['keywords_uk']),
+    'refs_ru'       => mysql_real_escape_string($_POST['refs_ru']),
+    'refs_en'       => mysql_real_escape_string($_POST['refs_en']),
+    'refs_uk'       => mysql_real_escape_string($_POST['refs_ru']),
+    'book'          => mysql_real_escape_string($_POST['book']),
+    'add_date'      => mysql_real_escape_string($_POST['add_date']),
+    'topic'         => mysql_real_escape_string($_POST['topic']),
+    'pages'         => mysql_real_escape_string($_POST['pages']),
+    'doi'           => mysql_real_escape_string($_POST['doi']),
     'stat_date_insert' => ConvertTimestampToDate()
 );
 
@@ -76,6 +76,8 @@ if (IsSet($_POST['authors'])) {
     $result['error'] = 1;
     $result['message'] .= "Не указаны авторы!<br>\r\n";
 }
+
+kwLogger::logEvent('Add', 'articles', $article_id, "Article added, new id is {$article_id}" );
 
 CloseDB($link);
 

@@ -1,6 +1,7 @@
 <?php
 require_once('core.php');
 require_once('config/config.filestorage.php');
+require_once('core.kwlogger.php');
 
 class FileStorage extends FileStorageConfig {
 
@@ -124,7 +125,7 @@ class FileStorage extends FileStorageConfig {
             $return = fwrite($fh, $file_content);
             fflush($fh);
             fclose($fh);
-            usleep(50000);// sleep 0.05 sec
+            usleep(100000);// sleep 0.1 sec
         }
 
         if (parent::$config['save_to_db'])
@@ -155,7 +156,7 @@ class FileStorage extends FileStorageConfig {
                 $ret = self::__getEmptyIMG();
                 break;
             }
-        } // switch
+        }
         return $ret;
     }
 
@@ -255,28 +256,31 @@ class FileStorage extends FileStorageConfig {
         if ($file_array['tmp_name'] != '')
         {
             $file_info = array(
-                'username' => $file_array['name'],
-                'tempname' => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\', ($file_array['tmp_name'])) : ($file_array['tmp_name']),
-                'filesize' => $file_array['size'],
-                'relation' => $related_id,
-                'filetype' => $file_array['type'],
-                'collection' => $collection,
+                'username'      => $file_array['name'],
+                'tempname'      => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\', ($file_array['tmp_name'])) : ($file_array['tmp_name']),
+                'filesize'      => $file_array['size'],
+                'relation'      => $related_id,
+                'filetype'      => $file_array['type'],
+                'collection'    => $collection,
                 'stat_date_insert' => ConvertTimestampToDate()
             );
             $file_info['internal_name'] = self::getInternalFileName($file_info);
 
             /* insert fileinfo to DB */
             $q = MakeInsert($file_info, self::getSQLTable());
-            mysql_query($q) or Die("Death on $q");
+            mysql_query($q) or kwLogger::_die("Death on $q");
             $last_file_id = mysql_insert_id() or Die("Не удалось получить id последнего добавленного файла !");
 
             self::appendFileContent($file_info, $last_file_id);
 
-            $q_api = MakeUpdate(array(
-                    $related_field_in_table => $last_file_id),
-                $collection, " WHERE id= $related_id ");
+            $q_api = MakeUpdate(array( $related_field_in_table => $last_file_id ),
+                                $collection,
+                                " WHERE id= $related_id ");
             mysql_query($q_api) or Die("Death on update {$collection} table with request: ".$q_api);
             $ret = $last_file_id;
+
+            kwLogger::logEvent('Add', 'filestorage', $last_file_id, "Added {$file_info['username']} file to collection = {$file_info['collection']}, owner is {$file_info['relation']}, fileid is {$last_file_id}");
+
         } else {
             $ret = null;
         }
@@ -296,19 +300,19 @@ class FileStorage extends FileStorageConfig {
         if (($id != -1) && ($id != null))
         {
             // get intenal filename
-            $qr = mysql_fetch_assoc(mysql_query("SELECT id, internal_name FROM {$table} WHERE id = {$id}"));
+            $qr = mysql_fetch_assoc(mysql_query("SELECT id, internal_name, relation, collection FROM {$table} WHERE id = {$id}"));
             $internal_name = $qr['internal_name'];
 
             // remove fileinfo (and content) from DB
             $query = "DELETE FROM {$table} WHERE id={$id}";
             $ret = mysql_query($query) or die("Death on: ".$query);
 
-            // remove file from disk (пусть лучше пытается удалить файл всегда)
-            // if (parent::$config['save_to_disk']) { }
+            // remove file from disk
             $fn = self::getRealFileName($internal_name);
             if (file_exists($fn)) {
                 unlink($fn);
             }
+            kwLogger::logEvent('Files', $table, $internal_name, "File removed from disk and DB, id was {$id}");
         } else {
             $ret = -1;
         }
@@ -316,7 +320,7 @@ class FileStorage extends FileStorageConfig {
     }
 
 
-    /* удаляет файл из хранилища по заданному relation.
+    /* удаляет файл из хранилища по заданному relation & collection.
      * Используется в authors.action.remove - возможно избыточна */
     public static function removeFileByRel($rel, $collection)
     {
@@ -339,6 +343,7 @@ class FileStorage extends FileStorageConfig {
             if (file_exists($fn)) {
                 unlink($fn);
             }
+            kwLogger::logEvent('Files', $table, $internal_name, "File removed from disk and DB, relation was {$rel}, collection was {$collection}");
 
             return $ret;
         } else {
@@ -351,9 +356,9 @@ class FileStorage extends FileStorageConfig {
     {
         $table = self::getSQLTable();
         $query = "update {$table}
-        set stat_download_counter = stat_download_counter + 1
-where id = {$id}";
-        $rp = @mysql_query($query);
+                  set stat_download_counter = stat_download_counter + 1
+                  where id = {$id}";
+        @mysql_query($query);
     }
 
     /* static function for file icons */
@@ -431,12 +436,8 @@ where id = {$id}";
 
 } // class
 
-
-
-//@TODO: полноценный filestorage maintanance
+//@TODO: filestorage maintanance
 /*
-список файлов
-пересчет размера
 оповещение о "лишних" записях о файлах в базе (не найден на диске)
 оповещение о "лишних" файлах на диске (не найден в базе)
 */

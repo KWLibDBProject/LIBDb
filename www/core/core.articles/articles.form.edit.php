@@ -34,7 +34,7 @@ if ($numarticles == 1)
 
     $currAuthList = "{ ";
 
-    if ($numauthors>0)
+    if ($numauthors > 0)
     {
         for ($i=1;$i<=$numauthors;$i++)
         {
@@ -238,18 +238,22 @@ CloseDB($link);
     <fieldset>
         <legend>Сборник</legend>
 
-        <label for="pages">Статья опубликована на страницах</label>
-        <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>">
+        <label for="pages">Статья опубликована на страницах
+            <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>">
+        </label>
 
-        <label for="the_book">... сборника: </label>
-        <select name="book" id="the_book"></select>
 
-        <label for="datepicker">Дата:</label>
-        <input type="text" id="datepicker" name="add_date" value="<?php echo $the_article['add_date']; ?>">
+        <label for="the_book">... сборника:
+            <select name="book" id="the_book"></select>
+        </label>
+        <br/>
+        <label for="datepicker">Дата:
+            <input type="text" id="datepicker" name="add_date" value="<?php echo $the_article['add_date']; ?>">
+        </label>
+        <label for="doi">DOI:
+            <input type="text" id="doi" name="doi" value="<?php echo $the_article['doi']; ?>" size="40">
+        </label>
 
-        <br>
-        <label for="doi">DOI: </label>
-        <input type="text" id="doi" name="doi" value="<?php echo $the_article['doi']; ?>" size="40">
     </fieldset>
 
     <fieldset>
@@ -290,6 +294,17 @@ CloseDB($link);
                 <td><input type="text" name="title_uk" id="title_uk" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_uk'] ;?>"></td>
             </tr>
         </table>
+    </fieldset>
+
+    <fieldset class="warning">
+        <legend>Внимание!</legend>
+        Пожалуйста, НЕ используйте избыточное форматирование при вводе аннотации, ключевых слов,
+        списка литературы и прочего. Используйте только логическое выделение важных слов и понятий.
+        Помните, что при выводе данные может возникнуть конфликт основных стилей сайта и ваших.
+        <br/>
+        <strong>Очистить форматирование </strong> можно при помощи кнопки 'clear formatting' в редакторе (самая правая под меню).
+        <br/>
+        <strong>При вставке из ворда</strong> используйте кнопку 'paste as text' (самая левая под меню).
     </fieldset>
 
     <fieldset>

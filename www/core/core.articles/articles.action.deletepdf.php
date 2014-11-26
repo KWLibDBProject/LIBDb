@@ -10,10 +10,14 @@ $id = IsSet($_GET['id']) ? $_GET['id'] : Die();
 
 $link = ConnectDB();
 
+// вообще-то это избыточно, достаточно "update articles set pdfid = -1 where id = $id" :)
 $pdf_relation = FileStorage::getRelById($id);
-
 $a_result = mysql_query("UPDATE articles SET pdfid=-1 WHERE id={$pdf_relation}") or Die("Die on: UPDATE articles RELATION field");
-//@todo: FileStorage::??? -- как назвать функцию, которая будет делать то же, что делает строчка выше?
+
+//FileStorage::??? -- как назвать функцию, которая будет делать то же, что делает строчка выше?
+// это удаление реально внести в функцию removeFileById, но нюанс в том, что в разных таблицах
+// поле, где хранится идентификатор файла называется по-разному!
+// А в некоторых таблицах так их еще и несколько :)
 
 FileStorage::removeFileById($id);
 

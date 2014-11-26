@@ -149,15 +149,11 @@ if (!isLogged()) header('Location: /core/');
     </fieldset>
     <fieldset>
         <legend>Сборник</legend>
-        <label for="pages">Статья опубликована на страницах</label>
-        <input type="text" id="pages" name="pages">
-        <label for="the_book">... сборника: </label>
-        <select name="book" id="the_book"></select>
-        <label for="datepicker">Дата приема на публикацию:</label>
-        <input type="text" id="datepicker" name="add_date">
-        <br>
-        <label for="doi">DOI: </label>
-        <input type="text" id="doi" name="doi" size="40">
+        <label for="pages">Статья опубликована на страницах <input type="text" id="pages" name="pages"></label>
+        <label for="the_book">... сборника: <select name="book" id="the_book"></select> </label>
+        <br/>
+        <label for="datepicker">Дата приема на публикацию: <input type="text" id="datepicker" name="add_date"></label>
+        <label for="doi">DOI: <input type="text" id="doi" name="doi" size="40"> </label>
     </fieldset>
     <fieldset>
         <legend>PDF-file</legend>
@@ -187,6 +183,17 @@ if (!isLogged()) header('Location: /core/');
                 <td><input type="text" name="title_uk" id="title_uk" size="80" class="text ui-widget-content ui-corner-all"></td>
             </tr>
         </table>
+    </fieldset>
+
+    <fieldset class="warning">
+        <legend>Внимание!</legend>
+        Пожалуйста, НЕ используйте избыточное форматирование при вводе аннотации, ключевых слов,
+        списка литературы и прочего. Используйте только логическое выделение важных слов и понятий.
+        Помните, что при выводе данные может возникнуть конфликт основных стилей сайта и ваших.
+        <br/>
+        <strong>Очистить форматирование </strong> можно при помощи кнопки 'clear formatting' в редакторе (самая правая под меню).
+        <br/>
+        <strong>При вставке из ворда</strong> используйте кнопку 'paste as text' (самая левая под меню).
     </fieldset>
 
     <fieldset>

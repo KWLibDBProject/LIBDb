@@ -37,7 +37,7 @@ var tiny_config = {
     'simple' : {
         forced_root_block : "",
         plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor " ],
-        toolbar: " pastetext | undo redo | bold italic underline subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | paste ",
+        toolbar: " pastetext | undo redo | bold italic underline subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | paste | removeformat",
         force_br_newlines : true,
         force_p_newlines : false
     }

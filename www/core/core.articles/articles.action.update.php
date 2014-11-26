@@ -12,29 +12,29 @@ $article_id = $_POST['article_id'];
 $link = ConnectDB();
 
 $q = array(
-    'udc' => str_replace(" ","",mysql_escape_string($_POST['udc'])),
-    'title_en' => mysql_escape_string($_POST['title_en']),
-    'title_ru' => mysql_escape_string($_POST['title_ru']),
-    'title_uk' => mysql_escape_string($_POST['title_uk']),
-    'abstract_en' => mysql_escape_string($_POST['abstract_en']),
-    'abstract_ru' => mysql_escape_string($_POST['abstract_ru']),
-    'abstract_uk' => mysql_escape_string($_POST['abstract_uk']),
-    'keywords_en' => mysql_escape_string($_POST['keywords_en']),
-    'keywords_ru' => mysql_escape_string($_POST['keywords_ru']),
-    'keywords_uk' => mysql_escape_string($_POST['keywords_uk']),
-    'refs_ru' => mysql_escape_string($_POST['refs_ru']),
-    'refs_en' => mysql_escape_string($_POST['refs_en']),
-    'refs_uk' => mysql_escape_string($_POST['refs_ru']),
-    'book' => mysql_escape_string($_POST['book']),
-    'add_date' => mysql_escape_string($_POST['add_date']),
-    'topic' => mysql_escape_string($_POST['topic']),
-    'pages' => mysql_escape_string($_POST['pages']),
-    'doi' => mysql_escape_string($_POST['doi']),
-    'stat_date_update'      => ConvertTimestampToDate()
+    'udc'               => str_replace(" ", "", mysql_real_escape_string($_POST['udc'])),
+    'title_en'          => trim(mysql_real_escape_string($_POST['title_en'])),
+    'title_ru'          => trim(mysql_real_escape_string($_POST['title_ru'])),
+    'title_uk'          => trim(mysql_real_escape_string($_POST['title_uk'])),
+    'abstract_en'       => mysql_real_escape_string($_POST['abstract_en']),
+    'abstract_ru'       => mysql_real_escape_string($_POST['abstract_ru']),
+    'abstract_uk'       => mysql_real_escape_string($_POST['abstract_uk']),
+    'keywords_en'       => mysql_real_escape_string($_POST['keywords_en']),
+    'keywords_ru'       => mysql_real_escape_string($_POST['keywords_ru']),
+    'keywords_uk'       => mysql_real_escape_string($_POST['keywords_uk']),
+    'refs_ru'           => mysql_real_escape_string($_POST['refs_ru']),
+    'refs_en'           => mysql_real_escape_string($_POST['refs_en']),
+    'refs_uk'           => mysql_real_escape_string($_POST['refs_ru']),
+    'book'              => mysql_real_escape_string($_POST['book']),
+    'add_date'          => mysql_real_escape_string($_POST['add_date']),
+    'topic'             => mysql_real_escape_string($_POST['topic']),
+    'pages'             => mysql_real_escape_string($_POST['pages']),
+    'doi'               => mysql_real_escape_string($_POST['doi']),
+    'stat_date_update'  => ConvertTimestampToDate()
 );
 
 // теперь нам нужно вставить данные в БАЗУ (пока что с учетом вставки файла в БЛОБ)
-$qstr = MakeUpdate($q,'articles',"where id=$article_id");
+$qstr = MakeUpdate($q, 'articles', "where id=$article_id");
 $res = mysql_query($qstr, $link) or Die("Невозможно вставить данные в базу  ".$qstr);
 
 $is_newfile = $_POST['currfile_changed'];
@@ -83,6 +83,8 @@ if (IsSet($_POST['authors'])) {
     $result['error'] = 1;
     $result['message'] .= "Не указаны авторы!<br>\r\n";
 }
+
+kwLogger::logEvent('Update', 'articles', $article_id, "Article updated, id is {$article_id}" );
 
 CloseDB($link);
 
