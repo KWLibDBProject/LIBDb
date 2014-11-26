@@ -4,6 +4,10 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 
 // отдает JSON объект для селектора "авторы"
+// данный файл 'duplicated' и почти эквивалентен файлу
+// authors.action.getoptionlist.php , только чуть-чуть другой формат
+// возвращаемых данных для функции buildSelector()
+//@Todo: переделать в версии 1.9R
 
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;

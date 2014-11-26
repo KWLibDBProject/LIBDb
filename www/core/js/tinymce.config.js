@@ -40,10 +40,19 @@ var tiny_config = {
         toolbar: " pastetext | undo redo | bold italic underline subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | paste | removeformat",
         force_br_newlines : true,
         force_p_newlines : false
+    },
+    'simplest' : {
+        forced_root_block : "",
+        plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ],
+        force_br_newlines : true,
+        force_p_newlines : false
     }
 };
 
-
+/*
+* config must be tiny_config['key']
+* elem must be html textarea ID ONLY (like 'bio_ru', not 'textarea#bio_ru' !!)
+* */
 function tinify(config, elem, mode)
 {
     m = (typeof mode != 'undefined') ? mode : true;

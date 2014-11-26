@@ -10,23 +10,23 @@ $ref_name = 'authors';
 $link = ConnectDB();
 
 $q = array(
-    'name_ru' => mysql_escape_string(trim($_POST['name_ru'], ' ')),
-    'name_en' => mysql_escape_string(trim($_POST['name_en'], ' ')),
-    'name_uk' => mysql_escape_string(trim($_POST['name_uk'], ' ')),
-    'title_ru' => mysql_escape_string($_POST['title_ru']),
-    'title_en' => mysql_escape_string($_POST['title_en']),
-    'title_uk' => mysql_escape_string($_POST['title_uk']),
-    'email' => mysql_escape_string($_POST['email']),
-    'workplace_en' => mysql_escape_string($_POST['workplace_en']),
-    'workplace_ru' => mysql_escape_string($_POST['workplace_ru']),
-    'workplace_uk' => mysql_escape_string($_POST['workplace_uk']),
-    'is_es' => (strtolower(mysql_escape_string($_POST['is_es']))=='on' ? 1 : 0),
-    'phone' => mysql_escape_string($_POST['phone']),
-    'bio_en' => mysql_escape_string($_POST['bio_en']),
-    'bio_ru' => mysql_escape_string($_POST['bio_ru']),
-    'bio_uk' => mysql_escape_string($_POST['bio_uk']),
+    'name_ru'       => mysql_real_escape_string(trim($_POST['name_ru'], ' ')),
+    'name_en'       => mysql_real_escape_string(trim($_POST['name_en'], ' ')),
+    'name_uk'       => mysql_real_escape_string(trim($_POST['name_uk'], ' ')),
+    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
+    'title_en'      => mysql_real_escape_string($_POST['title_en']),
+    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
+    'email'         => mysql_real_escape_string($_POST['email']),
+    'workplace_en'  => mysql_real_escape_string($_POST['workplace_en']),
+    'workplace_ru'  => mysql_real_escape_string($_POST['workplace_ru']),
+    'workplace_uk'  => mysql_real_escape_string($_POST['workplace_uk']),
+    'is_es'         => (strtolower(mysql_real_escape_string($_POST['is_es']))=='on' ? 1 : 0),
+    'phone'         => mysql_real_escape_string($_POST['phone']),
+    'bio_en'        => mysql_real_escape_string($_POST['bio_en']),
+    'bio_ru'        => mysql_real_escape_string($_POST['bio_ru']),
+    'bio_uk'        => mysql_real_escape_string($_POST['bio_uk']),
     /* самость */
-    'selfhood' => mysql_escape_string($_POST['selfhood']),
+    'selfhood'      => mysql_real_escape_string($_POST['selfhood']),
     /* stat */
     'stat_date_update'      => ConvertTimestampToDate()
 );
@@ -47,8 +47,10 @@ if (!empty($res)) {
     $result['error'] = 0;
 }
 else {
-    Die("Unable to insert data to DB!  ".$qstr);
+    die("Unable to insert data to DB!  ".$qstr);
 }
+
+kwLogger::logEvent('Update', 'authors', $new_author_id, "Author updated, id is {$new_author_id}" );
 
 CloseDB($link);
 

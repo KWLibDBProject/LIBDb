@@ -9,11 +9,9 @@ $ref_name = 'authors';
 
 $sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru " : '';
 
-//function start (надо, наверное, эту функцию дергать из /frontend.php или из
-//библиотечного модуля, относящегося к справочнику (например authors.lib.php), куда
-// стоит отправить большинство имеющихся функций, описанных inline в коде.
 if ( (!isset($_GET['letter'])) || ($_GET['letter'] != '0') ) {
     $like = " authors.name_ru LIKE '{$_GET['letter']}%'";
+    $sort_order = " ORDER BY name_ru ";
 } else {
     $like = '';
 }

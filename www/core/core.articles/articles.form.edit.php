@@ -96,6 +96,9 @@ CloseDB($link);
         var isArticleExists = <?php echo $numarticles ?>;
         var authorsList = preloadOptionsList('../core.authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('../core.books/ref.books.action.getoptionlist.php');
+
+        // var booksList = preloadOptionsList('../core.books/books.action.getoptionlist.php');
+
         var topicsList = preloadOptionsList('../core.topics/ref.topics.action.getoptionlist.php');
 
         var mode = 'edit';
@@ -134,6 +137,7 @@ CloseDB($link);
 
             // load books selector
             BuildSelector('book',booksList,currentBook);
+            // BuildSelector_NoRef('book', booksList,currentBook);
             BuildSelector('topic',topicsList,currentTopic);
 
             // WIDGETS
@@ -362,4 +366,4 @@ CloseDB($link);
 </form>
 
 </body>
-</html>
+<

@@ -27,8 +27,10 @@ if (!isLogged()) header('Location: /core/');
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            var siteLanguage = 'lang=ru';
+            var siteLanguage = 'lang=ru'; // required! we load letters with frontend-declared ajax function
+
             var lettersList = preloadOptionsList('/ajax.php?actor=get_letters_as_optionlist&'+siteLanguage);
+
             BuildSelector('letter', lettersList, 0);
 
             // bind hash selectors
@@ -36,11 +38,10 @@ if (!isLogged()) header('Location: /core/');
             $(".hash_selectors").on('change', '.search_selector', function(){
                 setHashBySelectors();
                 // enable or disable button if first letter selected
-                $(".actor-show-abc").prop('disabled', ($('select[name="letter"]').val() != '0') );
+                $("#actor-show-withselection").prop('disabled', !($('select[name="letter"]').val() != '0') );
             });
 
             // onload
-            // $("#authors_list").load("core.authors/authors.action.list.php");
             $("#authors_list").empty().load('core.authors/authors.action.list.php?'+siteLanguage+"&"+"letter="+$('select[name="letter"]').val());
 
             // bind exit actor
@@ -91,7 +92,7 @@ if (!isLogged()) header('Location: /core/');
     <button id="actor-show-abc">Отсортировать по фамилии</button>
     <button id="actor-show-all">Показать всех</button>
     Первая буква имени: <form class="hash_selectors inline_form"><select name="letter" class="search_selector"><option value="0">ANY</option></select></form>
-    <button id="actor-show-withselection">Показать выбранных</button>
+    <button id="actor-show-withselection" disabled>Показать выбранных</button>
 
 
 </fieldset>

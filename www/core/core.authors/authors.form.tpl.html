@@ -2,27 +2,28 @@
 <head>
     <title>{%page_title%}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../js/tinymce.config.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="authors.css">
     <style type="text/css"></style>
 
-    <script src="../js/core.js"></script>
-    <script src="authors.js"></script>
+    <script type="text/javascript" src="../js/core.js"></script>
+    <script type="text/javascript" src="authors.js"></script>
 
-    <script src="../js/jquery.colorbox.js"></script>
+    <script type="text/javascript" src="../js/jquery.colorbox.js"></script>
     <link rel="stylesheet" href="../css/colorbox.css" />
 
     <script type="text/javascript">
         // tinyMCE inits
+        author_id = {%author_id%};
         $(document).ready(function () {
             $.ajaxSetup({cache: false, async: false});
 
             selfhoodList = preloadOptionsList('../ref.abstract.getoptionslist.php?ref=ref_selfhood');
             currentSelfhood = 0;
-            author_id = {%author_id%};
 
             if (author_id != -1) {
                 currentSelfhood = Authors_LoadRecord("#form_edit_author", author_id, 'bio');
@@ -78,35 +79,17 @@
                     photo: true
                 });
             });
-            // вставить проверку валидации данных по сабмиту. Надо ли?
-            //
+            // note: don't use
+            tinify(tiny_config['simple'], 'bio_en');
+            tinify(tiny_config['simple'], 'bio_ru');
+            tinify(tiny_config['simple'], 'bio_uk');
 
-            tinymce.init({
-                selector:'textarea#bio_en', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
-                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
-            });
-            tinymce.init({
-                selector:'textarea#bio_ru', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
-                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
-            });
-            tinymce.init({
-                selector:'textarea#bio_uk', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
-                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
-            });
-            tinymce.init({
-                selector:'textarea#workplace_en', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
-                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
-            });
-            tinymce.init({
-                selector:'textarea#workplace_ru', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
-                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
-            });
-            tinymce.init({
-                selector:'textarea#workplace_uk', forced_root_block : "", force_br_newlines : true, force_p_newlines : false,
-                plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ]
-            });
+            tinify(tiny_config['simplest'], 'workplace_en');
+            tinify(tiny_config['simplest'], 'workplace_ru');
+            tinify(tiny_config['simplest'], 'workplace_uk');
+
             $("#name_en").focus();
-            // вставить проверку заполненности фамилий на всех языках
+            // проверка заполненности фамилий на всех языках
             $("#form_edit_author")
                     .submit(function(){
                         var bValid = true;
@@ -123,9 +106,8 @@
                             bValid = false;
                         }
                         return bValid;
-                    })
-                    .show();
-        })
+                    }).show();
+        });
     </script>
 </head>
 <body>

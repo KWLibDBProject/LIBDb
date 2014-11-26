@@ -312,7 +312,7 @@ class FileStorage extends FileStorageConfig {
             if (file_exists($fn)) {
                 unlink($fn);
             }
-            kwLogger::logEvent('Files', $table, $internal_name, "File removed from disk and DB, id was {$id}");
+            kwLogger::logEvent('Delete', $table, $internal_name, "File removed from disk and DB, id was {$id}");
         } else {
             $ret = -1;
         }
@@ -343,7 +343,7 @@ class FileStorage extends FileStorageConfig {
             if (file_exists($fn)) {
                 unlink($fn);
             }
-            kwLogger::logEvent('Files', $table, $internal_name, "File removed from disk and DB, relation was {$rel}, collection was {$collection}");
+            kwLogger::logEvent('Delete', $table, $internal_name, "File removed from disk and DB, relation was {$rel}, collection was {$collection}");
 
             return $ret;
         } else {

@@ -12,7 +12,8 @@ $result = array();
 
 $link = ConnectDB();
 
-$qt = "SELECT COUNT(article) AS aha FROM cross_aa WHERE author={$author_id}";
+$qt = "SELECT COUNT(article) AS aha FROM cross_aa WHERE author = {$author_id}";
+
 if ($rt = mysql_query($qt)) {
     $aha = mysql_fetch_assoc($rt);
     if ($aha['aha'] > 0) {
@@ -31,7 +32,7 @@ if ($rt = mysql_query($qt)) {
         FileStorage::removeFileById($photo_id);
 
         // удалить запись об авторе из таблицы AUTHORS
-        $q = "DELETE FROM $table WHERE (id = $author_id)";
+        $q = "DELETE FROM {$table} WHERE (id = {$author_id})";
         if ($r = mysql_query($q)) {
             // запрос удаление успешен
             $result["error"] = 0;
@@ -42,6 +43,7 @@ if ($rt = mysql_query($qt)) {
             $result["error"] = 1;
             $result['message'] = 'Ошибка удаления автора из базы данных!';
         }
+        kwLogger::logEvent('Delete', 'authors', $author_id, "Author deleted, id is {$author_id}" );
     }
 } else {
     // DB error

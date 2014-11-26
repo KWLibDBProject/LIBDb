@@ -17,12 +17,8 @@ if (isset($_GET['id'])) {
         'submit_button_text' => 'СОХРАНИТЬ ИЗМЕНЕНИЯ',
         'page_title' => 'Авторы -- редактирование',
         'author_selfhood' => 0,
-        /* photo */
-        'file_current_flag_show' => '', // эти поля тоже можно установить JS в клиенте
+        'file_current_flag_show' => '',
         'file_current_flag_delete' => '',
-        // this values MUST be loaded by JS Authors_LoadRecord()
-        // 'file_current_id' => $record['photo']['id'],
-        // 'file_current_username' => $record['photo']['username']
     );
 } else {
     // ADD
@@ -32,13 +28,8 @@ if (isset($_GET['id'])) {
         'submit_button_text' => 'ДОБАВИТЬ АВТОРА',
         'page_title' => 'Авторы -- добавление',
         'author_selfhood' => 0,
-        /* photo */
         'file_current_flag_show' => 'disabled',
         'file_current_flag_delete' => '',
-        // this values MUST be loaded by JS Authors_LoadRecord()
-        // 'file_current_id' => '',
-        // 'file_current_username' => ''
-
     );
 }
 $tpl->override($over);

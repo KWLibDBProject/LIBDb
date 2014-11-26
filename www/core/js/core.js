@@ -29,6 +29,21 @@ function BuildSelector(target, data, currentid) // currentid is 1 for NEW
     }
 }
 
+function BuildSelector_NoRef(target, data, currentid) // currentid is 1 for NEW
+{
+    if (data['error'] == 0) {
+        var _target = "select[name='"+target+"']";
+        $.each(data['data'], function(id, value){
+            $(_target).append('<option value="'+value['id']+'">'+value['text']+'</option>');
+        });
+        var _currentid = (typeof currentid != 'undefined') ? currentid : 1;
+        $("select[name="+target+"] option[value="+ _currentid +"]").prop("selected",true);
+    } else {
+        $("select[name="+target+"]").prop('disabled',true);
+    }
+}
+
+
 function strpos (haystack, needle, offset) {
     var i = (haystack+'').indexOf(needle, (offset || 0));
     return i === -1 ? false : i;
