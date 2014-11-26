@@ -2,6 +2,7 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.kwlogger.php');
 
 if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
@@ -20,6 +21,8 @@ $q = array(
 
 $qstr = MakeUpdate($q, $_POST['ref_name'], "WHERE id=$id");
 $res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
+
+kwLogger::logEvent('Update', 'topics', $id, "Topic updated, id = {$id}");
 
 $result['message'] = $qstr;
 $result['error'] = 0;

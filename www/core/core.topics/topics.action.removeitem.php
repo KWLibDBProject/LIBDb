@@ -3,6 +3,7 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.kwlogger.php');
 
 
 if (!IsSet($_GET['ref_name'])) {
@@ -28,6 +29,8 @@ if (!IsSet($_GET['ref_name'])) {
                 // запрос удаление успешен
                 $result["error"] = 0;
                 $result['message'] = 'Тематический раздел удален из базы данных!';
+
+                kwLogger::logEvent('Delete', 'topics', $id, "Topic deleted, id was {$id}");
 
             } else {
                 // DB error again

@@ -2,6 +2,7 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
+require_once('../core.kwlogger.php');
 
 if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
@@ -18,6 +19,8 @@ $q = array(
 $qstr = MakeInsert($q,$_POST['ref_name']);
 $res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
 $new_id = mysql_insert_id() or Die("Unable to get last insert id!");
+
+kwLogger::logEvent('Add', 'topics', $new_id, "Topic added, id = {$new_id}");
 
 $result['message'] = $qstr;
 $result['error'] = 0;

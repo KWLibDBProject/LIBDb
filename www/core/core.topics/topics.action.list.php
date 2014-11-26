@@ -2,9 +2,6 @@
 require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
-// require_once('../core.messages.php');
-
-// $msg = TheMessenger::getIt(); // Messenger singleton class
 
 $link = ConnectDB();
 $ref_name = 'topics';
