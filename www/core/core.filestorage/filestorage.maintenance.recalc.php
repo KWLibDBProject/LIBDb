@@ -64,7 +64,7 @@ kwLogger::logEvent('Maintenance', 'filestorage', '*',
         <td><?=$file['internal_name']?></td>
         <td class="center"><?=$file['filesize_old']?></td>
         <td class="center">
-            <span class="note"><?=$file['status']?>
+            <span class="note"><?=$file['status']?></span>
         </td>
     </tr>
     <?php } ?>

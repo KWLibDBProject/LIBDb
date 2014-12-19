@@ -444,6 +444,7 @@ WHERE books.id=articles.book
 AND cross_aa.article = articles.id
 AND books.published=1
 AND cross_aa.author = $id
+ORDER BY add_date
 ";
     $r = mysql_query($q);
     if (@mysql_num_rows($r) > 0) {
