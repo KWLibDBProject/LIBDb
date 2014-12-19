@@ -84,10 +84,6 @@
             tinify(tiny_config['simple'], 'bio_ru');
             tinify(tiny_config['simple'], 'bio_uk');
 
-            tinify(tiny_config['simplest'], 'workplace_en');
-            tinify(tiny_config['simplest'], 'workplace_ru');
-            tinify(tiny_config['simplest'], 'workplace_uk');
-
             $("#name_en").focus();
             // проверка заполненности фамилий на всех языках
             $("#form_edit_author")
@@ -129,8 +125,8 @@
 
         <label for="name_uk">Ф.И.О. (украинский)</label><br>
         <input type="text" name="name_uk" id="name_uk" size="60" value="">
+        <div class="warning-small">Важно: Не оставляйте эти поля пустыми. Укажите фамилии на всех языках!</div>
     </fieldset>
-    <small>Важно: Не оставляйте поля пустыми. Введите фамилии на всех языках</small>
     <fieldset>
         <label for="title_en">Звание, ученая степень, должность (на английском)</label><br>
         <input type="text" name="title_en" id="title_en" size="60" value="">

@@ -16,6 +16,42 @@ function CloseDB($link) // useless
     mysql_close($link) or Die("Не удается закрыть соединение с базой данных.");
 }
 
+function DB_EscapeArray( $array )
+{
+    $result = array();
+    foreach ($array as $key => $keyvalue) {
+        switch (gettype( $keyvalue )) {
+            case 'string': {
+                $result [ $key ] = mysql_real_escape_string( $keyvalue );
+                break;
+            }
+            case 'array': {
+                $result [ $key ] = DB_EscapeArray( $keyvalue );
+                break;
+            }
+            default: {
+                $result [ $key ] = $keyvalue;
+            }
+        }
+    }
+    return $result;
+}
+
+function MakeInsertEscaped($array, $table, $where = "")
+{
+    $arr = DB_EscapeArray( $array );
+    $query = "INSERT INTO $table ";
+
+    $keys = "(";
+    $vals = "(";
+    foreach ($arr as $key => $val) {
+        $keys .= "`" . $key . "`" . ",";
+        $vals .= "'".$val."',";
+    }
+    $query .= trim($keys,",") . ") VALUES " . trim($vals,",") . ") ".$where;
+    return $query;
+}
+
 function MakeInsert($arr, $table, $where="")
 {
     $query = "INSERT INTO $table ";
@@ -30,6 +66,19 @@ function MakeInsert($arr, $table, $where="")
     return $query;
 }
 
+function MakeUpdateEscaped($array, $table, $where = "")
+{
+    $arr = DB_EscapeArray( $array );
+    $query = "UPDATE $table SET ";
+    foreach ($arr as $key=>$val)
+    {
+        $query.= "`".$key."` = '".$val."', ";
+    };
+    $query = rtrim( $query , ", ");
+    $query.= " ".$where;
+    return $query;
+}
+
 function MakeUpdate($arr, $table, $where="")
 {
     $query = "UPDATE $table SET ";
@@ -37,7 +86,6 @@ function MakeUpdate($arr, $table, $where="")
     {
         $query.= "`".$key."` = '".$val."', ";
     };
-    // $str = substr($str,0,(strlen($str)-2)); // обрезаем последнюю ","
     $query = rtrim( $query , ", ");
     $query.= " ".$where;
     return $query;

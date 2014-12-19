@@ -10,28 +10,26 @@ $ref_name = 'authors';
 $link = ConnectDB();
 
 $q = array(
-    'name_ru'       => mysql_real_escape_string(trim($_POST['name_ru'], ' ')),
-    'name_en'       => mysql_real_escape_string(trim($_POST['name_en'], ' ')),
-    'name_uk'       => mysql_real_escape_string(trim($_POST['name_uk'], ' ')),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'email'         => mysql_real_escape_string($_POST['email']),
-    'workplace_en'  => mysql_real_escape_string($_POST['workplace_en']),
-    'workplace_ru'  => mysql_real_escape_string($_POST['workplace_ru']),
-    'workplace_uk'  => mysql_real_escape_string($_POST['workplace_uk']),
-    'is_es'         => (strtolower(mysql_real_escape_string($_POST['is_es']))=='on' ? 1 : 0),
-    'phone'         => mysql_real_escape_string($_POST['phone']),
-    'bio_en'        => mysql_real_escape_string($_POST['bio_en']),
-    'bio_ru'        => mysql_real_escape_string($_POST['bio_ru']),
-    'bio_uk'        => mysql_real_escape_string($_POST['bio_uk']),
-    /* самость */
-    'selfhood'      => mysql_real_escape_string($_POST['selfhood']),
-    /* stat */
-    'stat_date_update'      => ConvertTimestampToDate()
+    'name_ru'       => trim($_POST['name_ru'], ' '),
+    'name_en'       => trim($_POST['name_en'], ' '),
+    'name_uk'       => trim($_POST['name_uk'], ' '),
+    'title_ru'      => $_POST['title_ru'],
+    'title_en'      => $_POST['title_en'],
+    'title_uk'      => $_POST['title_uk'],
+    'email'         => $_POST['email'],
+    'workplace_en'  => strip_tags($_POST['workplace_en']),
+    'workplace_ru'  => strip_tags($_POST['workplace_ru']),
+    'workplace_uk'  => strip_tags($_POST['workplace_uk']),
+    'is_es'         => strtolower(($_POST['is_es']))=='on' ? 1 : 0,
+    'phone'         => $_POST['phone'],
+    'bio_en'        => $_POST['bio_en'],
+    'bio_ru'        => $_POST['bio_ru'],
+    'bio_uk'        => $_POST['bio_uk'],
+    'selfhood'      => $_POST['selfhood'],
+    'stat_date_update' => ConvertTimestampToDate()
 );
+$qstr = MakeUpdateEscaped($q, $ref_name, "WHERE id=$id");
 
-$qstr = MakeUpdate($q, $ref_name, "WHERE id=$id");
 $res = mysql_query($qstr, $link);
 
 if (!empty($res)) {

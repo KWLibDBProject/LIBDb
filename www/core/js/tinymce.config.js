@@ -36,6 +36,7 @@ var tiny_config = {
     },
     'simple' : {
         forced_root_block : "",
+        theme: "modern",
         plugins: [ "charmap link paste hr anchor preview print tabfocus table textcolor " ],
         toolbar: " pastetext | undo redo | bold italic underline subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | paste | removeformat",
         force_br_newlines : true,
@@ -46,6 +47,26 @@ var tiny_config = {
         plugins: [ "link paste hr anchor preview print tabfocus table textcolor" ],
         force_br_newlines : true,
         force_p_newlines : false
+    },
+    'form_core_authors' :{
+        theme       : "modern",
+        // skin        : "light",
+        language    : "ru",
+
+        forced_root_block   : "",
+        force_br_newlines   : true,
+        force_p_newlines    : false,
+
+        plugins     : [ "advlist lists link anchor charmap paste searchreplace code preview" ],
+        formats     : {
+            strikethrough : {inline : 'del'},
+            underline : {inline : 'span', 'classes' : 'underline', exact : true}
+        },
+        contextmenu : "link image responsivefilemanager | inserttable cell row column deletetable | charmap",
+        templates   : "/core/js/tinymce/templates/templates.json",
+        insertdatetime_formats: ["%d.%m.%Y", "%H:%m", "%d/%m/%Y"],
+        toolbar1    : "bold italic underline subscript superscript strikethrough | charmap | pastetext | undo redo | link unlink anchor | print preview code | pastetext removeformat",
+        image_advtab: true // advanced tab (without rel or class add)
     }
 };
 

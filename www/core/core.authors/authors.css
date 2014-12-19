@@ -25,3 +25,9 @@ form.inline_form {
     color: transparent;
     cursor: default;
 }
+
+.warning-small {
+    color: red;
+    font-size: small;
+    margin-top: 5px;
+}
