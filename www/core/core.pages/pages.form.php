@@ -3,6 +3,10 @@ require_once('../core.php');
 require_once('../core.db.php');
 require_once('../core.kwt.php');
 
+$SID = session_id();
+if(empty($SID)) session_start();
+ifNotLoggedRedirect('/core/');
+
 $data = json_decode(file_get_contents("http://".$_SERVER['HTTP_HOST'].'/core/core.pages/pages.action.getitem.php?id='.$_GET['id']), true);
 $page_id = isset($_GET['id']) ? $_GET['id'] : -1;
 

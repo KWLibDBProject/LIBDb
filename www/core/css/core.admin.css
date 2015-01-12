@@ -63,6 +63,8 @@ legend {
     font-weight: bold;
 }
 
+/* warning fields */
+
 fieldset.warning {
     color: #8b0000;
 }
@@ -70,6 +72,20 @@ fieldset.warning > legend {
     color: #8b008b;
 }
 fieldset.warning > strong {
+    color: red;
+}
+
+div.warning, span.warning {
+    color: #8B0000;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+div.warning-small, span.warning-small {
+    color: #8B0000;
+    font-size: small;
+    margin-top: 5px;
+}
+div.warning strong, span.warning strong {
     color: red;
 }
 

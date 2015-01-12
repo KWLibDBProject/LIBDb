@@ -57,5 +57,9 @@ nal_table_norows;
 
 }
 
+$return .= <<<nal_table_end
+</table>
+nal_table_end;
+
 print $return;
 ?>

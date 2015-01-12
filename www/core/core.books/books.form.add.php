@@ -1,3 +1,9 @@
+<?php
+require_once('../core.php');
+$SID = session_id();
+if(empty($SID)) session_start();
+ifNotLoggedRedirect('/core/');
+?>
 <html>
 <head>
     <title>Сборники -- добавление</title>

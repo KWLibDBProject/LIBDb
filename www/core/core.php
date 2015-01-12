@@ -47,6 +47,7 @@ function Redirect($url)
 }
 
 /**
+ * Возвращает 1 если мы залогинены в системе.
  * @return int
  */
 function isLogged()
@@ -57,7 +58,19 @@ function isLogged()
     $we_are_logged = $we_are_logged && $_SESSION['u_id'] !== -1;
     $we_are_logged = $we_are_logged && isset($_COOKIE['u_libdb_logged']);
     return (int) $we_are_logged ;
+
+    //@todo : перенести в CONFIG.INI названия проверяемых в сессии и куках переменных
 }
+
+/**
+ * Если мы не залогинены (проверяем функцией isLogged() ) - переход по указанному url.
+ * @return void
+ * */
+function ifNotLoggedRedirect($path = "/")
+{
+    if (!isLogged()) { header('Location: '.$path); die(); }
+}
+
 
 /**
  * @param $str

@@ -6,7 +6,7 @@ require_once('../core.filestorage.php');
 
 $SID = session_id();
 if(empty($SID)) session_start();
-if (!isLogged()) header('Location: /core/');
+ifNotLoggedRedirect('/core/');
 
 $id = IsSet($_GET['id']) ? $_GET['id'] : -1;
 

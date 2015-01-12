@@ -3,7 +3,7 @@ require_once('core.php');
 
 $SID = session_id();
 if(empty($SID)) session_start();
-if (!isLogged()) header('Location: /core/');
+ifNotLoggedRedirect('/core/');
 
 ?>
 
