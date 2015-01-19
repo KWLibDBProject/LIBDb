@@ -8,6 +8,7 @@ $ref_name = 'books';
 
 $link = ConnectDB();
 
+$now = ConvertTimestampToDate();
 $q = array(
     'title'         => mysql_real_escape_string($_POST['book_title']),
     'date'          => mysql_real_escape_string($_POST['book_date']),
@@ -15,7 +16,8 @@ $q = array(
     'published'     => mysql_real_escape_string($_POST['is_book_ready']),
     'year'          => substr(mysql_real_escape_string($_POST['book_date']), 6, 4),
     'timestamp'     => ConvertDateToTimestamp(mysql_real_escape_string($_POST['book_date'])),
-    'stat_date_insert' => ConvertTimestampToDate()
+    'stat_date_insert'  =>  $now,
+    'stat_date_update'  =>  $now
 );
 
 $qstr = MakeInsert($q, $ref_name);

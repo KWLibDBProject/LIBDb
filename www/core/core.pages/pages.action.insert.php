@@ -10,6 +10,8 @@ $ref_name = 'staticpages';
 
 
 $link = ConnectDB();
+
+$now = ConvertTimestampToDate();
 $q = array(
     'alias'         => mysql_real_escape_string($_POST['alias']),
     'comment'       => mysql_real_escape_string($_POST['comment']),
@@ -19,7 +21,8 @@ $q = array(
     'content_en'    => mysql_real_escape_string($_POST['content_en']),
     'content_ru'    => mysql_real_escape_string($_POST['content_ru']),
     'content_uk'    => mysql_real_escape_string($_POST['content_uk']),
-    'stat_date_insert' => ConvertTimestampToDate()
+    'stat_date_insert'  =>  $now,
+    'stat_date_update'  =>  $now
 );
 $qstr = MakeInsert($q, $ref_name);
 

@@ -13,6 +13,7 @@ $table = $_POST['ref_name'];
 
 $link = ConnectDB();
 
+$now = ConvertTimestampToDate();
 $post = array(
     'name'          => mysql_real_escape_string($_POST['name']),
     'email'         => mysql_real_escape_string($_POST['email']),
@@ -21,7 +22,8 @@ $post = array(
     'password'      => mysql_real_escape_string($_POST['password']),
     'phone'         => mysql_real_escape_string($_POST['phone']),
     'md5password'   => md5(mysql_real_escape_string($_POST['password'])),
-    'stat_date_insert' => ConvertTimestampToDate()
+    'stat_date_insert'  =>  $now,
+    'stat_date_update'  =>  $now
 );
 
 $q = "SELECT `id` FROM $table WHERE `login` LIKE '$post[login]'";

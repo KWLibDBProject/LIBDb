@@ -8,6 +8,7 @@ $table = 'authors';
 
 $link = ConnectDB();
 
+$now = ConvertTimestampToDate();
 $q = array(
     'name_ru'       => trim($_POST['name_ru'], ' '),
     'name_en'       => trim($_POST['name_en'], ' '),
@@ -27,7 +28,8 @@ $q = array(
     /* самость */
     'selfhood'      => $_POST['selfhood'],
     /* stats */
-    'stat_date_insert' => ConvertTimestampToDate()
+    'stat_date_insert'  =>  $now,
+    'stat_date_update'  =>  $now
 );
 $qstr = MakeInsertEscaped( $q, $table );
 

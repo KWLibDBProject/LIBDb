@@ -255,6 +255,7 @@ class FileStorage extends FileStorageConfig {
     {
         if ($file_array['tmp_name'] != '')
         {
+            $now = ConvertTimestampToDate();
             $file_info = array(
                 'username'      => $file_array['name'],
                 'tempname'      => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\', ($file_array['tmp_name'])) : ($file_array['tmp_name']),
@@ -262,7 +263,8 @@ class FileStorage extends FileStorageConfig {
                 'relation'      => $related_id,
                 'filetype'      => $file_array['type'],
                 'collection'    => $collection,
-                'stat_date_insert' => ConvertTimestampToDate()
+                'stat_date_insert'  =>  $now,
+                'stat_date_update'  =>  $now
             );
             $file_info['internal_name'] = self::getInternalFileName($file_info);
 

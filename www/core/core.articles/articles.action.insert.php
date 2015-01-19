@@ -17,6 +17,7 @@ if (!IsSet($_POST['caller'])) {
 
 $link = ConnectDB();
 
+$now = ConvertTimestampToDate();
 $q = array(
     'udc'           => str_replace(" ", "", mysql_real_escape_string($_POST['udc'])),
     'title_en'      => mysql_real_escape_string($_POST['title_en']),
@@ -36,7 +37,8 @@ $q = array(
     'topic'         => mysql_real_escape_string($_POST['topic']),
     'pages'         => mysql_real_escape_string($_POST['pages']),
     'doi'           => mysql_real_escape_string($_POST['doi']),
-    'stat_date_insert' => ConvertTimestampToDate()
+    'stat_date_insert'  =>  $now,
+    'stat_date_update'  =>  $now
 );
 
 // теперь нам нужно вставить данные в БАЗУ
