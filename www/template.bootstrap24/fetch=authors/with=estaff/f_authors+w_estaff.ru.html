@@ -1,9 +1,16 @@
 <fieldset id="estuff">
     <legend>Редакционная коллегия</legend>
-    <!--    <div id="all-authors-as-estuff">
-              {%es_authors_list%}
-    </div>-->
-    <h2>Главный (научный)  редактор журнала</h2>
+
+    <?php if ( $this->key('estaff_honorary_editor') != '') { ?>
+
+    <h2>Почетный редактор</h2>
+    <ul class="no-marker">
+        {%estaff_honorary_editor%}
+    </ul>
+
+    <?php } ?>
+
+    <h2>Главный редактор журнала</h2>
     <ul class="no-marker">
         {%estaff_main_editor%}
     </ul>

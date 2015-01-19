@@ -103,6 +103,8 @@ switch ($fetch) {
                 /* HTML Template */
                 $inner_html = new kwt($filename.".html");
                 $inner_html->override( array (
+                    // почетный редактор = 7
+                    'estaff_honorary_editor'    => $template_engine->getAuthors_EStaffList(7),
                     // главный редактор = 5
                     'estaff_main_editor'        => $template_engine->getAuthors_EStaffList(5),
                     // замглавного редактора = 4

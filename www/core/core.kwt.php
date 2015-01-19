@@ -1,6 +1,6 @@
 <?php
 /*
-KarelWintersky's Template simple engine ver 1.2
+KarelWintersky's Template simple engine ver 1.4
 */
 
 class kwt
@@ -89,9 +89,46 @@ class kwt
         return $this->get();
     }
 
-    /* обертка, которая где-то (в ядре) вызывается, но функционально не нужна */
-    public function contentstart()
-    {}
+    /**
+     *
+     * проверяет значение ключа в массиве kwt::overrides[] и возвращает его значение
+     * Заготовка-костыль нормального парсера условных операций в шаблоне, см. todo в конце
+     * Пример применения, в шаблоне:
+     * <?php if ( $this->key('estaff_honorary_editor') != '') { ?>
+         <h2>Почесний редактор</h2>
+         <ul class="no-marker">
+           {%estaff_honorary_editor%}
+         </ul>
+       <?php } ?>
+    */
+    public function key($key)
+    {
+        return isset($key) ? $this->overrides[ $key ] : null;
+    }
 
 }
+/*
+@todo:
+Хочется парсинг вида:
+
+{% $('estaff_honorary_editor') != '' { %}
+...
+{% } %}
+
+вместо
+
+<?php if ( $this->overrides['estaff_honorary_editor'] != '' ) {  ?>
+        {%estaff_honorary_editor%}
+<?php } ?>
+
+но это если и делать - то в функции get_include_contents()
+нужно загрузить
+
+
+
+*/
+
+
+
+
 ?>

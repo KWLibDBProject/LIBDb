@@ -62,7 +62,6 @@ if ($ref_numrows > 0)
             'photo_id'      =>  $row['photo_id'],
             'is_link_disabled' => ($row['photo_id'] == -1) ? 'action-aal-no-photo' : ''
         ));
-        $tpl->contentstart();
         $return .= $tpl->getcontent();
     }
 } else {

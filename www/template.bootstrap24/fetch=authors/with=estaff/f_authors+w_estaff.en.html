@@ -1,8 +1,16 @@
 <fieldset id="estuff">
     <legend>Editorial staff</legend>
-    <!--    <div id="all-authors-as-estuff">
-              {%es_authors_list%}
-    </div>-->
+
+    <?php if ( $this->key('estaff_honorary_editor') != '') { ?>
+
+    <h2>Honorary editor</h2>
+    <ul class="no-marker">
+        {%estaff_honorary_editor%}
+    </ul>
+
+    <?php } ?>
+
+
     <h2>Editor-in-Chief</h2>
     <ul class="no-marker">
         {%estaff_main_editor%}
