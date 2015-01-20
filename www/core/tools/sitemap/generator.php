@@ -46,7 +46,7 @@ function getSiteMapDynamic( $rules , $mode = 'string')
 
 function getSiteMapStatic( $rules , $mode = 'string')
 {
-    global $HTTPHOST;
+    global $HTTPHOST, $NOW;
     $return = '';
     foreach ( $rules as $rule )
     {
@@ -56,8 +56,8 @@ function getSiteMapStatic( $rules , $mode = 'string')
             $tpl = new kwt('sitemap_template_each_url.xml');
             $tpl->override( array(
                 'location'  =>  $url,
-                'lastmod'   =>  isset( $each[ $rules['lastmod'] ] ) ? $each[ $rules['lastmod'] ] : $NOW,
-                'changefreq'    =>  $rules['period']
+                'lastmod'   =>  $NOW,
+                'changefreq'    =>  $rule['period']
             ));
             $return .= $tpl->getcontent() . "\r\n";
         } else {
@@ -66,7 +66,6 @@ function getSiteMapStatic( $rules , $mode = 'string')
     }
     return $return;
 }
-
 /* =============================== void MAIN(void) ========================== */
 
 $link = ConnectDB();
@@ -95,7 +94,7 @@ if ($sitemap_mode == 'xml') {
 $sitemap_final = <<<XML_SITEMAP
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    {$sitemap}</urlset>
+{$sitemap}</urlset>
 XML_SITEMAP;
 } else {
     $sitemap_final = $sitemap;
@@ -110,4 +109,7 @@ println("Sitemap file written.");
 
 
 CloseDB( $link );
+?>
 
+<hr>
+<a href="/core/"><<< Назад в административный раздел</a>

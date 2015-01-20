@@ -25,6 +25,9 @@ ifNotLoggedRedirect('/core/');
         });
     </script>
     <style>
+        html {
+            overflow-y: scroll;
+        }
         table {
             border: 1px dotted blue;
         }
@@ -136,13 +139,11 @@ ifNotLoggedRedirect('/core/');
                         <li class="hidden">
                             <button data-href="/files/storage/" class="admin-button-small action-is-href-blank">/files/storage/</button>
                         </li>
-                        <!--
-                        <li>
-                            <button data-href="list.statistics.php" class="admin-button-small actor-button" disabled>Статистика</button>
-                        </li>
-                        -->
                         <li>
                             <button data-href="/core/core.filestorage/filestorage.maintenance.recalc.php" class="admin-button-small action-is-href">Recalc filesizes</button>
+                        </li>
+                        <li>
+                            <button data-href="/core/tools/sitemap/generator.php" class="admin-button-small action-is-href">Rebuld sitemap</button>
                         </li>
                         <li class="menu-header">
                             Справочники:
