@@ -15,7 +15,8 @@ function floadpdf($filename)
 }
 
 /**
- *
+ * @param $filename
+ * @return string
  */
 function floadfile($filename)
 {
@@ -180,6 +181,12 @@ function returnTopicsOptionString($row, $lang, $withoutid)
     return $id.$title;
 }
 
+/**
+ * @param $row
+ * @param $lang
+ * @param $withoutid
+ * @return string
+ */
 function returnNewsOptionString($row, $lang, $withoutid) // © Thomas Moroh
 {
     $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
@@ -210,6 +217,10 @@ http://php.fnlist.com/date_time/mktime
 http://www.php.net/manual/ru/function.mktime.php
 */
 
+/**
+ * @param $str_date
+ * @return array
+ */
 function ConvertDateToArray($str_date)
 {
     if (function_exists('date_parse_from_format')) {
@@ -220,6 +231,11 @@ function ConvertDateToArray($str_date)
     return $date_as_array;
 }
 
+/**
+ * @param $str_date
+ * @param string $format
+ * @return int
+ */
 function ConvertDateToTimestamp($str_date, $format="d/m/Y")
 {
     if (function_exists('date_parse_from_format')) {
@@ -230,6 +246,10 @@ function ConvertDateToTimestamp($str_date, $format="d/m/Y")
     return mktime(12, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 }
 
+/**
+ * @param string $format
+ * @return string
+ */
 function ConvertTimestampToDate($format = '%Y-%m-%d %H:%M:%S')
 {
     return strftime($format, time());
@@ -240,9 +260,23 @@ Converts value (filesize) to human-friendly view like '5.251 M', 339.645 K or 4.
 $value : converted value
 $closeness : number of digits after dot, default 0
 */
+/**
+ * @param $value
+ * @param int $closeness
+ * @return string
+ */
 function ConvertToHumanBytes($value, $closeness = 0) {
     $filesizename = array(" Bytes", " K", " M", " G", " T", " P", " E", " Z", " Y");
     return $value ? round($value / pow(1024, ($i = (int)floor(log($value, 1024)))), $closeness) . $filesizename[$i] : '0 Bytes';
+}
+
+
+/**
+ * @param $string
+ */
+function println( $string )
+{
+    print($string . '<br/>' . "\r\n");
 }
 
 ?>
