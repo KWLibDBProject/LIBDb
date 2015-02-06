@@ -10,6 +10,10 @@ require_once('../core.kwt.php');
 //@Todo: переделать в версии 1.9R
 
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
+$lang = getAllowedValue( $lang, array(
+    'ru', 'en', 'ua', 'uk'
+));
+
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
 

@@ -112,4 +112,4 @@ CloseDB( $link );
 ?>
 
 <hr>
-<a href="/core/"><<< Назад в административный раздел</a>
+<a href="/core/"><<< BACK </a>

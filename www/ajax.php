@@ -6,7 +6,7 @@ require_once('core/core.db.php');
 require_once('frontend.php');
 require_once('template.bootstrap24.php');
 
-$actor = isset($_GET['actor']) ? $_GET['actor'] : '';
+$actor = isset($_GET['actor']) ? $_GET['actor'] : ''; // безопасный результат - проверка в switch
 $lang = isset($_GET['lang']) ? GetRequestLanguage($_GET['lang']) : 'en';
 
 $return = '';
@@ -54,7 +54,7 @@ switch ($actor) {
     }
     case 'get_books_as_optionlist_extended' : {
         $i = 1;
-        $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
+        $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
         $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";
         $r = mysql_query($q) or die($q);
         $n = @mysql_num_rows($r) ;
@@ -81,7 +81,7 @@ switch ($actor) {
     }
     case 'get_topics_as_option_list' : {
         /* загрузить категории и отдать JSON-объект для построения селекта */
-        $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
+        $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
 
         $data['data'] = LoadTopics($lang);
 
@@ -97,7 +97,7 @@ switch ($actor) {
     }
     case 'get_topics_as_optgroup_list' : {
         /* загрузить категории и отдать JSON-объект для построения селекта c группировкой */
-        $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
+        $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
 
         $data = LoadTopicsTree($lang, $withoutid);
         if ($data['data'][1]['value'] != -1 ) {

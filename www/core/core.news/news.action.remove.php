@@ -5,7 +5,7 @@ require_once('../core.kwt.php');
 require_once('../core.kwlogger.php');
 
 
-$id = $_GET["id"];
+$id = intval($_GET["id"]);
 
 $table = 'news';
 $result = array();

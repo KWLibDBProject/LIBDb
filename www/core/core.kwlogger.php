@@ -1,4 +1,5 @@
 <?php
+/* version 1.1 */
 require_once('config/config.logging.php');
 
 class kwLogger extends kwLoggerConfig

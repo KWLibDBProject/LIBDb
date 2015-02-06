@@ -6,7 +6,9 @@ require_once('../core.kwlogger.php');
 
 $link = ConnectDB();
 
-$ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'users';
+// $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'users';
+$ref_name = 'users';
+
 $ref_prompt = IsSet($_GET["prompt"]) ? ($_GET["prompt"]) : 'Работа с пользователем';
 
 $query = "SELECT * FROM $ref_name ";
@@ -68,4 +70,3 @@ RUA_NOTHING;
 }
 
 print($return);
-?>

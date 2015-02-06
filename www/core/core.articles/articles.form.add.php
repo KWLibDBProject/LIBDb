@@ -253,7 +253,8 @@ ifNotLoggedRedirect('/core/');
     <input type="hidden" name="caller" value="articles.new">
     <button class="button-large" id="button-exit"><strong>ОТМЕНИТЬ</strong></button>
     <button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
-    <a href="#" id="actor-scroll-top">Наверх страницы</a>
+
+    <button type="button" class="button-large float-right" id="actor-scroll-top"><strong>Наверх страницы</strong></button>
 </form>
 
 </body>

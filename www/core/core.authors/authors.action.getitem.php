@@ -7,8 +7,10 @@ require_once('../core.filestorage.php');
 // с помощью этого скрипта мы загружаем данные и проставляем их в поля формы редактирования, используя JS
 $link = ConnectDB();
 
-$ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'authors';
-$item_id = IsSet($_GET['id']) ? $_GET['id'] : -1;
+// $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'authors';
+$ref_name = 'authors';
+
+$item_id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($item_id != -1) {
     $query = "SELECT * FROM {$ref_name} WHERE id={$item_id}";

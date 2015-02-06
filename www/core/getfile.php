@@ -3,7 +3,7 @@ require_once('core.db.php');
 require_once('core.filestorage.php');
 
 // сделать возможность просмотра файла как по АЙДИ, так и по ЮЗЕРНЕЙМ
-$id = IsSet($_GET['id']) ? $_GET['id'] : Die();
+$id = IsSet($_GET['id']) ? intval($_GET['id']) : Die();
 
 $link = ConnectDB();
 

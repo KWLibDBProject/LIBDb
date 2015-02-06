@@ -5,13 +5,27 @@ require_once('../core.filestorage.php');
 
 // в $id может быть -1 - это значит, что пытаться удалять ничего не надо, а просто вернуть "ОК"
 
-$id = IsSet($_GET['id']) ? $_GET['id'] : -1; // айди удаляемого объекта
+$id = IsSet($_GET['id']) ? intval($_GET['id']) : -1; // айди удаляемого объекта
 if (empty($id)) {
     $id = -1;
 }
 
-$caller = IsSet($_GET['caller']) ? $_GET['caller'] : Die(); // таблица, в которой ОБНОВЛЯЕМ релейшен объекта
-$field = IsSet($_GET['subcaller']) ? $_GET['subcaller'] : Die(); // поле, в которое записываем -1 для таблицы
+// таблица, в которой ОБНОВЛЯЕМ релейшен объекта - собственно кто владелец файла?
+$owner = IsSet($_GET['caller']) ? $_GET['caller'] : Die();
+
+// проверка допустимости таблицы
+$owner = getAllowedValue( $owner , array(
+    'articles', 'authors', 'books'
+));
+
+// поле, в которое записываем -1 в таблице-владельце
+$field = IsSet($_GET['subcaller']) ? $_GET['subcaller'] : Die();
+
+// проверка допустимости поля
+$field = getAllowedValue( $field, array(
+    'pdfid', 'photo_id', 'file_cover', 'file_title_ru', 'file_title_en', 'file_toc_ru',
+    'file_toc_en'
+));
 
 if ($id != -1)
 {
@@ -21,7 +35,7 @@ if ($id != -1)
     $file_related_to = FileStorage::getRelById($id);
 
     /* update related table with -1 in field*/
-    $q = "UPDATE {$caller} SET {$field}=-1 WHERE id={$file_related_to}";
+    $q = "UPDATE {$owner} SET {$field}=-1 WHERE id={$file_related_to}";
     $a_result = mysql_query($q) or Die($q);
 
     FileStorage::removeFileById($id);
@@ -33,4 +47,3 @@ if ($id != -1)
 }
 
 print(json_encode($result));
-?>

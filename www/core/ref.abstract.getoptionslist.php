@@ -3,11 +3,13 @@ require_once('core.php');
 require_once('core.db.php');
 
 // отдает JSON объект для построения selector/options list на основе абстрактного справочника
-$ref = $_GET['ref'];
+$ref = (isset($_GET['ref'])) ? $_GET['ref'] : '';
+
+$ref = getAllowedValue( $ref, $CONFIG['allowed_abstract_refs'] );
+//@todo: Config::get('allowed', 'allowed_abstract_ref');
 
 if (!empty($ref))
 {
-    $ref = $_GET['ref'];
     $link = ConnectDB();
 
     $query = "SELECT * FROM $ref";
@@ -37,4 +39,3 @@ if (!empty($ref))
 }
 
 print(json_encode($data));
-?>

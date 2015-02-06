@@ -6,6 +6,11 @@ require_once('../core.kwt.php');
 
 
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
+
+$lang = getAllowedValue($lang, array(
+    'ru', 'en', 'uk', 'ua'
+));
+
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
 $link = ConnectDB();

@@ -2,7 +2,7 @@
 require_once('core.db.php');
 require_once('core.filestorage.php');
 
-$id = isset($_GET['id']) ? $_GET['id'] : -1;
+$id = isset($_GET['id']) ? intval($_GET['id']) : -1;
 
 $is_downloading = isset($_SERVER['HTTP_REFERER']);
 

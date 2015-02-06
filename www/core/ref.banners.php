@@ -25,6 +25,11 @@ $reference = 'banners'; // вообще то если ref не задано - р
 $return = '';
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'no-action';
+$action = getAllowedValue($action, array(
+    'insert', 'update', 'remove', 'load', 'list', 'row-list', 'no-action'
+));
+
+
 $link = ConnectDB();
 
 switch ($action) {

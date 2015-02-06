@@ -12,7 +12,7 @@ $tpl = new kwt('authors.form.tpl.html');
 if (isset($_GET['id'])) {
     // EDIT
     $over = array(
-        'author_id' => $_GET['id'],
+        'author_id' => intval($_GET['id']),
         'form_call_script' => 'authors.action.update.php',
         'submit_button_text' => 'СОХРАНИТЬ ИЗМЕНЕНИЯ',
         'page_title' => 'Авторы -- редактирование',

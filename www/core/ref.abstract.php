@@ -20,10 +20,24 @@ data_comment varchar 64
 require_once('core.db.php');
 
 $reference = isset($_GET['ref']) ? $_GET['ref'] : ''; // вообще то если ref не задано - работать не с чем
+
+$reference = getAllowedRef( $reference , $CONFIG['allowed_abstract_refs']);
+
+
+
 $return = '';
 
 if (isset($_GET['ref'])) {
+
     $action = isset($_GET['action']) ? $_GET['action'] : 'no-action';
+    /*
+    эта проверка бессмысленна - у нас и так switch/case по действиям
+    $action = getAllowedValue($action, array(
+        'get-comments', 'insert', 'update', 'remove', 'load', 'advlist', 'list', 'no-action'
+    ));
+    */
+
+
     $link = ConnectDB();
 
     switch ($action) {
@@ -63,7 +77,7 @@ WHERE TABLE_NAME = '{$reference}'";
         } // case 'insert'
         case 'update':
         {
-            $id = $_GET['id'];
+            $id = intval($_GET['id']);
             $q = array(
                 'data_int' => mysql_real_escape_string($_GET['data_int']),
                 'data_str' => mysql_real_escape_string($_GET['data_str']),
@@ -80,7 +94,7 @@ WHERE TABLE_NAME = '{$reference}'";
         } // case 'update
         case 'remove':
         {
-            $id = $_GET['id'];
+            $id = intval($_GET['id']);
             $q = "DELETE FROM $reference WHERE (id=$id)";
             if ($r = mysql_query($q)) {
                 // запрос удаление успешен
@@ -97,7 +111,7 @@ WHERE TABLE_NAME = '{$reference}'";
         } // case 'remove
         case 'load':
         {
-            $id = $_GET['id'];
+            $id = intval($_GET['id']);
             $query = "SELECT * FROM $reference WHERE id=$id";
             $res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$query);
             $ref_numrows = mysql_num_rows($res);

@@ -7,6 +7,11 @@ require_once('../core.db.php');
 // differences is returned data format. @todo: optimise .js & remove this
 
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
+
+$lang = getAllowedValue( $lang, array(
+    'ru', 'en', 'ua', 'uk'
+));
+
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
 

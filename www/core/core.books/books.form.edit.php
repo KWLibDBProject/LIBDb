@@ -8,7 +8,7 @@ $SID = session_id();
 if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
 
-$id = IsSet($_GET['id']) ? $_GET['id'] : -1;
+$id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($id != -1)
 {

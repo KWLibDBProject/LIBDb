@@ -7,9 +7,17 @@ $link = ConnectDB();
 
 $ref_name = 'news';
 
-$year = isset($_GET['year']) ? "AND date_year={$_GET['year']} " : '';
+$year = isset($_GET['year'])
+    ? intval($_GET['year'])
+    : '';
 
-$query = "SELECT id, title_ru, date_add FROM $ref_name WHERE 1=1 ";
+$year = ($year != 0)
+    ? "AND date_year= {$year} "
+    : '';
+// ну и зачем я это делал если год нигде не используется?
+// кажется он использовался в запросе, но... где, когда?
+
+$query = "SELECT id, title_ru, date_add FROM {$ref_name} WHERE 1=1 ";
 $res = mysql_query($query) or die($query);
 $ref_numrows = @mysql_num_rows($res) ;
 

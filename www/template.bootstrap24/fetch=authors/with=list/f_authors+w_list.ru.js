@@ -8,7 +8,7 @@ var siteLanguage = '&lang=ru';
 // load data
 var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist'+siteLanguage);
 
-BuildSelector('letter', lettersList, 0);
+BuildSelector('letter', lettersList, 'Выбрать...', 0);
 
 url_base = "ajax.php?actor=load_authors_selected_by_letter"+siteLanguage;
 url_all = "ajax.php?actor=load_authors_selected_by_letter&letter=0"+siteLanguage;

@@ -10,7 +10,7 @@ if (!IsSet($_GET['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 } else {
     $table = $_GET['ref_name'];
-    $id = $_GET["id"];
+    $id = intval($_GET["id"]);
     $link = ConnectDB();
 
     $qt = "SELECT COUNT(`topic`) as `tcount` FROM articles WHERE `topic`=$id";

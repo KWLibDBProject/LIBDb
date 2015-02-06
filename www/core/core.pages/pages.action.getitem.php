@@ -7,7 +7,7 @@ require_once('../core.kwt.php');
 $link = ConnectDB();
 
 $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'staticpages';
-$item_id = IsSet($_GET['id']) ? $_GET['id'] : -1;
+$item_id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($item_id != -1) {
     $query = "SELECT * FROM $ref_name WHERE id=$item_id";

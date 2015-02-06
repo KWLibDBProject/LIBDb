@@ -103,6 +103,7 @@
                         }
                         return bValid;
                     }).show();
+            bindScrollTopAction("#actor-scroll-top");
         });
     </script>
 </head>
@@ -219,6 +220,8 @@
     </fieldset>
     <hr>
     <button type="submit" class="button-large" ><strong>{%submit_button_text%}</strong></button>
+
+    <button type="button" class="button-large float-right" id="actor-scroll-top"><strong>Наверх страницы</strong></button>
 </form>
 
 </body>

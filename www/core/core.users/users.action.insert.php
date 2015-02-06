@@ -9,7 +9,7 @@ if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 }
-$table = $_POST['ref_name'];
+$table = 'users';
 
 $link = ConnectDB();
 
@@ -25,6 +25,11 @@ $post = array(
     'stat_date_insert'  =>  $now,
     'stat_date_update'  =>  $now
 );
+// повысить до админа нельзя, по крайней мере отсюда
+$post['permissions'] =
+    ($post['permissions'] > 254)
+        ? 254
+        : $post['permissions'];
 
 $q = "SELECT `id` FROM $table WHERE `login` LIKE '$post[login]'";
 $r = mysql_query($q,$link);

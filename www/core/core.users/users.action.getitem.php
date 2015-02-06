@@ -8,9 +8,10 @@ if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 
 $link = ConnectDB();
 
-$ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'users';
+// $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'users';
+$ref_name = 'users';
 
-$item_id = isset($_GET['id']) ? $_GET['id'] : die('no id requested');
+$item_id = isset($_GET['id']) ? intval($_GET['id']) : die('no id requested');
 
 $query = "SELECT * FROM $ref_name WHERE id=$item_id";
 
@@ -19,11 +20,6 @@ $ref_numrows = mysql_num_rows($res);
 
 if ($ref_numrows != 0) {
     $row = mysql_fetch_assoc($res);
-    /* foreach ($row as $key=>$field)
-    {
-        $newrow [$key] = (empty($field)) ? '&nbsp;' : $field;
-    }*/
-
     $data['data'] = $row;
     $data['error'] = 0;
     $data['message'] = '';
@@ -35,4 +31,3 @@ if ($ref_numrows != 0) {
 CloseDB($link);
 
 print(json_encode($data));
-?>

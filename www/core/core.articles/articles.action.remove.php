@@ -6,7 +6,7 @@ require_once('../core.filestorage.php');
 
 $result['message'] = '';
 $result['error'] = 0;
-$article_id = IsSet($_GET['id']) ? $_GET['id'] : Die("No id!");
+$article_id = IsSet($_GET['id']) ? intval($_GET['id']) : Die("No id!");
 
 $link = ConnectDB();
 

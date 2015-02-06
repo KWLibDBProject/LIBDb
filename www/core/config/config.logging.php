@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Задает конфигурацию модуля kwLogger
+ */
 class kwLoggerConfig
 {
     // mysql-table for logging event data

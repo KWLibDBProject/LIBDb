@@ -5,7 +5,7 @@ require_once('../core.kwt.php');
 require_once('../core.filestorage.php');
 
 // а) удалить автора, если у него есть статьи НЕЛЬЗЯ
-$author_id = $_GET["id"];
+$author_id = intval($_GET["id"]);
 
 $table = 'authors';
 $result = array();

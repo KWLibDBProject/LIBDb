@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Задает конфигурацию модуля FileStorage
+ */
 class FileStorageConfig
 {
     public static $config = array(

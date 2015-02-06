@@ -11,7 +11,7 @@ if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 }
 
-$id = $_POST['id'];
+$id = intval($_POST['id']);
 $table = 'users';
 
 $link = ConnectDB();
@@ -26,8 +26,13 @@ $post = array(
     'md5password'   => md5(trim(mysql_real_escape_string($_POST['password']))),
     'stat_date_update' => ConvertTimestampToDate()
 );
+// нельзя создать админа
+$post['permissions'] =
+    ($post['permissions'] > 254)
+    ? 254
+    : $post['permissions'];
 
-$q = "SELECT `id` FROM $table WHERE `login` LIKE '$post[login]'";
+$q = "SELECT `id` FROM {$table} WHERE `login` LIKE '$post[login]'";
 $r = mysql_query($q, $link);
 
 if (mysql_errno($link)==0)

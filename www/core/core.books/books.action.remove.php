@@ -6,6 +6,8 @@ require_once('../core.kwt.php');
 
 // удалить сборник, если в нем есть статьи НЕЛЬЗЯ
 
+// @todo: проверка прав на удаление (в сессии ли мы и кто мы?)
+
 $table = 'books';
 
 // возможно, переделать
@@ -14,7 +16,7 @@ if (!IsSet($_GET['id'])) {
 } else {
     $table = 'books';
     $link = ConnectDB();
-    $id = $_GET["id"]; // айди удаляемой книжки
+    $id = intval($_GET["id"]); // айди удаляемой книжки
 
     $qt = "SELECT COUNT(book) as bcount FROM articles WHERE book=$id";
 

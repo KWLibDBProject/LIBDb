@@ -10,13 +10,13 @@ ifNotLoggedRedirect('/core/');
 
 if (isset($_GET['id']))
 {
-    $id = $_GET['id'];
+    $id = intval($_GET['id']);
 } else {
     Redirect('/core/ref.articles.show.php');
 }
 
 $link = ConnectDB();
-$query = "select * from articles where id=$id"; // получаем СТАТЬЮ
+$query = "select * from articles where id= {$id}"; // получаем СТАТЬЮ
 
 $res_article = mysql_query($query) or die("Невозможно получить содержимое статьи! ".$query);
 
@@ -219,6 +219,15 @@ CloseDB($link);
                 window.location.href="articles.action.remove.php?id="+id;
             });
 
+            /*
+            $("#actor-scroll-top").on('click', function(){
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                return false;
+            });
+            */
+
+            bindScrollTopAction("#actor-scroll-top");
+
         });
     </script>
 </head>
@@ -370,8 +379,8 @@ CloseDB($link);
     <button type="submit" class="button-large" id="button-save"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
     <button type="button" class="button-large" id="button-delete" name="<?php echo $id; ?>"><strong>УДАЛИТЬ СТАТЬЮ</strong></button>
     <button type="button" class="button-large button-exit"><strong>ОТМЕНИТЬ</strong></button>
-    <a href="#" id="actor-scroll-top">Наверх страницы</a>
+
+    <button type="button" class="button-large float-right" id="actor-scroll-top"><strong>Наверх страницы</strong></button>
 </form>
 
 </body>
-<

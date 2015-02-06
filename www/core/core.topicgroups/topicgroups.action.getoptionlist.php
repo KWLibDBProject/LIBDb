@@ -5,6 +5,11 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 
 $lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
+
+$lang = getAllowedValue($lang, array(
+    'ru', 'en', 'uk', 'ua'
+));
+
 $withoutid = isset($_GET['id']) ? 1 : 0;
 
 $link = ConnectDB();
@@ -42,6 +47,5 @@ if ($ref_numrows>0)
 
 CloseDB($link);
 
-print(json_encode($data));
 //print('<pre>'.print_r($data, true).'</pre>');
-?>
+print(json_encode($data));

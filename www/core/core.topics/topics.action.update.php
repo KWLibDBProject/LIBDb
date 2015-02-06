@@ -8,7 +8,7 @@ if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 }
 
-$id = $_POST['id'];
+$id = intval($_POST['id']);
 
 $link = ConnectDB();
 

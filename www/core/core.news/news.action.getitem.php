@@ -4,8 +4,10 @@ require_once('../core.db.php');
 
 $link = ConnectDB();
 
-$ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'news';
-$item_id = IsSet($_GET['id']) ? $_GET['id'] : -1;
+// $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'news';
+
+$ref_name = 'news';
+$item_id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($item_id != -1) {
     $query = "SELECT * FROM $ref_name WHERE id=$item_id";

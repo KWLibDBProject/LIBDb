@@ -5,7 +5,7 @@ require_once('../core.kwt.php');
 
 $link = ConnectDB();
 
-$ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'staticpages';
+$ref_name = 'staticpages';
 
 $query = "SELECT * FROM {$ref_name}";
 $res = mysql_query($query) or die($query);

@@ -1,11 +1,19 @@
 <?php
 /* ------------------------------- Служебные функции ----------------------------- */
 
+/**
+ * @param $data
+ */
 function debug($data)
 {
     print('<pre>'.print_r($data, true).'</pre>');
 }
 
+/**
+ *
+ * @param $request_string
+ * @return string       -- sql-безопасный результат
+ */
 function GetRequestLanguage($request_string)
 {
     $lang = 'en';
@@ -21,6 +29,9 @@ function GetRequestLanguage($request_string)
 }
 
 /* получение языка сайта из куки  */
+/**
+ * @return string
+ */
 function GetSiteLanguage()
 {
     $lang = 'en';
@@ -45,6 +56,11 @@ $TRANSLATED_MONTHS = array(
     'ru' => array("", "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"),
     'uk' => array("", "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"),
 );
+/**
+ * @param $date_as_string
+ * @param $lang
+ * @return string
+ */
 function ConvertDateByLang($date_as_string, $lang)
 {
     // в PHP младше 5.2 date_parse() не определена. Смотри stewarddb.
@@ -63,6 +79,10 @@ function ConvertDateByLang($date_as_string, $lang)
 
 // возврат массива "первых букв" для списка авторов для указанного языка
 // используется в ajax.php
+/**
+ * @param $lang
+ * @return mixed
+ */
 function LoadFirstLettersForSelector($lang)
 {
     $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0 ORDER BY name_{$lang}";
@@ -87,6 +107,11 @@ function LoadFirstLettersForSelector($lang)
 
 /* ---------------------------- Функции загрузки данных ---------------------------*/
 /* функция загрузки статических страниц из БД */
+/**
+ * @param $alias
+ * @param $lang
+ * @return array
+ */
 function LoadStaticPage($alias, $lang)
 {
     $return = array();
@@ -107,6 +132,11 @@ function LoadStaticPage($alias, $lang)
 }
 
 /* загружает из базы информацию об одной рубрике в зависимости от языка */
+/**
+ * @param $id
+ * @param $lang
+ * @return string
+ */
 function LoadTopicInfo($id, $lang)
 {
     $q = "SELECT id, title_{$lang} AS title FROM topics WHERE id={$id}";
@@ -122,6 +152,10 @@ function LoadTopicInfo($id, $lang)
 }
 
 /* загружает из базы рубрики, отдает ассоциативный массив вида [id -> title] */
+/**
+ * @param $lang
+ * @return array
+ */
 function LoadTopics($lang)
 {
     $q = "SELECT id, title_{$lang} AS title FROM topics ORDER BY title_{$lang}";
@@ -138,6 +172,11 @@ function LoadTopics($lang)
 }
 
 /* загружает из базы рубрики в древовидном представлении, отдает ассоциативный массив вида [id -> title] */
+/**
+ * @param $lang
+ * @param int $withoutid
+ * @return array
+ */
 function LoadTopicsTree($lang, $withoutid=1)
 {
     $withoutid = $withoutid || 1;
@@ -193,6 +232,9 @@ ORDER BY topicgroups.display_order, topics.title_{$lang}
 }
 
 /* загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом */
+/**
+ * @return array
+ */
 function LoadBooks()
 {
     $all_books = array();
@@ -214,6 +256,9 @@ ORDER BY books.title";
 }
 
 /* загружает массив отображаемых баннеров из базы */
+/**
+ * @return array|null
+ */
 function LoadBanners()
 {
     $ret = array();
@@ -231,6 +276,11 @@ function LoadBanners()
 
 /* возвращает для override-переменной последние $count новостей для правого блока (под сборниками): */
 /* отдает массив [id новости] => [id, title, date] */
+/**
+ * @param $lang
+ * @param int $count
+ * @return array
+ */
 function LoadLastNews($lang, $count=2)
 {
     $ret = array();
@@ -249,6 +299,10 @@ function LoadLastNews($lang, $count=2)
 }
 
 /* возвращает массив с информацией об указанном сборнике */
+/**
+ * @param $id
+ * @return array
+ */
 function LoadBookInfo($id)
 {
     $query = "SELECT books.title AS book_title, books.year AS book_year, file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en FROM books WHERE id={$id}";
@@ -262,6 +316,9 @@ function LoadBookInfo($id)
 }
 
 /* возвращает асс.массив из базы с информацией о ПОСЛЕДНЕМ опубликованном сборнике или {} если нет такого */
+/**
+ * @return array
+ */
 function LoadLastBookInfo()
 {
     $r = mysql_query("SELECT * FROM books WHERE published=1 ORDER BY timestamp desc LIMIT 1");
@@ -274,6 +331,11 @@ function LoadLastBookInfo()
 }
 
 /* построение универсального запроса WARNING: GOD OBJECT */
+/**
+ * @param $get
+ * @param $lang
+ * @return string
+ */
 function BuildQuery($get, $lang)
 {
     $q_select = " SELECT DISTINCT
@@ -326,12 +388,26 @@ topics.deleted=0 {$query_show_published} ";
 
     /* Extended search conditions */
     $q_extended = '';
-    /*@todo: critical: intval() this values: possible SQL injection and script crush! */
-    $q_extended .= (IsSet($get['book']) && ($get['book'] != 0))          ? " AND articles.book = {$get['book']} " : "";
-    $q_extended .= (IsSet($get['topic']) && ($get['topic'] != 0))        ? " AND articles.topic = {$get['topic']}" : "";
-    $q_extended .= (IsSet($get['letter']) && ($get['letter'] != '0'))    ? " AND authors.name_{$lang} LIKE '{$get['letter']}%' " : "";
-    $q_extended .= (IsSet($get['aid']) && ($get['aid'] != 0))            ? " AND authors.id = {$get['aid']} " : "";
-    $q_extended .= (IsSet($get['year']) && ($get['year'] != 0))          ? " AND books.year = {$get['year']} " : "";
+
+    $q_extended .= (IsSet($get['book']) && ($get['book'] != 0))
+        ? " AND articles.book = " . intval($get['book'])
+        : "";
+
+    $q_extended .= (IsSet($get['topic']) && ($get['topic'] != 0))
+        ? " AND articles.topic = " . intval($get['topic'])
+        : "";
+
+    $q_extended .= (IsSet($get['letter']) && ($get['letter'] != '0'))
+        ? " AND authors.name_{$lang} LIKE '" . substr($get['letter'], 0, 6) ."%' "
+        : "";
+
+    $q_extended .= (IsSet($get['aid']) && ($get['aid'] != 0))
+        ? " AND authors.id = " . intval($get['aid'])
+        : "";
+
+    $q_extended .= (IsSet($get['year']) && ($get['year'] != 0))
+        ? " AND books.year = " . intval($get['year'])
+        : "";
 
     /* Expert search conditions */
     $q_expert = '';
@@ -342,9 +418,17 @@ topics.deleted=0 {$query_show_published} ";
         /* пример: AND (articles.keywords_en LIKE '%robot%' OR ... OR ... )*/
         /*@todo: critical: экранировать значения: possible SQL injection and script crush! */
 
-        $q_expert .= ($get['expert_name'] != '')             ? " AND authors.name_{$lang} LIKE '{$get['expert_name']}%' " : "";
-        $q_expert .= ($get['expert_udc'] != '')              ? " AND articles.udc LIKE '%{$get['expert_udc']}%' " : "";
-        $q_expert .= ($get['expert_add_date'] != '')    ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' " : "";
+        $q_expert .= ($get['expert_name'] != '')
+            ? " AND authors.name_{$lang} LIKE '" . $get['expert_name'] . "%' "
+            : "";
+
+        $q_expert .= ($get['expert_udc'] != '')
+            ? " AND articles.udc LIKE '%{$get['expert_udc']}%' "
+            : "";
+
+        $q_expert .= ($get['expert_add_date'] != '')
+            ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' "
+            : "";
 
         /* это оптимизированная достраивалка запроса на основе множественных keywords */
         $keywords = explode(' ', $get['expert_keywords']);
@@ -363,6 +447,11 @@ topics.deleted=0 {$query_show_published} ";
 
 /* Загрузка статей по сложному запросу ($with_email - передается в LoadAuthorsByArticle, который отдает МАССИВ авторов по статье) */
 /* ВАЖНО: если мы получили ОДНОГО автора - его можно будет получить вызовом: reset(...) */
+/**
+ * @param $get
+ * @param $lang
+ * @return array
+ */
 function LoadArticles_ByQuery($get, $lang)
 {
     $query = BuildQuery($get, $lang);
@@ -383,6 +472,10 @@ function LoadArticles_ByQuery($get, $lang)
 }
 
 /* загружает данные для списка новостей [id] => [id => '', title => '', date => ''] */
+/**
+ * @param $lang
+ * @return null|string
+ */
 function LoadNewsListTOC($lang)
 {
     $ret = '';
@@ -397,6 +490,11 @@ function LoadNewsListTOC($lang)
 }
 
 /* загружает в асс.массив новость с указанным id, usable: используется для pure-вставки в шаблон */
+/**
+ * @param $id
+ * @param $lang
+ * @return array|null|string
+ */
 function LoadNewsItem($id, $lang)
 {
     $ret = '';
@@ -411,6 +509,11 @@ function LoadNewsItem($id, $lang)
 }
 
 /* загружает информацию об авторе в ассциативный массив */
+/**
+ * @param $id
+ * @param $lang
+ * @return string
+ */
 function LoadAuthorInformation_ById($id, $lang)
 {
     $ret = '';
@@ -430,6 +533,11 @@ function LoadAuthorInformation_ById($id, $lang)
 }
 
 /* возвращает список статей, которые написал указанный ($id) автор, но только в опубликованных сборниках */
+/**
+ * @param $id
+ * @param $lang
+ * @return array
+ */
 function LoadArticles_ByAuthor($id, $lang)
 {
     $ret = array();
@@ -459,6 +567,13 @@ ORDER BY add_date
 // значение буквы по умолчанию '0', что означает ВСЕ авторы
 // функция используется в аякс-ответах, в выгрузке полного списка авторов и выгрузке
 // списка авторов по первой букве
+/**
+ * @param $letter
+ * @param $lang
+ * @param string $is_es
+ * @param $selfhood
+ * @return array
+ */
 function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 {
     $authors = array();
@@ -471,9 +586,11 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
     $where_es = ($is_es != 'no') ? ' AND is_es=1 ' : '';
 
     // optional parameter selfhood (for extended estuff)
-    $where_selfhood = ($selfhood != -1 ) ? " AND selfhood=$selfhood " : " ";
+    $where_selfhood = ($selfhood != -1 )
+        ? " AND selfhood= " . intval($selfhood)
+        : " ";
 
-    $order = "ORDER BY authors.name_{$lang}";
+    $order = " ORDER BY authors.name_{$lang}";
 
     $q = "SELECT id, email,
     name_{$lang} AS name,
@@ -498,6 +615,11 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 
 
 // возвращает базовую информацию о статье как асс.массив (single-версия LoadArticlesByQuery() )
+/**
+ * @param $id
+ * @param $lang
+ * @return mixed
+ */
 function LoadArticleInformation_ById($id, $lang)
 {
     $ret = reset(LoadArticles_ByQuery(array('article_id' => $id ) , $lang));
@@ -507,6 +629,11 @@ function LoadArticleInformation_ById($id, $lang)
 
 // возвращает список авторов, участвовавших в создании статьи - как асс.массив c учетом языка!
 // вызывается из LoadArticles_ByQuery (в основном) и единоразово из template::вывод авторов, писавших статью (по шаблону вывода)
+/**
+ * @param $id
+ * @param $lang
+ * @return array
+ */
 function LoadAuthors_ByArticle($id, $lang)
 {
     $q = "SELECT authors.id AS author_id, name_{$lang} AS author_name, title_{$lang} AS author_title , email AS author_email FROM authors, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id ORDER BY name_{$lang}";

@@ -3,9 +3,15 @@ require_once('core.php');
 require_once('config/config.filestorage.php');
 require_once('core.kwlogger.php');
 
+/**
+ *
+ */
 class FileStorage extends FileStorageConfig {
 
     /* возвращает blob-строку пустого PDF-файла */
+    /**
+     * @return string
+     */
     private  static function __getEmptyPDF()
     {
         $data = "JVBERi0xLjQNCjEgMCBvYmoNCjw8IC9UeXBlIC9DYXRhbG9nIC9PdXRsaW5lcyAyIDAgUiAvUGFnZXMgMyAwIFIgPj4NCmVuZG9iag0KMiAwIG9iag0KPDwgL1R5cGUgT3V0bGluZXMgL0NvdW50IDAgPj4NCmVuZG9iag0KMyAwIG9iag0KPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFs0IDAgUl0gL0NvdW50IDEgPj4NCmVuZG9iag0KNCAwIG9iag0KPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAzIDAgUiAvTWVkaWFCb3ggWzAgMCA2MTIgNzkyXSAvQ29udGVudHMgNSAwIFIgL1Jlc291cmNlcyA8PCAvUHJvY1NldCA2IDAgUiA+PiA+Pg0KZW5kb2JqDQo1IDAgb2JqDQo8PCAvTGVuZ3RoIDM1ID4+DQpzdHJlYW0NCoUgUGFnZS1tYXJraW5nIG9wZXJhdG9ycyCFDQplbmRzdHJlYW0gDQplbmRvYmoNCjYgMCBvYmoNClsvUERGXQ0KZW5kb2JqDQp4cmVmDQowIDcNCjAwMDAwMDAwMDAgNjU1MzUgZiANCjAwMDAwMDAwMDkgMDAwMDAgbiANCjAwMDAwMDAwNzQgMDAwMDAgbiANCjAwMDAwMDAxMTkgMDAwMDAgbiANCjAwMDAwMDAxNzYgMDAwMDAgbiANCjAwMDAwMDAyOTUgMDAwMDAgbiANCjAwMDAwMDAzNzYgMDAwMDAgbiANCnRyYWlsZXIgDQo8PCAvU2l6ZSA3IC9Sb290IDEgMCBSID4+DQpzdGFydHhyZWYNCjM5NA0KJSVFT0Y=";
@@ -13,6 +19,9 @@ class FileStorage extends FileStorageConfig {
     }
 
     /* возвращает blob-строку картинки-плашки "нет изображения" */
+    /**
+     * @return string
+     */
     private  static function __getEmptyIMG()
     {
         // base64-строка для плашки "нет изображения" 240х180
@@ -45,18 +54,29 @@ class FileStorage extends FileStorageConfig {
     }
 
     /* возвращает имя таблицы хранилища */
+    /**
+     * @return mixed
+     */
     private static function getSQLTable()
     {
         return parent::$config['table'];
     }
 
     /* возвращает абсолютный путь до файла, _имя_ которого передано параметром */
+    /**
+     * @param $filename
+     * @return string
+     */
     private static function getRealFileName($filename)
     {
         return $_SERVER['DOCUMENT_ROOT'].parent::$config['path'].$filename;
     }
 
     /* построение внутреннего имени на основе информации о файле */
+    /**
+     * @param $fileinfo
+     * @return string
+     */
     private static function getInternalFileName($fileinfo)
     {
         $a = explode('/',$fileinfo['filetype']);
@@ -68,6 +88,10 @@ class FileStorage extends FileStorageConfig {
     }
 
     /* выгрузка файла из базы */
+    /**
+     * @param $id
+     * @return null
+     */
     private static function __getFileContent_db($id)
     {
         $table = self::getSQLTable();
@@ -87,6 +111,10 @@ class FileStorage extends FileStorageConfig {
     }
 
     /* выгрузка файла из хранилища на диске */
+    /**
+     * @param $id
+     * @return null|string
+     */
     private static function __getFileContent_disk($id)
     {
         $table = self::getSQLTable();
@@ -114,6 +142,11 @@ class FileStorage extends FileStorageConfig {
     }
 
     /* добавляет контент файла в хранилище */
+    /**
+     * @param $fileinfo
+     * @param $fileid
+     * @return int|resource
+     */
     private function appendFileContent($fileinfo, $fileid)
     {
         $file_content = floadfile($fileinfo['tempname']);
@@ -144,6 +177,10 @@ class FileStorage extends FileStorageConfig {
     /* ========================== PUBLIC SECTION ======================= */
 
     /* возвращает пустой файл для переданного Mime-типа */
+    /**
+     * @param $type
+     * @return string
+     */
     public static function getEmptyFile($type)
     {
         $ret = '';
@@ -162,6 +199,10 @@ class FileStorage extends FileStorageConfig {
 
 
     /* WRAPPER: возвращает контент файла по указанному идентификатору */
+    /**
+     * @param $id
+     * @return null|string
+     */
     public static function getFileContent($id)
     {
         $ret = '';
@@ -175,6 +216,10 @@ class FileStorage extends FileStorageConfig {
 
     /* ========================  Работа со взаимосвязями =================== */
     /* * @returns filestorage[rel]-> collection */
+    /**
+     * @param $rel
+     * @return int
+     */
     public static function getCollectionByRel($rel)
     {
         $table = self::getSQLTable();
@@ -197,6 +242,10 @@ class FileStorage extends FileStorageConfig {
      * коллекции (books, authors, articles) на значение -1. Следом нужно удалить
      * файл из хранилища соответствующим вызовом.
     */
+    /**
+     * @param $id
+     * @return int
+     */
     public static function getRelById($id)
     {
         $table = self::getSQLTable();
@@ -215,6 +264,10 @@ class FileStorage extends FileStorageConfig {
     /* =========================== ИНФОРМАЦИЯ О ФАЙЛЕ ======================== */
 
     /* возвращает служебную информацию по файлу из хранилища */
+    /**
+     * @param $id
+     * @return array|null
+     */
     public static function getFileInfo($id)
     {
         $table = self::getSQLTable();
@@ -251,6 +304,13 @@ class FileStorage extends FileStorageConfig {
      *
      * возвращает id файла, вставленного в базу или NULL
     */
+    /**
+     * @param $file_array
+     * @param $related_id
+     * @param $collection
+     * @param $related_field_in_table
+     * @return int|null
+     */
     public static function addFile($file_array, $related_id, $collection, $related_field_in_table)
     {
         if ($file_array['tmp_name'] != '')
@@ -295,6 +355,10 @@ class FileStorage extends FileStorageConfig {
 
     /*  удаляет из хранилища (таблицы) файл по соответствующему ID
      * (и только - за изменения соотв. relations отвечают вызывающие скрипты) */
+    /**
+     * @param $id
+     * @return int|resource
+     */
     public static function removeFileById($id)
     {
         $table = self::getSQLTable();
@@ -324,6 +388,11 @@ class FileStorage extends FileStorageConfig {
 
     /* удаляет файл из хранилища по заданному relation & collection.
      * Используется в authors.action.remove - возможно избыточна */
+    /**
+     * @param $rel
+     * @param $collection
+     * @return int|resource
+     */
     public static function removeFileByRel($rel, $collection)
     {
         $table = self::getSQLTable();
@@ -354,6 +423,9 @@ class FileStorage extends FileStorageConfig {
     }
 
     /* =========================== MAINTENANCE =========================== */
+    /**
+     * @param $id
+     */
     public static function statUpdateDownloadCounter($id)
     {
         $table = self::getSQLTable();
@@ -364,6 +436,10 @@ class FileStorage extends FileStorageConfig {
     }
 
     /* static function for file icons */
+    /**
+     * @param $type
+     * @return string
+     */
     public static function getIconFile($type)
     {
         $path = '/files/';
@@ -383,6 +459,9 @@ class FileStorage extends FileStorageConfig {
     }
 
     /* пересчет размеров файлов в базе (используется при пересжатии PDF-ок на стороннем сервисе */
+    /**
+     * @return array
+     */
     public static function recalcFilesSize()
     {
         $result = array(

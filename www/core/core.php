@@ -279,4 +279,35 @@ function println( $string )
     print($string . '<br/>' . "\r\n");
 }
 
+/**
+ * @todo comment
+ * @param $data
+ * @param $allowed_values_array
+ */
+function getAllowedRef( $data, $allowed_values_array )
+{
+    $key = array_search($data, $allowed_values_array);
+    return ($key !== FALSE )
+        ? $allowed_values_array[ $key ]
+        : FALSE;
+}
+
+/**
+ * Проверяет заданную переменную на допустимость (на основе массива допустымых значений)
+ * и если находит - возвращает её. В противном случае возвращает NULL.
+ * @param $data
+ * @param $allowed_values_array
+ */
+function getAllowedValue( $data, $allowed_values_array )
+{
+    if (empty($data)) {
+        return NULL;
+    } else {
+        $key = array_search($data, $allowed_values_array);
+        return ($key !== FALSE )
+            ? $allowed_values_array[ $key ]
+            : NULL;
+    }
+}
+
 ?>

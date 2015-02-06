@@ -10,7 +10,7 @@ if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 if (!IsSet($_GET['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 } else {
-    $table = $_GET['ref_name'];
+    $table = 'users';
 
     $link = ConnectDB();
     $id = mysql_real_escape_string($_GET["id"]);
@@ -44,4 +44,3 @@ if (!IsSet($_GET['ref_name'])) {
     CloseDB($link);
     print(json_encode($result));
 }
-?>

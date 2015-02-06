@@ -6,7 +6,7 @@ require_once('../core.kwt.php');
 $link = ConnectDB();
 
 $ref_name = 'topicgroups';
-$item_id = IsSet($_GET['id']) ? $_GET['id'] : 1;
+$item_id = IsSet($_GET['id']) ? intval($_GET['id']) : 1;
 
 $query = "SELECT * FROM $ref_name WHERE id=$item_id";
 $res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$q);

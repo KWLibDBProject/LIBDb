@@ -4,7 +4,7 @@ require_once('../core.db.php');
 require_once('../core.kwt.php');
 require_once('../core.filestorage.php');
 
-$id = IsSet($_GET['id']) ? $_GET['id'] : Die();
+$id = IsSet($_GET['id']) ? intval($_GET['id']) : Die();
 
 // удалить из таблицы filestorage
 

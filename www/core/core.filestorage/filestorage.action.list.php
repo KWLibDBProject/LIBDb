@@ -6,15 +6,43 @@ require_once('../core.filestorage.php');
 
 $link = ConnectDB();
 
-$where      = (isset($_GET['collection']) && ($_GET['collection'] !='all')) ? " WHERE collection = '{$_GET['collection']}'" : " ";
-$sortorder  = (isset($_GET['sort-order']) && ($_GET['sort-order'] !='ASC')) ? " DESC " : " ASC ";
-$sortby = (isset($_GET['sort-type']) && ($_GET['sort-type'] != 'id')) ? " ORDER BY {$_GET['sort-type']} {$sortorder} " : ' ';
+/* @todo: оптимизировать блок. его как-то можно сократить, ведь неустановенность коллекции === all !*/
+// коллекция
+$collection =
+    (isset($_GET['collection']))
+    ? $_GET['collection']
+    : "all";
+$collection = getAllowedValue( $collection , array(
+    'all', 'articles', 'authors', 'books'
+));
+$where =
+    ($collection != "all")
+    ? " WHERE collection = '{$collection}'"
+    : " ";
+
+// порядок сортировки
+$sortorder  =
+    (isset($_GET['sort-order']) && ($_GET['sort-order'] !='ASC'))
+    ? " DESC "
+    : " ASC ";
+
+// критерий сортировки
+$sort_type = $_GET['sort-type'];
+$sort_type = getAllowedValue( $sort_type, array(
+    'id', 'username', 'stat_date_insert', 'filesize', 'relation', 'stat_download_counter'
+));
+
+$sortby =
+    (!empty($sort_type) && $sort_type != 'id')
+    ? " ORDER BY {$sort_type} {$sortorder} "
+    : ' ';
 
 $fs_table = FileStorageConfig::$config['table'];
 
 $q = "
 SELECT id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter, stat_date_insert
 FROM {$fs_table} {$where} {$sortby}";
+
 $r = @mysql_query($q);
 
 $fs = array();

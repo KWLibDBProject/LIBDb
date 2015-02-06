@@ -25,9 +25,9 @@ topics.id=articles.topic
 AND
 books.id=articles.book";
 
-$query .= (IsSet($_GET['author'])   && $_GET['author']!=0)  ? " AND cross_aa.author = $_GET[author] "   : "";
-$query .= (IsSet($_GET['book'])     && $_GET['book']!=0 )   ? " AND articles.book = $_GET[book] "       : "";
-$query .= (IsSet($_GET['topic'])    && $_GET['topic'] !=0 ) ? " AND articles.topic = $_GET[topic] "     : "";
+$query .= (IsSet($_GET['author'])   && $_GET['author']!=0)  ? " AND cross_aa.author = " . intval($_GET['author'])    : "";
+$query .= (IsSet($_GET['book'])     && $_GET['book']!=0 )   ? " AND articles.book = "   . intval($_GET['book'])      : "";
+$query .= (IsSet($_GET['topic'])    && $_GET['topic'] !=0 ) ? " AND articles.topic = "  . intval($_GET['topic'])     : "";
 
 $query .= " ORDER BY articles.id";
 

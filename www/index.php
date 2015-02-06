@@ -36,8 +36,8 @@ $override['main_menu_content'] = $template_engine->getMenu();
 
 // Main switch
 
-$fetch = isset($_GET['fetch']) ? $_GET['fetch'] : '';
-$with = isset($_GET['with']) ? $_GET['with'] : '';
+$fetch = isset($_GET['fetch']) ? $_GET['fetch'] : ''; // safe
+$with = isset($_GET['with']) ? $_GET['with'] : ''; // safe
 
 switch ($fetch) {
     case 'authors' : {

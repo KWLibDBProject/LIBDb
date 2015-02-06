@@ -6,6 +6,10 @@ require_once('../core.kwt.php');
 // отдает JSON объект для селектора "авторы"
 
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
+$lang = getAllowedValue($lang, array(
+    'en', 'ru', 'ua', 'uk'
+));
+
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
 
