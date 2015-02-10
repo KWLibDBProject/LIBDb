@@ -115,6 +115,7 @@ function LoadFirstLettersForSelector($lang)
 function LoadStaticPage($alias, $lang)
 {
     $return = array();
+    $alias = mysql_real_escape_string($alias);
 
     $query = "SELECT content_{$lang} AS pagecontent FROM staticpages WHERE alias LIKE '{$alias}'";
     $res = mysql_query($query);
@@ -419,19 +420,19 @@ topics.deleted=0 {$query_show_published} ";
         /*@todo: critical: экранировать значения: possible SQL injection and script crush! */
 
         $q_expert .= ($get['expert_name'] != '')
-            ? " AND authors.name_{$lang} LIKE '" . $get['expert_name'] . "%' "
+            ? " AND authors.name_{$lang} LIKE '" . mysql_real_escape_string($get['expert_name']) . "%' "
             : "";
 
         $q_expert .= ($get['expert_udc'] != '')
-            ? " AND articles.udc LIKE '%{$get['expert_udc']}%' "
+            ? " AND articles.udc LIKE '%" . mysql_real_escape_string($get['expert_udc']) . "%' "
             : "";
 
         $q_expert .= ($get['expert_add_date'] != '')
-            ? " AND articles.add_date LIKE '%{$get['expert_add_date']}' "
+            ? " AND articles.add_date LIKE '%" . mysql_real_escape_string( $get['expert_add_date']) . "' "
             : "";
 
         /* это оптимизированная достраивалка запроса на основе множественных keywords */
-        $keywords = explode(' ', $get['expert_keywords']);
+        $keywords = explode(' ', mysql_real_escape_string( $get['expert_keywords'] ) );
         $q_expert .= " AND ( ";
         foreach ($keywords as $keyword) {
             $q_expert .= " articles.keywords_{$lang} LIKE '%{$keyword}%' OR ";
@@ -578,7 +579,11 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 {
     $authors = array();
     // check for letter, '0' is ANY first letter
-    if ($letter == '') { $letter = '0'; }
+    if ($letter == '') {
+        $letter = '0';
+    } else {
+        $letter = mysql_real_escape_string($letter);
+    }
 
     $where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
 
