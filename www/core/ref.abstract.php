@@ -21,7 +21,7 @@ require_once('core.db.php');
 
 $reference = isset($_GET['ref']) ? $_GET['ref'] : ''; // вообще то если ref не задано - работать не с чем
 
-$reference = getAllowedRef( $reference , $CONFIG['allowed_abstract_refs']);
+$reference = getAllowedValue( $reference , $CONFIG['allowed_abstract_refs']);
 
 
 
