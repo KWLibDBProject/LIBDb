@@ -3,7 +3,8 @@
 body {
     background: #EAF2E6;
 /*    background: url(/files/paper_01.jpg) scroll repeat; */
-background: url(/files/bg_new_year_2015.jpg) scroll repeat;
+/*    background: url(/files/bg_new_year_2015.jpg) scroll repeat; */
+    background: url(/files/bg_spring_grayscale.jpg) scroll repeat;
 }
 
 a {
