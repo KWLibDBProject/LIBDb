@@ -281,11 +281,24 @@ function println( $string )
 }
 
 /**
+ * @todo comment
+ * @param $data
+ * @param $allowed_values_array
+ * @return $data if it is in allowed values array, NULL otherwise
+ */
+function getAllowedRef( $data, $allowed_values_array )
+{
+    $key = array_search($data, $allowed_values_array);
+    return ($key !== FALSE )
+        ? $allowed_values_array[ $key ]
+        : FALSE;
+}
+
+/**
  * Проверяет заданную переменную на допустимость (на основе массива допустымых значений)
  * и если находит - возвращает её. В противном случае возвращает NULL.
  * @param $data
  * @param $allowed_values_array
- * @return $data if it is in allowed values array, NULL otherwise
  */
 function getAllowedValue( $data, $allowed_values_array )
 {
