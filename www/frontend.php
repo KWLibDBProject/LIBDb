@@ -352,7 +352,8 @@ articles.id
 , articles.pages AS article_pages
 , pdfid
 , doi
-, filestorage.username AS pdf_filename ";
+, filestorage.username AS pdf_filename
+, filestorage.stat_date_download AS pdf_last_download_date ";
 /* дополнительные поля (для /article/info ) */
     $q_select .= "
 , articles.abstract_{$lang} AS article_abstract

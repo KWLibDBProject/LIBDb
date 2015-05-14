@@ -84,6 +84,11 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 }
 
 /* доп стилизация панелей */
+
+.panel-header-title {
+    font-weight: bold; /* жирным заголовки столбцов "все тематики" и "все журналы" */
+}
+
 .panel-title:hover {
     cursor: default;
 }

@@ -49,4 +49,3 @@ header('Accept-Ranges: bytes');
 print($file_info['content']);
 flush();
 exit();
-?>

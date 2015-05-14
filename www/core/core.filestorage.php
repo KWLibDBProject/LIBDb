@@ -431,6 +431,8 @@ class FileStorage extends FileStorageConfig {
         $table = self::getSQLTable();
         $query = "update {$table}
                   set stat_download_counter = stat_download_counter + 1
+                  ,
+                  stat_date_download = now()
                   where id = {$id}";
         @mysql_query($query);
     }
@@ -522,4 +524,3 @@ class FileStorage extends FileStorageConfig {
 оповещение о "лишних" записях о файлах в базе (не найден на диске)
 оповещение о "лишних" файлах на диске (не найден в базе)
 */
-?>

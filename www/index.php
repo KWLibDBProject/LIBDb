@@ -219,7 +219,8 @@ switch ($fetch) {
                     'article-book-year'     => $article_info['book_year'],
                     'article-pdfid'         => $article_info['pdfid'],
                     'article-refs'          => $article_info['article_refs'],
-                    'article-doi'           => $article_info['doi']
+                    'article-doi'           => $article_info['doi'],
+                    'article-pdf-last-download-date' => $article_info['pdf_last_download_date']
                 ));
                 $override['meta_keywords'] = $article_info['keywords']; // GLOBAL KEYWORDS
                 $maincontent_html = $inner_html->get();

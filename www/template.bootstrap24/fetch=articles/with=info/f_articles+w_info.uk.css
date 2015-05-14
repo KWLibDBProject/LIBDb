@@ -1,3 +1,7 @@
+.article-content fieldset {
+    margin-top: 1em;
+}
+
 .article-title {
     text-transform: uppercase;
 }
