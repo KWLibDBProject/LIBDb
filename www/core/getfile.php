@@ -25,7 +25,8 @@ if (!$file_info) {
         $file_info['username'] = 'file not found.pdf';
         $file_info['filesize'] = 632;
     } else {
-        $current_state = "File: `{$file_info['username']}` retrieved, filesize = {$file_info['filesize']}";
+        // $current_state = "File: `{$file_info['username']}` retrieved, filesize = {$file_info['filesize']}";
+        $current_state = $_SERVER['HTTP_REFERER'];
     }
 
     /* update stat_download_counter

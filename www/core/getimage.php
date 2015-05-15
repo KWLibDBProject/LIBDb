@@ -16,7 +16,7 @@ if ($id != -1) {
     but only for really downloaded files, not fetched via control panel */
     if (strpos($_SERVER['HTTP_REFERER'], '/core/') == false ) {
         FileStorage::statUpdateDownloadCounter($id);
-        FileStorage::statLogDownloadEvent($id, 'Image: referer = '.$_SERVER['HTTP_REFERER']);
+        // FileStorage::statLogDownloadEvent($id, 'Image: referer = '.$_SERVER['HTTP_REFERER']);
     }
 
     // FileStorage::statUpdateDownloadCounter($id);
