@@ -10,21 +10,31 @@ $link = ConnectDB();
 $file_info = FileStorage::getFileInfo($id);
 
 if (!$file_info) {
+    $current_state = "Error: unknown file id ({$id}), not found in DB!";
+
     $file_info['username'] = 'file not found.pdf';
     $file_info['filesize'] = 632;
     $file_info['content'] = FileStorage::getEmptyFile('pdf');
 } else {
     $file_info['content'] = FileStorage::getFileContent($id);
+
     if ($file_info['content'] == null) {
+        $current_state = "Error: `{$file_info['username']}` file content not found (id = {$id})";
+
         $file_info['content'] = FileStorage::getEmptyFile('pdf');
         $file_info['username'] = 'file not found.pdf';
         $file_info['filesize'] = 632;
+    } else {
+        $current_state = "File: `{$file_info['username']}` retrieved, filesize = {$file_info['filesize']}";
     }
 
     /* update stat_download_counter
     but only for really downloaded files, not fetched via control panel */
-    if (strpos($_SESSION['HTTP_REFERER'], '/core/') == false )
+    if (strpos($_SERVER['HTTP_REFERER'], '/core/') == false ){
         FileStorage::statUpdateDownloadCounter($id);
+        FileStorage::statLogDownloadEvent($id, $current_state);
+    }
+
 }
 
 CloseDB($link);

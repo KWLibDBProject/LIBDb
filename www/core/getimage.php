@@ -10,9 +10,16 @@ if ($id != -1) {
 
     $link = ConnectDB() or Die("Не удается соединиться с базой данных!");
 
-    $file_info = FileStorage::getFileInfo($id);
+    $file_info = FileStorage::getFileInfo($id); //@todo: а если файла нет? см. ниже getFileContent()
 
-    FileStorage::statUpdateDownloadCounter($id);
+    /* update stat_download_counter
+    but only for really downloaded files, not fetched via control panel */
+    if (strpos($_SERVER['HTTP_REFERER'], '/core/') == false ) {
+        FileStorage::statUpdateDownloadCounter($id);
+        FileStorage::statLogDownloadEvent($id, 'Image: referer = '.$_SERVER['HTTP_REFERER']);
+    }
+
+    // FileStorage::statUpdateDownloadCounter($id);
 
     if ($file_info) {
         header ("HTTP/1.1 200 OK");

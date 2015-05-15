@@ -437,6 +437,11 @@ class FileStorage extends FileStorageConfig {
         @mysql_query($query);
     }
 
+    public static function statLogDownloadEvent($id, $message)
+    {
+        kwLogger::logEvent('Download', self::getSQLTable(), $id, $message);
+    }
+
     /* static function for file icons */
     /**
      * @param $type

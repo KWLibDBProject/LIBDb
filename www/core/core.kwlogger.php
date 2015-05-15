@@ -25,7 +25,7 @@ class kwLogger extends kwLoggerConfig
     */
     private static function ConvertTimestampToDate()
     {
-        return strftime(self::$log_datetime_format, time());
+        return strftime(self::$log_datetime_format /*, time() */);
     }
 
     private static function prepare( $array, $target = 'db' )
@@ -58,7 +58,9 @@ class kwLogger extends kwLoggerConfig
             'comment'       =>  $comment,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
             'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  (isset($_SESSION[ self::$log_userid_key_in_session ])) ? $_SESSION[ self::$log_userid_key_in_session ] : -1
+            // нельзя получить доступ к сессии без session_start() , поэтому сохраняем данные из кукисов
+            // 'user'          =>  (isset($_SESSION[ self::$log_userid_key_in_session ])) ? $_SESSION[ self::$log_userid_key_in_session ] : -1
+            'user'          =>  (isset($_COOKIE[ self::$log_userid_key_in_cookies ])) ? $_COOKIE[ self::$log_userid_key_in_cookies ] : -1
         );
         $query = self::makeInsertStatement($entry);
         mysql_query( $query ) or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
