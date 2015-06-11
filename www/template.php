@@ -2,29 +2,33 @@
 require_once('core/core.kwt.php');
 require_once('frontend.php');
 
-/*
-Prototype_Template Class
+/**
+Класс-предок для всех шаблонов.
 
-extends with Template class in template.{name}.php
+Расширяется классами-шаблонами, описываемыми в template.{name}.php
 
-ВАЖНО: В классах-наследниках функции могут переопределяться.
 Класс __Template описывает базовые методы вывода данных в шаблон(ы). В классах-наследниках
-это поведение можно переопределить.
+это поведение можно переопределить. Фактически это VIEW в методологии MVC.
 
 Эти классы запрашивают функции из frontend.php - там должны быть функции работы с базой -
-только получение результатов, никаких отображений
-*/
-
+только получение результатов, никаких отображений.
+ */
 class __Template
 {
     public $template_path = '';
     public $site_language = '';
     public $page_prefix = '';
 
+    /**
+     * @param $path
+     * @param $site_language
+     */
     public function __construct($path, $site_language)
     {
         $this->template_path = $path;
         $this->site_language = $site_language;
+
+        // определим префикс страницы по языку
         switch ($site_language) {
             case 'en': { $this->page_prefix = 'Pp. '; break; }
             case 'ru': { $this->page_prefix = 'C. '; break; }
@@ -32,7 +36,11 @@ class __Template
         } // end switch
     }
 
-    /* отображение статической страницы: alias */
+    /**
+     * отображение статической страницы: alias
+     * @param $alias
+     * @return mixed|string
+     */
     public function getStaticPage($alias)
     {
         $ret = LoadStaticPage($alias, $this->site_language);
@@ -51,7 +59,10 @@ class __Template
         return $return;
     } // end GetStaticPage
 
-    /* оформляет массив баннеров в LI-список (VIEW!) */
+    /**
+     * оформляет массив баннеров в LI-список (VIEW!)
+     * @return null|string
+     */
     public function getBanners()
     {
         $data = LoadBanners();
@@ -70,7 +81,12 @@ EACH_BANNER;
         return $return;
     } // GetBanners
 
-    /* возвращает длинную строку с новостями --результат подставляется в override-переменную новостного блока справа (под сборниками) */
+    /**
+     * возвращает длинную строку с новостями --результат подставляется в override-переменную
+     * новостного блока (справа под сборниками)
+     * @param $count
+     * @return string
+     */
     public function getLastNews($count)
     {
         $return = '';
@@ -92,14 +108,20 @@ PrintLastNews;
         return $return;
     } // GetLastNews
 
-    /* возвращает строку с меню */
+    /**
+     * возвращает строку с меню
+     * @return mixed
+     */
     public function getMenu()
     {
         $main_menu = new kwt($this->template_path."/_menu/menu.{$this->site_language}.html");
         return $main_menu->get();
     }
 
-    /* сообщение "нет статей" для разных языков */
+    /**
+     * сообщение "нет статей" для разных языков
+     * @return string
+     */
     private function messageNoArticles()
     {
         $r = '';
@@ -117,14 +139,21 @@ PrintLastNews;
         return $r;
     }
 
-    /* список статей, инфо о каждой статье делается на основе /_internal/item_in_articles_list.html */
+    /**
+     * список статей,
+     * инфо о каждой статье делается на основе /_internal/item_in_articles_list.html
+     *
+     * @param $request
+     * @param string $with_email
+     * @return string
+     */
     public function getArticlesList($request, $with_email = 'no')
     {
         $articles = LoadArticles_ByQuery($request, $this->site_language);
         $return = '';
         if (count($articles) > 0)
         {
-            // печатаем хедер таблицы
+            // хедер таблицы
             $return .= '<table class="articles-list">';
 
             // в цикле загружаем шаблон и передаем в него строки таблицы
@@ -148,7 +177,8 @@ PrintLastNews;
                 $return .= $t_a->get();
                 unset($t_a);
             } // foreach
-            // печатаем футер таблицы
+
+            // футер таблицы
             $return .= '</table>';
         } else {
             $return .= $this->messageNoArticles();
@@ -156,11 +186,17 @@ PrintLastNews;
         return $return;
     }
 
-    /* список авторов в полной информации о статье! Передаем массив с авторами (который можно загрузить по-разному) */
+    /**
+     * список авторов в полной информации о статье!
+     * Передаем массив с авторами (который можно загрузить по-разному)
+     *
+     * @param $authors
+     * @param string $with_email
+     * @return string
+     */
     public function getAuthors_InArticle($authors, $with_email = '')
     {
         $ret = '';
-        // $authors = LoadAuthors_ByArticle($id, $this->site_language);
         foreach ($authors as $author_id => $an_author)
         {
             // Иванов И.И., др.тех.наук
@@ -183,7 +219,13 @@ PrintLastNews;
         return $ret;
     }
 
-    /* список авторов в статье (для поля "авторы" в табличном представлении статей, вызывается в getArticlesList )*/
+    /**
+     * список авторов в статье
+     * (для поля "авторы" в табличном представлении статей, вызывается в getArticlesList )
+     * @param $authors
+     * @param string $with_email
+     * @return string
+     */
     public function getAuthors_InArticlesList($authors, $with_email = '')
     {
         $ret = '';
@@ -209,7 +251,11 @@ PrintLastNews;
         return $ret;
     }
 
-    /* список статей (публикаций) у указанного автора (для /author/info ) */
+    /**
+     * список статей (публикаций) у указанного автора (для /author/info )
+     * @param $id
+     * @return string
+     */
     public function getArticles_ByAuthor($id)
     {
         $ret = '';
@@ -240,13 +286,16 @@ FE_PrintArticles_ByAuthor_Start;
 </table>
 FE_PrintArticles_ByAuthor_End;
         } else {
-            $ret .= ''; // нет статей у автора (Messages::NoArticles_ByAuthor)
+            $ret .= ''; // нет статей у автора (@todo: Messages::NoArticles_ByAuthor)
         }
 
         return $ret;
     } // getArticles_ByAuthor
 
-    /* сообщение "нет авторов" для разных языков */
+    /**
+     * сообщение "нет авторов" для разных языков
+     * @return string
+     */
     private function messageNoPlainAuthors()
     {
         $r = '';
@@ -264,7 +313,11 @@ FE_PrintArticles_ByAuthor_End;
         return $r;
     }
 
-    /* список авторов в виде plain/list ( /authors/all для поисковых систем и не только)*/
+    /**
+     * список авторов в виде plain/list ( /authors/all для поисковых систем и не только)
+     * @param $letter
+     * @return string
+     */
     public function getAuthors_PlainList($letter)
     {
         $return = '';
@@ -300,8 +353,14 @@ PrintAuthorsSelectedByLetter_End;
         return $return;
     } // getAuthors_PlainList
 
-    // печать нужных авторов ($authors) в расширенной форме для /authors/estuff
-    // функция НЕ оборачивает элементы списка в UL, поэтому её вывод надо вставлять во внутрь списка в шаблоне
+    /**
+     * печать нужных авторов ($authors) в расширенной форме для /authors/estuff
+     * функция НЕ оборачивает элементы списка в UL, поэтому её вывод надо вставлять
+     * внутрь списка в шаблоне
+     *
+     * @param $selfhood
+     * @return string
+     */
     function getAuthors_EStaffList($selfhood)
     {
         $authors = LoadAuthors_ByLetter('0', $this->site_language, 'yes', $selfhood);
@@ -313,6 +372,7 @@ fe_printauthors_estuff_start;
         if ( sizeof($authors) > 0 ) {
             foreach ($authors as $i => $an_author ) {
                 $name = $an_author['name'];
+
                 // первое слово в имени обернуть в <span class="authors-estufflist-firstword">
                 $name = preg_replace('/^([^\s]+)/','<span class="authors-estufflist-firstword">\1</span>', $name);
 
@@ -336,8 +396,13 @@ fe_printauthors_estuff_end;
         return $return;
     }
 
-    /* список статей в виде plain/list (для поисковых систем) */
-    /* похоже по логике на getArticlesList, но другой формат вывода */
+    /**
+     * список статей в виде plain/list (для поисковых систем)
+     * похоже по логике на getArticlesList, но другой формат вывода
+     *
+     * @param $request
+     * @return string
+     */
     public function getArticles_PlainList($request)
     {
         $articles = LoadArticles_ByQuery($request, $this->site_language);
@@ -377,11 +442,19 @@ PAL_S_End;
         return $return;
     }
 
+    /**
+     * Прототип, переопределяется в конкретном шаблоне
+     * @return null
+     */
     function getTopics()
     {
         return null;
     }
 
+    /**
+     * Прототип, переопределяется в конкретном шаблоне
+     * @return null
+     */
     function getBooks()
     {
         return null;
@@ -389,4 +462,3 @@ PAL_S_End;
 
 
 }
-?>

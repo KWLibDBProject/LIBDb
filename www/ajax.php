@@ -140,4 +140,3 @@ if (isAjaxCall()) {
 } else {
     print_r($return);
 }
-?>

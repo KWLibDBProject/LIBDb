@@ -2,8 +2,15 @@
 require_once('template.php');
 $tpl_path = 'template.bootstrap24';
 
+/**
+ * Шаблон bootstrap24 под 24-х колоночную сетку. Наследуется от __Template
+ */
 class Template extends __Template
 {
+
+    /**
+     * @return string
+     */
     function getTopicsPlain()
     {
         $all_topics = LoadTopics($this->site_language);
@@ -19,6 +26,9 @@ FE_PrintTopics_Each;
         return $ret;
     }
 
+    /**
+     * @return string
+     */
     public function getTopicsTree()
     {
         $all_topics = LoadTopicsTree($this->site_language);
@@ -28,6 +38,7 @@ FE_PrintTopics_Each;
 
         foreach ($all_topics['data'] as $id => $row) {
             if ($row['type'] == 'group') {
+
                 // add optiongroup
                 if ($last_group != $row['value']) {
                     $last_group = $row['value'];
@@ -51,9 +62,11 @@ getTT_Group;
             if ($row['type'] == 'option') {
                 $id = $row['value'];
                 $title = $row['text'];
+
                 $ret .= <<<FE_PrintTopics_Each
 <a href="?fetch=articles&with=topic&id={$id}" class="list-group-item">{$title}</a>
 FE_PrintTopics_Each;
+
             }
 
         }
@@ -64,6 +77,9 @@ FE_PrintTopics_Each;
     }
 
 
+    /**
+     * @return string
+     */
     public function getBooks()
     {
         $ret = '';
@@ -84,10 +100,13 @@ FE_PrintTopics_Each;
                                 <ul class="etks-books-list">
 FE_PrintBooksBS_YearStart;
 
-            foreach ($year_books as $id => $book) {
+            foreach ($year_books as $id => $book)
+            {
+
                 $ret .= <<<FE_PrintBooksBS_EachBook
                                     <li><a href="?fetch=articles&with=book&id={$id}"> {$book['title']} </a>({$book['count']})</li>
 FE_PrintBooksBS_EachBook;
+
             }
 
             $ret .= <<<FE_PrintBooksBS_End
@@ -96,11 +115,16 @@ FE_PrintBooksBS_EachBook;
                         </div>
                     </div>
 FE_PrintBooksBS_End;
+
             $first_in = '';
         }
         return $ret;
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function getTopicTitle($id)
     {
         $topic = LoadTopicInfo($id, $this->site_language);
@@ -110,6 +134,3 @@ FE_PrintBooksBS_End;
 
 
 }
-
-
-?>

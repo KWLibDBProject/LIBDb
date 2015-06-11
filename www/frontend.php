@@ -28,8 +28,8 @@ function GetRequestLanguage($request_string)
     return $lang;
 }
 
-/* получение языка сайта из куки  */
 /**
+ * получение языка сайта из куки
  * @return string
  */
 function GetSiteLanguage()
@@ -37,26 +37,25 @@ function GetSiteLanguage()
     $lang = 'en';
     if (isset($_COOKIE['libdb_sitelanguage']) && $_COOKIE['libdb_sitelanguage'] != '') {
         switch ($_COOKIE['libdb_sitelanguage']) {
-            /* case 'en': {
-                $lang = 'en';
-                break;
-            } */
             case 'ru': { $lang = 'ru'; break; }
             case 'uk': { $lang = 'uk'; break; }
             case 'en':
-            default: {   $lang = 'en'; break; }
+            default:   { $lang = 'en'; break; }
         }
     }
     return $lang;
 }
 
-/* Конвертирует дату (строку) по языку ; */
+/*
+ * Массив с переводами месяцев на разные языки.
+ * */
 $TRANSLATED_MONTHS = array(
     'en' => array("", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"),
     'ru' => array("", "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"),
     'uk' => array("", "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"),
 );
 /**
+ * Конвертирует дату (строку) по языку. Использует массив-месяцеслов $TRANSLATED_MONTHS
  * @param $date_as_string
  * @param $lang
  * @return string
@@ -65,7 +64,9 @@ function ConvertDateByLang($date_as_string, $lang)
 {
     // в PHP младше 5.2 date_parse() не определена. Смотри stewarddb.
     /* $return = date("d M Y", strtotime($date_as_string)); */
+
     global $TRANSLATED_MONTHS;
+
     if (function_exists('date_parse_from_format')) {
         $date_as_array = date_parse_from_format('d.m.Y',$date_as_string);
         // $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
@@ -77,9 +78,9 @@ function ConvertDateByLang($date_as_string, $lang)
     return $return;
 }
 
-// возврат массива "первых букв" для списка авторов для указанного языка
-// используется в ajax.php
 /**
+ * возврат массива "первых букв" для списка авторов для указанного языка
+ * используется в ajax.php
  * @param $lang
  * @return mixed
  */
@@ -106,8 +107,9 @@ function LoadFirstLettersForSelector($lang)
 }
 
 /* ---------------------------- Функции загрузки данных ---------------------------*/
-/* функция загрузки статических страниц из БД */
+
 /**
+ * функция загрузки статических страниц из БД
  * @param $alias
  * @param $lang
  * @return array
@@ -132,8 +134,8 @@ function LoadStaticPage($alias, $lang)
     return $return;
 }
 
-/* загружает из базы информацию об одной рубрике в зависимости от языка */
 /**
+ * загружает из базы информацию об одной рубрике (тематике) в зависимости от языка
  * @param $id
  * @param $lang
  * @return string
@@ -152,8 +154,8 @@ function LoadTopicInfo($id, $lang)
     return $ret;
 }
 
-/* загружает из базы рубрики, отдает ассоциативный массив вида [id -> title] */
 /**
+ * загружает из базы рубрики (тематики), отдает ассоциативный массив вида [id -> title]
  * @param $lang
  * @return array
  */
@@ -172,8 +174,8 @@ function LoadTopics($lang)
     return $ret;
 }
 
-/* загружает из базы рубрики в древовидном представлении, отдает ассоциативный массив вида [id -> title] */
 /**
+ * загружает из базы рубрики в древовидном представлении, отдает ассоциативный массив вида [id -> title]
  * @param $lang
  * @param int $withoutid
  * @return array
@@ -232,21 +234,28 @@ ORDER BY topicgroups.display_order, topics.title_{$lang}
     return $data;
 }
 
-/* загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом */
 /**
+ * загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом
  * @return array
  */
 function LoadBooks()
 {
     $all_books = array();
 
-    $bq = "SELECT books.title as title, books.year AS year, books.id as bid, COUNT(books.id) AS articles_count
+    $bq = "SELECT
+books.title as title,
+books.year AS year,
+books.id as bid,
+COUNT(books.id) AS articles_count
+
 FROM books, articles
+
 WHERE
 articles.book = books.id AND
 books.published = 1
+
 GROUP BY books.title
-ORDER BY books.title";
+ORDER BY books.title DESC ";
 
     $br = mysql_query($bq);
     while ($ba = mysql_fetch_assoc($br)) {
@@ -256,8 +265,8 @@ ORDER BY books.title";
     return $all_books;
 }
 
-/* загружает массив отображаемых баннеров из базы */
 /**
+ * загружает массив отображаемых баннеров из базы
  * @return array|null
  */
 function LoadBanners()
@@ -275,9 +284,10 @@ function LoadBanners()
     return $ret;
 }
 
-/* возвращает для override-переменной последние $count новостей для правого блока (под сборниками): */
-/* отдает массив [id новости] => [id, title, date] */
 /**
+ * возвращает для override-переменной последние $count новостей для правого блока (под сборниками):
+ * отдает массив [id новости] => [id, title, date]
+ *
  * @param $lang
  * @param int $count
  * @return array
@@ -299,8 +309,8 @@ function LoadLastNews($lang, $count=2)
     return $ret;
 }
 
-/* возвращает массив с информацией об указанном сборнике */
 /**
+ * возвращает массив с информацией об указанном сборнике
  * @param $id
  * @return array
  */
@@ -316,8 +326,9 @@ function LoadBookInfo($id)
     return $ret;
 }
 
-/* возвращает асс.массив из базы с информацией о ПОСЛЕДНЕМ опубликованном сборнике или {} если нет такого */
 /**
+ * возвращает ассоциативный массив из базы с информацией о ПОСЛЕДНЕМ опубликованном сборнике
+ * или {} если нет такого
  * @return array
  */
 function LoadLastBookInfo()
@@ -331,8 +342,9 @@ function LoadLastBookInfo()
     return $ret;
 }
 
-/* построение универсального запроса WARNING: GOD OBJECT */
 /**
+ * построение универсального запроса. @WARNING: GOD OBJECT
+ *
  * @param $get
  * @param $lang
  * @return string
@@ -447,9 +459,10 @@ topics.deleted=0 {$query_show_published} ";
     return $q;
 }
 
-/* Загрузка статей по сложному запросу ($with_email - передается в LoadAuthorsByArticle, который отдает МАССИВ авторов по статье) */
-/* ВАЖНО: если мы получили ОДНОГО автора - его можно будет получить вызовом: reset(...) */
 /**
+ * Загрузка статей по сложному запросу ($with_email - передается в LoadAuthorsByArticle, который отдает МАССИВ авторов по статье)
+ * ВАЖНО: если мы получили ОДНОГО автора - его можно будет получить вызовом: reset(...)
+ *
  * @param $get
  * @param $lang
  * @return array
@@ -473,8 +486,8 @@ function LoadArticles_ByQuery($get, $lang)
     return $all_articles;
 }
 
-/* загружает данные для списка новостей [id] => [id => '', title => '', date => ''] */
 /**
+ * загружает данные для списка новостей [id] => [id => '', title => '', date => '']
  * @param $lang
  * @return null|string
  */
@@ -491,8 +504,11 @@ function LoadNewsListTOC($lang)
     return $ret;
 }
 
-/* загружает в асс.массив новость с указанным id, usable: используется для pure-вставки в шаблон */
+/*  */
 /**
+ * загружает в ассоциативный массив новость с указанным id,
+ * usable: используется для pure-вставки в шаблон
+ *
  * @param $id
  * @param $lang
  * @return array|null|string
@@ -510,8 +526,9 @@ function LoadNewsItem($id, $lang)
     return $ret;
 }
 
-/* загружает информацию об авторе в ассциативный массив */
 /**
+ * загружает информацию об авторе в ассциативный массив
+ *
  * @param $id
  * @param $lang
  * @return string
@@ -534,8 +551,9 @@ function LoadAuthorInformation_ById($id, $lang)
     return $ret;
 }
 
-/* возвращает список статей, которые написал указанный ($id) автор, но только в опубликованных сборниках */
 /**
+ * возвращает список статей, которые написал указанный ($id) автор, но только в опубликованных сборниках
+ *
  * @param $id
  * @param $lang
  * @return array
@@ -565,11 +583,11 @@ ORDER BY add_date
     return $ret;
 }
 
-// загрузка списка авторов с отбором по первой букве (в зависимости от языка)
-// значение буквы по умолчанию '0', что означает ВСЕ авторы
-// функция используется в аякс-ответах, в выгрузке полного списка авторов и выгрузке
-// списка авторов по первой букве
 /**
+ * загрузка списка авторов с отбором по первой букве (в зависимости от языка)
+ * значение буквы по умолчанию '0', что означает ВСЕ авторы // @todo: рефакторнинг: замена на *
+ * функция используется в аякс-ответах, в выгрузке полного списка авторов и выгрузке списка авторов по первой букве
+ *
  * @param $letter
  * @param $lang
  * @param string $is_es
@@ -620,8 +638,8 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 }
 
 
-// возвращает базовую информацию о статье как асс.массив (single-версия LoadArticlesByQuery() )
 /**
+ * возвращает базовую информацию о статье как асс.массив (single-версия LoadArticlesByQuery() )
  * @param $id
  * @param $lang
  * @return mixed
@@ -633,9 +651,10 @@ function LoadArticleInformation_ById($id, $lang)
 }
 
 
-// возвращает список авторов, участвовавших в создании статьи - как асс.массив c учетом языка!
-// вызывается из LoadArticles_ByQuery (в основном) и единоразово из template::вывод авторов, писавших статью (по шаблону вывода)
 /**
+ * возвращает список авторов, участвовавших в создании статьи - как асс.массив c учетом языка!
+ * вызывается из LoadArticles_ByQuery (в основном) и единоразово из template::вывод авторов, писавших статью (по шаблону вывода)
+ *
  * @param $id
  * @param $lang
  * @return array
@@ -651,5 +670,3 @@ function LoadAuthors_ByArticle($id, $lang)
     }
     return $ret;
 }
-
-?>

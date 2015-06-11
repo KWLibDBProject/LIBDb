@@ -31,14 +31,15 @@ $override['rubrics']    = $template_engine->getTopicsTree();
 $override['books']      = $template_engine->getBooks();
 $override['banners']    = $template_engine->getBanners();
 $override['last_news_shortlist'] = $template_engine->getLastNews(3);
+
 /* insert menu from template */
 $override['main_menu_content'] = $template_engine->getMenu();
 
 // Main switch
+$fetch  = at( $_GET, 'fetch', '' );
+$with   = at( $_GET, 'with' , '' );
 
-$fetch = isset($_GET['fetch']) ? $_GET['fetch'] : ''; // safe
-$with = isset($_GET['with']) ? $_GET['with'] : ''; // safe
-
+// А теперь надо загрузить контент в основной блок
 switch ($fetch) {
     case 'authors' : {
         /* секция обработки авторов - информация или список */
@@ -317,15 +318,19 @@ switch ($fetch) {
         } // /switch $with
         break;
     } // end /news/* case
+
     default : {
         // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
         $filename = $tpl_path.'/default/default.'.$site_language;
+
         $inner_html = new kwt($filename.".html");
         $inner_html->override( array(
             'static_page_content'   => $template_engine->GetStaticPage('about')
         ));
+
         // load last book
         $last_book = LoadLastBookInfo();
+
         if (count($last_book) != 0) {
             $inner_html->override( array(
                 'last_book_content'     => $template_engine->getArticlesList(
@@ -350,6 +355,7 @@ switch ($fetch) {
         $maincontent_css = $inner_css->get();
         break;
     } // end default case
+
 } // end global (fetch) switch
 
 $override['content_jquery'] = $maincontent_js;
@@ -358,5 +364,3 @@ $override['content_css'] = $maincontent_css;
 
 $tpl_index->override($override);
 $tpl_index->out();
-
-?>
