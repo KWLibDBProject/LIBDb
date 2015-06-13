@@ -107,7 +107,7 @@ function DBLoginCheck($login, $password)
     if (mysql_num_rows($r_login)==1) {
         // логин существует
         $user = mysql_fetch_assoc($r_login);
-        if ($password == $user['md5password']) {
+        if ($password === $user['md5password']) {
             // пароль верен
             $return = array(
                 'error'         => 0,
