@@ -116,6 +116,8 @@ switch ($fetch) {
                     'estaff_remote_editors'     => $template_engine->getAuthors_EStaffList(1),
                     // редакторы = 6
                     'estaff_simple_editors'     => $template_engine->getAuthors_EStaffList(6),
+                    // ответственный секретарь = 8
+                    'estaff_assistant_editor'   =>  $template_engine->getAuthors_EStaffList(8),
                 ));
                 $maincontent_html = $inner_html->getcontent();
 

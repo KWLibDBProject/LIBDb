@@ -1,2 +1,3 @@
 # List of files in this directory
 Options +Indexes
+php_flag engine off
