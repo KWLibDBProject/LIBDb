@@ -143,5 +143,17 @@ function DBIsTableExists($table)
 }
 
 
-
-?>
+function DBGetCount($field, $table, $condition = "")
+{
+    $cond  = ($condition !== "")
+        ? " WHERE {$condition}"
+        : "";
+    $query = "SELECT COUNT({$field}) AS rowcount FROM {$table} {$cond}";
+    if ($result = mysql_query($query)) {
+        $row = mysql_fetch_assoc($result);
+        $ret = $row['rowcount'];
+    } else {
+        $ret = NULL;
+    }
+    return $ret;
+}

@@ -5,6 +5,18 @@ require_once('core.db.php');
 $SID = session_id();
 if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
+
+$link = ConnectDB();
+
+$stats = array(
+    'articles'  =>  DBGetCount('id', 'articles'),
+    'authors'   =>  DBGetCount('id', 'authors'),
+    'books'     =>  DBGetCount('id', 'books'),
+    'files'     =>  DBGetCount('id', 'filestorage'),
+    'events'    =>  DBGetCount('id', 'eventlog'),
+    'news'      =>  DBGetCount('id', 'news')
+);
+
 ?>
 <html>
 <head>
@@ -89,6 +101,16 @@ ifNotLoggedRedirect('/core/');
             color: gray;
         }
 
+        /* padded span tag */
+        span.padded {
+            display: inline-block;
+            width: 3em;
+            text-align: right;
+            padding-right: 0.5em;
+            font-weight: bold;
+            color: #264BBD;
+        }
+
     </style>
 </head>
 <body>
@@ -162,8 +184,28 @@ ifNotLoggedRedirect('/core/');
             </ul>
         </td>
         <td valign="top">
-            <h1>Краткая справка</h1>
-            Она вам нужна? Обратитесь к разработчику :)
+            <br/>
+            <h2>Немного статистики</h2>
+            <ul>
+                <li>На данный момент в базе данных:</li>
+                <li>
+                    <span class="padded"><?php echo $stats['articles']?></span> статей
+                </li>
+                <li>
+                    <span class="padded"><?php echo $stats['authors']?></span> авторов
+                </li>
+                <li>
+                    <span class="padded"><?php echo $stats['books']?></span> сборников
+                </li>
+                <li>
+                    <span class="padded"><?php echo $stats['files']?></span> файлов в хранилище (pdf-ок, фотографий итд)
+                </li>
+                <li>
+                    <span class="padded"><?php echo $stats['events']?></span> залоггированных событий
+                </li>
+            </ul>
+
+            <h2>Рекомендации</h2>
             <hr>
             Внимание, старайтесь не загружать фотографии с линейными размерами больше 800*1000 (ширина*высота). <br>
             Если это фотография автора - она все равно будет принудительно уменьшена до размера 150*200<br>
@@ -176,7 +218,7 @@ ifNotLoggedRedirect('/core/');
             Откуда вообще берется такой размер файла? Чаще всего автор не желает выставлять нормальные настройки сжатия изображений в файле -
             опасаясь потери данных при сжатии. Но что делать <strong>нам</strong> с файлом на 8 мегабайт? <br/>
             Для уменьшения размера файла можно воспользоваться сервисом <a href="http://smallpdf.com/ru/compress-pdf">http://smallpdf.com/ru/compress-pdf</a><br>
-            После загрузки исправленного файла крайне желательно открыть подменю "Maintenance" и нажать кнопочку "Recalc filesizes"<br>
+            <u>После загрузки исправленного файла</u> крайне желательно открыть подменю "Maintenance" и нажать кнопочку "Recalc filesizes"<br>
         </td>
     </tr>
 </table>
