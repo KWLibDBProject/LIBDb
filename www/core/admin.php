@@ -200,9 +200,7 @@ $stats = array(
                 <li>
                     <span class="padded"><?php echo $stats['files']?></span> файлов в хранилище (pdf-ок, фотографий итд)
                 </li>
-                <li>
-                    <span class="padded"><?php echo $stats['events']?></span> залоггированных событий
-                </li>
+                <!-- Залоггированных событий: <?php echo $stats['events']?> -->
             </ul>
 
             <h2>Рекомендации</h2>
