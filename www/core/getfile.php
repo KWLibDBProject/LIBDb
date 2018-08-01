@@ -1,12 +1,10 @@
 <?php
-require_once('core.db.php');
-require_once('core.filestorage.php');
+require_once '__required.php'; // $mysqli_link
 
 // сделать возможность просмотра файла как по АЙДИ, так и по ЮЗЕРНЕЙМ
 $id = IsSet($_GET['id']) ? intval($_GET['id']) : Die();
 
-$link = ConnectDB();
-
+FileStorage::init($mysqli_link);
 $file_info = FileStorage::getFileInfo($id);
 
 if (!$file_info) {
@@ -37,8 +35,6 @@ if (!$file_info) {
     }
 
 }
-
-CloseDB($link);
 
 header ("HTTP/1.1 200 OK");
 header ("X-Powered-By: PHP/" . phpversion());

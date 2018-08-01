@@ -1,8 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
+require_once '../__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
@@ -15,17 +12,15 @@ if (!IsSet($_POST['ref_name'])) {
 $table = 'topicgroups';
 $id = $_POST['id'];
 
-$link = ConnectDB();
-
 $q = array(
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'display_order' => mysql_real_escape_string($_POST['display_order']),
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
+    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk']),
+    'display_order' => mysqli_real_escape_string($mysqli_link, $_POST['display_order']),
 );
 
 $qstr = MakeUpdate($q, $table, "WHERE id=$id");
-$res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
+$res = mysqli_query($mysqli_link, $qstr) or Die("Unable update data : ".$qstr);
 
 kwLogger::logEvent('Update', $table, $id, "Group of topics updated, id = {$id}");
 
@@ -33,5 +28,3 @@ $result['message'] = $qstr;
 $result['error'] = 0;
 
 print(json_encode($result));
-CloseDB($link);
-?>

@@ -1,7 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
+require_once '../__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
@@ -19,7 +17,7 @@ ifNotLoggedRedirect('/core/');
     <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
     <script type="text/javascript" src="../js/tinymce.config.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="../css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 

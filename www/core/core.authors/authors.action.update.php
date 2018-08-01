@@ -1,13 +1,8 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+require_once '../__required.php'; // $mysqli_link
 
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 $ref_name = 'authors';
-
-$link = ConnectDB();
 
 $q = array(
     'name_ru'       => trim($_POST['name_ru'], ' '),
@@ -30,7 +25,7 @@ $q = array(
 );
 $qstr = MakeUpdateEscaped($q, $ref_name, "WHERE id=$id");
 
-$res = mysql_query($qstr, $link);
+$res = mysqli_query($mysqli_link, $qstr);
 
 if (!empty($res)) {
     $new_author_id = $id; // айди автора в базе, он нужен для вставки фото
@@ -68,4 +63,3 @@ if (isAjaxCall()) {
         $tpl->out();
     }
 }
-?>

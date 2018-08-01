@@ -1,8 +1,6 @@
 <?php
 // отдает JSON объект для селектора "топики"
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
+require_once '../__required.php'; // $mysqli_link
 
 $lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
 
@@ -11,8 +9,6 @@ $lang = getAllowedValue($lang, array(
 ));
 
 $withoutid = isset($_GET['id']) ? 1 : 0;
-
-$link = ConnectDB();
 
 $query = "
 SELECT
@@ -25,9 +21,9 @@ ORDER BY topicgroups.title_{$lang}, topics.title_{$lang}
 ";
 
 
-$result = mysql_query($query) or die($query);
+$result = mysqli_query($mysqli_link, $query) or die($query);
 
-$ref_numrows = @mysql_num_rows($result) ;
+$ref_numrows = @mysqli_num_rows($result) ;
 
 if ($ref_numrows>0)
 {
@@ -36,7 +32,7 @@ if ($ref_numrows>0)
     $data['count'] = $ref_numrows;
     $i = 1;
     $group = '';
-    while ($row = mysql_fetch_assoc($result))
+    while ($row = mysqli_fetch_assoc($result))
     {
         if ($group != $row['title_group']) {
             // send new optiongroup
@@ -63,8 +59,4 @@ if ($ref_numrows>0)
     $data['count'] = 0;
 }
 
-CloseDB($link);
-
 print(json_encode($data));
-//print('<pre>'.print_r($data, true).'</pre>');
-?>

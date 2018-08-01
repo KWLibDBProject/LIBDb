@@ -1,8 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+require_once '../__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
@@ -15,21 +12,20 @@ if (isset($_GET['id']))
     Redirect('/core/ref.articles.show.php');
 }
 
-$link = ConnectDB();
-$query = "select * from articles where id= {$id}"; // получаем СТАТЬЮ
+$query = "SELECT * FROM articles WHERE id= {$id}"; // получаем СТАТЬЮ
 
-$res_article = mysql_query($query) or die("Невозможно получить содержимое статьи! ".$query);
+$res_article = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое статьи! ".$query);
 
-$numarticles = @mysql_num_rows($res_article);
+$numarticles = mysqli_num_rows($res_article);
 
 if ($numarticles == 1)
 {
-    $the_article = mysql_fetch_assoc($res_article);
+    $the_article = mysqli_fetch_assoc($res_article);
 // получаем авторов
     $query = "select * from cross_aa where article=$id";
-    $res_authors = mysql_query($query) or die("Невозможно получить кросс-таблицу автор X статья! ".$query);
+    $res_authors = mysqli_query($mysqli_link, $query) or die("Невозможно получить кросс-таблицу автор X статья! ".$query);
 
-    $numauthors = @mysql_num_rows($res_authors);
+    $numauthors = @mysqli_num_rows($res_authors);
     $the_loadedAuthorsNum = $numauthors;
 
     $currAuthList = "{ ";
@@ -38,7 +34,7 @@ if ($numarticles == 1)
     {
         for ($i=1;$i<=$numauthors;$i++)
         {
-            $tmp = mysql_fetch_assoc($res_authors);
+            $tmp = mysqli_fetch_assoc($res_authors);
             $currAuthList .= " $i : $tmp[author] ,";
         }
     }
@@ -74,7 +70,7 @@ CloseDB($link);
     <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
     <script type="text/javascript" src="../js/tinymce.config.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="../css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 

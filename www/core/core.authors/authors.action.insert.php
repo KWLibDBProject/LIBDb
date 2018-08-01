@@ -1,12 +1,7 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+require_once '../__required.php'; // $mysqli_link
 
 $table = 'authors';
-
-$link = ConnectDB();
 
 $now = ConvertTimestampToDate();
 $q = array(
@@ -33,10 +28,10 @@ $q = array(
 );
 $qstr = MakeInsertEscaped( $q, $table );
 
-$res = mysql_query($qstr, $link) or die("Error at $qstr");
+$res = mysqli_query($mysqli_link, $qstr) or die("Error at $qstr");
 
 if (!empty($res)) {
-    $new_author_id = mysql_insert_id(); // айди автора в базе, он нужен для вставки фото
+    $new_author_id = mysqli_insert_id($mysqli_link); // айди автора в базе, он нужен для вставки фото
 
     if ($_POST['file_current_changed'] == 1)
     {
@@ -54,8 +49,6 @@ else {
 
 kwLogger::logEvent('Add', 'authors', $new_author_id, "Author added, new id is {$new_author_id}" );
 
-CloseDB($link);
-
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
@@ -72,4 +65,4 @@ if (isAjaxCall()) {
         $tpl->out();
     }
 }
-?>
+

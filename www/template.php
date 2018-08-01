@@ -149,6 +149,7 @@ PrintLastNews;
      */
     public function getArticlesList($request, $with_email = 'no')
     {
+        global $mysqli_link;
         $articles = LoadArticles_ByQuery($request, $this->site_language);
         $return = '';
         if (count($articles) > 0)

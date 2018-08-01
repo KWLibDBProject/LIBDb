@@ -1,12 +1,9 @@
 <?php
-require_once('core.php');
-require_once('core.db.php');
+require_once '__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
-
-$link = ConnectDB();
 
 $stats = array(
     'articles'  =>  DBGetCount('id', 'articles'),
@@ -165,7 +162,7 @@ $stats = array(
                             <button data-href="/core/core.filestorage/filestorage.maintenance.recalc.php" class="admin-button-small action-is-href">Recalc filesizes</button>
                         </li>
                         <li>
-                            <button data-href="/core/tools/sitemap/generator.php" class="admin-button-small action-is-href">Rebuld sitemap</button>
+                            <button class="admin-button-small action-is-href" disabled>Rebuld sitemap</button>
                         </li>
                         <li class="menu-header">
                             Справочники:
@@ -220,7 +217,7 @@ $stats = array(
         </td>
     </tr>
 </table>
-<div id="footer">© Karel Wintersky, 2014.</div>
+<div id="footer">© Karel Wintersky, 2014-2018.</div>
 
 </body>
 </html>

@@ -1,8 +1,10 @@
 <?php
-require_once('../core.php');
+require_once '../__required.php'; // $mysqli_link
+
 $SID = session_id();
 if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
+
 ?>
 <html>
 <head>
@@ -13,7 +15,7 @@ ifNotLoggedRedirect('/core/');
     <script src="../js/jquery.ui.datepicker.rus.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
-    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="../css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="books.css">
 
     <script src="../js/core.js"></script>
@@ -62,7 +64,7 @@ ifNotLoggedRedirect('/core/');
             changeYear: true,
             dateFormat: 'dd.mm.yy',
             minDate: '01.01.2003',
-            maxDate: '01.01.2020',
+            maxDate: '01.01.2025',
             showButtonPanel: true
         });
         $("#book_title").focus();

@@ -1,8 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+require_once '../__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
@@ -12,12 +9,11 @@ $id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($id != -1)
 {
-    $link = ConnectDB();
     $q = "select * from books where id=$id";
-    $r = mysql_query($q) or die("Death at : $q");
+    $r = mysqli_query($mysqli_link, $q) or die("Death at : $q");
 
-    if (@mysql_num_rows($r) > 0) {
-        $book = mysql_fetch_assoc($r);
+    if (@mysqli_num_rows($r) > 0) {
+        $book = mysqli_fetch_assoc($r);
 
         // теперь надо загрузить информацию о файлах!
         // file_cover
@@ -91,7 +87,6 @@ if ($id != -1)
         $isBookExists = 0;
         $book['published'] = 0;
     }
-    CloseDb($link);
 } else {
     Die('Некорректный вызов! ');
 }
@@ -109,7 +104,7 @@ if ($id != -1)
     <link rel="stylesheet" href="../css/colorbox.css" />
 
     <link rel="stylesheet" type="text/css" href="books.css">
-    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="../css/core.admin.css">
 
     <script src="../js/core.js"></script>
 

@@ -1,12 +1,11 @@
 <?php
-require_once('core.php');
+require_once '__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
 
 ?>
-
 
 <html>
 <head>
@@ -26,8 +25,6 @@ ifNotLoggedRedirect('/core/');
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-
-            // setSelectorsByHash(".search-selector"); // not required!
 
             // on change search selectors SET new window-hash
             $(".hash-selectors").on('change', '.search-selector', function(){

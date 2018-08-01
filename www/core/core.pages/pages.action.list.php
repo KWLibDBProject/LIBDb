@@ -1,25 +1,20 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-
-$link = ConnectDB();
+require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'staticpages';
 
 $query = "SELECT * FROM {$ref_name}";
-$res = mysql_query($query) or die($query);
-$ref_numrows = @mysql_num_rows($res) ;
+$res = mysqli_query($mysqli_link, $query) or die($query);
+$ref_numrows = @mysqli_num_rows($res) ;
 
 if ($ref_numrows > 0) {
-    while ($ref_record = mysql_fetch_assoc($res)) {
+    while ($ref_record = mysqli_fetch_assoc($res)) {
         $ref_list[$ref_record['id']] = $ref_record;
     }
 } else {
     $ref_message = 'Страниц не найдено!';
 }
 
-CloseDB($link);
 ?>
 
 <table border="1" width="100%">
@@ -42,10 +37,17 @@ CloseDB($link);
     </tr>
 REF_ONEROW;
         } //foreach
-        echo '</table>';
+
+
+
+
     } else {
+
         echo <<<REF_NUMROWS_ZERO
 <tr><td colspan="4">$ref_message</td></tr>
 REF_NUMROWS_ZERO;
+
+
     } // else
-?>
+
+echo '</table>';

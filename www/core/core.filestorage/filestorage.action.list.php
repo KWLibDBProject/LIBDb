@@ -1,10 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
-
-$link = ConnectDB();
+require_once '../__required.php'; // $mysqli_link
 
 /* @todo: оптимизировать блок. его как-то можно сократить, ведь неустановенность коллекции === all !*/
 // коллекция
@@ -43,16 +38,16 @@ $q = "
 SELECT id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter, stat_date_insert
 FROM {$fs_table} {$where} {$sortby}";
 
-$r = @mysql_query($q);
+$r = @mysqli_query($mysqli_link, $q);
 
 $fs = array();
 if ($r) {
-    while ($f = mysql_fetch_assoc($r)) {
+    while ($f = mysqli_fetch_assoc($r)) {
         $ext_a = explode('/',$f['filetype']);
 
         switch ($f['collection']) {
             case 'books': {
-                $qr = mysql_fetch_assoc(mysql_query("SELECT title FROM books WHERE id = {$f['relation']}"));
+                $qr = mysqli_fetch_assoc(mysqli_query($mysqli_link, "SELECT title FROM books WHERE id = {$f['relation']}"));
                 $qt = $qr['title'];
                 $f['external_link'] = "{$qt}";
                 $f['external_link'] = '→ <a href="/?fetch=articles&with=book&id='.$f['relation'].'" target="_blank"> '.$qt.'</a>';
@@ -86,7 +81,7 @@ if ($r) {
         $fs[ $f['id'] ] = $f;
     }
 }
-CloseDB($link);
+
 ?>
 
 <table class="" border="1" width="100%" id="exportable">

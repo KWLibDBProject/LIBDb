@@ -1,28 +1,40 @@
 <?php
-// функции работы с базой (@todo: синглтон класс)
 require_once('config/config.php');
 
+/**
+ *
+ * @return mysqli
+ */
 function ConnectDB()
 {
     global $CONFIG;
-    $link = mysql_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password']);
-    mysql_select_db($CONFIG['database'], $link) or die("Could not select db: " . mysql_error());
-    mysql_query("SET NAMES utf8", $link);
+    $link = mysqli_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password'], $CONFIG['database']);
+    mysqli_query($link, "SET NAMES utf8");
     return $link;
 }
 
-function CloseDB($link) // useless
+/**
+ * @param $link
+ */
+function CloseDB($link)
 {
-    mysql_close($link) or Die("Не удается закрыть соединение с базой данных.");
+    mysqli_close($link);
 }
 
+
+/**
+ *
+ * @param $array
+ * @return array
+ */
 function DB_EscapeArray( $array )
 {
+    global $mysqli_link;
     $result = array();
     foreach ($array as $key => $keyvalue) {
         switch (gettype( $keyvalue )) {
             case 'string': {
-                $result [ $key ] = mysql_real_escape_string( $keyvalue );
+                $result [ $key ] = mysqli_real_escape_string($mysqli_link, $keyvalue );
                 break;
             }
             case 'array': {
@@ -39,6 +51,7 @@ function DB_EscapeArray( $array )
 
 function MakeInsertEscaped($array, $table, $where = "")
 {
+    global $mysqli_link;
     $arr = DB_EscapeArray( $array );
     $query = "INSERT INTO $table ";
 
@@ -54,6 +67,7 @@ function MakeInsertEscaped($array, $table, $where = "")
 
 function MakeInsert($arr, $table, $where="")
 {
+    global $mysqli_link;
     $query = "INSERT INTO $table ";
 
     $keys = "(";
@@ -68,6 +82,7 @@ function MakeInsert($arr, $table, $where="")
 
 function MakeUpdateEscaped($array, $table, $where = "")
 {
+    global $mysqli_link;
     $arr = DB_EscapeArray( $array );
     $query = "UPDATE $table SET ";
     foreach ($arr as $key=>$val)
@@ -81,6 +96,7 @@ function MakeUpdateEscaped($array, $table, $where = "")
 
 function MakeUpdate($arr, $table, $where="")
 {
+    global $mysqli_link;
     $query = "UPDATE $table SET ";
     foreach ($arr as $key=>$val)
     {
@@ -94,19 +110,23 @@ function MakeUpdate($arr, $table, $where="")
 function DBLoginCheck($login, $password)
 {
     global $CONFIG;
+    global $mysqli_link;
     // возвращает массив с полями "error" и "message"
     $link = ConnectDB();
     // логин мы передали точно совершенно, мы это проверили в скрипте, а пароль может быть и пуст
     // а) логин не существует
     // б) логин существует, пароль неверен
     // в) логин существует, пароль верен
-    $userlogin = mysql_real_escape_string(mb_strtolower($login));
+    $userlogin = mysqli_real_escape_string($mysqli_link, mb_strtolower($login));
     $q_login = "SELECT `md5password`,`permissions`,`id` FROM users WHERE login = '$userlogin'";
-    if (!$r_login = mysql_query($q_login)) { /* error catch */ }
 
-    if (mysql_num_rows($r_login)==1) {
+    $r_login = mysqli_query($mysqli_link, $q_login);
+
+    if (!$r_login) { /* error catch */ }
+
+    if (mysqli_num_rows($r_login)==1) {
         // логин существует
-        $user = mysql_fetch_assoc($r_login);
+        $user = mysqli_fetch_assoc($r_login);
         if ($password === $user['md5password']) {
             // пароль верен
             $return = array(
@@ -137,20 +157,33 @@ function DBLoginCheck($login, $password)
     return $return;
 }
 
+/**
+ * @param $table
+ * @return bool
+ */
 function DBIsTableExists($table)
 {
-    return (mysql_query("SELECT 1 FROM $table WHERE 0")) ? true : false;
+    global $mysqli_link;
+    return (mysqli_query($mysqli_link,"SELECT 1 FROM $table WHERE 0")) ? true : false;
 }
 
-
+/**
+ * @param $field
+ * @param $table
+ * @param string $condition
+ * @return null
+ */
 function DBGetCount($field, $table, $condition = "")
 {
+    global $mysqli_link;
     $cond  = ($condition !== "")
         ? " WHERE {$condition}"
         : "";
     $query = "SELECT COUNT({$field}) AS rowcount FROM {$table} {$cond}";
-    if ($result = mysql_query($query)) {
-        $row = mysql_fetch_assoc($result);
+    $result = mysqli_query($mysqli_link, $query);
+
+    if ($result) {
+        $row = mysqli_fetch_assoc($result);
         $ret = $row['rowcount'];
     } else {
         $ret = NULL;

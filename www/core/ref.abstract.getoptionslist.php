@@ -1,6 +1,5 @@
 <?php
-require_once('core.php');
-require_once('core.db.php');
+require_once '__required.php'; // $mysqli_link
 
 // отдает JSON объект для построения selector/options list на основе абстрактного справочника
 $ref = (isset($_GET['ref'])) ? $_GET['ref'] : '';
@@ -10,16 +9,14 @@ $ref = getAllowedValue( $ref, $CONFIG['allowed_abstract_refs'] );
 
 if (!empty($ref))
 {
-    $link = ConnectDB();
-
     $query = "SELECT * FROM $ref";
-    $result = mysql_query($query) or die($query);
-    $ref_numrows = @mysql_num_rows($result) ;
+    $result = mysqli_query($mysqli_link, $query) or die($query);
+    $ref_numrows = @mysqli_num_rows($result) ;
 
     if ($ref_numrows>0)
     {
         $data['error'] = 0;
-        while ($row = mysql_fetch_assoc($result))
+        while ($row = mysqli_fetch_assoc($result))
         {
             $data['data'][ $row['id'] ] = "[{$row['id']}] {$row['data_str']}";
         }

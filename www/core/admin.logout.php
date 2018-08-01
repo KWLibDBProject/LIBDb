@@ -1,12 +1,7 @@
 <?php
-require_once('core.php');
-require_once('core.db.php');
-require_once('core.kwlogger.php');
-
+require_once '__required.php'; // $mysqli_link
 $SID = session_id();
 if(empty($SID)) session_start();
-
-ConnectDB();
 
 kwLogger::logEvent('login', 'userlist', $_SESSION['u_username'], 'User logged out');
 
@@ -20,4 +15,3 @@ setcookie('u_libdb_permissions',null,-1);
 unset($_COOKIE['u_libdb_permissions']);
 
 Redirect('/core/');
-?>

@@ -1,30 +1,24 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
+require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'staticpages';
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 
-// printr($_POST);
-
-$link = ConnectDB();
 $q = array(
-    'alias'         => mysql_real_escape_string($_POST['alias']),
-    'comment'       => mysql_real_escape_string($_POST['comment']),
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'content_en'    => mysql_real_escape_string($_POST['content_en']),
-    'content_ru'    => mysql_real_escape_string($_POST['content_ru']),
-    'content_uk'    => mysql_real_escape_string($_POST['content_uk']),
+    'alias'         => mysqli_real_escape_string($mysqli_link, $_POST['alias']),
+    'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
+    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk']),
+    'content_en'    => mysqli_real_escape_string($mysqli_link, $_POST['content_en']),
+    'content_ru'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ru']),
+    'content_uk'    => mysqli_real_escape_string($mysqli_link, $_POST['content_uk']),
     'stat_date_update' => ConvertTimestampToDate()
 );
 
-$qstr = MakeUpdate($q, $ref_name, " WHERE id=$id ");
+$qstr = MakeUpdate($q, $ref_name, " WHERE id={$id} ");
 
-if ($res = mysql_query($qstr, $link)) {
+if ($res = mysqli_query($mysqli_link, $qstr)) {
     $result['message'] = $qstr;
     $result['error'] = 0;
     kwLogger::logEvent('Update', 'pages', $id, "Static page updated, id = {$id}");
@@ -51,4 +45,3 @@ if (isAjaxCall()) {
         $tpl->out();
     }
 }
-?>

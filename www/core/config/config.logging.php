@@ -21,5 +21,3 @@ class kwLoggerConfig
     public static $log_datetime_format = '%Y-%m-%d %H:%M:%S';
 }
 
-
-?>

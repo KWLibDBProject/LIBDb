@@ -1,6 +1,5 @@
 <?php
-require_once('core.php');
-require_once('core.db.php');
+require_once '__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
@@ -19,8 +18,6 @@ data_comment varchar 64
 }
 
 */
-require_once('core.db.php');
-
 $reference = 'banners'; // вообще то если ref не задано - работать не с чем
 $return = '';
 
@@ -30,21 +27,19 @@ $action = getAllowedValue($action, array(
 ));
 
 
-$link = ConnectDB();
-
 switch ($action) {
     case 'insert':
     {
         $q = array(
-            'data_url_image' => mysql_real_escape_string($_GET['data_url_image']),
-            'data_url_href' => mysql_real_escape_string($_GET['data_url_href']),
-            'data_alt' => mysql_real_escape_string($_GET['data_alt']),
-            'data_is_visible' => mysql_real_escape_string($_GET['data_is_visible']),
-            'data_comment' => mysql_real_escape_string($_GET['data_comment']),
+            'data_url_image' => mysqli_real_escape_string($mysqli_link, $_GET['data_url_image']),
+            'data_url_href' => mysqli_real_escape_string($mysqli_link, $_GET['data_url_href']),
+            'data_alt' => mysqli_real_escape_string($mysqli_link, $_GET['data_alt']),
+            'data_is_visible' => mysqli_real_escape_string($mysqli_link, $_GET['data_is_visible']),
+            'data_comment' => mysqli_real_escape_string($mysqli_link, $_GET['data_comment']),
         );
         $qstr = MakeInsert($q, $reference);
-        $res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
-        $new_id = mysql_insert_id() or Die("Unable to get last insert id! Last request is [$qstr]");
+        $res = mysqli_query($mysqli_link, $qstr) or Die("Unable to insert data to DB!".$qstr);
+        $new_id = mysqli_insert_id($mysqli_link) or Die("Unable to get last insert id! Last request is [$qstr]");
 
         $result['message'] = $qstr;
         $result['error'] = 0;
@@ -55,15 +50,15 @@ switch ($action) {
     {
         $id = $_GET['id'];
         $q = array(
-            'data_url_image' => mysql_real_escape_string($_GET['data_url_image']),
-            'data_url_href' => mysql_real_escape_string($_GET['data_url_href']),
-            'data_alt' => mysql_real_escape_string($_GET['data_alt']),
-            'data_is_visible' => mysql_real_escape_string($_GET['data_is_visible']),
-            'data_comment' => mysql_real_escape_string($_GET['data_comment']),
+            'data_url_image' => mysqli_real_escape_string($mysqli_link, $_GET['data_url_image']),
+            'data_url_href' => mysqli_real_escape_string($mysqli_link, $_GET['data_url_href']),
+            'data_alt' => mysqli_real_escape_string($mysqli_link, $_GET['data_alt']),
+            'data_is_visible' => mysqli_real_escape_string($mysqli_link, $_GET['data_is_visible']),
+            'data_comment' => mysqli_real_escape_string($mysqli_link, $_GET['data_comment']),
         );
 
         $qstr = MakeUpdate($q, $reference, "WHERE id=$id");
-        $res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
+        $res = mysqli_query($mysqli_link, $qstr) or Die("Unable update data : ".$qstr);
 
         $result['message'] = $qstr;
         $result['error'] = 0;
@@ -74,7 +69,7 @@ switch ($action) {
     {
         $id = $_GET['id'];
         $q = "DELETE FROM $reference WHERE (id=$id)";
-        if ($r = mysql_query($q)) {
+        if ($r = mysqli_query($mysqli_link, $q)) {
             // запрос удаление успешен
             $result["error"] = 0;
             $result['message'] = 'Удаление успешно';
@@ -91,11 +86,11 @@ switch ($action) {
     {   // get single record
         $id = $_GET['id'];
         $query = "SELECT * FROM $reference WHERE id=$id";
-        $res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$query);
-        $ref_numrows = mysql_num_rows($res);
+        $res = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое справочника! ".$query);
+        $ref_numrows = mysqli_num_rows($res);
 
         if ($ref_numrows != 0) {
-            $result['data'] = mysql_fetch_assoc($res);
+            $result['data'] = mysqli_fetch_assoc($res);
             $result['error'] = 0;
             $result['message'] = '';
         } else {
@@ -108,9 +103,9 @@ switch ($action) {
     case 'list':
     {   // get full list
         $query = "SELECT * FROM $reference";
-        $res = mysql_query($query) or die("mysql_query_error: ".$query);
+        $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
 
-        $ref_numrows = @mysql_num_rows($res) ;
+        $ref_numrows = @mysqli_num_rows($res) ;
         $return = <<<TABLE_START
 <table border="1" width="100%">
 <tr>
@@ -124,7 +119,7 @@ switch ($action) {
 </tr>
 TABLE_START;
         if ($ref_numrows > 0) {
-            while ($ref_record = mysql_fetch_assoc($res))
+            while ($ref_record = mysqli_fetch_assoc($res))
             {
                 $is_visible = ($ref_record['data_is_visible']==1) ? "Да" : "Нет";
                 $return.= <<<TABLE_EACHROW
@@ -152,12 +147,12 @@ TABLE_IS_EMPTY;
     } // case 'list'
     case 'row-list': { // возвращает LI-список (VIEW!) баннеров
         $query = "SELECT * FROM $reference WHERE data_is_visible=true";
-        $res = mysql_query($query) or die("mysql_query_error: ".$query);
-        $res_numrows = @mysql_num_rows($res);
+        $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
+        $res_numrows = @mysqli_num_rows($res);
         $return = '';
         if ($res_numrows > 0)
         {
-            while ($row = mysql_fetch_assoc($res)) {
+            while ($row = mysqli_fetch_assoc($res)) {
                 $return .= <<<EACH_BANNER
                 <li class="banner-item">
                     <a href="{$row['data_url_href']}" target="_blank" class="banner-item-href">
@@ -456,4 +451,3 @@ EACH_BANNER;
 CloseDB($link);
 
 print($return);
-?>

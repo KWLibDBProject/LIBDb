@@ -1,7 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
+require_once '../__required.php'; // $mysqli_link
 
 $data = json_decode(file_get_contents("http://".$_SERVER['HTTP_HOST'].'/core/core.news/news.action.getitem.php?id='.$_GET['id']), true);
 $news_id = isset($_GET['id']) ? intval($_GET['id']) : -1;
@@ -26,4 +24,3 @@ $over = array(
 );
 $tpl->override($over);
 $tpl->out();
-?>

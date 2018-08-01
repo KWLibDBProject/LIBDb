@@ -86,13 +86,16 @@ function ConvertDateByLang($date_as_string, $lang)
  */
 function LoadFirstLettersForSelector($lang)
 {
+    global $mysqli_link;
     $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0 ORDER BY name_{$lang}";
-    if ($qr = mysql_query($ql))
+    $qr = mysqli_query($mysqli_link, $ql);
+
+    if ($qr)
     {
-        $qn = @mysql_num_rows($qr);
+        $qn = @mysqli_num_rows($qr);
         if ($qn > 0) {
             $return['error'] = 0;
-            while ($letter = mysql_fetch_assoc($qr)) {
+            while ($letter = mysqli_fetch_assoc($qr)) {
                 $return['data'][ "{$letter['letter']}" ] = "{$letter['letter']}";
             }
         } else {
@@ -116,15 +119,16 @@ function LoadFirstLettersForSelector($lang)
  */
 function LoadStaticPage($alias, $lang)
 {
+    global $mysqli_link;
     $return = array();
-    $alias = mysql_real_escape_string($alias);
+    $alias = mysqli_real_escape_string($mysqli_link, $alias);
 
     $query = "SELECT content_{$lang} AS pagecontent FROM staticpages WHERE alias LIKE '{$alias}'";
-    $res = mysql_query($query);
-    $numrows = mysql_num_rows($res);
+    $res = mysqli_query($mysqli_link, $query);
+    $numrows = mysqli_num_rows($res);
 
     if ($numrows == 1) {
-        $a = mysql_fetch_assoc($res);
+        $a = mysqli_fetch_assoc($res);
         $return['content']  = $a['pagecontent'];
         $return['state']    = '200';
     } else {
@@ -142,13 +146,14 @@ function LoadStaticPage($alias, $lang)
  */
 function LoadTopicInfo($id, $lang)
 {
+    global $mysqli_link;
     $q = "SELECT id, title_{$lang} AS title FROM topics WHERE id={$id}";
-    $r = mysql_query($q);
+    $r = mysqli_query($mysqli_link, $q);
     $ret = '';
 
-    if (@mysql_num_rows($r) == 1)
+    if (@mysqli_num_rows($r) == 1)
     {
-        $topic = mysql_fetch_assoc($r);
+        $topic = mysqli_fetch_assoc($r);
         $ret = $topic['title'];
     }
     return $ret;
@@ -161,13 +166,15 @@ function LoadTopicInfo($id, $lang)
  */
 function LoadTopics($lang)
 {
+    global $mysqli_link;
     $q = "SELECT id, title_{$lang} AS title FROM topics ORDER BY title_{$lang}";
-    $r = mysql_query($q);
+    $r = mysqli_query($mysqli_link, $q);
     $ret = array();
+    $num_rows = mysqli_num_rows($r);
 
-    if (@mysql_num_rows($r) > 0)
+    if ($num_rows > 0)
     {
-        while ($topic = mysql_fetch_assoc($r)) {
+        while ($topic = mysqli_fetch_assoc($r)) {
             $ret[ $topic['id']  ] = $topic['title'];
         }
     }
@@ -182,6 +189,7 @@ function LoadTopics($lang)
  */
 function LoadTopicsTree($lang, $withoutid=1)
 {
+    global $mysqli_link;
     $withoutid = $withoutid || 1;
 
     $query = "
@@ -194,14 +202,15 @@ LEFT JOIN topicgroups ON topicgroups.id = topics.rel_group
 ORDER BY topicgroups.display_order, topics.title_{$lang}
 ";
 
-    $r = mysql_query($query);
+    $r = mysqli_query($mysqli_link, $query);
     $data = array();
+    $num_rows = mysqli_num_rows($r);
 
-    if (@mysql_num_rows($r) > 0)
+    if ($num_rows > 0)
     {
         $group = '';
         $i = 1;
-        while ($row = mysql_fetch_assoc($r))
+        while ($row = mysqli_fetch_assoc($r))
         {
             if ($group != $row['title_group']) {
                 // send new optiongroup
@@ -240,6 +249,7 @@ ORDER BY topicgroups.display_order, topics.title_{$lang}
  */
 function LoadBooks()
 {
+    global $mysqli_link;
     $all_books = array();
 
     $bq = "SELECT
@@ -257,8 +267,8 @@ books.published = 1
 GROUP BY books.title
 ORDER BY books.title DESC ";
 
-    $br = mysql_query($bq);
-    while ($ba = mysql_fetch_assoc($br)) {
+    $br = mysqli_query($mysqli_link, $bq);
+    while ($ba = mysqli_fetch_assoc($br)) {
         $all_books[ $ba['year'] ][ $ba['bid'] ]['title'] = $ba['title'];
         $all_books[ $ba['year'] ][ $ba['bid'] ]['count'] = $ba['articles_count'];
     }
@@ -271,13 +281,14 @@ ORDER BY books.title DESC ";
  */
 function LoadBanners()
 {
+    global $mysqli_link;
     $ret = array();
     $query = "SELECT * FROM banners WHERE data_is_visible=true";
-    $res = mysql_query($query) or die("mysql_query_error: ".$query);
-    $res_numrows = @mysql_num_rows($res);
+    $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
+    $res_numrows = @mysqli_num_rows($res);
     if ($res_numrows > 0)
     {
-        while ($row = mysql_fetch_assoc($res)) {
+        while ($row = mysqli_fetch_assoc($res)) {
             $ret[] = $row;
         }
     } else $ret = null;
@@ -294,14 +305,15 @@ function LoadBanners()
  */
 function LoadLastNews($lang, $count=2)
 {
+    global $mysqli_link;
     $ret = array();
     $query = "SELECT id, title_{$lang} AS title, date_add FROM news ORDER BY timestamp DESC LIMIT {$count}";
-    $res = mysql_query($query) or die("mysql_query_error: ".$query);
-    $res_numrows = @mysql_num_rows($res);
+    $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
+    $res_numrows = @mysqli_num_rows($res);
     $i = 1;
     if ($res_numrows > 0)
     {
-        while ($row = mysql_fetch_assoc($res)) {
+        while ($row = mysqli_fetch_assoc($res)) {
             $ret[ $i ] = $row;
             $i++;
         }
@@ -316,12 +328,13 @@ function LoadLastNews($lang, $count=2)
  */
 function LoadBookInfo($id)
 {
+    global $mysqli_link;
     $query = "SELECT books.title AS book_title, books.year AS book_year, file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en FROM books WHERE id={$id}";
-    $r = mysql_query($query) or die($query);
-    if (@mysql_num_rows($r)==1) {
-        $ret = mysql_fetch_assoc($r);
-    } else {
-        $ret = array();
+    $r = mysqli_query($mysqli_link, $query) or die($query);
+
+    $ret = [];
+    if (@mysqli_num_rows($r)==1) {
+        $ret = mysqli_fetch_assoc($r);
     }
     return $ret;
 }
@@ -333,11 +346,12 @@ function LoadBookInfo($id)
  */
 function LoadLastBookInfo()
 {
-    $r = mysql_query("SELECT * FROM books WHERE published=1 ORDER BY timestamp desc LIMIT 1");
-    if (@mysql_num_rows($r)==1) {
-        $ret = mysql_fetch_assoc($r);
-    } else {
-        $ret = array();
+    global $mysqli_link;
+    $r = mysqli_query($mysqli_link, "SELECT * FROM books WHERE published=1 ORDER BY timestamp desc LIMIT 1");
+
+    $ret = [];
+    if (@mysqli_num_rows($r)==1) {
+        $ret = mysqli_fetch_assoc($r);
     }
     return $ret;
 }
@@ -351,6 +365,8 @@ function LoadLastBookInfo()
  */
 function BuildQuery($get, $lang)
 {
+    global $mysqli_link;
+
     $q_select = " SELECT DISTINCT
 articles.id
 , articles.udc AS article_udc
@@ -425,7 +441,7 @@ topics.deleted=0 {$query_show_published} ";
 
     /* Expert search conditions */
     $q_expert = '';
-    if ($get['actor'] == 'load_articles_expert_search') {
+    if (isset($get['actor']) && ($get['actor'] == 'load_articles_expert_search')) {
         /* пример: AND authors.name_en LIKE 'Mak%' */
         /* пример: AND articles.udc LIKE '%621%' */
         /* пример: AND articles.add_date LIKE '%2013' */
@@ -433,19 +449,19 @@ topics.deleted=0 {$query_show_published} ";
         /*@todo: critical: экранировать значения: possible SQL injection and script crush! */
 
         $q_expert .= ($get['expert_name'] != '')
-            ? " AND authors.name_{$lang} LIKE '" . mysql_real_escape_string($get['expert_name']) . "%' "
+            ? " AND authors.name_{$lang} LIKE '" . mysqli_real_escape_string($mysqli_link, $get['expert_name']) . "%' "
             : "";
 
         $q_expert .= ($get['expert_udc'] != '')
-            ? " AND articles.udc LIKE '%" . mysql_real_escape_string($get['expert_udc']) . "%' "
+            ? " AND articles.udc LIKE '%" . mysqli_real_escape_string($mysqli_link, $get['expert_udc']) . "%' "
             : "";
 
         $q_expert .= ($get['expert_add_date'] != '')
-            ? " AND articles.add_date LIKE '%" . mysql_real_escape_string( $get['expert_add_date']) . "' "
+            ? " AND articles.add_date LIKE '%" . mysqli_real_escape_string($mysqli_link, $get['expert_add_date']) . "' "
             : "";
 
         /* это оптимизированная достраивалка запроса на основе множественных keywords */
-        $keywords = explode(' ', mysql_real_escape_string( $get['expert_keywords'] ) );
+        $keywords = explode(' ', mysqli_real_escape_string($mysqli_link, $get['expert_keywords'] ) );
         $q_expert .= " AND ( ";
         foreach ($keywords as $keyword) {
             $q_expert .= " articles.keywords_{$lang} LIKE '%{$keyword}%' OR ";
@@ -469,13 +485,14 @@ topics.deleted=0 {$query_show_published} ";
  */
 function LoadArticles_ByQuery($get, $lang)
 {
+    global $mysqli_link;
     $query = BuildQuery($get, $lang);
-    $res = mysql_query($query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
-    $articles_count = @mysql_num_rows($res);
+    $res = mysqli_query($mysqli_link, $query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
+    $articles_count = @mysqli_num_rows($res);
     $all_articles = array();
 
     if ($articles_count > 0) {
-        while ($an_article = mysql_fetch_assoc($res))
+        while ($an_article = mysqli_fetch_assoc($res))
         {
             $id = $an_article['id'];
             $all_articles[$id] = $an_article;
@@ -493,11 +510,11 @@ function LoadArticles_ByQuery($get, $lang)
  */
 function LoadNewsListTOC($lang)
 {
-    $ret = '';
+    global $mysqli_link;
     $query = "SELECT id, title_{$lang} AS title, date_add AS date FROM news ORDER BY timestamp DESC LIMIT 15";
-    $r = @mysql_query($query);
+    $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
-        while ($row = mysql_fetch_assoc($r)) {
+        while ($row = mysqli_fetch_assoc($r)) {
             $ret[ $row['id'] ] = $row;
         }
     } else $ret = null;
@@ -515,12 +532,12 @@ function LoadNewsListTOC($lang)
  */
 function LoadNewsItem($id, $lang)
 {
-    $ret = '';
+    global $mysqli_link;
     $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, date_add FROM news where id={$id}";
-    $r = @mysql_query($query);
+    $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
-        if (@mysql_num_rows($r) > 0) {
-            $ret = mysql_fetch_assoc($r);
+        if (@mysqli_num_rows($r) > 0) {
+            $ret = mysqli_fetch_assoc($r);
         }
     } else $ret = null;
     return $ret;
@@ -531,15 +548,17 @@ function LoadNewsItem($id, $lang)
  *
  * @param $id
  * @param $lang
- * @return string
+ * @return array
  */
 function LoadAuthorInformation_ById($id, $lang)
 {
-    $ret = '';
-    $q = "SELECT * FROM authors WHERE id=$id";
-    $r = mysql_query($q);
-    if (@mysql_num_rows($r)>0) {
-        $author = mysql_fetch_assoc($r);
+    global $mysqli_link;
+    $ret = [];
+
+    $q = "SELECT * FROM `authors` WHERE id=$id";
+    $r = mysqli_query($mysqli_link, $q);
+    if (@mysqli_num_rows($r)>0) {
+        $author = mysqli_fetch_assoc($r);
         $ret['author_name'] = $author['name_'.$lang];
         $ret['author_title'] = $author['title_'.$lang];
         $ret['author_email'] = $author['email'];
@@ -560,7 +579,9 @@ function LoadAuthorInformation_ById($id, $lang)
  */
 function LoadArticles_ByAuthor($id, $lang)
 {
-    $ret = array();
+    global $mysqli_link;
+    $ret = [];
+
     $q = "SELECT
 articles.id AS aid,
 articles.title_{$lang} AS atitle,
@@ -574,9 +595,9 @@ AND books.published=1
 AND cross_aa.author = $id
 ORDER BY add_date
 ";
-    $r = mysql_query($q);
-    if (@mysql_num_rows($r) > 0) {
-        while ($article = mysql_fetch_assoc($r)) {
+    $r = mysqli_query($mysqli_link, $q);
+    if (@mysqli_num_rows($r) > 0) {
+        while ($article = mysqli_fetch_assoc($r)) {
             $ret [ $article['aid'] ] = $article;
         }
     }
@@ -596,12 +617,13 @@ ORDER BY add_date
  */
 function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 {
+    global $mysqli_link;
     $authors = array();
     // check for letter, '0' is ANY first letter
     if ($letter == '') {
         $letter = '0';
     } else {
-        $letter = mysql_real_escape_string($letter);
+        $letter = mysqli_real_escape_string($mysqli_link, $letter);
     }
 
     $where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
@@ -627,10 +649,10 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
     {$where_like}
     {$order}";
 
-    $r = mysql_query($q) or Die(0);
+    $r = mysqli_query($mysqli_link, $q) or Die(0);
 
-    if ( @mysql_num_rows($r) > 0 ) {
-        while ($i = mysql_fetch_assoc($r)) {
+    if ( @mysqli_num_rows($r) > 0 ) {
+        while ($i = mysqli_fetch_assoc($r)) {
             $authors[ $i['id'] ] = $i;
         }
     }
@@ -661,10 +683,12 @@ function LoadArticleInformation_ById($id, $lang)
  */
 function LoadAuthors_ByArticle($id, $lang)
 {
+    global $mysqli_link;
+
     $q = "SELECT authors.id AS author_id, name_{$lang} AS author_name, title_{$lang} AS author_title , email AS author_email FROM authors, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id ORDER BY name_{$lang}";
     $ret = array();
-    if ($r = mysql_query($q)) {
-        while ($row = @mysql_fetch_assoc($r)) {
+    if ($r = mysqli_query($mysqli_link, $q)) {
+        while ($row = @mysqli_fetch_assoc($r)) {
             $ret[ $row['author_id'] ] = $row;
         }
     }

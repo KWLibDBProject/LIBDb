@@ -6,7 +6,20 @@ require_once('core.kwlogger.php');
 /**
  *
  */
-class FileStorage extends FileStorageConfig {
+class FileStorage extends FileStorageConfig
+{
+    /**
+     * @var mysqli
+     */
+    private static $mysqli_link;
+
+    /**
+     * @param $mysqli_link
+     */
+    public static function init($mysqli_link)
+    {
+        self::$mysqli_link = $mysqli_link;
+    }
 
     /* возвращает blob-строку пустого PDF-файла */
     /**
@@ -97,9 +110,9 @@ class FileStorage extends FileStorageConfig {
         $table = self::getSQLTable();
         if (($id != null) && ($id != -1)) {
             $q = "SELECT content FROM {$table} WHERE id = {$id}";
-            $r = @mysql_query($q);
+            $r = mysqli_query(self::$mysqli_link, $q);
             if ($r) {
-                $d = mysql_fetch_assoc($r);
+                $d = mysqli_fetch_assoc($r);
                 $ret = $d['content'];
             } else {
                 $ret = null;
@@ -120,9 +133,9 @@ class FileStorage extends FileStorageConfig {
         $table = self::getSQLTable();
         if (($id != null) && ($id != -1)) {
             $q = "SELECT filesize, internal_name FROM {$table} WHERE id = {$id}";
-            $r = @mysql_query($q);
+            $r = mysqli_query(self::$mysqli_link, $q);
             if ($r) {
-                $d = mysql_fetch_assoc($r);
+                $d = mysqli_fetch_assoc($r);
                 $internal_file_name = self::getRealFileName($d['internal_name']);
                 if (file_exists($internal_file_name)) {
                     $h = fopen($internal_file_name, "rb");
@@ -147,7 +160,7 @@ class FileStorage extends FileStorageConfig {
      * @param $fileid
      * @return int|resource
      */
-    private function appendFileContent($fileinfo, $fileid)
+    private static function appendFileContent($fileinfo, $fileid)
     {
         $file_content = floadfile($fileinfo['tempname']);
 
@@ -164,9 +177,9 @@ class FileStorage extends FileStorageConfig {
         if (parent::$config['save_to_db'])
         {
             $qc = MakeUpdate(array(
-                'content' => mysql_real_escape_string($file_content)
+                'content' => mysqli_real_escape_string(self::$mysqli_link, $file_content)
             ), self::getSQLTable(), " WHERE id = {$fileid} ");
-            $return = mysql_query($qc);
+            $return = mysqli_query(self::$mysqli_link, $qc);
         }
         return $return;
     }
@@ -224,10 +237,10 @@ class FileStorage extends FileStorageConfig {
     {
         $table = self::getSQLTable();
         $q = "SELECT collection FROM {$table} WHERE relation = {$rel}";
-        $r = @mysql_query($q) or die($q);
+        $r = @mysqli_query(self::$mysqli_link, $q) or die($q);
 
         if ($r) {
-            $record = mysql_fetch_assoc($r);
+            $record = mysqli_fetch_assoc($r);
             return $record['collection'];
         } else {
             return -1;
@@ -251,10 +264,10 @@ class FileStorage extends FileStorageConfig {
         $table = self::getSQLTable();
         $q = "SELECT relation FROM {$table} WHERE id = $id";
 
-        $r = @mysql_query($q) or die($q);
+        $r = @mysqli_query(self::$mysqli_link, $q) or die($q);
 
         if ($r) {
-            $record = mysql_fetch_assoc($r);
+            $record = mysqli_fetch_assoc($r);
             return $record['relation'];
         } else {
             return -1;
@@ -274,10 +287,10 @@ class FileStorage extends FileStorageConfig {
 
         if (($id != null) && ($id != -1)) {
             $qp = "SELECT id, username, filesize, filetype, relation, collection FROM {$table} WHERE id = $id";
-            $rp = @mysql_query($qp);
+            $rp = @mysqli_query(self::$mysqli_link, $qp);
             if ($rp) {
-                if (@mysql_num_rows($rp) == 1) {
-                    $ret = mysql_fetch_assoc($rp);
+                if (@mysqli_num_rows($rp) == 1) {
+                    $ret = mysqli_fetch_assoc($rp);
                 } else {
                     $ret = null;
                 }
@@ -330,15 +343,15 @@ class FileStorage extends FileStorageConfig {
 
             /* insert fileinfo to DB */
             $q = MakeInsert($file_info, self::getSQLTable());
-            mysql_query($q) or kwLogger::_die("Death on $q");
-            $last_file_id = mysql_insert_id() or Die("Не удалось получить id последнего добавленного файла !");
+            mysqli_query(self::$mysqli_link, $q) or kwLogger::_die("Death on $q");
+            $last_file_id = mysqli_insert_id(self::$mysqli_link) or Die("Не удалось получить id последнего добавленного файла !");
 
             self::appendFileContent($file_info, $last_file_id);
 
             $q_api = MakeUpdate(array( $related_field_in_table => $last_file_id ),
                                 $collection,
                                 " WHERE id= $related_id ");
-            mysql_query($q_api) or Die("Death on update {$collection} table with request: ".$q_api);
+            mysqli_query(self::$mysqli_link, $q_api) or Die("Death on update {$collection} table with request: ".$q_api);
             $ret = $last_file_id;
 
             kwLogger::logEvent('Add', 'filestorage', $last_file_id, "Added {$file_info['username']} file to collection = {$file_info['collection']}, owner is {$file_info['relation']}, fileid is {$last_file_id}");
@@ -366,12 +379,12 @@ class FileStorage extends FileStorageConfig {
         if (($id != -1) && ($id != null))
         {
             // get intenal filename
-            $qr = mysql_fetch_assoc(mysql_query("SELECT id, internal_name, relation, collection FROM {$table} WHERE id = {$id}"));
+            $qr = mysqli_fetch_assoc(mysqli_query(self::$mysqli_link, "SELECT id, internal_name, relation, collection FROM {$table} WHERE id = {$id}"));
             $internal_name = $qr['internal_name'];
 
             // remove fileinfo (and content) from DB
             $query = "DELETE FROM {$table} WHERE id={$id}";
-            $ret = mysql_query($query) or die("Death on: ".$query);
+            $ret = mysqli_query(self::$mysqli_link, $query) or die("Death on: ".$query);
 
             // remove file from disk
             $fn = self::getRealFileName($internal_name);
@@ -400,14 +413,14 @@ class FileStorage extends FileStorageConfig {
         {
             // get intenal filename
             $q = "SELECT id, internal_name FROM {$table} WHERE relation={$rel} AND collection = '{$collection}' ";
-            $qr = mysql_query($q) or Die("Death on: {$q}");
-            $qf = mysql_fetch_assoc($qr);
+            $qr = mysqli_query(self::$mysqli_link, $q) or Die("Death on: {$q}");
+            $qf = mysqli_fetch_assoc($qr);
             $internal_name = $qf['internal_name'];
             $id = $qf['id'];
 
             // remove fileinfo (and content) from DB
             $query = "DELETE FROM {$table} WHERE id={$id}";
-            $ret = mysql_query($query) or die("Death on: ".$query);
+            $ret = mysqli_query(self::$mysqli_link, $query) or die("Death on: ".$query);
 
             // remove file from disk
             $fn = self::getRealFileName($internal_name);
@@ -434,7 +447,7 @@ class FileStorage extends FileStorageConfig {
                   ,
                   stat_date_download = now()
                   where id = {$id}";
-        @mysql_query($query);
+        @mysqli_query(self::$mysqli_link, $query);
     }
 
     public static function statLogDownloadEvent($id, $message)
@@ -479,9 +492,9 @@ class FileStorage extends FileStorageConfig {
         );
         $table = self::getSQLTable();
         $query = "SELECT id, username, filetype, internal_name, filesize FROM {$table}";
-        $r = @mysql_query($query);
+        $r = @mysqli_query(self::$mysqli_link, $query);
         if ($r) {
-            while ($filerecord = mysql_fetch_assoc($r))
+            while ($filerecord = mysqli_fetch_assoc($r))
             {
                 $filename = self::getRealFileName($filerecord['internal_name']);
                 $newfilesize = @filesize($filename);
@@ -502,9 +515,9 @@ class FileStorage extends FileStorageConfig {
                     if ($filerecord['filesize'] != $newfilesize) {
                         $result['total_files_fixed']++;
                         $query = "UPDATE {$table} SET filesize = {$newfilesize} WHERE id = {$filerecord['id']}";
-                        mysql_query("LOCK TABLES {$table}");
-                        mysql_query($query);
-                        mysql_query("UNLOCK TABLES");
+                        mysqli_query(self::$mysqli_link, "LOCK TABLES {$table}");
+                        mysqli_query(self::$mysqli_link, $query);
+                        mysqli_query(self::$mysqli_link, "UNLOCK TABLES");
                         $result['log'][] = array(
                             'id'        => $filerecord['id'],
                             'username'  => $filerecord['username'],

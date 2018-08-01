@@ -1,9 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-
-$link = ConnectDB();
+require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'news';
 
@@ -18,11 +14,11 @@ $year = ($year != 0)
 // кажется он использовался в запросе, но... где, когда?
 
 $query = "SELECT id, title_ru, date_add FROM {$ref_name} WHERE 1=1 ";
-$res = mysql_query($query) or die($query);
-$ref_numrows = @mysql_num_rows($res) ;
+$res = mysqli_query($mysqli_link, $query) or die($query);
+$ref_numrows = @mysqli_num_rows($res) ;
 
 if ($ref_numrows > 0) {
-    while ($ref_record = mysql_fetch_assoc($res)) {
+    while ($ref_record = mysqli_fetch_assoc($res)) {
         $ref_list[$ref_record['id']] = $ref_record;
     }
 } else {
@@ -70,4 +66,3 @@ $return .= <<<nal_table_end
 nal_table_end;
 
 print $return;
-?>

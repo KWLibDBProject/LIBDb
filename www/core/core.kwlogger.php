@@ -4,7 +4,20 @@ require_once('config/config.logging.php');
 
 class kwLogger extends kwLoggerConfig
 {
-    /* convert query record to SQL statement */
+    private static $mysqli_link;
+
+    public static function init($mysqli_link)
+    {
+        self::$mysqli_link = $mysqli_link;
+    }
+
+    /**
+     * convert query record to SQL statement
+     *
+     * @param $record
+     * @param string $where
+     * @return string
+     */
     private static function makeInsertStatement($record, $where="")
     {
         $table = self::$log_table;
@@ -20,9 +33,11 @@ class kwLogger extends kwLoggerConfig
         return $query;
     }
 
-    /*
-    prepare event record for export to specific format: db|json|csv
-    */
+    /**
+     * prepare event record for export to specific format: db|json|csv
+     *
+     * @return string
+     */
     private static function ConvertTimestampToDate()
     {
         return strftime(self::$log_datetime_format /*, time() */);
@@ -33,7 +48,7 @@ class kwLogger extends kwLoggerConfig
         $return = null;
         if ($target == 'db' || $target == 'mysql') {
             foreach( $array as $key => $value )
-                $return [ $key ] = mysql_real_escape_string( $value );
+                $return [ $key ] = mysqli_real_escape_string(self::$mysqli_link,  $value );
         } elseif ($target == 'json' || $target == 'file') {
             $return = json_encode($array) . "\r\n";
         } elseif ($target == 'csv') {
@@ -63,8 +78,8 @@ class kwLogger extends kwLoggerConfig
             'user'          =>  (isset($_COOKIE[ self::$log_userid_key_in_cookies ])) ? $_COOKIE[ self::$log_userid_key_in_cookies ] : -1
         );
         $query = self::makeInsertStatement($entry);
-        mysql_query( $query ) or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
-        return mysql_errno();
+        mysqli_query(self::$mysqli_link, $query ) or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
+        return mysqli_errno(self::$mysqli_link);
     }
 
     /* override die function */

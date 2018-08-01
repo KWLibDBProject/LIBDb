@@ -1,8 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+require_once '../__required.php'; // $mysqli_link
 
 // а) удалить автора, если у него есть статьи НЕЛЬЗЯ
 $author_id = intval($_GET["id"]);
@@ -10,12 +7,10 @@ $author_id = intval($_GET["id"]);
 $table = 'authors';
 $result = array();
 
-$link = ConnectDB();
-
 $qt = "SELECT COUNT(article) AS aha FROM cross_aa WHERE author = {$author_id}";
 
-if ($rt = mysql_query($qt)) {
-    $aha = mysql_fetch_assoc($rt);
+if ($rt = mysqli_query($mysqli_link, $qt)) {
+    $aha = mysqli_fetch_assoc($rt);
     if ($aha['aha'] > 0) {
         // у автора есть статьи, удалять низя
         $result["error"] = 4;
@@ -25,15 +20,15 @@ if ($rt = mysql_query($qt)) {
         // нужно получить информацию об авторе, в частности id его фотографии
 
         $q = "SELECT id, photo_id FROM {$table} WHERE id = {$author_id}";
-        $qr = mysql_query($q);
-        $qf = mysql_fetch_assoc($qr);
+        $qr = mysqli_query($mysqli_link, $q);
+        $qf = mysqli_fetch_assoc($qr);
         $photo_id = $qf['photo_id'];
 
         FileStorage::removeFileById($photo_id);
 
         // удалить запись об авторе из таблицы AUTHORS
         $q = "DELETE FROM {$table} WHERE (id = {$author_id})";
-        if ($r = mysql_query($q)) {
+        if ($r = mysqli_query($mysqli_link, $q)) {
             // запрос удаление успешен
             $result["error"] = 0;
             $result['message'] = 'Автор удален из базы данных.';
@@ -67,4 +62,3 @@ if (isAjaxCall()) {
     $tpl->override($override);
     $tpl->out();
 }
-?>

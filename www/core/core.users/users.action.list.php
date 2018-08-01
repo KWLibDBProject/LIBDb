@@ -1,23 +1,17 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
+require_once '../__required.php'; // $mysqli_link
 
-$link = ConnectDB();
-
-// $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'users';
 $ref_name = 'users';
 
 $ref_prompt = IsSet($_GET["prompt"]) ? ($_GET["prompt"]) : 'Работа с пользователем';
 
 $query = "SELECT * FROM $ref_name ";
 
-$res = mysql_query($query); // or die("Невозможно получить содержимое справочника! ".$ref_name);
-$ref_numrows = @mysql_num_rows($res) ;
+$res = mysqli_query($mysqli_link, $query); // or die("Невозможно получить содержимое справочника! ".$ref_name);
+$ref_numrows = @mysqli_num_rows($res) ;
 
 if ($ref_numrows > 0) {
-    while ($ref_record = mysql_fetch_assoc($res))
+    while ($ref_record = mysqli_fetch_assoc($res))
     {
         foreach($ref_record as $rid => $rfield)
         {

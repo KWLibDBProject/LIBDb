@@ -1,6 +1,5 @@
 <?php
-require_once('core.db.php');
-require_once('core.filestorage.php');
+require_once '__required.php'; // $mysqli_link
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : -1;
 
@@ -8,8 +7,7 @@ $is_downloading = isset($_SERVER['HTTP_REFERER']);
 
 if ($id != -1) {
 
-    $link = ConnectDB() or Die("Не удается соединиться с базой данных!");
-
+    FileStorage::init($mysqli_link);
     $file_info = FileStorage::getFileInfo($id); //@todo: а если файла нет? см. ниже getFileContent()
 
     /* update stat_download_counter
@@ -40,7 +38,6 @@ if ($id != -1) {
         print(FileStorage::getFileContent($id));
 
         flush();
-        CloseDB($link);
     } else {
         header("Content-type: image/gif");
 
@@ -56,4 +53,3 @@ if ($id != -1) {
 
     flush();
 };
-?>

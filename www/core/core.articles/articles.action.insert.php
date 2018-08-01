@@ -1,8 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+require_once '../__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
@@ -15,36 +12,34 @@ if (!IsSet($_POST['caller'])) {
     $result['error'] = 1; $result['message'] .= 'Unknown caller!'; print(json_encode($result)); exit();
 }
 
-$link = ConnectDB();
-
 $now = ConvertTimestampToDate();
 $q = array(
-    'udc'           => str_replace(" ", "", mysql_real_escape_string($_POST['udc'])),
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'abstract_en'   => mysql_real_escape_string($_POST['abstract_en']),
-    'abstract_ru'   => mysql_real_escape_string($_POST['abstract_ru']),
-    'abstract_uk'   => mysql_real_escape_string($_POST['abstract_uk']),
-    'keywords_en'   => mysql_real_escape_string($_POST['keywords_en']),
-    'keywords_ru'   => mysql_real_escape_string($_POST['keywords_ru']),
-    'keywords_uk'   => mysql_real_escape_string($_POST['keywords_uk']),
-    'refs_ru'       => mysql_real_escape_string($_POST['refs_ru']),
-    'refs_en'       => mysql_real_escape_string($_POST['refs_en']),
-    'refs_uk'       => mysql_real_escape_string($_POST['refs_ru']),
-    'book'          => mysql_real_escape_string($_POST['book']),
-    'add_date'      => mysql_real_escape_string($_POST['add_date']),
-    'topic'         => mysql_real_escape_string($_POST['topic']),
-    'pages'         => mysql_real_escape_string($_POST['pages']),
-    'doi'           => mysql_real_escape_string($_POST['doi']),
+    'udc'           => str_replace(" ", "", mysqli_real_escape_string($mysqli_link, $_POST['udc'])),
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
+    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk']),
+    'abstract_en'   => mysqli_real_escape_string($mysqli_link, $_POST['abstract_en']),
+    'abstract_ru'   => mysqli_real_escape_string($mysqli_link, $_POST['abstract_ru']),
+    'abstract_uk'   => mysqli_real_escape_string($mysqli_link, $_POST['abstract_uk']),
+    'keywords_en'   => mysqli_real_escape_string($mysqli_link, $_POST['keywords_en']),
+    'keywords_ru'   => mysqli_real_escape_string($mysqli_link, $_POST['keywords_ru']),
+    'keywords_uk'   => mysqli_real_escape_string($mysqli_link, $_POST['keywords_uk']),
+    'refs_ru'       => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
+    'refs_en'       => mysqli_real_escape_string($mysqli_link, $_POST['refs_en']),
+    'refs_uk'       => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
+    'book'          => mysqli_real_escape_string($mysqli_link, $_POST['book']),
+    'add_date'      => mysqli_real_escape_string($mysqli_link, $_POST['add_date']),
+    'topic'         => mysqli_real_escape_string($mysqli_link, $_POST['topic']),
+    'pages'         => mysqli_real_escape_string($mysqli_link, $_POST['pages']),
+    'doi'           => mysqli_real_escape_string($mysqli_link, $_POST['doi']),
     'stat_date_insert'  =>  $now,
     'stat_date_update'  =>  $now
 );
 
 // теперь нам нужно вставить данные в БАЗУ
 $qstr = MakeInsert($q,'articles');
-$res = mysql_query($qstr, $link) or Die("Невозможно вставить данные в базу  ".$qstr);
-$article_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");
+$res = mysqli_query($mysqli_link, $qstr) or Die("Невозможно вставить данные в базу  ".$qstr);
+$article_id = mysqli_insert_id($mysqli_link) or Die("Не удалось получить id последней добавленной записи!");
 
 if (IsSet($_FILES)) {
     switch ($_FILES['pdffile']['error']) {
@@ -72,7 +67,7 @@ if (IsSet($_POST['authors'])) {
     $authors = $_POST['authors'];
     foreach ($authors as $n => $author) {
         $qa = "INSERT INTO cross_aa (author,article) VALUES ($author, $article_id)";
-        mysql_query($qa , $link) or Die('error at '.$qa);
+        mysqli_query($mysqli_link, $qa) or Die('error at '.$qa);
     }
 } else {
     $result['error'] = 1;
@@ -101,5 +96,3 @@ if ($result['error'] == 0) {
 $tpl = new kwt('../ref.all.timed.callback.tpl');
 $tpl->override($override);
 $tpl->out();
-
-?>

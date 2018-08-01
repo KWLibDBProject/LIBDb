@@ -1,42 +1,34 @@
 <?php
-// print_r($_POST);
-
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
+require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'staticpages';
 
 
-$link = ConnectDB();
-
 $now = ConvertTimestampToDate();
 $q = array(
-    'alias'         => mysql_real_escape_string($_POST['alias']),
-    'comment'       => mysql_real_escape_string($_POST['comment']),
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'content_en'    => mysql_real_escape_string($_POST['content_en']),
-    'content_ru'    => mysql_real_escape_string($_POST['content_ru']),
-    'content_uk'    => mysql_real_escape_string($_POST['content_uk']),
+    'alias'         => mysqli_real_escape_string($mysqli_link, $_POST['alias']),
+    'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
+    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk']),
+    'content_en'    => mysqli_real_escape_string($mysqli_link, $_POST['content_en']),
+    'content_ru'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ru']),
+    'content_uk'    => mysqli_real_escape_string($mysqli_link, $_POST['content_uk']),
     'stat_date_insert'  =>  $now,
     'stat_date_update'  =>  $now
 );
 $qstr = MakeInsert($q, $ref_name);
 
-if ($res = mysql_query($qstr, $link)) {
+if ($res = mysqli_query($mysqli_link, $qstr)) {
     $result['message'] = $qstr;
     $result['error'] = 0;
-    $record_id = mysql_insert_id();
+    $record_id = mysqli_insert_id($mysqli_link);
     kwLogger::logEvent('Add', 'pages', $record_id, "Static page added, id = {$record_id}");
 }
 else {
     Die("Unable to insert data to DB!  ".$qstr);
 }
 
-CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));
@@ -54,4 +46,3 @@ if (isAjaxCall()) {
         $tpl->out();
     }
 }
-?>

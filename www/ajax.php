@@ -1,16 +1,15 @@
 <?php
 // Здесь собраны функции-ответы на вывод различных данных, передаваемых аяксом.
 // в основном это ответы на разные селекторы
-require_once('core/core.php');
-require_once('core/core.db.php');
-require_once('frontend.php');
-require_once('template.bootstrap24.php');
+define('__ROOT__', __DIR__);
+require_once (__ROOT__ . '/core/__required.php');
+require_once 'frontend.php';
+require_once 'template.bootstrap24.php';
 
 $actor = isset($_GET['actor']) ? $_GET['actor'] : ''; // безопасный результат - проверка в switch
 $lang = isset($_GET['lang']) ? GetRequestLanguage($_GET['lang']) : 'en';
 
 $return = '';
-$link = ConnectDB();
 
 $engine = new Template($tpl_path, $lang);
 
@@ -34,15 +33,15 @@ switch ($actor) {
         /* загрузить сборники и отдать JSON-объект для построения селекта */
         $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
         $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";
-        $r = mysql_query($q) or die($q);
-        $n = @mysql_num_rows($r) ;
+        $r = mysqli_query($mysqli_link, $q) or die($q);
+        $n = @mysqli_num_rows($r) ;
 
         if ($n > 0)
         {
             $data['error'] = 0;
-            while ($row = mysql_fetch_assoc($r))
+            while ($row = mysqli_fetch_assoc($r))
             {
-                $data['data'][ $row['id'] ] = returnBooksOptionString($row,$lang,$withoutid); // see core.php
+                $data['data'][ $row['id'] ] = returnBooksOptionString($row, $lang, $withoutid); // see core.php
                 // $data['data'][] = returnBooksOptionString($row, $lang, $withoutid); // see core.php
             }
         } else {
@@ -56,18 +55,18 @@ switch ($actor) {
         $i = 1;
         $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
         $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";
-        $r = mysql_query($q) or die($q);
-        $n = @mysql_num_rows($r) ;
+        $r = mysqli_query($mysqli_link, $q) or die($q);
+        $n = @mysqli_num_rows($r) ;
 
         if ($n > 0)
         {
             $data['error'] = 0;
-            while ($row = mysql_fetch_assoc($r))
+            while ($row = mysqli_fetch_assoc($r))
             {
                 $data['data'][ $i ] = array(
                     'type'      => 'option',
                     'value'     => $row['id'],
-                    'text'      => returnBooksOptionString($row,$lang,$withoutid)
+                    'text'      => returnBooksOptionString($row, $lang, $withoutid)
                 );
                 $i++;
             }
@@ -132,8 +131,6 @@ switch ($actor) {
 
 } // switch
 
-
-CloseDB($link);
 
 if (isAjaxCall()) {
     print($return);

@@ -1,9 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
-
+require_once '../__required.php'; // $mysqli_link
 
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 
@@ -14,16 +10,14 @@ if (!IsSet($_POST['ref_name'])) {
 $id = intval($_POST['id']);
 $table = 'users';
 
-$link = ConnectDB();
-
 $post = array(
-    'name'          => mysql_real_escape_string($_POST['name']),
-    'email'         => mysql_real_escape_string($_POST['email']),
-    'permissions'   => mysql_real_escape_string($_POST['permissions']),
-    'login'         => trim(mysql_real_escape_string($_POST['login'])),
-    'password'      => trim(mysql_real_escape_string($_POST['password'])),
-    'phone'         => mysql_real_escape_string($_POST['phone']),
-    'md5password'   => md5(trim(mysql_real_escape_string($_POST['password']))),
+    'name'          => mysqli_real_escape_string($mysqli_link, $_POST['name']),
+    'email'         => mysqli_real_escape_string($mysqli_link, $_POST['email']),
+    'permissions'   => mysqli_real_escape_string($mysqli_link, $_POST['permissions']),
+    'login'         => trim(mysqli_real_escape_string($mysqli_link, $_POST['login'])),
+    'password'      => trim(mysqli_real_escape_string($mysqli_link, $_POST['password'])),
+    'phone'         => mysqli_real_escape_string($mysqli_link, $_POST['phone']),
+    'md5password'   => md5(trim(mysqli_real_escape_string($mysqli_link, $_POST['password']))),
     'stat_date_update' => ConvertTimestampToDate()
 );
 // нельзя создать админа
@@ -33,14 +27,14 @@ $post['permissions'] =
     : $post['permissions'];
 
 $q = "SELECT `id` FROM {$table} WHERE `login` LIKE '$post[login]'";
-$r = mysql_query($q, $link);
+$r = mysqli_query($mysqli_link, $q);
 
-if (mysql_errno($link)==0)
+if (mysqli_errno($link)==0)
 {
-    if (mysql_num_rows($r)==0) {
+    if (mysqli_num_rows($r)==0) {
         // новое имя не совпадает с уже существующими
         $qstr = MakeUpdate($post, $table, "WHERE id=$id");
-        $res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
+        $res = mysqli_query($mysqli_link, $qstr) or Die("Unable update data : ".$qstr);
 
         $result['message'] = "User update successful!";
         $result['error'] = 0;
@@ -59,6 +53,3 @@ if (mysql_errno($link)==0)
 }
 
 print(json_encode($result));
-CloseDB($link);
-
-?>

@@ -1,8 +1,6 @@
 <?php
 // отдает JSON объект для селектора "топики"
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
+require_once '../__required.php'; // $mysqli_link
 
 
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
@@ -13,16 +11,14 @@ $lang = getAllowedValue($lang, array(
 
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
-$link = ConnectDB();
-
 $query = "SELECT * FROM topics";
-$result = mysql_query($query) or die($query);
-$ref_numrows = @mysql_num_rows($result) ;
+$result = mysqli_query($mysqli_link, $query) or die($query);
+$ref_numrows = @mysqli_num_rows($result) ;
 
 if ($ref_numrows>0)
 {
     $data['error'] = 0;
-    while ($row = mysql_fetch_assoc($result))
+    while ($row = mysqli_fetch_assoc($result))
     {
         $data['data'][ $row['id'] ] = returnTopicsOptionString($row,$lang,$withoutid); // see CORE.PHP
     }
@@ -31,6 +27,4 @@ if ($ref_numrows>0)
     $data['error'] = 1;
 }
 
-CloseDB($link);
 print(json_encode($data));
-?>

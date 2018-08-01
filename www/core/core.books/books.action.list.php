@@ -1,11 +1,7 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
+require_once '../__required.php'; // $mysqli_link
 
 // выводит в виде таблицы содержимое справочника 'books' в админку
-
-$link = ConnectDB();
 
 $ref_name = 'books';
 
@@ -15,13 +11,13 @@ $query = "SELECT books.id AS book_id, books.title, books.date, contentpages, pub
  GROUP BY books.id, books.title, books.year
  ORDER BY books.title DESC";
 
-$res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$query);
-$ref_numrows = @mysql_num_rows($res) ;
+$res = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое справочника! ".$query);
+$ref_numrows = @mysqli_num_rows($res) ;
 
 $ref_list = array();
 
 if ($ref_numrows > 0) {
-    while($ref_record = mysql_fetch_assoc($res)) {
+    while($ref_record = mysqli_fetch_assoc($res)) {
         $ref_list[$ref_record['book_id']] = $ref_record;
     }
 }
@@ -49,6 +45,7 @@ if ($ref_numrows > 0)
     foreach ($ref_list as $r_id => $book)
     {
         $book_ready = ($book['published']!=0) ? "Да<br><small>(опубликован)</small>" : "Нет<br><small>(в работе)</small>";
+
         $return .= <<<BAL_EACH
 <tr>
     <td class="centred_cell">{$book['book_id']}         </td>
@@ -86,6 +83,5 @@ AAL_NOTHING;
 $return .= <<<AAL_END
 </table>
 AAL_END;
-print($return);
 
-?>
+print($return);

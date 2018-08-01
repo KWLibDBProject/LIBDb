@@ -1,11 +1,9 @@
 <?php
-require_once('core/core.php');
-require_once('core/core.db.php');
-require_once('core/core.kwt.php');
-require_once('frontend.php');
-/*  вызов нужного шаблона и его движка. ВАЖНО: такую же строчку надо поменять в ajax.php
-    путь до каталога шаблонов определяется во включаемом файле движка шаблона */
-require_once('template.bootstrap24.php');
+define('__ROOT__', __DIR__);
+
+require_once (__ROOT__ . '/core/__required.php');
+require_once 'frontend.php';
+require_once 'template.bootstrap24.php';
 
 $site_language = GetSiteLanguage();
 
@@ -19,8 +17,6 @@ $override = array();
 
 // load default index file for template, based on language
 $tpl_index = new kwt($tpl_path."/index.{$site_language}.html", '<!--{', '}-->' );
-
-$link = ConnectDB();
 
 // init template engine
 $template_engine = new Template($tpl_path, $site_language);

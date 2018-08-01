@@ -1,8 +1,5 @@
 <?php
-require_once('core.php');
-require_once('core.db.php');
-require_once('core.kwlogger.php');
-require_once('core.kwt.php');
+require_once '__required.php'; // $mysqli_link
 
 $SID = session_id();
 if(empty($SID)) session_start();
@@ -54,4 +51,3 @@ if (isLogged()) {
         }
     }
 }
-?>

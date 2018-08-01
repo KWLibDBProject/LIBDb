@@ -1,8 +1,5 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+require_once '../__required.php'; // $mysqli_link
 
 /* файл вызывается черех аякс лоадер
 Варианты аргументов:
@@ -11,7 +8,6 @@ topic - показать статьи в топике
 book - показать статьи в сборнике
 */
 
-$link = ConnectDB();
 /* этот же запрос существует в frontend.php (DB_BuildQuery)*/
 $query = "
 SELECT DISTINCT articles.id, articles.title_en AS title_en, articles.title_ru AS title_ru, articles.title_uk AS title_uk, udc, pdfid, add_date, pages,
@@ -31,12 +27,12 @@ $query .= (IsSet($_GET['topic'])    && $_GET['topic'] !=0 ) ? " AND articles.top
 
 $query .= " ORDER BY articles.id";
 
-$res = mysql_query($query) or die("Death on : $query");
-$articles_count = @mysql_num_rows($res);
+$res = mysqli_query($mysqli_link, $query) or die("Death on : $query");
+$articles_count = mysqli_num_rows($res);
 
 $all_articles = array();
 if ($articles_count>0) {
-    while ($an_article = mysql_fetch_assoc($res))
+    while ($an_article = mysqli_fetch_assoc($res))
     {
         $id = $an_article['id']; // айди статьи
         $all_articles[$id] = $an_article; // ВСЯ статья
@@ -46,24 +42,22 @@ if ($articles_count>0) {
         $all_articles[$id]['pdffile'] = FileStorage::getFileInfo($an_article['pdfid']);
 
         // получить информацию об авторах
-        $r_auths = mysql_query("SELECT authors.name_ru, authors.title_ru, authors.id FROM authors, cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
-        $r_auths_count = @mysql_num_rows($r_auths);
+        $r_auths = mysqli_query($mysqli_link, "SELECT authors.name_ru, authors.title_ru, authors.id FROM authors, cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
+        $r_auths_count = @mysqli_num_rows($r_auths);
 
         if ($r_auths_count>0)
         {
             // $i=1;
-            while ($an_author = mysql_fetch_assoc($r_auths))
+            while ($an_author = mysqli_fetch_assoc($r_auths))
             {
                 $all_articles[$id]['authors'] .= <<<ArticlesAL_AuthorsEach
 <li> <a href="/?fetch=authors&with=info&id={$an_author['id']}&lang=ru" target="_blank">{$an_author['name_ru']}</a> ({$an_author['title_ru']})</li>
 ArticlesAL_AuthorsEach;
-                // $i++;
             }
             // $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4);
         }
     }
 }
-CloseDB($link);
 
 $return = <<<ArticlesAL_Start
 <table border="1" width="100%">
@@ -118,4 +112,3 @@ $return .= <<<ArticlesAL_End
 ArticlesAL_End;
 
 print($return);
-?>

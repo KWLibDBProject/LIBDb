@@ -1,24 +1,19 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-
-$link = ConnectDB();
+require_once '../__required.php'; // $mysqli_link
 $ref_name = 'topics';
 
 $query = "SELECT * FROM topics";
-$res = mysql_query($query) or die('$msg->say("errors/mysql_query_error",$query)');
+$res = mysqli_query($mysqli_link, $query) or die('$msg->say("errors/mysqli_query_error",$query)');
 
-$ref_numrows = @mysql_num_rows($res) ;
+$ref_numrows = @mysqli_num_rows($res) ;
 
 if ($ref_numrows > 0) {
-    while($ref_record = mysql_fetch_assoc($res))
+    while($ref_record = mysqli_fetch_assoc($res))
     {
         $ref_list[ $ref_record['id']  ] = $ref_record;
     }
 }
 
-CloseDB($link);
 $return = <<<REF_TAL_START
 <table border="1" width="100%">
 REF_TAL_START;
@@ -57,4 +52,3 @@ $return .= <<<REF_TAL_END
 REF_TAL_END;
 
 print($return);
-?>
