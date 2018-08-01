@@ -18,7 +18,7 @@
 
     <script type="text/javascript">
         // tinyMCE inits
-        author_id = {%author_id%};
+        var author_id = {%author_id%};
         $(document).ready(function () {
             $.ajaxSetup({cache: false, async: false});
 
@@ -49,7 +49,7 @@
                 $("select[name='selfhood']").prop('disabled', !this.checked);
                 // Участник редколлегии КАК МИНИМУМ тех-редактор, сменим значение селектора 'selfhood'
                 //@hint: +this.checked преобразует bool -> int
-                $("select[name='selfhood'] option[value='"+ +this.checked +"']").prop("selected",true);
+                $("select[name='selfhood'] option[value='"+ this.checked +"']").prop("selected",true);
             });
 
             /* photo actors */
@@ -176,7 +176,7 @@
         </legend>
         <dl class="h-layout">
             <dt class="w250">Участник редакционной коллегии:</dt>
-            <dd><input type="checkbox" name="is_es" id="is_es"></dd>
+            <dd><input type="checkbox" name="is_es" id="is_es" value="on"></dd>
             <dt class="w250">
                 Роль в редакционной коллегии:
             </dt>
@@ -190,10 +190,10 @@
         <!-- photo inputs -->
         <div id="file_current">
             <label for="file_current_input">
-                <button type="button" class="actor-file-current-show lightboxed" name="file_current_id_show">Фотография</button>
+                <button type="button" class="actor-file-current-show lightboxed" name="file_current_id_show">Показать фотографию</button>
             </label>
-            <input type="text" size="60" id="file_current_input" name="file_current_input" value="Нажмите *удалить* и добавьте фотографию автора">
-            <button type="button" name="file_current_id_remove" class="actor-file-current-remove">Удалить</button>
+            <input type="text" size="60" id="file_current_input" name="file_current_input" value="Нажмите *удалить фотографию* и добавьте фотографию автора">
+            <button type="button" name="file_current_id_remove" class="actor-file-current-remove">Удалить фотографию</button>
         </div>
 
         <div id="file_new" class="hidden">

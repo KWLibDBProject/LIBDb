@@ -3,25 +3,31 @@ require_once '../__required.php'; // $mysqli_link
 
 $table = 'authors';
 
+printr($_POST);
+
+
 $now = ConvertTimestampToDate();
 $q = array(
-    'name_ru'       => trim($_POST['name_ru'], ' '),
-    'name_en'       => trim($_POST['name_en'], ' '),
-    'name_uk'       => trim($_POST['name_uk'], ' '),
-    'title_ru'      => $_POST['title_ru'],
-    'title_en'      => $_POST['title_en'],
-    'title_uk'      => $_POST['title_uk'],
-    'email'         => $_POST['email'],
-    'workplace_en'  => strip_tags($_POST['workplace_en']),
-    'workplace_ru'  => strip_tags($_POST['workplace_ru']),
-    'workplace_uk'  => strip_tags($_POST['workplace_uk']),
-    'is_es'         => strtolower(($_POST['is_es']))=='on' ? 1 : 0,
-    'phone'         => $_POST['phone'],
-    'bio_en'        => $_POST['bio_en'],
-    'bio_ru'        => $_POST['bio_ru'],
-    'bio_uk'        => $_POST['bio_uk'],
-    /* самость */
-    'selfhood'      => $_POST['selfhood'],
+    'name_ru'       => trim($_POST['name_ru'] ?? '', ' '),
+    'name_en'       => trim($_POST['name_en'] ?? '', ' '),
+    'name_uk'       => trim($_POST['name_uk'] ?? '', ' '),
+    'title_ru'      => $_POST['title_ru'] ?? '',
+    'title_en'      => $_POST['title_en'] ?? '',
+    'title_uk'      => $_POST['title_uk'] ?? '',
+    'email'         => $_POST['email'] ?? '',
+    'workplace_en'  => strip_tags($_POST['workplace_en'] ?? ''),
+    'workplace_ru'  => strip_tags($_POST['workplace_ru'] ?? ''),
+    'workplace_uk'  => strip_tags($_POST['workplace_uk'] ?? ''),
+    'phone'         => $_POST['phone'] ?? '',
+    'bio_en'        => $_POST['bio_en'] ?? '',
+    'bio_ru'        => $_POST['bio_ru'] ?? '',
+    'bio_uk'        => $_POST['bio_uk'] ?? '',
+    /* Участие в редколлегии */
+    'is_es'         => (($_POST['is_es'] ?? 'off') == 'on') ? 1 : 0,
+
+    /* Роль в редколлегии */
+    'selfhood'      => $_POST['selfhood'] ?? 0,
+
     /* stats */
     'stat_date_insert'  =>  $now,
     'stat_date_update'  =>  $now
