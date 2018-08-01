@@ -58,7 +58,7 @@ if (IsSet($_FILES)) {
     }
 } else {
     $result['error'] = 1;
-    $result['message'] .= "Не выбран файл для загрузки или ошибка передачи данных! <br>\r\n";
+    $result['message'] = "Не выбран файл для загрузки или ошибка передачи данных! <br>\r\n";
 }
 
 // потом обновить кросс-таблицу
@@ -82,7 +82,7 @@ if ($result['error'] == 0) {
         'time' => $CONFIG['callback_timeout'] ?? 15,
         'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
-        'message' => 'Статья добавлена... '.$result['error_message']
+        'message' => 'Статья добавлена... ' . ($result['error_message'] ?? '')
     );
 } else {
     $override = array(

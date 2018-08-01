@@ -30,7 +30,7 @@ $q = array(
     'stat_date_update'  => ConvertTimestampToDate()
 );
 
-// теперь нам нужно вставить данные в БАЗУ (пока что с учетом вставки файла в БЛОБ)
+// теперь нам нужно вставить данные в БАЗУ
 $qstr = MakeUpdate($q, 'articles', "where id = $article_id");
 $res = mysqli_query($mysqli_link, $qstr) or Die("Невозможно вставить данные в базу  ".$qstr);
 
@@ -78,7 +78,7 @@ if (IsSet($_POST['authors'])) {
 
 } else {
     $result['error'] = 1;
-    $result['message'] .= "Не указаны авторы!<br>\r\n";
+    $result['message'] = "Не указаны авторы!<br>\r\n";
 }
 
 kwLogger::logEvent('Update', 'articles', $article_id, "Article updated, id is {$article_id}" );
@@ -89,7 +89,7 @@ if ($result['error'] == 0) {
         'time' => $CONFIG['callback_timeout'] ?? 15,
         'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
-        'message' => 'Информация о статье в базе обновлена... '.$result['error_message']
+        'message' => 'Информация о статье в базе обновлена... ' . ( $result['error_message'] ?? '')
     );
 } else {
     $override = array(

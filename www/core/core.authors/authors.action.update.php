@@ -23,7 +23,7 @@ $q = array(
     /* Участие в редколлегии */
     'is_es'         => (($_POST['is_es'] ?? 'off') == 'on') ? 1 : 0,
 
-    /* Роль в редколлегии */
+    /* Роль в редколлегии: @todo: доп-проверка, если он не in_es - то 0 ? */
     'selfhood'      => $_POST['selfhood'] ?? 0,
 
     'stat_date_update' => ConvertTimestampToDate()
