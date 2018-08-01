@@ -8,7 +8,8 @@ require_once('config/config.php');
 function ConnectDB()
 {
     global $CONFIG;
-    $link = mysqli_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password'], $CONFIG['database']);
+    $link = mysqli_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password'], $CONFIG['database'])
+            or die("Can't establish connection to '{$CONFIG['hostname']}' for user '{$CONFIG['username']}' at '{$CONFIG['database']}' database");
     mysqli_query($link, "SET NAMES utf8");
     return $link;
 }

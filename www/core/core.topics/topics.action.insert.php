@@ -13,7 +13,7 @@ $q = array(
 );
 $qstr = MakeInsert($q,$_POST['ref_name']);
 $res = mysqli_query($mysqli_link, $qstr) or Die("Unable to insert data to DB!".$qstr);
-$new_id = mysqli_insert_id() or Die("Unable to get last insert id!");
+$new_id = mysqli_insert_id($mysqli_link) or Die("Unable to get last insert id!");
 
 kwLogger::logEvent('Add', 'topics', $new_id, "Topic added, id = {$new_id}");
 

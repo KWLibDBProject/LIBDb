@@ -18,8 +18,8 @@ $q = array(
 $table = 'topicgroups';
 
 $qstr = MakeInsert($q, $table);
-$res = mysqli_query($mysqli_link, $qstr) or Die("Unable to insert data to DB!".$qstr);
-$new_id = mysqli_insert_id() or Die("Unable to get last insert id!");
+$res = mysqli_query($mysqli_link, $qstr) or die("Unable to insert data to DB!".$qstr);
+$new_id = mysqli_insert_id($mysqli_link) or die("Unable to get last insert id!");
 
 kwLogger::logEvent('Add', $table, $new_id, "Group of topics added, id = {$new_id}");
 

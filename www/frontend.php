@@ -668,8 +668,12 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
  */
 function LoadArticleInformation_ById($id, $lang)
 {
-    $ret = reset(LoadArticles_ByQuery(array('article_id' => $id ) , $lang));
-    return $ret;
+    $articles = LoadArticles_ByQuery(array('article_id' => $id ) , $lang)[$id];
+
+    // если использовать reset() - вроде бы более корректно - вернет 1 элемент массива или FALSE если элемента нет или он приводится к FALSE
+    // $articles = reset($articles);
+
+    return $articles;
 }
 
 

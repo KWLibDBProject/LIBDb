@@ -221,7 +221,8 @@ switch ($fetch) {
                     'article-doi'           => $article_info['doi'],
                     'article-pdf-last-download-date' => $article_info['pdf_last_download_date']
                 ));
-                $override['meta_keywords'] = $article_info['keywords']; // GLOBAL KEYWORDS
+                if (isset($article_info['keywords']))
+                    $override['meta_keywords'] = $article_info['keywords'];
                 $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.'.js', '/*', '*/');
