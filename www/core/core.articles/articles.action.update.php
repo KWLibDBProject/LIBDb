@@ -86,14 +86,14 @@ kwLogger::logEvent('Update', 'articles', $article_id, "Article updated, id is {$
 
 if ($result['error'] == 0) {
     $override = array(
-        'time' => 10,
+        'time' => $CONFIG['callback_timeout'] ?? 15,
         'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
         'message' => 'Информация о статье в базе обновлена... '.$result['error_message']
     );
 } else {
     $override = array(
-        'time' => 10,
+        'time' => $CONFIG['callback_timeout'] ?? 15,
         'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
         'message' => $result['message']

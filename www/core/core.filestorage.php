@@ -75,14 +75,26 @@ class FileStorage extends FileStorageConfig
         return parent::$config['table'];
     }
 
-    /* возвращает абсолютный путь до файла, _имя_ которого передано параметром */
     /**
+     * возвращает абсолютный путь до файла, _имя_ которого передано параметром
+     *
      * @param $filename
      * @return string
      */
     private static function getRealFileName($filename)
     {
-        return $_SERVER['DOCUMENT_ROOT'].parent::$config['path'].$filename;
+        $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(parent::$config['path'], '/') . '/' . $filename;
+        return $filename;
+    }
+
+    /**
+     * Возвращает путь до filestorage с оконечным слэшем.
+     *
+     * @return string
+     */
+    public static function getStorageDir()
+    {
+        return rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(parent::$config['path'], '/') . '/';
     }
 
     /* построение внутреннего имени на основе информации о файле */
@@ -167,7 +179,14 @@ class FileStorage extends FileStorageConfig
         if (parent::$config['save_to_disk']) {
             // save to file
             $filename = self::getRealFileName($fileinfo['internal_name']);
-            $fh = fopen($filename, "wb");
+            $fh = @fopen($filename, "wb");
+
+            if (!$fh) {
+                print_r(error_get_last());
+                die;
+            }
+
+
             $return = fwrite($fh, $file_content);
             fflush($fh);
             fclose($fh);

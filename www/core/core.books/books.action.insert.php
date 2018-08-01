@@ -29,11 +29,11 @@ if (count($_FILES)>0) {
     }
 
     $result['error'] = 0;
-    $result['message'] .= "Данные обновлены!";
+    $result['message'] = "Данные обновлены!";
 
  } else {
     $result['error'] = 1;
-    $result['message'] .= "Не выбраны файлы для загрузки или ошибка передачи данных! <br>\r\n";
+    $result['message'] = "Не выбраны файлы для загрузки или ошибка передачи данных! <br>\r\n";
 }
 
 kwLogger::logEvent('Add', 'books', $book_id, "Added book, new id = {$book_id}");
@@ -43,14 +43,14 @@ if (isAjaxCall()) {
 } else {
     if ($result['error'] == 0) {
         $override = array(
-            'time' => 10,
+            'time' => $CONFIG['callback_timeout'] ?? 15,
             'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => 'Сборник добавлен'
         );
     } else {
         $override = array(
-            'time' => 10,
+            'time' => $CONFIG['callback_timeout'] ?? 15,
             'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => $result['message']

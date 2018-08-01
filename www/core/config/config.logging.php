@@ -9,7 +9,7 @@ class kwLoggerConfig
     public static $log_table   =   'eventlog';
 
     // path to local errors.log file
-    public static $log_file    =   '/core/config/errors.log';
+    public static $log_file    =   'core/config/errors.log';
 
     // key in $_SESSION for logging informaton about logged user
     public static $log_userid_key_in_session  = 'u_id';

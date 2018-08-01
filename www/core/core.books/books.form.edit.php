@@ -136,7 +136,7 @@ if ($id != -1)
             });
             $("#button-remove").on('click',function(event){
                 if (confirm("Вы уверены, что хотите удалить сборник?")) {
-                    window.location.href = 'books.action.remove.php?id='+<? echo $id ?>;
+                    window.location.href = 'books.action.remove.php?id='+<?php echo $id ?>;
                 }
 
             });

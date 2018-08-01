@@ -52,7 +52,7 @@ if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     $override = array(
-        'time' => 15,
+        'time' => $CONFIG['callback_timeout'] ?? 15,
         'target' => '/core/ref.authors.show.php',
         'buttonmessage' => 'Вернуться к списку авторов',
         'message' => $result['message']

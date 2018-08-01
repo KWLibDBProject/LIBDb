@@ -25,7 +25,7 @@ if (!IsSet($_GET['id'])) {
         } else {
             // статей нет, можно удалить
             /* вот тут нужно удалить 5 файлов из таблицы STORAGE!!! */
-            $book_files = mysqli_fetch_assoc(mysqli_query("SELECT file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en FROM books WHERE id={$id}"));
+            $book_files = mysqli_fetch_assoc(mysqli_query($mysqli_link, "SELECT file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en FROM books WHERE id={$id}"));
             FileStorage::removeFileById($book_files['file_cover']);
             FileStorage::removeFileById($book_files['file_title_ru']);
             FileStorage::removeFileById($book_files['file_title_en']);
@@ -56,7 +56,7 @@ if (!IsSet($_GET['id'])) {
         print(json_encode($result));
     } else {
         $override = array(
-            'time' => 15,
+            'time' => $CONFIG['callback_timeout'] ?? 15,
             'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => $result['message']

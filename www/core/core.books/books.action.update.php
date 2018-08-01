@@ -27,11 +27,11 @@ if (count($_FILES)>0) {
         FileStorage::addFile($a_data, $book_id, 'books', $a_file);
     }
     $result['error'] = 0;
-    $result['message'] .= "Данные обновлены, новые файлы в базу добавлены!";
+    $result['message'] = "Данные обновлены, новые файлы в базу добавлены!";
 } else {
     $result['error'] = 1;
     // файлы не менялись, хотя прочие данные обновлены
-    $result['message'] .= "Данные обновлены!";
+    $result['message'] = "Данные обновлены!";
 }
 
 kwLogger::logEvent('Update', 'books', $book_id, "Updated book, id = {$book_id}");
@@ -42,14 +42,14 @@ if (isAjaxCall()) {
 } else {
     if ($result['error'] == 0) {
         $override = array(
-            'time' => 10,
+            'time' => $CONFIG['callback_timeout'] ?? 15,
             'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => 'Сборник обновлен'
         );
     } else {
         $override = array(
-            'time' => 10,
+            'time' => $CONFIG['callback_timeout'] ?? 15,
             'target' => '/core/ref.books.show.php',
             'buttonmessage' => 'Вернуться к списку сборников',
             'message' => $result['message']

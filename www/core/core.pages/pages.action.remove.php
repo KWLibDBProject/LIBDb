@@ -25,7 +25,7 @@ if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     $override = array(
-        'time' => 15,
+        'time' => $CONFIG['callback_timeout'] ?? 15,
         'target' => '../ref.pages.show.php',
         'buttonmessage' => 'Вернуться к списку статичных страниц',
         'message' => $result['message']

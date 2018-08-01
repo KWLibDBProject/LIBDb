@@ -34,7 +34,7 @@ if (isAjaxCall()) {
     if ($result['error'] == 0) {
         // use template
         $override = array(
-            'time' => 10,
+            'time' => $CONFIG['callback_timeout'] ?? 15,
             'target' => '/core/ref.news.show.php',
             'buttonmessage' => 'Вернуться к списку новостей',
             'message' => 'Данные обновлены'

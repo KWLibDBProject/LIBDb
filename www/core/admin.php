@@ -14,6 +14,8 @@ $stats = array(
     'news'      =>  DBGetCount('id', 'news')
 );
 
+$disk_space_available = ConvertToHumanBytes( disk_free_space( FileStorage::getStorageDir() ) , 1);
+
 ?>
 <html>
 <head>
@@ -182,7 +184,7 @@ $stats = array(
         </td>
         <td valign="top">
             <br/>
-            <h2>Немного статистики</h2>
+            <h2>Cтатистика</h2>
             <ul>
                 <li>На данный момент в базе данных:</li>
                 <li>
@@ -196,6 +198,9 @@ $stats = array(
                 </li>
                 <li>
                     <span class="padded"><?php echo $stats['files']?></span> файлов в хранилище (pdf-ок, фотографий итд)
+                </li>
+                <li>
+                    <span class="padded"><?php echo $disk_space_available; ?></span> свободно в файловом хранилище.
                 </li>
                 <!-- Залоггированных событий: <?php echo $stats['events']?> -->
             </ul>

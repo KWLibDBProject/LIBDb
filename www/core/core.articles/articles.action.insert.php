@@ -79,14 +79,14 @@ kwLogger::logEvent('Add', 'articles', $article_id, "Article added, new id is {$a
 
 if ($result['error'] == 0) {
     $override = array(
-        'time' => 10,
+        'time' => $CONFIG['callback_timeout'] ?? 15,
         'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
         'message' => 'Статья добавлена... '.$result['error_message']
     );
 } else {
     $override = array(
-        'time' => 10,
+        'time' => $CONFIG['callback_timeout'] ?? 15,
         'target' => '/core/ref.articles.show.php',
         'buttonmessage' => 'Вернуться к списку статей',
         'message' => $result['message']

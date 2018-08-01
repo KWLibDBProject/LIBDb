@@ -100,7 +100,9 @@ class kwLogger extends kwLoggerConfig
             $die_message = print_r($dataset, true);
         }
 
-        $f = fopen( $_SERVER['DOCUMENT_ROOT'].self::$log_file , 'a+' );
+        $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . self::$log_file;
+
+        $f = fopen( $filename , 'a+' );
         fwrite($f, self::prepare( $entry, 'file' ));
         fclose($f);
         die( $message . $die_message);

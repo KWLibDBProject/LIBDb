@@ -36,7 +36,7 @@ if (isAjaxCall()) {
     if ($result['error'] == 0) {
         // use template
         $override = array(
-            'time' => 10,
+            'time' => $CONFIG['callback_timeout'] ?? 15,
             'target' => '../ref.pages.show.php',
             'buttonmessage' => 'Вернуться к списку страниц',
             'message' => 'Страница добавлена в базу данных'
