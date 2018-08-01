@@ -25,7 +25,6 @@ if ($ref_numrows > 0) {
     $ref_message = 'Новостей не найдено!';
 }
 
-CloseDB($link);
 
 $return = '';
 $return .= <<<nal_table_start

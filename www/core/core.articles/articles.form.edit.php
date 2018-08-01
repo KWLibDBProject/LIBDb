@@ -57,7 +57,6 @@ if ($numarticles == 1)
 
 
 
-CloseDB($link);
 ?>
 <!DOCTYPE HTML>
 <html>

@@ -448,6 +448,5 @@ EACH_BANNER;
     }
 
 } //switch
-CloseDB($link);
 
 print($return);

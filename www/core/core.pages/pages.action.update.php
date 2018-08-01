@@ -27,7 +27,6 @@ else {
     Die("Unable to insert data to DB!  ".$qstr);
 }
 
-CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));

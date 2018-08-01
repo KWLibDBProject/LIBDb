@@ -35,27 +35,27 @@ if ($articles_count>0) {
     while ($an_article = mysqli_fetch_assoc($res))
     {
         $id = $an_article['id']; // айди статьи
-        $all_articles[$id] = $an_article; // ВСЯ статья
 
-        // получить информацию о связанной ПДФке
-
-        $all_articles[$id]['pdffile'] = FileStorage::getFileInfo($an_article['pdfid']);
-
+        $an_article['pdffile'] = FileStorage::getFileInfo($an_article['pdfid']);
         // получить информацию об авторах
         $r_auths = mysqli_query($mysqli_link, "SELECT authors.name_ru, authors.title_ru, authors.id FROM authors, cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
         $r_auths_count = @mysqli_num_rows($r_auths);
 
         if ($r_auths_count>0)
         {
-            // $i=1;
+            $an_article['authors'] = '';
+
             while ($an_author = mysqli_fetch_assoc($r_auths))
             {
-                $all_articles[$id]['authors'] .= <<<ArticlesAL_AuthorsEach
+                $an_article['authors'] .= <<<ArticlesAL_AuthorsEach
 <li> <a href="/?fetch=authors&with=info&id={$an_author['id']}&lang=ru" target="_blank">{$an_author['name_ru']}</a> ({$an_author['title_ru']})</li>
 ArticlesAL_AuthorsEach;
             }
-            // $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4);
         }
+
+        $all_articles[$id] = $an_article; // ВСЯ статья
+
+
     }
 }
 

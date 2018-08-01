@@ -24,7 +24,6 @@ mysqli_query($mysqli_link, $q) or Die("Death at {$q}");
 
 kwLogger::logEvent('Delete', 'articles', $article_id, "Article removed, id was: {$article_id}" );
 
-CloseDB($link);
 
 if ($result['error'] == 0) {
     $override = array(

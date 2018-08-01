@@ -83,7 +83,6 @@ if (IsSet($_POST['authors'])) {
 
 kwLogger::logEvent('Update', 'articles', $article_id, "Article updated, id is {$article_id}" );
 
-CloseDB($link);
 
 if ($result['error'] == 0) {
     $override = array(

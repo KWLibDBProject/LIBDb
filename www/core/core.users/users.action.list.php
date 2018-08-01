@@ -23,7 +23,6 @@ if ($ref_numrows > 0) {
     $ref_message = 'Пока не ввели ни одного пользователя!';
 }
 
-CloseDB($link);
 $return = <<<RUA_Start
 <table border="1" width="100%">
 RUA_Start;

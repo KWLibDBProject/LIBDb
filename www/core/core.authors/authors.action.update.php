@@ -45,7 +45,6 @@ else {
 
 kwLogger::logEvent('Update', 'authors', $new_author_id, "Author updated, id is {$new_author_id}" );
 
-CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));

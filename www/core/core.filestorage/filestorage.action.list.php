@@ -3,13 +3,11 @@ require_once '../__required.php'; // $mysqli_link
 
 /* @todo: оптимизировать блок. его как-то можно сократить, ведь неустановенность коллекции === all !*/
 // коллекция
-$collection =
-    (isset($_GET['collection']))
-    ? $_GET['collection']
-    : "all";
+$collection = at($_GET, 'collection', 'all');
 $collection = getAllowedValue( $collection , array(
     'all', 'articles', 'authors', 'books'
 ));
+
 $where =
     ($collection != "all")
     ? " WHERE collection = '{$collection}'"
@@ -22,7 +20,7 @@ $sortorder  =
     : " ASC ";
 
 // критерий сортировки
-$sort_type = $_GET['sort-type'];
+$sort_type = $_GET['sort-type'] ?? 'id';
 $sort_type = getAllowedValue( $sort_type, array(
     'id', 'username', 'stat_date_insert', 'filesize', 'relation', 'stat_download_counter'
 ));

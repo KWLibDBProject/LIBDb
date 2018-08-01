@@ -27,8 +27,6 @@ if (!empty($ref))
         $data['count'] = 0;
     }
 
-    CloseDB($link);
-
 } else {
     $data['data'][1] = "Справочник $ref не существует!";
     $data['error'] = 2;

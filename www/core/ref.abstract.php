@@ -511,8 +511,6 @@ TABLE_IS_EMPTY;
             break;
         }
     } //switch
-    CloseDB($link);
-
     print($return);
 } else {
     Die('При вызове не указан идентификатор справочника! Работать не с чем! ');

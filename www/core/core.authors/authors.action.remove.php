@@ -47,7 +47,6 @@ if ($rt = mysqli_query($mysqli_link, $qt)) {
 };
 
 
-CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));

@@ -314,10 +314,11 @@ function getAllowedValue( $data, $allowed_values_array )
 
 /**
  * Эквивалент isset( array[ key ] ) ? array[ key ] : default ;
- * at PHP 7 useless, z = a ?? b;
+ * at PHP 7 useless, z = a ?? b;*
  * @param $array
  * @param $key
  * @param $default
+ * @return mixed
  */
 function at($array, $key, $default)
 {

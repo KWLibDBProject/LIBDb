@@ -5,6 +5,8 @@ $SID = session_id();
 if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
 
+//@todo: не загружать статьи если их больше 100, вместо этого писать сообщение об этом
+
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -23,6 +25,7 @@ ifNotLoggedRedirect('/core/');
         var booksList = preloadOptionsList('core.books/ref.books.action.getoptionlist.php');
         var topicsList = preloadOptionsList('core.topics/ref.topics.action.getoptionlist.php');
         var url_extended = "core.articles/articles.action.list.php";
+        var url_get_articles_count = ""; //@todo: через ajax.php
 
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
@@ -45,8 +48,11 @@ ifNotLoggedRedirect('/core/');
             } else {
                 query = '';
             }
+
+            //@todo: дергаем базу на предмет количества статей
+
             // загружаем статьи согласно стартовым селекторам
-            $("#articles_list").empty().load(url_extended+query);
+            $("#articles_list").empty().load(url_extended + query);
 
             $("#button-newarticle").on('click',function(){
                 location.href = 'core.articles/articles.form.add.php';

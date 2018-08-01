@@ -76,7 +76,6 @@ if (IsSet($_POST['authors'])) {
 
 kwLogger::logEvent('Add', 'articles', $article_id, "Article added, new id is {$article_id}" );
 
-CloseDB($link);
 
 if ($result['error'] == 0) {
     $override = array(

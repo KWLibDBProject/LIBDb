@@ -13,9 +13,9 @@ if ( (!isset($_GET['letter'])) || ($_GET['letter'] != '0') ) {
     $like = '';
 }
 
-if ($like != '') $where = " WHERE {$like}";
+$where = ($like != '') ? " WHERE {$like}" : "";
 
-$ref_list = array();
+$ref_list = [];
 
 $query = "SELECT * FROM {$ref_name} {$where} {$sort_order}";
 $res = mysqli_query($mysqli_link, $query) or die($query);
@@ -27,7 +27,6 @@ if ($ref_numrows > 0) {
     }
 }
 
-CloseDB($link);
 $return = <<<AAL_Start
 <table border="1" width="100%">
 AAL_Start;

@@ -12,8 +12,9 @@ kwLogger::logEvent('Maintenance', 'filestorage', '*',
     "Fixed: {$result['total_files_fixed']} files. " .
     "Errors: {$result['total_files_error']}. ");
 
+$exit_message = $_GET['target'] ?? '';
 $exit_message =
-    $_GET['target'] == 'iframe'
+    $exit_message == 'iframe'
         ? '<a href="#" onclick="javascript:window.parent.closeIframe()">Закрыть</a>'
         : '<a href="/core/"><<< Назад в административный раздел</a>';
 

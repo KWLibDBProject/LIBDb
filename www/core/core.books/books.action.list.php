@@ -22,7 +22,6 @@ if ($ref_numrows > 0) {
     }
 }
 
-CloseDB($link);
 $return = <<<BAL_Start
 <table border="1" width="100%">
 BAL_Start;
