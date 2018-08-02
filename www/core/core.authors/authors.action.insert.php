@@ -22,15 +22,12 @@ $q = array(
     'bio_en'        => $_POST['bio_en'] ?? '',
     'bio_ru'        => $_POST['bio_ru'] ?? '',
     'bio_uk'        => $_POST['bio_uk'] ?? '',
+
     /* Участие в редколлегии */
     'is_es'         => (($_POST['is_es'] ?? 'off') == 'on') ? 1 : 0,
 
     /* Роль в редколлегии */
     'selfhood'      => $_POST['selfhood'] ?? 0,
-
-    /* stats */
-    'stat_date_insert'  =>  $now,
-    'stat_date_update'  =>  $now
 );
 $qstr = MakeInsertEscaped( $q, $table );
 
@@ -59,16 +56,18 @@ if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     if ($result['error'] == 0) {
-        // use template
-        $override = array(
-            'time' => $CONFIG['callback_timeout'] ?? 15,
-            'target' => '/core/ref.authors.show.php',
-            'buttonmessage' => 'Вернуться к списку авторов',
-            'message' => "Автор добавлен в базу данных, его внутренний идентификатор = $new_author_id"
+
+        $template_dir = '$/core/_templates';
+        $template_file = "ref.all_timed_callback.html";
+
+        $template_data = array(
+            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'target'        => '/core/ref.authors.show.php',
+            'button_text'   => 'Вернуться к списку авторов',
+            'message'       => "Автор добавлен в базу данных, его внутренний идентификатор = {$new_author_id}"
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();
+        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
     }
 }
 

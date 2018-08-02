@@ -19,7 +19,7 @@ if ($rt = mysqli_query($mysqli_link, $qt)) {
         // статей нет, можно удалять автора
         // нужно получить информацию об авторе, в частности id его фотографии
 
-        $q = "SELECT id, photo_id FROM {$table} WHERE id = {$author_id}";
+        $q = "SELECT `id`, `photo_id` FROM {$table} WHERE id = {$author_id}";
         $qr = mysqli_query($mysqli_link, $q);
         $qf = mysqli_fetch_assoc($qr);
         $photo_id = $qf['photo_id'];
@@ -51,13 +51,15 @@ if ($rt = mysqli_query($mysqli_link, $qt)) {
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
-    $override = array(
-        'time' => $CONFIG['callback_timeout'] ?? 15,
-        'target' => '/core/ref.authors.show.php',
-        'buttonmessage' => 'Вернуться к списку авторов',
-        'message' => $result['message']
+    $template_dir = '$/core/_templates';
+    $template_file = "ref.all_timed_callback.html";
+
+    $template_data = array(
+        'time'          => $CONFIG['callback_timeout'] ?? 15,
+        'target'        => '/core/ref.authors.show.php',
+        'button_text'   => 'Вернуться к списку авторов',
+        'message'       => $result['message']
     );
-    $tpl = new kwt('../ref.all.timed.callback.tpl');
-    $tpl->override($override);
-    $tpl->out();
+    echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
 }

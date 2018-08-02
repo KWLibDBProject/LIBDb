@@ -25,8 +25,6 @@ $q = array(
 
     /* Роль в редколлегии: @todo: доп-проверка, если он не in_es - то 0 ? */
     'selfhood'      => $_POST['selfhood'] ?? 0,
-
-    'stat_date_update' => ConvertTimestampToDate()
 );
 $qstr = MakeUpdateEscaped($q, $ref_name, "WHERE id=$id");
 
@@ -55,15 +53,17 @@ if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     if ($result['error'] == 0) {
-        // use template
-        $override = array(
-            'time' => $CONFIG['callback_timeout'] ?? 15,
-            'target' => '/core/ref.authors.show.php',
-            'buttonmessage' => 'Вернуться к списку авторов',
-            'message' => "Информация об авторе c внутренним идентификатором $id обновлена"
+
+        $template_dir = '$/core/_templates';
+        $template_file = "ref.all_timed_callback.html";
+
+        $template_data = array(
+            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'target'        => '/core/ref.authors.show.php',
+            'button_text'   => 'Вернуться к списку авторов',
+            'message'       => "Информация об авторе c внутренним идентификатором {$id} обновлена"
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();
+        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
     }
 }

@@ -3,7 +3,7 @@ require_once '../__required.php'; // $mysqli_link
 
 // отдает JSON объект для селектора "авторы"
 // данный файл 'duplicated' и почти эквивалентен файлу
-// authors.action.getoptionlist.php , только чуть-чуть другой формат
+// authors.action.getoptionlist , только чуть-чуть другой формат
 // возвращаемых данных для функции buildSelector()
 //@Todo: переделать в версии 1.9R
 

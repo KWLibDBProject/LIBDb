@@ -15,62 +15,26 @@ if ( (!isset($_GET['letter'])) || ($_GET['letter'] != '0') ) {
 
 $where = ($like != '') ? " WHERE {$like}" : "";
 
-$ref_list = [];
+$authors_list = [];
 
-$query = "SELECT * FROM {$ref_name} {$where} {$sort_order}";
+$query = "SELECT * FROM authors {$where} {$sort_order}";
 $res = mysqli_query($mysqli_link, $query) or die($query);
-$ref_numrows = @mysqli_num_rows($res) ;
+$authors_count = @mysqli_num_rows($res) ;
 
-if ($ref_numrows > 0) {
-    while ($ref_record = mysqli_fetch_assoc($res)) {
-        $ref_list[$ref_record['id']] = $ref_record;
+if ($authors_count > 0) {
+    while ($author_record = mysqli_fetch_assoc($res)) {
+        $author_record['is_photo_present'] = ($author_record['photo_id'] == -1) ? false : true;
+
+        $authors_list[$author_record['id']] = $author_record;
     }
 }
 
-$return = <<<AAL_Start
-<table border="1" width="100%">
-AAL_Start;
+$template_dir = '$/core/core.authors';
+$template_file = "_template.authors.list.html";
 
-$return .= <<<core_authors_action_list_th
-    <tr>
-        <th width="5%">#</th>
-        <th width="85%">Информация об авторе</th>
-        <th width="5%"><img src="/core/css/jpeg48x48.png" width="32" height="32"></th>
-        <th width="5%">Edit</th>
-    </tr>
-core_authors_action_list_th;
+$template_data = array(
+    'authors_list' =>  $authors_list
+);
 
-if ($ref_numrows > 0)
-{
-    foreach ($ref_list as $row) {
-        foreach ($row as $fid => $field) {
-            if (empty($field)) $row[$fid] = '';
-        }
-        $is_link_disabled = ($row['photo_id'] == -1) ? 'action-aal-no-photo' : '';
+echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
 
-        $tpl = new kwt('authors.action.list.onerow.html');
-        $tpl->override(array(
-            'id'            =>  $row['id'],
-            'name_ru'       =>  $row['name_ru'],
-            'workplace_ru'  =>  $row['workplace_ru'],
-            'email'         =>  $row['email'],
-            'phone'         =>  $row['phone'],
-            'photo_id'      =>  $row['photo_id'],
-            'is_link_disabled' => ($row['photo_id'] == -1) ? 'action-aal-no-photo' : ''
-        ));
-        $return .= $tpl->getcontent();
-    }
-} else {
-    $return .= <<<core_authors_action_list_noauthors
-    <tr>
-        <td colspan="4">Пока не добавили ни одного автора!</td>
-    </tr>
-core_authors_action_list_noauthors;
-
-}
-
-$return .= <<<AAA_END
-</table>
-AAA_END;
-
-print $return;
