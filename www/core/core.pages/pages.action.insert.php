@@ -6,14 +6,14 @@ $ref_name = 'staticpages';
 
 $now = ConvertTimestampToDate();
 $q = array(
-    'alias'         => mysqli_real_escape_string($mysqli_link, $_POST['alias']),
-    'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
-    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
-    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
-    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk']),
-    'content_en'    => mysqli_real_escape_string($mysqli_link, $_POST['content_en']),
-    'content_ru'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ru']),
-    'content_uk'    => mysqli_real_escape_string($mysqli_link, $_POST['content_uk']),
+    'alias'         => mysqli_real_escape_string($mysqli_link, $_POST['alias'] ?? ''),
+    'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment'] ?? ''),
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en'] ?? ''),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru'] ?? ''),
+    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk'] ?? ''),
+    'content_en'    => mysqli_real_escape_string($mysqli_link, $_POST['content_en'] ?? ''),
+    'content_ru'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ru'] ?? ''),
+    'content_uk'    => mysqli_real_escape_string($mysqli_link, $_POST['content_uk'] ?? ''),
     'stat_date_insert'  =>  $now,
     'stat_date_update'  =>  $now
 );

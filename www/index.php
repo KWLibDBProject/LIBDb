@@ -51,13 +51,13 @@ switch ($fetch) {
                 $inner_html->override( array(
                     'author_publications'   => $author_publications,
                     'author_publications_display_class' => (empty($author_publications)) ? ' hidden ' : ' ',
-                    'author_name'           => $author_information['author_name'],
-                    'author_title'          => $author_information['author_title'],
-                    'author_email'          => $author_information['author_email'],
-                    'author_workplace'      => $author_information['author_workplace'],
-                    'author_bio'            => $author_information['author_bio'],
+                    'author_name'           => $author_information['author_name'] ?? '',
+                    'author_title'          => $author_information['author_title'] ?? '',
+                    'author_email'          => $author_information['author_email'] ?? '',
+                    'author_workplace'      => $author_information['author_workplace'] ?? '',
+                    'author_bio'            => $author_information['author_bio'] ?? '',
                     'author_bio_display_class' => (empty($author_information['author_bio'])) ? ' hidden ' : ' ',
-                    'author_photo_id'       => $author_information['author_photo_id'],
+                    'author_photo_id'       => $author_information['author_photo_id'] ?? -1,
                     'author_photo_link'     => ($author_information['author_photo_id'] == -1) ? "/".$tpl_path."/images/no_photo_{$site_language}.png" : "core/getimage.php?id={$author_information['author_photo_id']}"
                 ));
                 $maincontent_html = $inner_html->get();
@@ -183,13 +183,13 @@ switch ($fetch) {
                 $book_row = LoadBookInfo($id);
 
                 $inner_html->override( array (
-                    'file_cover'    => $book_row['file_cover'],
-                    'file_title_ru' => $book_row['file_title_ru'],
-                    'file_title_en' => $book_row['file_title_en'],
-                    'file_toc_ru'   => $book_row['file_toc_ru'],
-                    'file_toc_en'   => $book_row['file_toc_en'],
-                    'book_title'    => $book_row['book_title'],
-                    'book_year'     => $book_row['book_year']
+                    'file_cover'    => $book_row['file_cover'] ?? '',
+                    'file_title_ru' => $book_row['file_title_ru'] ?? '',
+                    'file_title_en' => $book_row['file_title_en'] ?? '',
+                    'file_toc_ru'   => $book_row['file_toc_ru'] ?? '',
+                    'file_toc_en'   => $book_row['file_toc_en'] ?? '',
+                    'book_title'    => $book_row['book_title'] ?? '',
+                    'book_year'     => $book_row['book_year'] ?? ''
                 ));
                 $maincontent_html = $inner_html->get();
 
@@ -210,15 +210,15 @@ switch ($fetch) {
                 //@warning: мы вставили в BuildQuery еще несколько полей (article_abstract, article_refs, article_keywords), при поиске по keywords может (!) возникнуть бага -- тесты!
                 $inner_html = new kwt($filename.'.html', '<!--{%', '%}-->');
                 $inner_html->override( array (
-                    'article-title'         => $article_info['article_title'],
-                    'article-abstract'      => $article_info['article_abstract'],
+                    'article-title'         => $article_info['article_title'] ?? '',
+                    'article-abstract'      => $article_info['article_abstract'] ?? '',
                     'article-authors-list'  => $article_authors, // список авторов, писавших статью
-                    'article-keywords'      => $article_info['article_keywords'],
-                    'article-book-title'    => $article_info['book_title'],
-                    'article-book-year'     => $article_info['book_year'],
-                    'article-pdfid'         => $article_info['pdfid'],
-                    'article-refs'          => $article_info['article_refs'],
-                    'article-doi'           => $article_info['doi'],
+                    'article-keywords'      => $article_info['article_keywords'] ?? '',
+                    'article-book-title'    => $article_info['book_title'] ?? '',
+                    'article-book-year'     => $article_info['book_year'] ?? '',
+                    'article-pdfid'         => $article_info['pdfid'] ?? '',
+                    'article-refs'          => $article_info['article_refs'] ?? '',
+                    'article-doi'           => $article_info['doi'] ?? '',
                     'article-pdf-last-download-date' => $article_info['pdf_last_download_date']
                 ));
                 if (isset($article_info['keywords']))
@@ -283,9 +283,9 @@ switch ($fetch) {
                 $the_news_item = LoadNewsItem($id, $site_language);
 
                 $inner_html->override( array (
-                    'news_item_title'   => $the_news_item['title'],
-                    'news_item_date'    => $the_news_item['date_add'],
-                    'news_item_text'    => $the_news_item['text']
+                    'news_item_title'   => $the_news_item['title'] ?? '',
+                    'news_item_date'    => $the_news_item['date_add'] ?? '',
+                    'news_item_text'    => $the_news_item['text'] ?? ''
                 ));
                 $maincontent_html = $inner_html->getcontent();
 
@@ -332,16 +332,13 @@ switch ($fetch) {
 
         if (count($last_book) != 0) {
             $inner_html->override( array(
-                'last_book_content'     => $template_engine->getArticlesList(
-                    array(
-                        'book'  =>  $last_book['id']
-                    ), 'no'),
-                'last_book_title_string'=> "{$last_book['title']}, {$last_book['year']}",
-                'last_book_cover_id'    => $last_book['file_cover'],
-                'last_book_title_ru_id'    => $last_book['file_title_ru'],
-                'last_book_title_en_id'    => $last_book['file_title_en'],
-                'last_book_toc_ru_id'      => $last_book['file_toc_ru'],
-                'last_book_toc_en_id'   => $last_book['file_toc_en'],
+                'last_book_content'         => $template_engine->getArticlesList([ 'book'  =>  $last_book['id'] ], 'no'),
+                'last_book_title_string'    => "{$last_book['title']}, {$last_book['year']}",
+                'last_book_cover_id'        => $last_book['file_cover'],
+                'last_book_title_ru_id'     => $last_book['file_title_ru'],
+                'last_book_title_en_id'     => $last_book['file_title_en'],
+                'last_book_toc_ru_id'       => $last_book['file_toc_ru'],
+                'last_book_toc_en_id'       => $last_book['file_toc_en'],
             ));
         }
         $maincontent_html = $inner_html->get();

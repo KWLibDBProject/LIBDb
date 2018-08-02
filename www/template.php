@@ -98,7 +98,7 @@ EACH_BANNER;
                 $date_add = ConvertDateByLang($row['date_add'], $this->site_language);
                 $return .= <<<PrintLastNews
                         <li>
-                            <strong>{$date_add} </strong>
+                            <strong>{$date_add}</strong>
                             <br>
                             <a href="?fetch=news&with=the&id={$row['id']}">{$row['title']}</a>
                         </li>

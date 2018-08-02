@@ -1,8 +1,6 @@
 <?php
 require_once '../__required.php'; // $mysqli_link
 
-// с помощью этого скрипта мы загружаем данные и проставляем их в поля формы редактирования, используя JS
-
 $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'staticpages';
 $item_id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
@@ -17,7 +15,7 @@ if ($item_id != -1) {
         $data['message'] = '';
     } else {
         $data['error'] = 1;
-        $data['message'] = 'Страницы в базе данных не найдены, добавьте хотя бы одного!';
+        $data['message'] = 'Страницы в базе данных не найдены, добавьте хотя бы одну!';
     }
     print(json_encode($data));
 } else {

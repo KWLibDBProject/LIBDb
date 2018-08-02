@@ -39,6 +39,11 @@ ifNotLoggedRedirect('/core/');
 <button type="button" class="button-large" id="actor-exit"><strong><<< НАЗАД </strong></button>
 <button type="button" class="button-large" id="actor-add">Добавить статическую страницу</button><br>
 <hr>
+Должны быть определены страницы с идентификаторами:<br />
+<strong>pubethics</strong>, <strong>tom</strong>, <strong>format</strong>, <strong>forauthors</strong>,
+<strong>estaff</strong>, <strong>details</strong>, <strong>imprint</strong>, <strong>default</strong>,
+<strong>about</strong>. <br/> Страница about - стартовая страница сайта.
+<hr>
 <fieldset class="result-list table-hl-rows">
     <div id="pages_list">
     </div>
