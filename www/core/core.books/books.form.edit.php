@@ -83,6 +83,15 @@ if ($id != -1)
             $book['file_toc_en_data']['disabled_flag'] = 'disabled';
         }
         $isBookExists = 1;
+
+        $articles_count = 0;
+
+        //func
+        $qt = "SELECT COUNT(book) as bcount FROM articles WHERE book=$id";
+        $rt = mysqli_query($mysqli_link, $qt);
+        $articles_count = mysqli_fetch_assoc($rt)['bcount'];
+        //end
+
     } else {
         $isBookExists = 0;
         $book['published'] = 0;
@@ -255,6 +264,12 @@ if ($id != -1)
             </label>
             <select name="is_book_ready" id="is_book_ready"></select>
         </div>
+        <div class="field">
+            <label>
+                Статей в сборнике:
+            </label>
+            <div><?php echo $articles_count; ?></div>
+        </div>
     </fieldset>
     <div class="clear"></div>
 
@@ -338,7 +353,7 @@ if ($id != -1)
     <fieldset class="fields_area rounded">
         <legend>Управление</legend>
         <button type="button" class="button-large button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
-        <button type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СБОРНИК</strong></button>
+        <button type="button" class="button-large" id="button-remove" <?php echo ($articles_count>0) ? 'disabled' : ''; ?> ><strong>УДАЛИТЬ СБОРНИК</strong></button>
         <button type="submit" class="button-large" ><strong>ОБНОВИТЬ СБОРНИК</strong></button>
     </fieldset>
 </form>

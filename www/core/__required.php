@@ -3,6 +3,7 @@
  * User: Karel Wintersky
  * Date: 31.07.2018, time: 16:57
  */
+ini_set('pcre.backtrack_limit', 1024*1024); // 1 Mб
 
 require_once 'config/config.php';
 require_once 'core.php';

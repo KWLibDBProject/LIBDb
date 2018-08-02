@@ -12,75 +12,22 @@ $query = "SELECT books.id AS book_id, books.title, books.date, contentpages, pub
  ORDER BY books.title DESC";
 
 $res = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое справочника! ".$query);
-$ref_numrows = @mysqli_num_rows($res) ;
+$books_count = @mysqli_num_rows($res) ;
 
-$ref_list = array();
+$books_list = [];
 
-if ($ref_numrows > 0) {
-    while($ref_record = mysqli_fetch_assoc($res)) {
-        $ref_list[$ref_record['book_id']] = $ref_record;
+if ($books_count > 0) {
+    while($book_record = mysqli_fetch_assoc($res)) {
+        $books_list[$book_record['book_id']] = $book_record;
     }
 }
 
-$return = <<<BAL_Start
-<table border="1" width="100%">
-BAL_Start;
 
-$return .= <<<BAL_TH
-<tr>
-    <th width="5%">(id)</th>
-    <th width="20%">Название или номер сборника</th>
-    <th width="10%">Дата/год выпуска</th>
-    <th width="10%">Страницы со статьями</th>
-    <th width="15%">Сборник готов? </th>
-    <th width="10%">Кол-во статей</th>
-    <th width="15%">Файлы</th>
-    <th width="7%">Управление</th>
-</tr>
-BAL_TH;
+$template_dir = '$/core/core.books';
+$template_file = "_template.books.list.html";
 
-if ($ref_numrows > 0)
-{
-    foreach ($ref_list as $r_id => $book)
-    {
-        $book_ready = ($book['published']!=0) ? "Да<br><small>(опубликован)</small>" : "Нет<br><small>(в работе)</small>";
+$template_data = array(
+    'books_list' =>  $books_list
+);
 
-        $return .= <<<BAL_EACH
-<tr>
-    <td class="centred_cell">{$book['book_id']}         </td>
-    <td>{$book['title']}                                </td>
-    <td class="centred_cell">{$book['date']}            </td>
-    <td class="centred_cell">{$book['contentpages']}    </td>
-    <td class="centred_cell">{$book_ready}              </td>
-    <td class="centred_cell">
-        <a href="/core/ref.articles.show.php#with_book={$book['book_id']}" target="_blank">
-            {$book['book_articles_count']}
-        </a>
-    </td>
-    <td>
-        <a href="getimage.php?id={$book['file_cover']}" class="icon-jpg icon lightbox-image">Обложка</a>
-        <br>
-        <a href="getfile.php?id={$book['file_title_ru']}" class="icon-pdf icon">Титульник (рус)</a>
-        <br>
-        <a href="getfile.php?id={$book['file_title_en']}" class="icon-pdf icon">Титульник (англ)</a>
-        <br>
-        <a href="getfile.php?id={$book['file_toc_ru']}" class="icon-pdf icon">Оглавление (рус)</a>
-        <br>
-        <a href="getfile.php?id={$book['file_toc_en']}" class="icon-pdf icon">Английское оглавление</a>
-    </td>
-    <td class="centred_cell"><button class="action-edit button-edit" name="{$book['book_id']}">Edit</button></td>
-</tr>
-BAL_EACH;
-    }
-
-} else {
-    $return .= <<<AAL_NOTHING
-<tr><td colspan="8">Пока не добавили ни один сборник!</td></tr>
-AAL_NOTHING;
-}
-
-$return .= <<<AAL_END
-</table>
-AAL_END;
-
-print($return);
+echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);

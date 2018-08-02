@@ -1,5 +1,4 @@
 <?php
-ini_set('pcre.backtrack_limit', 1024*1024); // 1 Mб
 define('__ROOT__', __DIR__);
 
 require_once (__ROOT__ . '/core/__required.php');

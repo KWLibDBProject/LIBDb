@@ -15,6 +15,13 @@ $stats = array(
 );
 
 $disk_space_available = ConvertToHumanBytes( disk_free_space( FileStorage::getStorageDir() ) , 1);
+$upload_limits = [
+    'post_max_size'         => ini_get('post_max_size'),
+    'upload_max_filesize'   => ini_get('upload_max_filesize'),
+    'max_file_uploads'      =>  ini_get('max_file_uploads'),
+];
+
+// var_dump($upload_limits);
 
 ?>
 <html>
