@@ -4,6 +4,7 @@ require_once '__required.php'; // $mysqli_link
 $SID = session_id();
 if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
+
 ?>
 <html>
 <head>
@@ -28,10 +29,9 @@ ifNotLoggedRedirect('/core/');
             $("#actor-add").on('click',function(event){
                 window.location.href = 'core.pages/pages.form.php';
             });
-            $('#pages_list')
-                    .on('click','.action-edit',function(){
-                        window.location.href = 'core.pages/pages.form.php?id='+$(this).attr('name');
-                    });
+            $('#pages_list').on('click','.action-edit',function(){
+                window.location.href = 'core.pages/pages.form.php?id='+$(this).attr('name');
+            });
         });
     </script>
 </head>

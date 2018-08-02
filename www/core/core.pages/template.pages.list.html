@@ -1,0 +1,26 @@
+<table border="1" width="100%">
+    <tr>
+        <th width="5%"> ID </th>
+        <th width="15%">Alias <br><small>click to view in another window</small></th>
+        <th>Comment</th>
+        <th width="10%">&nbsp;</th>
+    </tr>
+
+    {?*pages_list*}
+    {%*pages_list*}
+    <tr>
+    <tr>
+        <td>{*pages_list:id*}</td>
+        <td><a href="/?fetch=page&with={*pages_list:alias*}" target="_blank">{*pages_list:alias*}</a></td>
+        <td>{*pages_list:comment*}</td>
+        <td class="centred_cell"><button class="action-edit button-edit" name="{*pages_list:id*}">Edit</button></td>
+    </tr>
+    {%}
+    {?}
+
+    {?!*pages_list*}
+    <tr>
+        <td colspan="4">Страниц нет</td>
+    </tr>
+    {?}
+</table>

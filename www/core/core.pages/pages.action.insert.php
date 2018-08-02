@@ -3,8 +3,6 @@ require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'staticpages';
 
-
-$now = ConvertTimestampToDate();
 $q = array(
     'alias'         => mysqli_real_escape_string($mysqli_link, $_POST['alias'] ?? ''),
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment'] ?? ''),
@@ -14,8 +12,6 @@ $q = array(
     'content_en'    => mysqli_real_escape_string($mysqli_link, $_POST['content_en'] ?? ''),
     'content_ru'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ru'] ?? ''),
     'content_uk'    => mysqli_real_escape_string($mysqli_link, $_POST['content_uk'] ?? ''),
-    'stat_date_insert'  =>  $now,
-    'stat_date_update'  =>  $now
 );
 $qstr = MakeInsert($q, $ref_name);
 
@@ -34,15 +30,16 @@ if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     if ($result['error'] == 0) {
-        // use template
-        $override = array(
-            'time' => $CONFIG['callback_timeout'] ?? 15,
-            'target' => '../ref.pages.show.php',
-            'buttonmessage' => 'Вернуться к списку страниц',
-            'message' => 'Страница добавлена в базу данных'
+
+        $template_dir = '$/core/_templates';
+        $template_file = "ref.all_timed_callback.html";
+
+        $template_data = array(
+            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'target'        => '../ref.pages.show.php',
+            'button_text'   => 'Вернуться к списку страниц',
+            'message'       => 'Статическая страница добавлена'
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();
+        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }

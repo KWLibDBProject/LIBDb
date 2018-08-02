@@ -42,9 +42,13 @@ function isAjaxCall($debugmode=false)
 /**
  * @param $url
  */
-function Redirect($url, $httpcode = 200)
+function Redirect($url)
 {
-    if (headers_sent() === false) header('Location: '.$url , true, $httpcode);
+    if (headers_sent() === false) {
+        header('Location: '.$url );
+    } else {
+        die('Headers sent');
+    }
     exit;
 }
 

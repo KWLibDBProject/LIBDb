@@ -25,3 +25,11 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
 
+# Таблица staticpages
+
+- Меняем дефолтные значения полей 
+```
+`stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
+`stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+```
+

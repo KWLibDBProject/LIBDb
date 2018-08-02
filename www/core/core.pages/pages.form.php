@@ -5,9 +5,6 @@ $SID = session_id();
 if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
 
-// это эмулирует http-запрос к соотв. странице и отдает нам результат.
-// $data = json_decode(file_get_contents("http://".$_SERVER['HTTP_HOST'].'/core/core.pages/pages.action.getitem.php?id='.$_GET['id']), true);
-
 $page_id = isset($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($page_id != -1) {
@@ -19,11 +16,11 @@ if ($page_id != -1) {
     }
 }
 
-$tpl = new kwt('pages.form.tpl.html');
 
-$tpl -> config('/**','**/');
+$template_dir = '$/core/core.pages/';
+$template_file = "template.pages.form.html";
 
-$over = array(
+$template_data = array(
     'page_id'           => $page_id,
     'form_call_script'  => ($page_id != -1) ? 'pages.action.update.php' : 'pages.action.insert.php',
     'submit_button_text'=> ($page_id != -1) ? 'СОХРАНИТЬ ИЗМЕНЕНИЯ' : 'СОХРАНИТЬ СТРАНИЦУ',
@@ -37,5 +34,5 @@ $over = array(
     'comment'           => $data['comment'] ?? '',
     'alias'             => $data['alias'] ?? '',
 );
-$tpl->override($over);
-$tpl->out();
+
+echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);

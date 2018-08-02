@@ -559,13 +559,14 @@ function LoadNewsListTOC($lang, $limit = 15)
 function LoadNewsItem($id, $lang)
 {
     global $mysqli_link;
+    $ret = null;
     $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news where id={$id}";
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
         if (@mysqli_num_rows($r) > 0) {
             $ret = mysqli_fetch_assoc($r);
         }
-    } else $ret = null;
+    }
     return $ret;
 }
 

@@ -1,13 +1,11 @@
 <?php
 require_once '../__required.php'; // $mysqli_link
 
-
 $id = intval($_GET["id"]);
 
-$table = 'staticpages';
-$result = array();
+$result = [];
 
-$q = " DELETE FROM {$table} WHERE (id = {$id}) ";
+$q = " DELETE FROM `staticpages` WHERE (id = {$id}) ";
 if ($r = mysqli_query($mysqli_link, $q)) {
     // запрос удаление успешен
     $result["error"] = 0;
@@ -24,13 +22,14 @@ if ($r = mysqli_query($mysqli_link, $q)) {
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
-    $override = array(
-        'time' => $CONFIG['callback_timeout'] ?? 15,
-        'target' => '../ref.pages.show.php',
-        'buttonmessage' => 'Вернуться к списку статичных страниц',
-        'message' => $result['message']
+    $template_dir = '$/core/_templates';
+    $template_file = "ref.all_timed_callback.html";
+
+    $template_data = array(
+        'time'          => $CONFIG['callback_timeout'] ?? 15,
+        'target'        => '../ref.pages.show.php',
+        'button_text'   => 'Вернуться к списку страниц',
+        'message'       => $result['message']
     );
-    $tpl = new kwt('../ref.all.timed.callback.tpl');
-    $tpl->override($override);
-    $tpl->out();
+    echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
 }
