@@ -164,8 +164,7 @@ function returnAuthorsOptionString($row, $lang, $withoutid)
  */
 function returnTopicsOptionString($row, $lang, $withoutid)
 {
-    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
-    // по идее можно и с шаблоном, но ну нафиг
+    //ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ
     $title = '';
     switch ($lang) {
         case 'en': {
