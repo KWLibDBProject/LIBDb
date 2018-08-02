@@ -1,13 +1,11 @@
 <?php
 require_once '../__required.php'; // $mysqli_link
 
-// $ref_name = IsSet($_GET['ref']) ? $_GET['ref'] : 'news';
-
 $ref_name = 'news';
 $item_id = isset($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($item_id != -1) {
-    $query = "SELECT * FROM news WHERE `id`={$item_id}"; // was $ref_name
+    $query = "SELECT *, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news WHERE `id`={$item_id}"; // was $ref_name
     $res = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое таблицы ".$ref_name);
     $ref_numrows = mysqli_num_rows($res);
 

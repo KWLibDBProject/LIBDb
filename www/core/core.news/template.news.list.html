@@ -1,0 +1,26 @@
+<table border="1" width="100%">
+    <tr>
+        <th width="5%"> ID </th>
+        <th>Заголовок</th>
+        <th width="25%">Дата добавления</th>
+        <th width="10%">&nbsp;</th>
+    </tr>
+
+    {?*news_list*}
+    {%*news_list*}
+    <tr>
+        <td>{*news_list:id*}</td>
+        <td>{*news_list:title_ru*}</td>
+        <td>{*news_list:date_add*}</td>
+        <td class="centred_cell"><button class="actor-edit button-edit" name="{*news_list:id*}">Edit</button></td>
+    </tr>
+    {%}
+    {?}
+
+    {?!*news_list*}
+    <tr>
+        <td colspan="4">Новостей нет</td>
+    </tr>
+    {?}
+
+</table>

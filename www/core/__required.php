@@ -10,6 +10,7 @@ require_once 'core.db.php';
 require_once 'core.kwt.php';
 require_once 'core.filestorage.php';
 require_once 'core.kwlogger.php';
+require_once 'websun.php';
 
 // require_once '../frontend.php';
 /*  вызов нужного шаблона и его движка.

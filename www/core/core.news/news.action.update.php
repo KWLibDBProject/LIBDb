@@ -5,7 +5,8 @@ $ref_name = 'news';
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 
 $q = array(
-    'date_add'      => mysqli_real_escape_string($mysqli_link, $_POST['date_add']),
+    'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
+
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
     'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
@@ -13,14 +14,14 @@ $q = array(
     'text_en'       => mysqli_real_escape_string($mysqli_link, $_POST['text_en']),
     'text_ru'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ru']),
     'text_uk'       => mysqli_real_escape_string($mysqli_link, $_POST['text_uk']),
-    'date_year'     => substr(mysqli_real_escape_string($mysqli_link, $_POST['date_add']),6,4),
+
+    'timestamp'     => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('U'),
 );
-$q ['timestamp']    =  ConvertDateToTimestamp($q['date_add']);
 
 $qstr = MakeUpdate($q, $ref_name, " WHERE id=$id ");
 
-if ($res = mysqli_query($mysqli_link, $qstr, $link)) {
-    $result['message'] = $qstr;
+if ($res = mysqli_query($mysqli_link, $qstr)) {
+    $result['message'] = 'Новость обновлена';
     $result['error'] = 0;
     kwLogger::logEvent('Update', 'news', $id, "News record updated, id = {$id}");
 }
@@ -32,15 +33,16 @@ if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     if ($result['error'] == 0) {
-        // use template
-        $override = array(
-            'time' => $CONFIG['callback_timeout'] ?? 15,
-            'target' => '/core/ref.news.show.php',
-            'buttonmessage' => 'Вернуться к списку новостей',
-            'message' => 'Данные обновлены'
+
+        $template_dir = '$/core/_templates';
+        $template_file = "ref.all_timed_callback.html";
+
+        $template_data = array(
+            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'target'        => '/core/ref.news.show.php',
+            'button_text'   => 'Вернуться к списку новостей',
+            'message'       => 'Новость обновлена'
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();
+        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }

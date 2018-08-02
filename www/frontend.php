@@ -34,9 +34,13 @@ function GetRequestLanguage($request_string)
  */
 function GetSiteLanguage()
 {
+    global $CONFIG;
+
+    $cookie_name = $CONFIG['cookie_site_language'];
+
     $lang = 'en';
-    if (isset($_COOKIE['libdb_sitelanguage']) && $_COOKIE['libdb_sitelanguage'] != '') {
-        switch ($_COOKIE['libdb_sitelanguage']) {
+    if (isset($_COOKIE[ $cookie_name ]) && $_COOKIE[ $cookie_name ] != '') {
+        switch ($_COOKIE[ $cookie_name ]) {
             case 'ru': { $lang = 'ru'; break; }
             case 'uk': { $lang = 'uk'; break; }
             case 'en':
@@ -48,12 +52,33 @@ function GetSiteLanguage()
 
 /*
  * Массив с переводами месяцев на разные языки.
+ *
  * */
 $TRANSLATED_MONTHS = array(
     'en' => array("", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"),
     'ru' => array("", "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"),
     'uk' => array("", "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"),
 );
+
+/**
+ * Конвертирует дату (строку) по языку. Использует массив-месяцеслов $TRANSLATED_MONTHS.
+ * Версия для PHP7
+ * @param $date_as_string
+ * @param $lang
+ * @return string
+ */
+function __langDate($date_as_string, $lang)
+{
+    global $TRANSLATED_MONTHS;
+    $date_as_array = date_parse_from_format('d.m.Y',$date_as_string);
+
+    $day = $date_as_array['day'] ?? '';
+    $month = $TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ] ?? '';
+    $year = $date_as_array['year'] ?? '';
+
+    return "{$day} {$month} {$year}";
+}
+
 /**
  * Конвертирует дату (строку) по языку. Использует массив-месяцеслов $TRANSLATED_MONTHS
  * @param $date_as_string
@@ -69,10 +94,8 @@ function ConvertDateByLang($date_as_string, $lang)
 
     if (function_exists('date_parse_from_format')) {
         $date_as_array = date_parse_from_format('d.m.Y',$date_as_string);
-        // $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
     } else {
         $date_as_array = date_parse($date_as_string);
-        // $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
     }
     $return = "{$date_as_array['day']} {$TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ]} {$date_as_array['year']}";
     return $return;
@@ -307,7 +330,7 @@ function LoadLastNews($lang, $count=2)
 {
     global $mysqli_link;
     $ret = array();
-    $query = "SELECT id, title_{$lang} AS title, date_add FROM news ORDER BY timestamp DESC LIMIT {$count}";
+    $query = "SELECT id, title_{$lang} AS title, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news ORDER BY timestamp DESC LIMIT {$count}";
     $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
     $res_numrows = @mysqli_num_rows($res);
     $i = 1;
@@ -508,16 +531,19 @@ function LoadArticles_ByQuery($get, $lang)
  * @param $lang
  * @return null|string
  */
-function LoadNewsListTOC($lang)
+function LoadNewsListTOC($lang, $limit = 15)
 {
     global $mysqli_link;
-    $query = "SELECT id, title_{$lang} AS title, date_add AS date FROM news ORDER BY timestamp DESC LIMIT 15";
+    $ret = null;
+
+    $query = "SELECT id, title_{$lang} AS title, DATE_FORMAT(date_add, '%d.%m.%Y') as date FROM news ORDER BY timestamp DESC LIMIT {$limit}";
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
         while ($row = mysqli_fetch_assoc($r)) {
             $ret[ $row['id'] ] = $row;
         }
-    } else $ret = null;
+    }
+
     return $ret;
 }
 
@@ -533,7 +559,7 @@ function LoadNewsListTOC($lang)
 function LoadNewsItem($id, $lang)
 {
     global $mysqli_link;
-    $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, date_add FROM news where id={$id}";
+    $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news where id={$id}";
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
         if (@mysqli_num_rows($r) > 0) {

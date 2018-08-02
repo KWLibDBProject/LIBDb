@@ -95,7 +95,7 @@ EACH_BANNER;
         if (count($data)>0) {
             foreach ($data as $i => $row)
             {
-                $date_add = ConvertDateByLang($row['date_add'], $this->site_language);
+                $date_add = __langDate($row['date_add'], $this->site_language);
                 $return .= <<<PrintLastNews
                         <li>
                             <strong>{$date_add}</strong>

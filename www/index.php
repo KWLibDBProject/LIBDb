@@ -1,4 +1,5 @@
 <?php
+ini_set('pcre.backtrack_limit', 1024*1024); // 1 Mб
 define('__ROOT__', __DIR__);
 
 require_once (__ROOT__ . '/core/__required.php');
@@ -23,9 +24,26 @@ $template_engine = new Template($tpl_path, $site_language);
 
 /* Override variables in INDEX.*.HTML template */
 $override['template_path'] = $tpl_path; // template directory name (not a path!), defined in template.xxx.php
+
+
+/**
+ * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне)
+ */
 $override['rubrics']    = $template_engine->getTopicsTree();
+
+/**
+ * Блок "выпуски" (нужно возвращать ARRAY, который разбирается в шаблоне)
+ */
 $override['books']      = $template_engine->getBooks();
+
+/**
+ * Блок "баннеры" (нужно возвращать ARRAY, который разбирается в шаблоне)
+ */
 $override['banners']    = $template_engine->getBanners();
+
+/*
+ * Блок "последние новости" (нужно возвращать ARRAY, который разбирается в шаблоне)
+ */
 $override['last_news_shortlist'] = $template_engine->getLastNews(3);
 
 /* insert menu from template */
@@ -270,47 +288,44 @@ switch ($fetch) {
         /* секция вывода новостей */
         switch ($with) {
             case 'the' : {
-                $id = 0;
+                /* конкретная новость */
+
                 if (isset($_GET['id'])) {
                     $id = intval($_GET['id']);
                 } else {
                     Redirect('?fetch=news&with=list');
                 }
 
-                $filename = $tpl_path.'/fetch=news/with=the/f_news+w_the.'.$site_language;
-                $inner_html = new kwt($filename.".html");
+                $template_dir = '$/template.bootstrap24/fetch=news/with=the/';
+                $template_file_name = "f_news+w_the.{$site_language}";
 
                 $the_news_item = LoadNewsItem($id, $site_language);
 
-                $inner_html->override( array (
+                $local_template_data = [
                     'news_item_title'   => $the_news_item['title'] ?? '',
                     'news_item_date'    => $the_news_item['date_add'] ?? '',
                     'news_item_text'    => $the_news_item['text'] ?? ''
-                ));
-                $maincontent_html = $inner_html->getcontent();
+                ];
 
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$template_file_name}.html", $template_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->getcontent();
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
+
                 break;
             }
             case 'list' : {
                 /* список новостей */
-                $filename = $tpl_path.'/fetch=news/with=list/f_news+w_list.'.$site_language;
 
-                $news_list_toc = LoadNewsListTOC($site_language);
-                // $news_list_toc will be used in php-section of template loaded file
+                $template_dir = '$/template.bootstrap24/fetch=news/with=list/';
+                $template_file_name = "f_news+w_list.{$site_language}";
 
-                $inner_html = new kwt($filename.'.html');
-                $maincontent_html = $inner_html->getcontent();
+                $local_template_data = [
+                    'news_list' => LoadNewsListTOC($site_language)
+                ];
 
-                $inner_js = new kwt($filename.'.js');
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$template_file_name}.html", $template_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->getcontent();
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
 
                 break;
             }

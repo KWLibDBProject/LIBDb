@@ -1,20 +1,18 @@
-<ul class="news-list">
-
-<?php
-global $news_list_toc;
-foreach ($news_list_toc as $i => $d) {
-echo <<<NI_ITEM
+<ul>
+    {?*news_list*}
+    {%*news_list*}
     <li class="news-list-item">
         <div class="news-list-item-date">
-            {$d['date']}
+            {*news_list:date*}
         </div>
         <div class="news-list-item-title">
-            <a href="?fetch=news&with=the&id={$i}">{$d['title']}</a>
+            <a href="?fetch=news&with=the&id={*news_list:^KEY*}">{*news_list:title*}</a>
         </div>
     </li>
-NI_ITEM;
+    {%}
+    {?}
 
-}
-?>
-
+    {?!*news_list*}
+    Новостей нет
+    {?}
 </ul>

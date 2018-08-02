@@ -25,13 +25,14 @@ if ($r = mysqli_query($mysqli_link, $q)) {
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
-    $override = array(
-        'time' => $CONFIG['callback_timeout'] ?? 15,
-        'target' => '../ref.news.show.php',
-        'buttonmessage' => 'Вернуться к списку новостей',
-        'message' => $result['message']
+    $template_dir = '$/core/_templates';
+    $template_file = "ref.all_timed_callback.html";
+
+    $template_data = array(
+        'time'          => $CONFIG['callback_timeout'] ?? 15,
+        'target'        => '/core/ref.news.show.php',
+        'button_text'   => 'Вернуться к списку новостей',
+        'message'       => $result['message']
     );
-    $tpl = new kwt('../ref.all.timed.callback.tpl');
-    $tpl->override($override);
-    $tpl->out();
+    echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
 }

@@ -42,9 +42,10 @@ function isAjaxCall($debugmode=false)
 /**
  * @param $url
  */
-function Redirect($url)
+function Redirect($url, $httpcode = 200)
 {
-    if (headers_sent() === false) header('Location: '.$url);
+    if (headers_sent() === false) header('Location: '.$url , true, $httpcode);
+    exit;
 }
 
 /**
@@ -224,11 +225,7 @@ http://www.php.net/manual/ru/function.mktime.php
  */
 function ConvertDateToArray($str_date)
 {
-    if (function_exists('date_parse_from_format')) {
-        $date_as_array = date_parse_from_format('d/m/Y',$str_date);
-    } else {
-        $date_as_array = date_parse($str_date);
-    }
+    $date_as_array = date_parse_from_format('d.m.Y', $str_date);
     return $date_as_array;
 }
 
@@ -237,13 +234,9 @@ function ConvertDateToArray($str_date)
  * @param string $format
  * @return int
  */
-function ConvertDateToTimestamp($str_date, $format="d/m/Y")
+function ConvertDateToTimestamp($str_date, $format="d.m.Y")
 {
-    if (function_exists('date_parse_from_format')) {
-        $date_array = date_parse_from_format('d.m.Y',$str_date);
-    } else {
-        $date_array = date_parse($str_date);
-    }
+    $date_array = date_parse_from_format($format, $str_date);
     return mktime(12, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 }
 

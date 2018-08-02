@@ -16,7 +16,6 @@ ifNotLoggedRedirect('/core/');
     <link rel="stylesheet" type="text/css" href="core.news/news.css">
 
     <script src="js/core.js"></script>
-    <script src="core.news/news.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
