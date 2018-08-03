@@ -201,6 +201,7 @@ function LoadTopics($lang)
             $ret[ $topic['id']  ] = $topic['title'];
         }
     }
+
     return $ret;
 }
 
@@ -239,7 +240,7 @@ ORDER BY topicgroups.display_order, topics.title_{$lang}
                 // send new optiongroup
                 $group_id = 'g_'.$row['id'];
 
-                $data['data'][ $i] = array(
+                $data['data'][ $i ] = array(
                     'type'      => 'group',
                     'value'     => $group_id,
                     'text'      => $row['title_group']
@@ -273,28 +274,47 @@ ORDER BY topicgroups.display_order, topics.title_{$lang}
 function LoadBooks()
 {
     global $mysqli_link;
-    $all_books = array();
+    $all_books = [];
 
     $bq = "SELECT
-books.title as title,
-books.year AS year,
-books.id as bid,
+books.title AS title,
+books.year  AS year,
+books.id    AS bid,
 COUNT(books.id) AS articles_count
 
 FROM books, articles
 
 WHERE
-articles.book = books.id AND
-books.published = 1
+ articles.book = books.id AND  
+ books.published = 1
 
 GROUP BY books.title
 ORDER BY books.title DESC ";
 
     $br = mysqli_query($mysqli_link, $bq);
-    while ($ba = mysqli_fetch_assoc($br)) {
-        $all_books[ $ba['year'] ][ $ba['bid'] ]['title'] = $ba['title'];
-        $all_books[ $ba['year'] ][ $ba['bid'] ]['count'] = $ba['articles_count'];
+    $is_active = 1;
+
+    $all_books = [];
+
+    while ($book_any = mysqli_fetch_assoc($br)) {
+        $book = [
+            'year'      =>  $book_any['year'],
+            'bid'       =>  $book_any['bid'],
+            'title'     =>  $book_any['title'],
+            'count'     =>  $book_any['articles_count'],
+            'is_active' =>  $is_active
+        ];
+
+        // kwt-variant
+        // $all_books[ $book_any['year'] ][ $book_any['bid'] ] = $book;
+
+        // websun variant
+        $all_books[ $book_any['year'] ]['yearly_books'][ $book_any['bid'] ] = $book;
+        $all_books[ $book_any['year'] ]['is_active'] = $is_active;
+
+        $is_active = 0;
     }
+
     return $all_books;
 }
 
@@ -337,6 +357,8 @@ function LoadLastNews($lang, $count=2)
     if ($res_numrows > 0)
     {
         while ($row = mysqli_fetch_assoc($res)) {
+            $row['date_add'] = __langDate($row['date_add'], $lang); // websun variant
+
             $ret[ $i ] = $row;
             $i++;
         }

@@ -65,8 +65,20 @@ class __Template
      */
     public function getBanners()
     {
-        $data = LoadBanners();
-        $return = '';
+        // $data = LoadBanners();
+
+        $template_dir = '$/template.bootstrap24/_websun_templates';
+        $template_file = "frontpage_banners_section.html";
+
+        $template_data = array(
+            'all_banners' =>  LoadBanners()
+        );
+
+        $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
+        return $render_result;
+
+        /*$return = '';
         if (count($data)) {
             foreach ($data as $id=>$row) {
                 $return .= <<<EACH_BANNER
@@ -78,7 +90,7 @@ class __Template
 EACH_BANNER;
             }
         } else $return = null;
-        return $return;
+        return $return;*/
     } // GetBanners
 
     /**
@@ -92,7 +104,19 @@ EACH_BANNER;
         $return = '';
         $data = LoadLastNews($this->site_language, $count);
 
-        if (count($data)>0) {
+        $template_dir = '$/template.bootstrap24/_websun_templates';
+        $template_file = "frontpage_news_section.html";
+
+        $template_data = array(
+            'last_news_list' =>  LoadLastNews($this->site_language, $count)
+        );
+
+        $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
+        return $render_result;
+
+
+        /*if (count($data)>0) {
             foreach ($data as $i => $row)
             {
                 $date_add = __langDate($row['date_add'], $this->site_language);
@@ -105,7 +129,7 @@ EACH_BANNER;
 PrintLastNews;
             }
         }
-        return $return;
+        return $return;*/
     } // GetLastNews
 
     /**

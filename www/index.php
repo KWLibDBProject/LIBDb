@@ -28,25 +28,25 @@ $override['template_path'] = $tpl_path; // template directory name (not a path!)
 /**
  * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$override['rubrics']    = $template_engine->getTopicsTree();
+$override['rubrics']    = $template_engine->getTopicsTree(); //@TODO: работает - не трогай (там очень уж замороченно, используется HEREDOC)
 
 /**
  * Блок "выпуски" (нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$override['books']      = $template_engine->getBooks();
+$override['books']      = $template_engine->getBooks(); // возвращает рендер websun
 
 /**
  * Блок "баннеры" (нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$override['banners']    = $template_engine->getBanners();
+$override['banners']    = $template_engine->getBanners(); // возвращает рендер websun
 
 /*
  * Блок "последние новости" (нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$override['last_news_shortlist'] = $template_engine->getLastNews(3);
+$override['last_news_shortlist'] = $template_engine->getLastNews(3); // возвращает рендер websun
 
 /* insert menu from template */
-$override['main_menu_content'] = $template_engine->getMenu();
+$override['main_menu_content'] = $template_engine->getMenu(); // делать через вставку шаблона (сейчас - kwt)
 
 // Main switch
 $fetch  = at( $_GET, 'fetch', '' );
@@ -342,7 +342,7 @@ switch ($fetch) {
         ));
 
         // load last book
-        $last_book = LoadLastBookInfo();
+        $last_book = LoadLastBookInfo(); //@todo: есть проблема - СЕЙЧАС возвращается latest сборник по дате, без учета флага is_published + наличие статей в сборнике
 
         if (count($last_book) != 0) {
             $inner_html->override( array(

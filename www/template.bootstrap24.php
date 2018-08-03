@@ -32,6 +32,7 @@ FE_PrintTopics_Each;
     public function getTopicsTree()
     {
         $all_topics = LoadTopicsTree($this->site_language);
+
         $ret = '';
         $last_group = '';
         $optgroup_found = 0;
@@ -83,10 +84,22 @@ FE_PrintTopics_Each;
     public function getBooks()
     {
         $ret = '';
-        $first_in = 'in';
         $all_books = LoadBooks();
 
-        foreach ($all_books as $key => $year_books)
+        // этот шаблон надо подключать в основном шаблоне, передавая в 'all_books' результат LoadBooks()
+        // ВАЖНО: по аналогии можно написать и TOPICS+TOPIC GROUPS
+
+        $template_dir = '$/template.bootstrap24/_websun_templates';
+        $template_file = "frontpage_books_section.html";
+
+        $template_data = array(
+            'all_books' =>  $all_books
+        );
+
+        $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
+        $first_in = 'in';
+        /*foreach ($all_books as $key => $year_books)
         {
             $ret .= <<<FE_PrintBooksBS_YearStart
                     <div class="panel panel-default">
@@ -117,8 +130,14 @@ FE_PrintBooksBS_EachBook;
 FE_PrintBooksBS_End;
 
             $first_in = '';
-        }
-        return $ret;
+        }*/
+        // return $ret;
+
+        /*printr($all_books);
+        printr($render_result);
+        die;*/
+
+        return $render_result;
     }
 
     /**
