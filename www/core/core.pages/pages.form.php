@@ -18,7 +18,7 @@ if ($page_id != -1) {
 
 
 $template_dir = '$/core/core.pages/';
-$template_file = "template.pages.form.html";
+$template_file = "_template.pages.form.html";
 
 $template_data = array(
     'page_id'           => $page_id,

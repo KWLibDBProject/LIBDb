@@ -16,7 +16,7 @@ if (mysqli_num_rows($res) > 0) {
 }
 
 $template_dir = '$/core/core.pages';
-$template_file = "template.pages.list.html";
+$template_file = "_template.pages.list.html";
 
 $template_data = array(
     'pages_list' =>  $pages_list

@@ -13,7 +13,7 @@ if ($news_id != -1) {
 }
 
 $template_dir = '$/core/core.news/';
-$template_file = "template.news.form.html";
+$template_file = "_template.news.form.html";
 
 $template_data = [
     'news_id'               => $news_id,

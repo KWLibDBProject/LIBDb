@@ -17,7 +17,7 @@ if (mysqli_num_rows($res) > 0) {
 }
 
 $template_dir = '$/core/core.news';
-$template_file = "template.news.list.html";
+$template_file = "_template.news.list.html";
 
 $template_data = array(
     'news_list' =>  $news_list

@@ -66,15 +66,5 @@ if (!IsSet($_GET['id'])) {
             'message'       => $result['message']
         );
         echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
-
-        /*$override = array(
-            'time' => $CONFIG['callback_timeout'] ?? 15,
-            'target' => '/core/ref.books.show.php',
-            'buttonmessage' => 'Вернуться к списку сборников',
-            'message' => $result['message']
-        );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();*/
     }
 }
