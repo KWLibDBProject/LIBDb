@@ -21,9 +21,8 @@ ifNotLoggedRedirect('/core/');
     <link rel="stylesheet" type="text/css" href="articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
-
     <script type="text/javascript" src="../js/core.js"></script>
-    <script type="text/javascript" src="ref.articles.js"></script>
+    <script type="text/javascript" src="articles.js"></script>
     <script type="text/javascript">
         var authorsList = preloadOptionsList('../core.authors/ref.authors.action.getoptionlist.php');
         var booksList = preloadOptionsList('../core.books/ref.books.action.getoptionlist.php');
@@ -50,7 +49,7 @@ ifNotLoggedRedirect('/core/');
             // onload
             // load authors
             if (mode == 'edit') {
-                for (i = 1; i <= loadedAuthorsNum; i++)
+                for (i=1; i<=loadedAuthorsNum; i++)
                 {
                     InsertAuthorSelector("#authors_list",i);
                     if (typeof currAuthorsList[i] != 'undefined') {
@@ -73,9 +72,9 @@ ifNotLoggedRedirect('/core/');
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd/mm/yy',
-                minDate: '01/01/2003',
-                maxDate: '01/01/2020',
+                dateFormat: 'dd.mm.yy',
+                minDate: '01.01.2003',
+                maxDate: '01.01.2020',
                 showButtonPanel: true,
                 showOn: "both",
                 buttonImageOnly: true,
@@ -97,20 +96,12 @@ ifNotLoggedRedirect('/core/');
                 return false;
             });
 
-            $("#unique_test").on('click',function(){
-                test_authorsList = [];
-                $.each( $(".an_authors") , function(id, data) {
-                    test_authorsList.push($(data).val());
-                });
-                alert(isArrayUnique(test_authorsList));
-            } );
-
             $("#form_new_article").submit(function(){
+                var bValid = true;
                 var test_authorsList = [];
                 $.each( $(".an_authors") , function(id, data) {
                     test_authorsList.push($(data).val());
                 });
-                var bValid = true;
 
                 if (!($("#authors_list").find('li').size())) {
                     // проверка количества авторов
@@ -124,47 +115,73 @@ ifNotLoggedRedirect('/core/');
                     // проверка PDF-файла
                     alert('Указан неправильный файл для загрузки');
                     bValid = false;
-                } else if ( $("input[name='add_date']").val().length == 0  ) {
+                } else if ( $("input[name='add_date']").val().length == 0 ) {
                     alert('Не указана дата!');
                     bValid = false;
                 }
                 return bValid;
             });
 
+            /*$("#unique_test").on('click',function(){
+                test_authorsList = [];
+                $.each( $(".an_authors") , function(id, data) {
+                    test_authorsList.push($(data).val());
+                });
+                alert(isArrayUnique(test_authorsList));
+            } );*/
+
             bindScrollTopAction("#actor-scroll-top");
+
         });
     </script>
 </head>
 
 <body>
 <form action="articles.action.insert.php" method="post" enctype="multipart/form-data" id="form_new_article">
+
     <fieldset>
         <legend>Выпускные данные:</legend>
+
         <label for="the_topic">Тематический раздел (рубрика): </label>
         <select name="topic" id="the_topic"></select>
+
         <label for="udc">УДК:</label>
         <input type="text" name="udc" id="udc" class="text ui-widget-content ui-corner-all">
     </fieldset>
+
     <fieldset>
         <legend>Сборник</legend>
-        <label for="pages">Статья опубликована на страницах <input type="text" id="pages" name="pages"></label>
-        <label for="the_book">... сборника: <select name="book" id="the_book"></select> </label>
+
+        <label for="pages">Статья опубликована на страницах
+            <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>">
+        </label>
+
+        <label for="the_book">... сборника:
+            <select name="book" id="the_book"></select>
+        </label>
         <br/>
-        <label for="datepicker">Дата приема на публикацию: <input type="text" id="datepicker" name="add_date"></label>
-        <label for="doi">DOI: <input type="text" id="doi" name="doi" size="40"> </label>
+        <label for="datepicker">Дата приема на публикацию:
+            <input type="text" id="datepicker" name="date_add">
+        </label>
+        <label for="doi">DOI:
+            <input type="text" id="doi" name="doi" size="40">
+        </label>
     </fieldset>
+
     <fieldset>
         <legend>PDF-file</legend>
         <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
+
         <label for="pdf">Прикрепить PDF-файл:</label>
         <input type="file" name="pdffile" id="pdf">
     </fieldset>
+
     <fieldset>
         <legend id="authors_legend">Авторы:</legend>
         <ul id="authors_list" class="authors_list_in_form"></ul>
         <input type="button" class="al-add" value="Добавить автора">
-        <button type="button" id="unique_test" style="display: none">Test</button>
     </fieldset>
+
     <fieldset>
         <legend>Название статьи на разных языках</legend>
         <table>
@@ -183,25 +200,27 @@ ifNotLoggedRedirect('/core/');
         </table>
     </fieldset>
 
-    <fieldset class="warning">
+    <fieldset class="hint" id="hint-main">
         <legend>Внимание!</legend>
         Пожалуйста, <strong>НЕ</strong> используйте избыточное форматирование при вводе аннотации, ключевых слов,
         списка литературы и прочего. Используйте только логическое выделение важных слов и понятий.
         Помните, что при выводе данных может возникнуть конфликт основных стилей сайта и ваших.
         <br/>
-        <strong>Очищать форматирование </strong> <u>нужно</u> при помощи кнопки 'clear formatting' в редакторе (самая правая под меню).
+        <strong>Очищать форматирование </strong> <u>нужно</u> при помощи кнопки <span class="tinymce-icon-container"><i class="mce-ico mce-i-removeformat"></i></span> в редакторе (самая правая под меню).
         <br/>
         Если вы копируете переведенный блок текста из google-translate - <strong>обязательно</strong> очищайте форматирование.
         <br/>
-        <strong>При вставке из ворда</strong> используйте кнопку 'paste as text' (самая левая под меню).
+        <strong>При вставке из ворда</strong> используйте кнопку <span class="tinymce-icon-container"><i class="mce-ico mce-i-pastetext"></i></span> (самая левая под меню).
     </fieldset>
 
     <fieldset>
         <legend>Аннотация на разных языках</legend>
+
         <div class="warning">
             Важно: аннотация будет <u>всегда</u> отображаться <em>курсивом</em> на сайте библиотеки.
             Выделять здесь текст курсивом <strong>не нужно. </strong>
         </div>
+
         <div id="abstract_tabs">
             <ul>
                 <li><a href="#abstract-en">На английском</a></li>
@@ -238,6 +257,13 @@ ifNotLoggedRedirect('/core/');
             </div>
         </div>
     </fieldset>
+
+    <fieldset class="hint" id="hint-references">
+        <legend>Совет:</legend>
+        Для списка литературы лучше использовать немаркированный (<span class="tinymce-icon-container"><i class="mce-ico mce-i-bullist"></i></span>)
+        или маркированный (<span class="tinymce-icon-container"><i class="mce-ico mce-i-numlist"></i></span>) список.
+    </fieldset>
+
     <fieldset>
         <legend>Источники: </legend>
         <label for="refs_ru"><strong>Список литературы:</strong></label><br>
@@ -256,4 +282,3 @@ ifNotLoggedRedirect('/core/');
 </form>
 
 </body>
-</html>

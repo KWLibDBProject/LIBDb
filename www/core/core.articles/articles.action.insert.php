@@ -28,12 +28,13 @@ $q = array(
     'refs_en'       => mysqli_real_escape_string($mysqli_link, $_POST['refs_en']),
     'refs_uk'       => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
     'book'          => mysqli_real_escape_string($mysqli_link, $_POST['book']),
-    'add_date'      => mysqli_real_escape_string($mysqli_link, $_POST['add_date']),
     'topic'         => mysqli_real_escape_string($mysqli_link, $_POST['topic']),
     'pages'         => mysqli_real_escape_string($mysqli_link, $_POST['pages']),
     'doi'           => mysqli_real_escape_string($mysqli_link, $_POST['doi']),
-    'stat_date_insert'  =>  $now,
-    'stat_date_update'  =>  $now
+
+    // 'add_date'      => mysqli_real_escape_string($mysqli_link, $_POST['add_date']),
+
+    'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
 );
 
 // теперь нам нужно вставить данные в БАЗУ
@@ -44,11 +45,11 @@ $article_id = mysqli_insert_id($mysqli_link) or Die("Не удалось пол�
 if (IsSet($_FILES)) {
     switch ($_FILES['pdffile']['error']) {
         case UPLOAD_ERR_INI_SIZE: {
-            $result['error_message'] = " Однако возникла ошибка. Размер загружаемого файла больше ".ini_get('upload_max_filesize')." байт!";
+            $result['error_message'] = " Возникла ошибка. Размер загружаемого файла больше ".ini_get('upload_max_filesize')." байт!";
             break;
         }
         case UPLOAD_ERR_FORM_SIZE : {
-            $result['error_message'] = " Однако возникла ошибка. Размер загружаемого файла больше ".$_POST['MAX_FILE_SIZE']." байт!";
+            $result['error_message'] = " Возникла ошибка. Размер загружаемого файла больше ".$_POST['MAX_FILE_SIZE']." байт!";
             break;
         }
         case UPLOAD_ERR_OK: {
@@ -71,27 +72,25 @@ if (IsSet($_POST['authors'])) {
     }
 } else {
     $result['error'] = 1;
-    $result['message'] .= "Не указаны авторы!<br>\r\n";
+    $result['message'] = "Не указаны авторы!<br>\r\n";
 }
 
 kwLogger::logEvent('Add', 'articles', $article_id, "Article added, new id is {$article_id}" );
 
 
-if ($result['error'] == 0) {
-    $override = array(
-        'time' => $CONFIG['callback_timeout'] ?? 15,
-        'target' => '/core/ref.articles.show.php',
-        'buttonmessage' => 'Вернуться к списку статей',
-        'message' => 'Статья добавлена... ' . ($result['error_message'] ?? '')
-    );
-} else {
-    $override = array(
-        'time' => $CONFIG['callback_timeout'] ?? 15,
-        'target' => '/core/ref.articles.show.php',
-        'buttonmessage' => 'Вернуться к списку статей',
-        'message' => $result['message']
-    );
-}
-$tpl = new kwt('../ref.all.timed.callback.tpl');
-$tpl->override($override);
-$tpl->out();
+$template_dir = '$/core/_templates';
+$template_file = "ref.all_timed_callback.html";
+
+$template_data = array(
+    'time'          => $CONFIG['callback_timeout'] ?? 15,
+    'target'        => '../ref.articles.show.php',
+    'button_text'   => 'Вернуться к списку статей',
+);
+
+$template_data['message']
+    = ($result['error'] == 0)
+    ? ('Статья добавлена... ' . ($result['error_message'] ?? ''))
+    : $result['message'];
+
+echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+

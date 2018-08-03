@@ -1,0 +1,46 @@
+<table border="1" width="100%">
+    <tr>
+        <th width="3%">id</th>
+        <th>Тематический<br> раздел</th>
+        <th>Сборник</th>
+        <th width="7%">УДК</th>
+        <th>Авторы</th>
+        <th>Название</th>
+        <th width="7%">Дата</th>
+        <th width="105" colspan="1">Control<br><small>PDF info</small></th>
+    </tr>
+
+    {?*articles_list*}
+    {%*articles_list*}
+
+    <tr>
+        <td>{*articles_list:id*}</td>
+        <td>{*articles_list:ttitle*}</td>
+        <td><nobr>{*articles_list:btitle*}</nobr></td>
+        <td>{*articles_list:udc*}</td>
+        <td>
+            {?*articles_list:authors_list*}
+            <ol class="articles-list-table-authors-list">
+            {%*articles_list:authors_list*}
+                <li>
+                    <a href="/?fetch=authors&with=info&id={*articles_list:authors_list:id*}_&lang=ru">{*articles_list:authors_list:name_ru*}</a>{?*articles_list:authors_list:title_ru*}&nbsp;({*articles_list:authors_list:title_ru*}){?}
+                </li>
+            {%}
+            </ol>
+            {?}
+        </td>
+        <td><small>{*articles_list:title_ru*}</small></td>
+        <td class="center_cell"><small>{*articles_list:date_add*}</small></td>
+        <td>
+            <button class="action-download-pdf button-download-icon" name="{*articles_list:pdffile.id*}" data-text="Show PDF"></button>
+            <button class="action-edit button-edit-icon" name="{*articles_list:id*}" data-text="Edit"></button>
+        </td>
+    </tr>
+    {%}
+    {?}
+
+    {?!*articles_list*}
+    <tr><td colspan="8">Статей не найдено</td></tr>
+    {?}
+
+</table>

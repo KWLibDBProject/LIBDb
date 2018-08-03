@@ -23,11 +23,12 @@ $q = array(
     'refs_en'           => mysqli_real_escape_string($mysqli_link, $_POST['refs_en']),
     'refs_uk'           => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
     'book'              => mysqli_real_escape_string($mysqli_link, $_POST['book']),
-    'add_date'          => mysqli_real_escape_string($mysqli_link, $_POST['add_date']),
     'topic'             => mysqli_real_escape_string($mysqli_link, $_POST['topic']),
     'pages'             => mysqli_real_escape_string($mysqli_link, $_POST['pages']),
     'doi'               => mysqli_real_escape_string($mysqli_link, $_POST['doi']),
-    'stat_date_update'  => ConvertTimestampToDate()
+
+    // 'add_date'          => mysqli_real_escape_string($mysqli_link, $_POST['add_date']),
+    'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
 );
 
 // теперь нам нужно вставить данные в БАЗУ
@@ -83,22 +84,18 @@ if (IsSet($_POST['authors'])) {
 
 kwLogger::logEvent('Update', 'articles', $article_id, "Article updated, id is {$article_id}" );
 
+$template_dir = '$/core/_templates';
+$template_file = "ref.all_timed_callback.html";
 
-if ($result['error'] == 0) {
-    $override = array(
-        'time' => $CONFIG['callback_timeout'] ?? 15,
-        'target' => '/core/ref.articles.show.php',
-        'buttonmessage' => 'Вернуться к списку статей',
-        'message' => 'Информация о статье в базе обновлена... ' . ( $result['error_message'] ?? '')
-    );
-} else {
-    $override = array(
-        'time' => $CONFIG['callback_timeout'] ?? 15,
-        'target' => '/core/ref.articles.show.php',
-        'buttonmessage' => 'Вернуться к списку статей',
-        'message' => $result['message']
-    );
-}
-$tpl = new kwt('../ref.all.timed.callback.tpl');
-$tpl->override($override);
-$tpl->out();
+$template_data = array(
+    'time'          => $CONFIG['callback_timeout'] ?? 15,
+    'target'        => '../ref.articles.show.php',
+    'button_text'   => 'Вернуться к списку статей',
+);
+
+$template_data['message']
+    = ($result['error'] == 0)
+    ? ('Информация о статье в базе обновлена... ' . ($result['error_message'] ?? ''))
+    : $result['message'];
+
+echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);

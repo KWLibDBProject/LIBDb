@@ -48,3 +48,15 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 `stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
+
+# Таблица articles
+
+- Переименовываем поле `add_date` в `date_add_legacy`
+- Создаем поле `date_add DATE`
+- конвертируем:
+```
+UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
+```
+
+Фиксим выборки данных, вставку и генерацию контента в JS/PHP
+
