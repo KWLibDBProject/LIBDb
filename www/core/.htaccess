@@ -6,4 +6,4 @@ php_value upload_max_filesize 16M
 php_value post_max_size 32M
 php_value max_file_uploads 32
 
-DirectoryIndex admin.login.php
+DirectoryIndex admin.php

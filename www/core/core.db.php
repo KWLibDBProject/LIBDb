@@ -135,7 +135,7 @@ function DBLoginCheck($login, $password)
                 'message'       => 'User credentials correct! ',
                 'id'            => $user['id'],
                 'permissions'   => $user['permissions'],
-                'url'           => 'admin.php',
+                'url'           => '_admin.php',
                 'username'      => $userlogin
             );
             kwLogger::logEvent('login', 'userlist', $userlogin, 'User logged!');
