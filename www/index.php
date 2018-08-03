@@ -59,13 +59,20 @@ switch ($fetch) {
         switch ($with) {
             case 'info': {
                 /*расширенная информация по автору + список его статей + фото */
-                $filename = $tpl_path.'/fetch=authors/with=info/f_authors+w_info.'.$site_language;
                 $id = intval($_GET['id']);
+
+                $template_dir = '$/template.bootstrap24/authors/info/';
+                $template_file_name = "authors__info.{$site_language}";
+
+                // both must be class methods or functions
                 $author_information = LoadAuthorInformation_ById($id, $site_language);
-                $author_publications = $template_engine->getArticles_ByAuthor($id);
-                /* HTML Template */
-                $inner_html = new kwt($filename.".html");
-                $inner_html->override( array(
+
+                $author_publications = $template_engine->getArticles_ByAuthor($id); // возвращает HTML-код, его надо развернуть в шаблон
+
+                /**
+                 * HTML
+                 */
+                $local_html_data = [
                     'author_publications'   => $author_publications,
                     'author_publications_display_class' => (empty($author_publications)) ? ' hidden ' : ' ',
                     'author_name'           => $author_information['author_name'] ?? '',
@@ -75,20 +82,28 @@ switch ($fetch) {
                     'author_bio'            => $author_information['author_bio'] ?? '',
                     'author_bio_display_class' => (empty($author_information['author_bio'])) ? ' hidden ' : ' ',
                     'author_photo_id'       => $author_information['author_photo_id'] ?? -1,
-                    'author_photo_link'     => ($author_information['author_photo_id'] == -1) ? "/".$tpl_path."/images/no_photo_{$site_language}.png" : "core/get.image.php?id={$author_information['author_photo_id']}"
-                ));
-                $maincontent_html = $inner_html->get();
+                    'author_photo_link'
+                            => ($author_information['author_photo_id'] == -1)
+                            ?  "/".$tpl_path."/images/no_photo_{$site_language}.png"
+                            :  "core/get.image.php?id={$author_information['author_photo_id']}"
+                ];
 
-                /* JS Template */
-                $inner_js = new kwt($filename.".js");
-                $inner_js->override( array(
-                        "author_is_es" => ($author_information['author_is_es'])==1 ? 'block' : 'none' )
-                );
-                $maincontent_js = $inner_js->get();
+                $maincontent_html = \Websun\websun::websun_parse_template_path($local_html_data, "{$template_file_name}.html", $template_dir);
 
-                /* CSS Template */
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                /**
+                 * JS
+                 */
+                $local_js_data = [
+                    "author_is_es" => ($author_information['author_is_es']==1) ? 'block' : 'none'
+                ];
+                $maincontent_js = \Websun\websun::websun_parse_template_path($local_js_data, "{$template_file_name}.js", $template_dir);
+
+                /**
+                 * CSS
+                 */
+                $local_css_data = [];
+                $maincontent_css = \Websun\websun::websun_parse_template_path($local_css_data, "{$template_file_name}.css", $template_dir);
+
                 break;
             }
             case 'all' : {
