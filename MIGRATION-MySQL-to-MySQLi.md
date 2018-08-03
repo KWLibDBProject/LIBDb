@@ -77,5 +77,7 @@ UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
 
+# Таблица cross_aa
 
+Накладываем индексы на все поля.
 

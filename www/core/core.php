@@ -58,14 +58,18 @@ function Redirect($url)
  */
 function isLogged()
 {
+    global $CONFIG;
+
+    $key_session_userid = $CONFIG['session']['user_id'];
+    $key_cookie_is_logged = $CONFIG['cookies']['user_is_logged'];
+
     // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
     $we_are_logged = !empty($_SESSION);
-    $we_are_logged = $we_are_logged && isset($_SESSION['u_id']);
-    $we_are_logged = $we_are_logged && $_SESSION['u_id'] !== -1;
-    $we_are_logged = $we_are_logged && isset($_COOKIE['u_libdb_logged']);
-    return (int) $we_are_logged ;
+    $we_are_logged = $we_are_logged && isset($_SESSION[ $key_session_userid  ]);
+    $we_are_logged = $we_are_logged && $_SESSION[ $key_session_userid ] !== -1;
 
-    //@todo : перенести в CONFIG.INI названия проверяемых в сессии и куках переменных
+    $we_are_logged = $we_are_logged && isset($_COOKIE[ $key_cookie_is_logged ]);
+    return (int) $we_are_logged ;
 }
 
 /**
@@ -325,12 +329,12 @@ function at($array, $key, $default)
 function ossl_encrypt($data)
 {
     global $CONFIG;
-    $CONFIG['OPENSSL_ENCRYPTION_KEY'];
+    $OPENSSL_ENCRYPTION_KEY = $CONFIG['OPENSSL_ENCRYPTION_KEY'];
 
     $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
     $iv = openssl_random_pseudo_bytes($ivlen);
-    $ciphertext_raw = openssl_encrypt($data, $cipher, $CONFIG['OPENSSL_ENCRYPTION_KEY'], $options = OPENSSL_RAW_DATA, $iv);
-    $hmac = hash_hmac('sha256', $ciphertext_raw, $CONFIG['OPENSSL_ENCRYPTION_KEY'], $as_binary = true);
+    $ciphertext_raw = openssl_encrypt($data, $cipher, $OPENSSL_ENCRYPTION_KEY, $options = OPENSSL_RAW_DATA, $iv);
+    $hmac = hash_hmac('sha256', $ciphertext_raw, $OPENSSL_ENCRYPTION_KEY, $as_binary = true);
     $ciphertext = base64_encode($iv . $hmac . $ciphertext_raw);
 
     return $ciphertext;
@@ -339,15 +343,15 @@ function ossl_encrypt($data)
 function ossl_decrypt($data)
 {
     global $CONFIG;
+    $OPENSSL_ENCRYPTION_KEY = $CONFIG['OPENSSL_ENCRYPTION_KEY'];
 
     $c = base64_decode($data);
     $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
     $iv = substr($c, 0, $ivlen);
     $hmac = substr($c, $ivlen, $sha2len = 32);
     $ciphertext_raw = substr($c, $ivlen + $sha2len);
-    $decrypted_data = openssl_decrypt($ciphertext_raw, $cipher, $CONFIG['OPENSSL_ENCRYPTION_KEY'], $options = OPENSSL_RAW_DATA, $iv);
-    $calcmac = hash_hmac('sha256', $ciphertext_raw, $CONFIG['OPENSSL_ENCRYPTION_KEY'], $as_binary = true);
-
+    $decrypted_data = openssl_decrypt($ciphertext_raw, $cipher, $OPENSSL_ENCRYPTION_KEY, $options = OPENSSL_RAW_DATA, $iv);
+    $calcmac = hash_hmac('sha256', $ciphertext_raw, $OPENSSL_ENCRYPTION_KEY, $as_binary = true);
 
     return (hash_equals($hmac, $calcmac)) ? $decrypted_data : null;
 }

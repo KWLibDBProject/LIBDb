@@ -40,7 +40,7 @@ class kwLogger extends kwLoggerConfig
      */
     private static function ConvertTimestampToDate()
     {
-        return strftime(self::$log_datetime_format /*, time() */);
+        return strftime(self::$log_datetime_format);
     }
 
     private static function prepare( $array, $target = 'db' )
@@ -75,7 +75,7 @@ class kwLogger extends kwLoggerConfig
             'datetime'      =>  self::ConvertTimestampToDate(),
             // нельзя получить доступ к сессии без session_start() , поэтому сохраняем данные из кукисов
             // 'user'          =>  (isset($_SESSION[ self::$log_userid_key_in_session ])) ? $_SESSION[ self::$log_userid_key_in_session ] : -1
-            'user'          =>  (isset($_COOKIE[ self::$log_userid_key_in_cookies ])) ? $_COOKIE[ self::$log_userid_key_in_cookies ] : -1
+            'user'          => $_COOKIE[ self::$log_userid_key_in_cookies ] ?? -1
         );
         $query = self::makeInsertStatement($entry);
         mysqli_query(self::$mysqli_link, $query ) or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
@@ -92,7 +92,7 @@ class kwLogger extends kwLoggerConfig
             'comment'       =>  $message,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
             'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  (isset($_SESSION[ self::$log_userid_key_in_session ])) ? $_SESSION[ self::$log_userid_key_in_session ] : 0
+            'user'          =>  $_SESSION[ self::$log_userid_key_in_session ] ?? 0
         );
         $die_message = '';
         if (!empty($dataset)) {
@@ -120,7 +120,7 @@ class kwLogger extends kwLoggerConfig
             'comment'       =>  $comment,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
             'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  (isset($_SESSION['u_id'])) ? $_SESSION['u_id'] : 0
+            'user'          =>  $_SESSION[ self::$log_userid_key_in_session ] ?? 0
         );
         $f = fopen( $_SERVER['DOCUMENT_ROOT'].self::$log_file , 'a+' );
         fwrite($f, self::prepare( $entry, 'file' ));
@@ -136,7 +136,7 @@ class kwLogger extends kwLoggerConfig
             'comment'       =>  $comment,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
             'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  (isset($_SESSION['u_id'])) ? $_SESSION['u_id'] : 0
+            'user'          =>  $_SESSION[ self::$log_userid_key_in_session ] ?? 0
         );
         $f = fopen( $_SERVER['DOCUMENT_ROOT'].self::$log_file , 'a+' );
         fputcsv( $f, $entry );
@@ -152,7 +152,7 @@ class kwLogger extends kwLoggerConfig
             'comment'       =>  $comment,
             'ip'            =>  $_SERVER['REMOTE_ADDR'],
             'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  (isset($_SESSION['u_id'])) ? $_SESSION['u_id'] : 0
+            'user'          =>  $_SESSION[ self::$log_userid_key_in_session ] ?? 0
         );
         return self::prepare( $entry, 'csv' );
     }

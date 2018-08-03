@@ -8,7 +8,7 @@ require_once('config/config.php');
 function ConnectDB()
 {
     global $CONFIG;
-    $link = mysqli_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password'], $CONFIG['database'])
+    $link = mysqli_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password'], $CONFIG['database'], $CONFIG['port'])
             or die("Can't establish connection to '{$CONFIG['hostname']}' for user '{$CONFIG['username']}' at '{$CONFIG['database']}' database");
     mysqli_query($link, "SET NAMES utf8");
     return $link;
@@ -135,7 +135,7 @@ function DBLoginCheck($login, $password)
                 'message'       => 'User credentials correct! ',
                 'id'            => $user['id'],
                 'permissions'   => $user['permissions'],
-                'url'           => '_admin.php',
+                'url'           => 'admin.actions.php',
                 'username'      => $userlogin
             );
             kwLogger::logEvent('login', 'userlist', $userlogin, 'User logged!');
@@ -143,7 +143,7 @@ function DBLoginCheck($login, $password)
             // пароль неверен
             $return = array(
                 'error'         => 1,
-                'message'       => 'Пароль не указан или неверен! Проверьте раскладку клавиатуры! ',
+                'message'       => 'Пароль неверен! Проверьте раскладку клавиатуры! ',
             );
             kwLogger::logEvent('login', 'userlist', $userlogin, 'Error: password incorrect');
         }
