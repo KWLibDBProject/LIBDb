@@ -14,11 +14,8 @@ $post = array(
     'email'         => mysqli_real_escape_string($mysqli_link, $_POST['email']),
     'permissions'   => mysqli_real_escape_string($mysqli_link, $_POST['permissions']),
     'login'         => mysqli_real_escape_string($mysqli_link, $_POST['login']),
-    'password'      => mysqli_real_escape_string($mysqli_link, $_POST['password']), //@todo: REMOVE IT
     'phone'         => mysqli_real_escape_string($mysqli_link, $_POST['phone']),
     'md5password'   => md5(mysqli_real_escape_string($mysqli_link, $_POST['password'])),
-    'stat_date_insert'  =>  $now,
-    'stat_date_update'  =>  $now
 );
 // повысить до админа нельзя, по крайней мере отсюда
 $post['permissions'] =

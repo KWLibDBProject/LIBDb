@@ -15,10 +15,8 @@ $post = array(
     'email'         => mysqli_real_escape_string($mysqli_link, $_POST['email']),
     'permissions'   => mysqli_real_escape_string($mysqli_link, $_POST['permissions']),
     'login'         => trim(mysqli_real_escape_string($mysqli_link, $_POST['login'])),
-    'password'      => trim(mysqli_real_escape_string($mysqli_link, $_POST['password'])), //@todo: REMOVE
     'phone'         => mysqli_real_escape_string($mysqli_link, $_POST['phone']),
     'md5password'   => md5(trim(mysqli_real_escape_string($mysqli_link, $_POST['password']))),
-    'stat_date_update' => ConvertTimestampToDate()
 );
 // нельзя создать админа
 $post['permissions'] =

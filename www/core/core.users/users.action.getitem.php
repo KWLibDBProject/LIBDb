@@ -1,5 +1,4 @@
 <?php
-// выводит в виде таблицы содержимое справочника 'users'
 require_once '../__required.php'; // $mysqli_link
 
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
