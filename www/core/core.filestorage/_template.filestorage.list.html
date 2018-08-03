@@ -1,0 +1,29 @@
+<table class="" border="1" width="100%" id="exportable">
+    <caption></caption>
+    <tr>
+        <th>icon</th>
+        <th>User filename</th>
+        <th>Internal filename</th>
+        <th>Date upload</th>
+        <th>Size</th>
+        <th>Collection</th>
+        <th> <img title="Сколько раз скачивали" alt="↓" src="../css/download.png" /> </th>
+        <th>Link</th>
+    </tr>
+
+    {?*filestorage_list*}
+    {%*filestorage_list*}
+    <tr>
+        <td class="center">{*filestorage_list:ext*}</td>
+        <td>{*filestorage_list:filelink*}</td>
+        <td>{*filestorage_list:internal_name_link*}</td>
+        <td class="center">{*filestorage_list:stat_date_insert*}</td>
+        <td class="center">{*filestorage_list:size*}</td>
+        <td class="center">{*filestorage_list:collection*}</td>
+        <td class="center">&nbsp;&nbsp;<small>{*filestorage_list:stat_download_counter*}</small>&nbsp;&nbsp;</td>
+        <td class="center">{*filestorage_list:external_link*}</td>
+    </tr>
+    {%}
+    {?}
+
+</table>

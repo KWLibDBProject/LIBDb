@@ -504,10 +504,10 @@ class FileStorage extends FileStorageConfig
     public static function recalcFilesSize()
     {
         $result = array(
-            'total_files_found'   => 0,
-            'total_files_fixed'     => 0,
-            'total_files_error'     => 0,
-            'log'             => array()
+            'total_files_found' => 0,
+            'total_files_fixed' => 0,
+            'total_files_error' => 0,
+            'log'               => []
         );
         $table = self::getSQLTable();
         $query = "SELECT id, username, filetype, internal_name, filesize FROM {$table}";
@@ -520,7 +520,7 @@ class FileStorage extends FileStorageConfig
                 if ( $newfilesize === FALSE ) {
                     // file not found
                     $result['total_files_error']++;
-                    $result['log'][] = array(
+                    $result['log'][] = [
                         'id'        => $filerecord['id'],
                         'username'  => $filerecord['username'],
                         'internal_name' => $filerecord['internal_name'],
@@ -528,7 +528,7 @@ class FileStorage extends FileStorageConfig
                         'filesize_old'  =>  $filerecord['filesize'],
                         'icon'  => '',
                         'status'    => 'File not found on disk or disk error! '
-                    );
+                    ];
                 } else {
                     $result['total_files_found']++;
                     if ($filerecord['filesize'] != $newfilesize) {
@@ -537,15 +537,16 @@ class FileStorage extends FileStorageConfig
                         mysqli_query(self::$mysqli_link, "LOCK TABLES {$table}");
                         mysqli_query(self::$mysqli_link, $query);
                         mysqli_query(self::$mysqli_link, "UNLOCK TABLES");
-                        $result['log'][] = array(
-                            'id'        => $filerecord['id'],
-                            'username'  => $filerecord['username'],
+
+                        $result['log'][] = [
+                            'id'            => $filerecord['id'],
+                            'username'      => $filerecord['username'],
                             'internal_name' => $filerecord['internal_name'],
                             'filesize_new'  =>  $newfilesize,
                             'filesize_old'  =>  $filerecord['filesize'],
-                            'icon'  => self::getIconFile($filerecord['filetype']),
-                            'status'    => 'Filesize changed! New size = '.$newfilesize
-                        );
+                            'icon'          => self::getIconFile($filerecord['filetype']),
+                            'status'        => 'Filesize changed! New size = '.$newfilesize
+                        ];
                     } // if inner
                 } // is filesize NOT false (i.e. file exists)
             } // end while

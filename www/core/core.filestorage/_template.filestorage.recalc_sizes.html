@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <title>Recalc file sizes</title>
+    <style>
+        .note {
+            color: blue;
+        }
+        .warning {
+            color: red;
+        }
+        .stats {
+            font-size: 120%;
+        }
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="stats">
+    Просканировано файлов: <span class="warning">{*total_files_found*}</span> <br/>
+    Исправлено записей в БД: <span class="warning">{*total_files_fixed*}</span> <br/>
+    Ошибочных записей в БД: <span class="warning">{*total_files_error*}</span> <br/>
+</div>
+
+{?*is_log_present*}
+<table class="" border="1" width="100%" id="exportable">
+    <caption></caption>
+    <tr>
+        <th>Icon</th>
+        <th>User filename</th>
+        <th>Internal filename</th>
+        <th>Old <br> filesize</th>
+        <th>Status</th>
+    </tr>
+{%*log_records*}
+    <tr>
+        <td class="center"><img src="{*log_records:icon*}"></td>
+        <td>{*log_records:username*}</td>
+        <td>{*log_records:internal_name*}</td>
+        <td class="center">{*log_records:filesize_old*}</td>
+        <td class="center">
+            <span class="note">{*log_records:status*}</span>
+        </td>
+    </tr>
+{%}
+</table>
+{?}
+<hr>
+{*exit_message*}
+</body>

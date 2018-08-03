@@ -6,7 +6,7 @@ if(empty($SID)) session_start();
 ifNotLoggedRedirect('/core/');
 
 ?>
-
+<!DOCTYPE html>
 <html>
 <head>
     <title>FileStorage::List</title>
@@ -24,6 +24,8 @@ ifNotLoggedRedirect('/core/');
 
     <script type="text/javascript">
         $(document).ready(function () {
+            var url_files_list = "core.filestorage/filestorage.action.list.php";
+
             $.ajaxSetup({cache: false});
 
             // on change search selectors SET new window-hash
@@ -37,7 +39,7 @@ ifNotLoggedRedirect('/core/');
             });
 
             // onload full list
-            $("#files_list").load("core.filestorage/filestorage.action.list.php");
+            $("#files_list").load(url_files_list);
 
             // bind exit actor
             $("#actor-exit").on('click',function(event){
@@ -59,7 +61,7 @@ ifNotLoggedRedirect('/core/');
                     query+= "&sort-type="  + $('select[name="sort-type"]').val();
                     query+= "&sort-order=" + $('select[name="sort-order"]').val();
                 clearHash();
-                $("#files_list").empty().load('core.filestorage/filestorage.action.list.php?'+query);
+                $("#files_list").empty().load(url_files_list + '?' + query);
             });
 
             $("#actor-show-all").on('click' , function() {
@@ -67,7 +69,7 @@ ifNotLoggedRedirect('/core/');
                 $('select[name="sort-type"]').val('id');
                 $('select[name="sort-order"]').val('ASC');
                 clearHash();
-                $("#files_list").empty().load('core.filestorage/filestorage.action.list.php');
+                $("#files_list").empty().load(url_files_list);
             });
             $("#actor-export-excel").on('click', function(){
                 tableToExcel('exportable', 'export');
