@@ -75,7 +75,7 @@ switch ($fetch) {
                     'author_bio'            => $author_information['author_bio'] ?? '',
                     'author_bio_display_class' => (empty($author_information['author_bio'])) ? ' hidden ' : ' ',
                     'author_photo_id'       => $author_information['author_photo_id'] ?? -1,
-                    'author_photo_link'     => ($author_information['author_photo_id'] == -1) ? "/".$tpl_path."/images/no_photo_{$site_language}.png" : "core/getimage.php?id={$author_information['author_photo_id']}"
+                    'author_photo_link'     => ($author_information['author_photo_id'] == -1) ? "/".$tpl_path."/images/no_photo_{$site_language}.png" : "core/get.image.php?id={$author_information['author_photo_id']}"
                 ));
                 $maincontent_html = $inner_html->get();
 

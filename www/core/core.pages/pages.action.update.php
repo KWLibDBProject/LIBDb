@@ -37,7 +37,7 @@ if (isAjaxCall()) {
 
         $template_data = array(
             'time'          => $CONFIG['callback_timeout'] ?? 15,
-            'target'        => '../ref.pages.show.php',
+            'target'        => '../list.pages.show.php',
             'button_text'   => 'Вернуться к списку страниц',
             'message'       => 'Статическая страница обновлена'
         );

@@ -56,7 +56,7 @@ if (isAjaxCall()) {
 
     $template_data = array(
         'time'          => $CONFIG['callback_timeout'] ?? 15,
-        'target'        => '/core/ref.authors.show.php',
+        'target'        => '/core/list.authors.show.php',
         'button_text'   => 'Вернуться к списку авторов',
         'message'       => $result['message']
     );

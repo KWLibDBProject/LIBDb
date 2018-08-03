@@ -141,7 +141,7 @@ if ($id != -1)
             }
 
             $(".button-exit").on('click',function(event){
-                window.location.href = '../ref.books.show.php';
+                window.location.href = '../list.books.show.php';
             });
             $("#button-remove").on('click',function(event){
                 if (confirm("Вы уверены, что хотите удалить сборник?")) {

@@ -28,7 +28,7 @@ ifNotLoggedRedirect('/core/');
 
         $(document).ready(function () {
         $("#actor-exit").on('click',function(event){
-            window.location.href = '../ref.books.show.php';
+            window.location.href = '../list.books.show.php';
         });
         $("#actor-remove").on('click',function(event){
             // window.location.href = 'books.action.remove.php?id='+author_id;

@@ -32,7 +32,7 @@ $template_file = "ref.all_timed_callback.html";
 
 $template_data = array(
     'time'          => $CONFIG['callback_timeout'] ?? 15,
-    'target'        => '../ref.articles.show.php',
+    'target'        => '../list.articles.show.php',
     'button_text'   => 'Вернуться к списку статей',
 );
 

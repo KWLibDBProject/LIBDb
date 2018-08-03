@@ -138,19 +138,19 @@ $upload_limits = [
                     <button data-href="ref.topics.show.php" class="admin-button-large action-is-href">ТЕМАТИЧЕСКИЕ РАЗДЕЛЫ</button>
                 </li>
                 <li>
-                    <button data-href="ref.books.show.php" class="admin-button-large action-is-href">СБОРНИКИ (КНИГИ)</button>
+                    <button data-href="list.books.show.php" class="admin-button-large action-is-href">СБОРНИКИ (КНИГИ)</button>
                 </li>
                 <li>
-                    <button data-href="ref.authors.show.php" class="admin-button-large action-is-href">АВТОРЫ</button>
+                    <button data-href="list.authors.show.php" class="admin-button-large action-is-href">АВТОРЫ</button>
                 </li>
                 <li>
-                    <button data-href="ref.articles.show.php" class="admin-button-large action-is-href">СТАТЬИ</button>
+                    <button data-href="list.articles.show.php" class="admin-button-large action-is-href">СТАТЬИ</button>
                 </li>
                 <li>
                     <button data-href="ref.pages.show.php" class="admin-button-large action-is-href">СТАТИЧНЫЕ<br>СТРАНИЦЫ</button>
                 </li>
                 <li>
-                    <button data-href="ref.news.show.php" class="admin-button-large action-is-href">НОВОСТИ</button>
+                    <button data-href="list.news.show.php" class="admin-button-large action-is-href">НОВОСТИ</button>
                 </li>
                 <li>
                     <button data-href="ref.banners.php" class="admin-button-large action-is-href">Баннеры</button>

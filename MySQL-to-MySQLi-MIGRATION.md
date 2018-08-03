@@ -49,6 +49,8 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
 
+[todo] : поле `date` legacy, поле `timestamp` 
+
 # Таблица articles
 
 - Переименовываем поле `add_date` в `date_add_legacy`
@@ -57,6 +59,7 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 ```
 UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
 ```
+- Удаляем `date_add_legacy`
 
 # Таблица users
 

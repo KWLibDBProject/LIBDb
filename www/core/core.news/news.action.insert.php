@@ -47,7 +47,7 @@ if (isAjaxCall()) {
 
         $template_data = array(
             'time'          => $CONFIG['callback_timeout'] ?? 15,
-            'target'        => '../ref.news.show.php',
+            'target'        => '../list.news.show.php',
             'button_text'   => 'Вернуться к списку новостей',
             'message'       => 'Новость добавлена'
         );

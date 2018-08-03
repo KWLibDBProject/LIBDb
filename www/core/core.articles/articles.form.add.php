@@ -92,7 +92,7 @@ ifNotLoggedRedirect('/core/');
 
             $("#button-exit").on('click',function(event){
                 event.preventDefault();
-                window.location.href = '/core/ref.articles.show.php';
+                window.location.href = '/core/list.articles.show.php';
                 return false;
             });
 

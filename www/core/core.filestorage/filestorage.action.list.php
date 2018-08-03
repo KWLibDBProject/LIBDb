@@ -64,11 +64,11 @@ if ($r) {
         $filestorage_item['ext'] = $ext_a[1];
         switch ($filestorage_item['ext']) {
             case 'pdf' : {
-                $filestorage_item['filelink'] = '<a href="/core/getfile.php?id='.$filestorage_item['id'].'">'.$filestorage_item['username'].'</a>';
+                $filestorage_item['filelink'] = '<a href="/core/get.file.php?id='.$filestorage_item['id'].'">'.$filestorage_item['username'].'</a>';
                 break;
             }
             default: { // image
-                $filestorage_item['filelink'] = '<a href="/core/getimage.php?id='.$filestorage_item['id'].'" class="lightbox" target="_blank">'.$filestorage_item['username'].'</a>';
+                $filestorage_item['filelink'] = '<a href="/core/get.image.php?id='.$filestorage_item['id'].'" class="lightbox" target="_blank">'.$filestorage_item['username'].'</a>';
                 break;
             }
 

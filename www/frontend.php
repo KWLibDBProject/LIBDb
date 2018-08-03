@@ -390,10 +390,12 @@ function BuildQuery($get, $lang)
 {
     global $mysqli_link;
 
+    // DATE_FORMAT(date_add, '%d.%m.%Y') as date_add,
+
     $q_select = " SELECT DISTINCT
 articles.id
 , articles.udc AS article_udc
-, articles.add_date AS article_add_date
+, DATE_FORMAT(date_add, '%d.%m.%Y') AS article_add_date
 , articles.title_{$lang} AS article_title
 , articles.book
 , articles.topic
@@ -480,7 +482,7 @@ topics.deleted=0 {$query_show_published} ";
             : "";
 
         $q_expert .= ($get['expert_add_date'] != '')
-            ? " AND articles.add_date LIKE '%" . mysqli_real_escape_string($mysqli_link, $get['expert_add_date']) . "' "
+            ? " AND DATE_FORMAT(date_add, '%d.%m.%Y') LIKE '%" . mysqli_real_escape_string($mysqli_link, $get['expert_add_date']) . "' "
             : "";
 
         /* это оптимизированная достраивалка запроса на основе множественных keywords */
@@ -620,7 +622,7 @@ WHERE books.id=articles.book
 AND cross_aa.article = articles.id
 AND books.published=1
 AND cross_aa.author = $id
-ORDER BY add_date
+ORDER BY date_add
 ";
     $r = mysqli_query($mysqli_link, $q);
     if (@mysqli_num_rows($r) > 0) {

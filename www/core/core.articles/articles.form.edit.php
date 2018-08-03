@@ -9,7 +9,7 @@ if (isset($_GET['id']))
 {
     $id = intval($_GET['id']);
 } else {
-    Redirect('/core/ref.articles.show.php');
+    Redirect('/core/list.articles.show.php');
 }
 
 $query = "SELECT *, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM articles WHERE id= {$id}"; // получаем СТАТЬЮ
@@ -139,7 +139,7 @@ if ($numarticles == 1)
 
             $(".button-exit").on('click',function(event){
                 event.preventDefault();
-                window.location.href = '/core/ref.articles.show.php';
+                window.location.href = '/core/list.articles.show.php';
                 return false;
             });
 

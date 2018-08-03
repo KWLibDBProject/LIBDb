@@ -61,7 +61,7 @@ if (!IsSet($_GET['id'])) {
 
         $template_data = array(
             'time'          => $CONFIG['callback_timeout'] ?? 15,
-            'target'        => '../ref.books.show.php',
+            'target'        => '../list.books.show.php',
             'button_text'   => 'Вернуться к списку сборников',
             'message'       => $result['message']
         );
