@@ -310,8 +310,8 @@ switch ($fetch) {
                     Redirect('?fetch=news&with=list');
                 }
 
-                $template_dir = '$/template.bootstrap24/fetch=news/with=the/';
-                $template_file_name = "f_news+w_the.{$site_language}";
+                $template_dir = '$/template.bootstrap24/news/the/';
+                $template_file_name = "news__the.{$site_language}";
 
                 $the_news_item = LoadNewsItem($id, $site_language);
 
@@ -330,8 +330,8 @@ switch ($fetch) {
             case 'list' : {
                 /* список новостей */
 
-                $template_dir = '$/template.bootstrap24/fetch=news/with=list/';
-                $template_file_name = "f_news+w_list.{$site_language}";
+                $template_dir = '$/template.bootstrap24/news/list/';
+                $template_file_name = "news__list.{$site_language}";
 
                 $local_template_data = [
                     'news_list' => LoadNewsListTOC($site_language)
