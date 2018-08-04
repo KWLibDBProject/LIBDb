@@ -187,10 +187,10 @@ if ($id != -1)
 
 
             $(".current_file_show").on('click', function(){
-                window.location.href="../getfile.php?id="+$(this).attr('data-fileid');
+                window.location.href="../get.file.php?id="+$(this).attr('data-fileid');
             });
             $(".current_file_lightbox").on('click', function(){
-                var link = "../getimage.php?id="+$(this).attr('data-fileid');
+                var link = "../get.image.php?id="+$(this).attr('data-fileid');
                 $.colorbox({
                     href: link,
                     photo: true

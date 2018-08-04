@@ -250,6 +250,7 @@ class __Template
     /**
      * сообщение "нет авторов" для разных языков
      * @return string
+     * @todo: USELESS
      */
     private function messageNoPlainAuthors()
     {
@@ -272,6 +273,7 @@ class __Template
      * список авторов в виде plain/list ( /authors/all для поисковых систем и не только)
      * @param $letter
      * @return array
+     * @todo: USELESS
      */
     public function getAuthors_PlainList($letter)
     {

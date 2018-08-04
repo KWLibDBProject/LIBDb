@@ -176,7 +176,7 @@ if ($numarticles == 1)
 
             // логика кнопок
             $("#currfile_show").on('click',function(){ // show current file
-                window.location.href="../getfile.php?id="+$(this).attr('data-fileid');
+                window.location.href="../get.file.php?id="+$(this).attr('data-fileid');
             });
 
             $("#currfile_del").on('click',function(){

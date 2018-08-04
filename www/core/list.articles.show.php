@@ -62,7 +62,7 @@ ifNotLoggedRedirect('/core/');
             });
             $('#articles_list')
                     .on('click','.action-download-pdf',function(){
-                        window.location.href="getfile.php?id="+$(this).attr('name')
+                        window.location.href="get.file.php?id="+$(this).attr('name')
                     })
                     .on('click','.action-edit',function(){
                         location.href = 'core.articles/articles.form.edit.php?id='+$(this).attr('name');

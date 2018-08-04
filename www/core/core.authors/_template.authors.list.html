@@ -17,11 +17,11 @@
                 {*authors_list:name_ru*}
             </div>
             <div class="aal-author-info">
-                {*authors_list:workplace_ru*}{?*authors_list:email*}, {*authors_list:email*}{?}{?*authors_list:phone*}, {*authors_list:phone*}{?}
+                {?*authors_list:workplace_ru*}{*authors_list:workplace_ru*}{?}{?*authors_list:email*}, {*authors_list:email*}{?}{?*authors_list:phone*}, {*authors_list:phone*}  {?}
             </div>
         </td>
         <td class="centred_cell">
-            {?*authors_list:is_photo_present*}<a href="getimage.php?id={*authors_list:photo_id*}" target="_blank" class="lightbox"> &lt;Show&gt; </a> {?}
+            {?*authors_list:is_photo_present*}<a href="get.image.php?id={*authors_list:photo_id*}" target="_blank" class="lightbox"> &lt;Show&gt; </a> {?}
         </td>
         <td class="centred_cell">
             <button class="action-edit button-edit" name="{*authors_list:id*}">Edit</button>
