@@ -7,46 +7,49 @@ require_once 'template.bootstrap24.php';
 
 $site_language = GetSiteLanguage();
 
-// init
 // defaults fields and variables
 $maincontent_html = '';
 $maincontent_js = '';
 $maincontent_css = '';
+
 // init template override array
-$override = array();
+// main_template_data
+$main_template_data = array();
+
+$main_template_dir = '$/template.bootstrap24/';
+$main_template_file = "index.{$site_language}.html";
 
 // load default index file for template, based on language
-$tpl_index = new kwt($tpl_path."/index.{$site_language}.html", '<!--{', '}-->' );
+// $tpl_index = new kwt($tpl_path."/index.{$site_language}.html", '<!--{', '}-->' );
 
 // init template engine
-$template_engine = new Template($tpl_path, $site_language);
+$template_engine = new Template($CONFIG['frontend_template_name'], $site_language); //@todo disable this after full refactoring
 
 /* Override variables in INDEX.*.HTML template */
-$override['template_path'] = $tpl_path; // template directory name (not a path!), defined in template.xxx.php
-
+$main_template_data['template_path'] = $CONFIG['frontend_template_name']; // template directory name (not a path!), defined in template.xxx.php
 
 /**
  * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$override['rubrics']    = $template_engine->getTopicsTree(); //@TODO: работает - не трогай (там очень уж замороченно, используется HEREDOC)
+$main_template_data['rubrics']    = $template_engine->getTopicsTree(); //@TODO: работает - не трогай (там очень уж замороченно, используется HEREDOC)
 
 /**
  * Блок "выпуски" (нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$override['books']      = $template_engine->getBooks(); // возвращает рендер websun
+$main_template_data['books']      = $template_engine->getBooks(); // возвращает рендер websun
 
 /**
  * Блок "баннеры" (нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$override['banners']    = $template_engine->getBanners(); // возвращает рендер websun
+$main_template_data['banners']    = $template_engine->getBanners(); // возвращает рендер websun
 
 /*
  * Блок "последние новости" (нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$override['last_news_shortlist'] = $template_engine->getLastNews(3); // возвращает рендер websun
+$main_template_data['last_news_shortlist'] = $template_engine->getLastNews(3); // возвращает рендер websun
 
 /* insert menu from template */
-$override['main_menu_content'] = $template_engine->getMenu(); // делать через вставку шаблона (сейчас - kwt)
+$main_template_data['main_menu_content'] = $template_engine->getMenu(); // делать через вставку шаблона (сейчас - kwt),
 
 // Main switch
 $fetch  = at( $_GET, 'fetch', '' );
@@ -253,7 +256,7 @@ switch ($fetch) {
                     'article-pdf-last-download-date' => $article_info['pdf_last_download_date']
                 ));
                 if (isset($article_info['keywords']))
-                    $override['meta_keywords'] = $article_info['keywords'];
+                    $main_template_data['meta_keywords'] = $article_info['keywords'];
                 $maincontent_html = $inner_html->get();
 
                 $inner_js = new kwt($filename.'.js', '/*', '*/');
@@ -382,9 +385,14 @@ switch ($fetch) {
 
 } // end global (fetch) switch
 
-$override['content_jquery'] = $maincontent_js;
-$override['content_html'] = $maincontent_html;
-$override['content_css'] = $maincontent_css;
+$main_template_data['content_jquery'] = $maincontent_js;
+$main_template_data['content_html'] = $maincontent_html;
+$main_template_data['content_css'] = $maincontent_css;
+$main_template_data['frontend_assets_mode'] = $CONFIG['frontend_assets_mode'];
 
-$tpl_index->override($override);
-$tpl_index->out();
+// $tpl_index->override($override);
+// $tpl_index->out();
+
+$content = \Websun\websun::websun_parse_template_path($main_template_data, $main_template_file, $main_template_dir);
+$content = preg_replace('/^\h*\v+/m', '', $content);
+echo $content;
