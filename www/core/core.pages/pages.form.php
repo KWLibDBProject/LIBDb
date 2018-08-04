@@ -27,10 +27,10 @@ $template_data = array(
     'page_title'        => ($page_id != -1) ? 'Страницы -- редактирование' : 'Страницы -- добавление',
     'title_en'          => $data['title_en'] ?? '',
     'title_ru'          => $data['title_ru'] ?? '',
-    'title_uk'          => $data['title_uk'] ?? '',
+    'title_ua'          => $data['title_ua'] ?? '',
     'content_en'        => $data['content_en'] ?? '',
     'content_ru'        => $data['content_ru'] ?? '',
-    'content_uk'        => $data['content_uk'] ?? '',
+    'content_ua'        => $data['content_ua'] ?? '',
     'comment'           => $data['comment'] ?? '',
     'alias'             => $data['alias'] ?? '',
 );

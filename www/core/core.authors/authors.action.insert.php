@@ -10,18 +10,18 @@ $now = ConvertTimestampToDate();
 $q = array(
     'name_ru'       => trim($_POST['name_ru'] ?? '', ' '),
     'name_en'       => trim($_POST['name_en'] ?? '', ' '),
-    'name_uk'       => trim($_POST['name_uk'] ?? '', ' '),
+    'name_ua'       => trim($_POST['name_ua'] ?? '', ' '),
     'title_ru'      => $_POST['title_ru'] ?? '',
     'title_en'      => $_POST['title_en'] ?? '',
-    'title_uk'      => $_POST['title_uk'] ?? '',
+    'title_ua'      => $_POST['title_ua'] ?? '',
     'email'         => $_POST['email'] ?? '',
     'workplace_en'  => strip_tags($_POST['workplace_en'] ?? ''),
     'workplace_ru'  => strip_tags($_POST['workplace_ru'] ?? ''),
-    'workplace_uk'  => strip_tags($_POST['workplace_uk'] ?? ''),
+    'workplace_ua'  => strip_tags($_POST['workplace_ua'] ?? ''),
     'phone'         => $_POST['phone'] ?? '',
     'bio_en'        => $_POST['bio_en'] ?? '',
     'bio_ru'        => $_POST['bio_ru'] ?? '',
-    'bio_uk'        => $_POST['bio_uk'] ?? '',
+    'bio_ua'        => $_POST['bio_ua'] ?? '',
 
     /* Участие в редколлегии */
     'is_es'         => (($_POST['is_es'] ?? 'off') == 'on') ? 1 : 0,

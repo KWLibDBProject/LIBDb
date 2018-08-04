@@ -21,8 +21,7 @@ function GetRequestLanguage($request_string)
         switch ($request_string) {
             case 'ru' : {$lang = 'ru'; break;}
             case 'en' : {$lang = 'en'; break;}
-            case 'uk' : {$lang = 'uk'; break;}
-            case 'ua' : {$lang = 'uk'; break;}
+            case 'ua' : {$lang = 'ua'; break;}
         }
     }
     return $lang;
@@ -42,7 +41,7 @@ function GetSiteLanguage()
     if (isset($_COOKIE[ $cookie_name ]) && $_COOKIE[ $cookie_name ] != '') {
         switch ($_COOKIE[ $cookie_name ]) {
             case 'ru': { $lang = 'ru'; break; }
-            case 'uk': { $lang = 'uk'; break; }
+            case 'ua': { $lang = 'ua'; break; }
             case 'en':
             default:   { $lang = 'en'; break; }
         }
@@ -57,7 +56,7 @@ function GetSiteLanguage()
 $TRANSLATED_MONTHS = array(
     'en' => array("", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"),
     'ru' => array("", "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"),
-    'uk' => array("", "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"),
+    'ua' => array("", "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"),
 );
 
 /**

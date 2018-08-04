@@ -32,7 +32,7 @@ class __Template
         switch ($site_language) {
             case 'en': { $this->page_prefix = 'Pp. '; break; }
             case 'ru': { $this->page_prefix = 'C. '; break; }
-            case 'uk': { $this->page_prefix = 'C. '; break; }
+            case 'ua': { $this->page_prefix = 'C. '; break; }
         } // end switch
     }
 
@@ -65,8 +65,6 @@ class __Template
      */
     public function getBanners()
     {
-        // $data = LoadBanners();
-
         $template_dir = '$/template.bootstrap24/_websun_templates';
         $template_file = "frontpage_banners_section.html";
 
@@ -74,23 +72,11 @@ class __Template
             'all_banners' =>  LoadBanners()
         );
 
+        // перенести в основной шабло как подключение файла с передачей ему параметров
+
         $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
 
         return $render_result;
-
-        /*$return = '';
-        if (count($data)) {
-            foreach ($data as $id=>$row) {
-                $return .= <<<EACH_BANNER
-                    <li class="banner-item">
-                        <a href="{$row['data_url_href']}" target="_blank" class="banner-item-href">
-                            <img src="{$row['data_url_image']}" alt="{$row['data_alt']}">
-                        </a>
-                    </li>
-EACH_BANNER;
-            }
-        } else $return = null;
-        return $return;*/
     } // GetBanners
 
     /**
@@ -115,21 +101,6 @@ EACH_BANNER;
 
         return $render_result;
 
-
-        /*if (count($data)>0) {
-            foreach ($data as $i => $row)
-            {
-                $date_add = __langDate($row['date_add'], $this->site_language);
-                $return .= <<<PrintLastNews
-                        <li>
-                            <strong>{$date_add}</strong>
-                            <br>
-                            <a href="?fetch=news&with=the&id={$row['id']}">{$row['title']}</a>
-                        </li>
-PrintLastNews;
-            }
-        }
-        return $return;*/
     } // GetLastNews
 
     /**
@@ -156,7 +127,7 @@ PrintLastNews;
             case 'ru' : {
                 $r = '<br><strong>По заданным критериям поиска статей не найдено!</strong>'; break;
             }
-            case 'uk' : {
+            case 'ua' : {
                 $r = '<br><strong>За заданими критеріями пошуку статей не знайдено!</strong>'; break;
             }
         }
@@ -290,7 +261,7 @@ PrintLastNews;
             case 'ru' : {
                 $r = '<br><strong>Авторы не найдены</strong>'; break;
             }
-            case 'uk' : {
+            case 'ua' : {
                 $r = '<br><strong>Автори не знайдені</strong>'; break;
             }
         }

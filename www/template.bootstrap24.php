@@ -98,45 +98,6 @@ FE_PrintTopics_Each;
 
         $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
 
-        $first_in = 'in';
-        /*foreach ($all_books as $key => $year_books)
-        {
-            $ret .= <<<FE_PrintBooksBS_YearStart
-                    <div class="panel panel-default">
-                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{$key}">
-                            <h4 class="panel-title">
-                                <a class="accordion-toggle">{$key}</a>
-                            </h4>
-                        </div>
-                        <div id="collapse{$key}" class="panel-collapse collapse {$first_in} books">
-                            <div class="panel-body">
-                                <ul class="etks-books-list">
-FE_PrintBooksBS_YearStart;
-
-            foreach ($year_books as $id => $book)
-            {
-
-                $ret .= <<<FE_PrintBooksBS_EachBook
-                                    <li><a href="?fetch=articles&with=book&id={$id}"> {$book['title']} </a>({$book['count']})</li>
-FE_PrintBooksBS_EachBook;
-
-            }
-
-            $ret .= <<<FE_PrintBooksBS_End
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-FE_PrintBooksBS_End;
-
-            $first_in = '';
-        }*/
-        // return $ret;
-
-        /*printr($all_books);
-        printr($render_result);
-        die;*/
-
         return $render_result;
     }
 

@@ -12,7 +12,7 @@ if (!IsSet($_POST['ref_name'])) {
 $q = array(
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
     'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
-    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk']),
+    'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua']),
     'display_order' => mysqli_real_escape_string($mysqli_link, $_POST['display_order']),
 );
 $table = 'topicgroups';

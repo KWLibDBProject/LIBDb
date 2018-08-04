@@ -17,15 +17,15 @@ function Authors_LoadRecord(destination, id, tinyarea_target) // номер за
             $form.find("input[name='id']").val( result['data']['id'] );
             $form.find("input[name='name_ru']").val( result['data']['name_ru'] );
             $form.find("input[name='name_en']").val( result['data']['name_en'] );
-            $form.find("input[name='name_uk']").val( result['data']['name_uk'] );
+            $form.find("input[name='name_ua']").val( result['data']['name_ua'] );
             $form.find("input[name='title_ru']").val( result['data']['title_ru'] );
             $form.find("input[name='title_en']").val( result['data']['title_en'] );
-            $form.find("input[name='title_uk']").val( result['data']['title_uk'] );
+            $form.find("input[name='title_ua']").val( result['data']['title_ua'] );
             $form.find("input[name='email']").val( result['data']['email'] );
             $form.find("input[name='phone']").val( result['data']['phone'] );
             $form.find("textarea[name='workplace_en']").val(result['data']['workplace_en']);
             $form.find("textarea[name='workplace_ru']").val(result['data']['workplace_ru']);
-            $form.find("textarea[name='workplace_uk']").val(result['data']['workplace_uk']);
+            $form.find("textarea[name='workplace_ua']").val(result['data']['workplace_ua']);
             // Если is_es установлен - надо селекту selfhood задать prop(disabled, false),т.е. задать инвертированное значение чекбокса!
             $form.find("input[name='is_es']").prop("checked", !!parseInt(result['data']['is_es']));
             // установить значение атрибута "selfhood'
@@ -47,7 +47,7 @@ function Authors_LoadRecord(destination, id, tinyarea_target) // номер за
             }
             if (result['data']['bio'] != '')
             {
-                $form.find("textarea[name='bio_uk']").val(result['data']['bio_uk']);
+                $form.find("textarea[name='bio_ua']").val(result['data']['bio_ua']);
             }
         } else {
             // ошибка загрузки

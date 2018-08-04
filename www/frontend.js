@@ -137,6 +137,6 @@ function calledOnSwitchLanguage() {
     // redefined in some JS-files in templates for correct clearing global browser
     // values, such as URL-hash.
     // var current_hash = window.location.hash;
-    // window.location.hash = current_hash.replace(/\&lang=[en|ru|uk]/g, '');
+    // window.location.hash = current_hash.replace(/\&lang=[en|ru|ua]/g, '');
     // return null;
 }

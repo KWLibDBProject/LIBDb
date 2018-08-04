@@ -22,10 +22,10 @@ $template_data = [
     'page_title'            => isset($_GET['id']) ? 'Новости -- редактирование' : 'Новости -- добавление',
     'title_en'      => $data['title_en'] ?? '',
     'title_ru'      => $data['title_ru'] ?? '',
-    'title_uk'      => $data['title_uk'] ?? '',
+    'title_ua'      => $data['title_ua'] ?? '',
     'text_en'       => $data['text_en'] ?? '',
     'text_ru'       => $data['text_ru'] ?? '',
-    'text_uk'       => $data['text_uk'] ?? '',
+    'text_ua'       => $data['text_ua'] ?? '',
     'date_add'      => $data['date_add'] ?? '',
     'comment'       => $data['comment'] ?? '',
 ];

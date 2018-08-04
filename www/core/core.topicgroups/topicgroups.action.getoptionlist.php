@@ -5,7 +5,7 @@ require_once '../__required.php'; // $mysqli_link
 $lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
 
 $lang = getAllowedValue($lang, array(
-    'ru', 'en', 'uk', 'ua'
+    'ru', 'en', 'ua'
 ));
 
 $withoutid = isset($_GET['id']) ? 1 : 0;

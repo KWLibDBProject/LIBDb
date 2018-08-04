@@ -91,7 +91,7 @@ if ($numarticles == 1)
         // tinyMCE inits
         tinify(tiny_config['simple'], 'abstract_en');
         tinify(tiny_config['simple'], 'abstract_ru');
-        tinify(tiny_config['simple'], 'abstract_uk');
+        tinify(tiny_config['simple'], 'abstract_ua');
 
         tinify(tiny_config['simple'], 'refs_en');
         tinify(tiny_config['simple'], 'refs_ru');
@@ -273,8 +273,8 @@ if ($numarticles == 1)
                 <td><input type="text" name="title_ru" id="title_ru" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_ru'] ;?>"></td>
             </tr>
             <tr>
-                <td><label for="title_uk">Назва статті:</label></td>
-                <td><input type="text" name="title_uk" id="title_uk" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_uk'] ;?>"></td>
+                <td><label for="title_ua">Назва статті:</label></td>
+                <td><input type="text" name="title_ua" id="title_ua" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_ua'] ;?>"></td>
             </tr>
         </table>
     </fieldset>
@@ -304,7 +304,7 @@ if ($numarticles == 1)
             <ul>
                 <li><a href="#abstract-en">На английском</a></li>
                 <li><a href="#abstract-ru">На русском</a></li>
-                <li><a href="#abstract-uk">На украинском</a></li>
+                <li><a href="#abstract-ua">На украинском</a></li>
             </ul>
             <div id="abstract-en">
                 <textarea id="abstract_en" name="abstract_en"><?php echo $the_article['abstract_en'] ;?></textarea>
@@ -312,8 +312,8 @@ if ($numarticles == 1)
             <div id="abstract-ru">
                 <textarea id="abstract_ru" name="abstract_ru"><?php echo $the_article['abstract_ru'] ;?></textarea>
             </div>
-            <div id="abstract-uk">
-                <textarea id="abstract_uk" name="abstract_uk"><?php echo $the_article['abstract_uk'] ;?></textarea>
+            <div id="abstract-ua">
+                <textarea id="abstract_ua" name="abstract_ua"><?php echo $the_article['abstract_ua'] ;?></textarea>
             </div>
         </div>
     </fieldset>
@@ -323,7 +323,7 @@ if ($numarticles == 1)
             <ul>
                 <li><a href="#keywords-en">На английском</a></li>
                 <li><a href="#keywords-ru">На русском</a></li>
-                <li><a href="#keywords-uk">На украинском</a></li>
+                <li><a href="#keywords-ua">На украинском</a></li>
             </ul>
             <div id="keywords-en">
                 <textarea id="keywords_en" name="keywords_en" cols="80" rows="6"><?php echo $the_article['keywords_en'] ;?></textarea>
@@ -331,8 +331,8 @@ if ($numarticles == 1)
             <div id="keywords-ru">
                 <textarea id="keywords_ru" name="keywords_ru" cols="80" rows="6"><?php echo $the_article['keywords_ru'] ;?></textarea>
             </div>
-            <div id="keywords-uk">
-                <textarea id="keywords_uk" name="keywords_uk" cols="80" rows="6"><?php echo $the_article['keywords_uk'] ;?></textarea>
+            <div id="keywords-ua">
+                <textarea id="keywords_ua" name="keywords_ua" cols="80" rows="6"><?php echo $the_article['keywords_ua'] ;?></textarea>
             </div>
         </div>
     </fieldset>

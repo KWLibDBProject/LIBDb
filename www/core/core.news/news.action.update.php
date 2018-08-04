@@ -10,10 +10,10 @@ $q = array(
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
     'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
-    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk']),
+    'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua']),
     'text_en'       => mysqli_real_escape_string($mysqli_link, $_POST['text_en']),
     'text_ru'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ru']),
-    'text_uk'       => mysqli_real_escape_string($mysqli_link, $_POST['text_uk']),
+    'text_ua'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ua']),
 
     'timestamp'     => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('U'),
 );

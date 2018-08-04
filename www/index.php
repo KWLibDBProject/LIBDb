@@ -26,7 +26,7 @@ $main_template_file = "index.{$site_language}.html";
 $template_engine = new Template($CONFIG['frontend_template_name'], $site_language); //@todo disable this after full refactoring
 
 /* Override variables in INDEX.*.HTML template */
-$main_template_data['template_path'] = $CONFIG['frontend_template_name']; // template directory name (not a path!), defined in template.xxx.php
+$main_template_data['template_name'] = $CONFIG['frontend_template_name']; // template name , defined in config
 
 /**
  * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне)

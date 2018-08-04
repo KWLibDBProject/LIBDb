@@ -83,7 +83,7 @@
             // note: don't use
             tinify(tiny_config['simple'], 'bio_en');
             tinify(tiny_config['simple'], 'bio_ru');
-            tinify(tiny_config['simple'], 'bio_uk');
+            tinify(tiny_config['simple'], 'bio_ua');
 
             $("#name_en").focus();
             // проверка заполненности фамилий на всех языках
@@ -98,7 +98,7 @@
                         alert('Обязательно укажите фамилию автора на русском языке');
                         bValid = false;
                     }
-                    if ($('input[name="name_uk"]').val() == '') {
+                    if ($('input[name="name_ua"]').val() == '') {
                         alert('Обязательно укажите фамилию автора на украинском языке');
                         bValid = false;
                     }
@@ -125,8 +125,8 @@
         <input type="text" name="name_ru" id="name_ru" size="60" value="">
         <br>
 
-        <label for="name_uk">Ф.И.О. (украинский)</label><br>
-        <input type="text" name="name_uk" id="name_uk" size="60" value="">
+        <label for="name_ua">Ф.И.О. (украинский)</label><br>
+        <input type="text" name="name_ua" id="name_ua" size="60" value="">
         <div class="warning-small">Важно: Не оставляйте эти поля пустыми. Укажите фамилии на всех языках!</div>
     </fieldset>
     <fieldset>
@@ -138,8 +138,8 @@
         <input type="text" name="title_ru" id="title_ru" size="60" value="">
         <br>
 
-        <label for="title_uk">Званна, вчена ступiнь, посада</label><br>
-        <input type="text" name="title_uk" id="title_uk" size="60" value="">
+        <label for="title_ua">Званна, вчена ступiнь, посада</label><br>
+        <input type="text" name="title_ua" id="title_ua" size="60" value="">
 
     </fieldset>
     <fieldset>
@@ -166,8 +166,8 @@
 
         <br>
 
-        <label for="workplace_uk"><strong>Место работы (на украинском)</strong></label><br>
-        <textarea name="workplace_uk" id="workplace_uk" cols="90" rows="5"></textarea>
+        <label for="workplace_ua"><strong>Место работы (на украинском)</strong></label><br>
+        <textarea name="workplace_ua" id="workplace_ua" cols="90" rows="5"></textarea>
     </fieldset>
     <hr>
 
@@ -216,7 +216,7 @@
         <hr>
 
         <h3>Биография на украинском языке</h3>
-        <textarea name="bio_uk" id="bio_uk" cols="90" rows="12"></textarea>
+        <textarea name="bio_ua" id="bio_ua" cols="90" rows="12"></textarea>
 
     </fieldset>
     <hr>

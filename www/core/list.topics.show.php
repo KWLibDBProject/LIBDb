@@ -121,8 +121,8 @@ ifNotLoggedRedirect('/core/');
             <input type="text" name="add_title_en" id="add_title_en" class="text ui-widget-content ui-corner-all">
             <label for="add_title_ru">Тематический раздел:</label>
             <input type="text" name="add_title_ru" id="add_title_ru" class="text ui-widget-content ui-corner-all">
-            <label for="add_title_uk">Тематичний розділ:</label>
-            <input type="text" name="add_title_uk" id="add_title_uk" class="text ui-widget-content ui-corner-all">
+            <label for="add_title_ua">Тематичний розділ:</label>
+            <input type="text" name="add_title_ua" id="add_title_ua" class="text ui-widget-content ui-corner-all">
             <label for="add_group">Относится к группе №</label>
             <input type="text" name="add_group" id="add_group" class="text ui-widget-content ui-corner-all">
         </fieldset>
@@ -136,8 +136,8 @@ ifNotLoggedRedirect('/core/');
             <input type="text" name="edit_title_en" id="edit_title_en" class="text ui-widget-content ui-corner-all">
             <label for="edit_title_ru">Тематический раздел:</label>
             <input type="text" name="edit_title_ru" id="edit_title_ru" class="text ui-widget-content ui-corner-all">
-            <label for="edit_title_uk">Тематичний розділ:</label>
-            <input type="text" name="edit_title_uk" id="edit_title_uk" class="text ui-widget-content ui-corner-all">
+            <label for="edit_title_ua">Тематичний розділ:</label>
+            <input type="text" name="edit_title_ua" id="edit_title_ua" class="text ui-widget-content ui-corner-all">
             <label for="edit_group">Относится к группе №</label>
             <input type="text" name="edit_group" id="edit_group" class="text ui-widget-content ui-corner-all">
         </fieldset>

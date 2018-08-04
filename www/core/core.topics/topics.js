@@ -13,7 +13,7 @@ function Topics_CallAddItem(source, result_area)
     var posting = $.post(url, {
         title_en: $form.find("input[name='add_title_en']").val(),
         title_ru: $form.find("input[name='add_title_ru']").val(),
-        title_uk: $form.find("input[name='add_title_uk']").val(),
+        title_ua: $form.find("input[name='add_title_ua']").val(),
         rel_group: $form.find("input[name='add_group']").val(),
         ref_name: ref_name
     } );
@@ -45,7 +45,7 @@ function Topics_CallLoadItem(destination, id) // номер записи, цел
             // загружаем данные в поля формы
             $form.find("input[name='edit_title_en']").val( result['data']['title_en'] );
             $form.find("input[name='edit_title_ru']").val( result['data']['title_ru'] );
-            $form.find("input[name='edit_title_uk']").val( result['data']['title_uk'] );
+            $form.find("input[name='edit_title_ua']").val( result['data']['title_ua'] );
             $form.find("input[name='edit_group']").val( result['data']['rel_group'] );
         } else {
             // ошибка загрузки
@@ -60,7 +60,7 @@ function Topics_CallUpdateItem(source, id, result_area)
     var posting = $.post(url, {
         title_en: $form.find("input[name='edit_title_en']").val(),
         title_ru: $form.find("input[name='edit_title_ru']").val(),
-        title_uk: $form.find("input[name='edit_title_uk']").val(),
+        title_ua: $form.find("input[name='edit_title_ua']").val(),
         rel_group: $form.find("input[name='edit_group']").val(),
         ref_name: ref_name,
         id: id

@@ -115,9 +115,9 @@ function returnBooksOptionString($row, $lang, $withoutid)
                 $title = $row['title_ru'];
                 break;
             }
-            case 'uk': {
-                $name = $row['name_uk'];
-                $title = $row['title_uk'];
+            case 'ua': {
+                $name = $row['name_ua'];
+                $title = $row['title_ua'];
                 break;
             }
         } */
@@ -151,9 +151,9 @@ function returnAuthorsOptionString($row, $lang, $withoutid)
             $title = $row['title_ru'];
             break;
         }
-        case 'uk': {
-            $name = $row['name_uk'];
-            $title = $row['title_uk'];
+        case 'ua': {
+            $name = $row['name_ua'];
+            $title = $row['title_ua'];
             break;
         }
     }
@@ -179,8 +179,8 @@ function returnTopicsOptionString($row, $lang, $withoutid)
             $title = $row['title_ru'];
             break;
         }
-        case 'uk': {
-            $title = $row['title_uk'];
+        case 'ua': {
+            $title = $row['title_ua'];
             break;
         }
     }
@@ -210,9 +210,9 @@ function returnNewsOptionString($row, $lang, $withoutid) // © Thomas Moroh
             $title = $row['title_ru'];
             break;
         }
-        case 'uk': {
-            $name = $row['text_uk'];
-            $title = $row['title_uk'];
+        case 'ua': {
+            $name = $row['text_ua'];
+            $title = $row['title_ua'];
             break;
         }
     }

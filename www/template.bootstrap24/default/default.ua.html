@@ -1,0 +1,35 @@
+<span class="static-page-content">
+{%static_page_content%}
+</span>
+<hr>
+<h3 class="last-book-title">Останній випуск журналу <br> {%last_book_title_string%} рік.</h3>
+<fieldset class="books-extended-info">
+    <ul>
+        <li>
+            <a href="core/getimage.php?id={%last_book_cover_id%}" class="icon-jpg icon lightbox-image">
+                <img src="/files/books_file_cover.jpg"><br>Обгортка</a>
+        </li>
+        <li>
+            <a href="core/getfile.php?id={%last_book_title_ru_id%}" class="icon-pdf icon">
+                <img src="/files/books_file_title.jpg"><br>Назва</a>
+        </li>
+        <!--
+        <li>
+            <a href="core/get.file.php?id={%last_book_title_en_id%}" class="icon-pdf icon">
+                <img src="/files/books_file_title_en.jpg"><br>Назва (англійське)</a>
+        </li>
+        -->
+        <li>
+            <a href="core/getfile.php?id={%last_book_toc_ru_id%}" class="icon-pdf icon">
+                <img src="/files/books_file_toc.jpg"><br>Змiст</a>
+        </li>
+        <!--
+        <li>
+            <a href="core/get.file.php?id={%last_book_toc_en_id%}" class="icon-pdf icon">
+                <img src="/files/books_file_toc_en.jpg"><br>Зміст (англійське)</a>
+        </li>
+        -->
+    </ul>
+</fieldset>
+<br>
+{%last_book_content%}

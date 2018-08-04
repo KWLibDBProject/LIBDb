@@ -10,7 +10,7 @@ $id = intval($_POST['id']);
 $q = array(
     'title_en' => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
     'title_ru' => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
-    'title_uk' => mysqli_real_escape_string($mysqli_link, $_POST['title_uk']),
+    'title_ua' => mysqli_real_escape_string($mysqli_link, $_POST['title_ua']),
     'rel_group' => mysqli_real_escape_string($mysqli_link, $_POST['rel_group']),
 );
 

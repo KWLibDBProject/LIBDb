@@ -8,10 +8,10 @@ $q = array(
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment'] ?? ''),
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en'] ?? ''),
     'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru'] ?? ''),
-    'title_uk'      => mysqli_real_escape_string($mysqli_link, $_POST['title_uk'] ?? ''),
+    'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua'] ?? ''),
     'content_en'    => mysqli_real_escape_string($mysqli_link, $_POST['content_en'] ?? ''),
     'content_ru'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ru'] ?? ''),
-    'content_uk'    => mysqli_real_escape_string($mysqli_link, $_POST['content_uk'] ?? ''),
+    'content_ua'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ua'] ?? ''),
 );
 $qstr = MakeInsert($q, $ref_name);
 

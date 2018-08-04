@@ -19,7 +19,7 @@ SELECT
 DISTINCT articles.id, 
 articles.title_en AS title_en, 
 articles.title_ru AS title_ru, 
-articles.title_uk AS title_uk, 
+articles.title_ua AS title_ua, 
 udc, 
 pdfid, 
 DATE_FORMAT(date_add, '%d.%m.%Y') as date_add, 

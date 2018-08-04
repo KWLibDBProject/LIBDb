@@ -121,8 +121,8 @@ ifNotLoggedRedirect('/core/');
             <input type="text" name="add_title_en" id="add_title_en" class="text ui-widget-content ui-corner-all">
             <label for="add_title_ru">Русское название:</label>
             <input type="text" name="add_title_ru" id="add_title_ru" class="text ui-widget-content ui-corner-all">
-            <label for="add_title_uk">Украинское название:</label>
-            <input type="text" name="add_title_uk" id="add_title_uk" class="text ui-widget-content ui-corner-all">
+            <label for="add_title_ua">Украинское название:</label>
+            <input type="text" name="add_title_ua" id="add_title_ua" class="text ui-widget-content ui-corner-all">
             <label for="add_display_order">Display order <br>(меньше - раньше)</label>
             <input type="text" name="add_display_order" id="add_display_order" class="text ui-widget-content ui-corner-all">
         </fieldset>
@@ -136,8 +136,8 @@ ifNotLoggedRedirect('/core/');
             <input type="text" name="edit_title_en" id="edit_title_en" class="text ui-widget-content ui-corner-all">
             <label for="edit_title_ru">Русское название:</label>
             <input type="text" name="edit_title_ru" id="edit_title_ru" class="text ui-widget-content ui-corner-all">
-            <label for="edit_title_uk">Украинское название:</label>
-            <input type="text" name="edit_title_uk" id="edit_title_uk" class="text ui-widget-content ui-corner-all">
+            <label for="edit_title_ua">Украинское название:</label>
+            <input type="text" name="edit_title_ua" id="edit_title_ua" class="text ui-widget-content ui-corner-all">
             <label for="edit_display_order">Display order <br>(меньше - раньше)</label>
             <input type="text" name="edit_display_order" id="edit_display_order" class="text ui-widget-content ui-corner-all">
         </fieldset>
