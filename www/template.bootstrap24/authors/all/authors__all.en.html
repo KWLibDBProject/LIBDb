@@ -1,0 +1,20 @@
+<fieldset>
+    <div id="full_list">
+
+        {?*all_authors_list*}
+        <ul class="authors-list">
+            {%*all_authors_list*}
+            <li class="authors-list-item">
+                <label>
+                    <a href="?fetch=authors&with=info&id={*all_authors_list:id*}">{*all_authors_list:name*}</a>{?*all_authors_list:title*}, {*all_authors_list:title*} {?}
+                </label>
+            </li>
+            {%}
+        </ul>
+        {?}
+
+        {?!*all_authors_list*}
+        <br><strong>Authors not found!</strong>
+        {?}
+    </div>
+</fieldset>

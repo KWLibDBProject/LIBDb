@@ -271,42 +271,12 @@ class __Template
     /**
      * список авторов в виде plain/list ( /authors/all для поисковых систем и не только)
      * @param $letter
-     * @return string
+     * @return array
      */
     public function getAuthors_PlainList($letter)
     {
-        $return = '';
-        $authors = LoadAuthors_ByLetter($letter, $this->site_language, 'no');
-
-        // начало
-        $return .= <<<PrintAuthorsSelectedByLetter_Start
-<ul class="authors-list">
-PrintAuthorsSelectedByLetter_Start;
-
-        if (sizeof($authors) > 0)
-        {
-            foreach ($authors as $i => $an_author)
-            {
-                $t_a = new kwt($this->template_path.'/_internal/plainlist_author_row.html', '<!--{', '}-->');
-                $t_a->override( array(
-                    'id'    => $an_author['id'],
-                    'name'  => $an_author['name'],
-                    'title' => (!empty($an_author['title'])) ? ", ".$an_author['title'] : " ",
-                    'email' => $an_author['email']
-                ) );
-                $return .= $t_a->get();
-                unset($t_a);
-            }
-        } else {
-            $return .= $this->messageNoPlainAuthors();
-        }
-        // конец
-        $return .= <<<PrintAuthorsSelectedByLetter_End
-</ul>
-PrintAuthorsSelectedByLetter_End;
-
-        return $return;
-    } // getAuthors_PlainList
+        return LoadAuthors_ByLetter($letter, $this->site_language, 'no');
+    }
 
     /**
      * печать нужных авторов ($authors) в расширенной форме для /authors/estuff

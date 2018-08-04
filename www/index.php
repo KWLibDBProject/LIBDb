@@ -70,7 +70,7 @@ switch ($fetch) {
                 /**
                  * HTML
                  */
-                $local_html_data = [
+                $inner_html_data = [
                     'author_publications'   => $author_publications,
 
                     'author_publications_display_class' => (empty($author_publications)) ? ' hidden ' : ' ',
@@ -87,42 +87,55 @@ switch ($fetch) {
                             :  "core/get.image.php?id={$author_information['author_photo_id']}"
                 ];
 
-                $maincontent_html = \Websun\websun::websun_parse_template_path($local_html_data, "{$template_file_name}.html", $template_dir);
+                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
                 /**
                  * JS
                  */
-                $local_js_data = [
+                $inner_js_data = [
                     "author_is_es" => ($author_information['author_is_es']==1) ? 'block' : 'none'
                 ];
-                $maincontent_js = \Websun\websun::websun_parse_template_path($local_js_data, "{$template_file_name}.js", $template_dir);
+                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
 
                 /**
                  * CSS
                  */
-                $local_css_data = [];
-                $maincontent_css = \Websun\websun::websun_parse_template_path($local_css_data, "{$template_file_name}.css", $template_dir);
+                $inner_css_data = [];
+                $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
 
                 break;
             }
             case 'all' : {
                 // список ВСЕХ авторов - для поисковых систем
                 // фио, титул, email -> link to author page
-                $filename = $tpl_path.'/fetch=authors/with=all/f_authors+w_all.'.$site_language;
+                $template_dir = '$/template.bootstrap24/authors/all/';
+                $template_file_name = "authors__all.{$site_language}";
 
-                $all_authors_list = $template_engine->getAuthors_PlainList('');
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
+                    // 'all_authors_list' => $template_engine->getAuthors_PlainList('')
+                    'all_authors_list'      => LoadAuthors_ByLetter('', $site_language, 'no')
+                ];
 
-                $inner_html = new kwt($filename.".html");
-                $inner_html->override( array (
-                    'all_authors_list' => $all_authors_list
-                ));
-                $maincontent_html = $inner_html->get();
+                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->get();
+                /**
+                 * JS
+                 */
+                /*
+                $inner_js_data = [
+                ];
+                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
+                */
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                /**
+                 * CSS
+                 */
+                $inner_css_data = [];
+                $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
+
                 break;
             }
             case 'estaff' : {
@@ -158,6 +171,10 @@ switch ($fetch) {
                 break;
             }
             case 'list' : {
+
+
+
+
                 $filename = $tpl_path.'/fetch=authors/with=list/f_authors+w_list.'.$site_language;
 
                 $inner_html = new kwt($filename.".html");

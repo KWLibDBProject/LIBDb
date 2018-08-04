@@ -116,7 +116,19 @@ switch ($actor) {
     }
 
     case 'load_authors_selected_by_letter': {
-        $return = $engine -> getAuthors_PlainList($_GET['letter']);
+        // called js from /authors/list
+
+        // $authors_list = $engine->getAuthors_PlainList($_GET['letter']);
+        $authors_list = LoadAuthors_ByLetter($_GET['letter'], $lang, 'no');
+
+        $template_dir = '$/template.bootstrap24/authors/all/';
+        $template_file_name = "authors__all.{$lang}";
+        $inner_html_data = [
+            'all_authors_list' => $authors_list
+        ];
+
+        $return = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
+
         break;
     }
     case 'load_articles_expert_search': {
