@@ -11,14 +11,19 @@ $q = array(
     'name_ru'       => trim($_POST['name_ru'] ?? '', ' '),
     'name_en'       => trim($_POST['name_en'] ?? '', ' '),
     'name_ua'       => trim($_POST['name_ua'] ?? '', ' '),
-    'title_ru'      => $_POST['title_ru'] ?? '',
-    'title_en'      => $_POST['title_en'] ?? '',
-    'title_ua'      => $_POST['title_ua'] ?? '',
-    'email'         => $_POST['email'] ?? '',
+
+    'title_ru'      => trim($_POST['title_ru'] ?? '', ' '),
+    'title_en'      => trim($_POST['title_en'] ?? '',' '),
+    'title_ua'      => trim($_POST['title_ua'] ?? '', ' '),
+
+    'email'         => trim($_POST['email'] ?? '', ' '),
+
     'workplace_en'  => strip_tags($_POST['workplace_en'] ?? ''),
     'workplace_ru'  => strip_tags($_POST['workplace_ru'] ?? ''),
     'workplace_ua'  => strip_tags($_POST['workplace_ua'] ?? ''),
-    'phone'         => $_POST['phone'] ?? '',
+
+    'phone'         => trim($_POST['phone'] ?? '', ' '),
+
     'bio_en'        => $_POST['bio_en'] ?? '',
     'bio_ru'        => $_POST['bio_ru'] ?? '',
     'bio_ua'        => $_POST['bio_ua'] ?? '',

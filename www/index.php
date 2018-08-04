@@ -140,23 +140,29 @@ switch ($fetch) {
                 $template_file_name = "authors__estaff.{$site_language}";
 
                 /**
-                 * HTML
+                 * HTML, warning, MAGIC NUMBERS (see table `ref_selfhood`)
                  */
                 $inner_html_data = [
                     // почетный редактор = 7
-                    'estaff_honorary_editor'    => $template_engine->getAuthors_EStaffList(7),
+                    'honorary_editor'               => $template_engine->getAuthors_EStaffList(7),
+
                     // главный редактор = 5
-                    'estaff_main_editor'        => $template_engine->getAuthors_EStaffList(5),
+                    'chief_editor'                  => $template_engine->getAuthors_EStaffList(5),
+
                     // замглавного редактора = 4
-                    'estaff_main_subeditors'    => $template_engine->getAuthors_EStaffList(4),
+                    'chief_editor_assistants'       => $template_engine->getAuthors_EStaffList(4),
+
                     // редакционная коллегия = 3
-                    'estaff_local_editors'      => $template_engine->getAuthors_EStaffList(3),
+                    'editorial_board_local'         => $template_engine->getAuthors_EStaffList(3),
+
                     // международная редакционная коллегия = 1
-                    'estaff_remote_editors'     => $template_engine->getAuthors_EStaffList(1),
-                    // редакторы = 6
-                    'estaff_simple_editors'     => $template_engine->getAuthors_EStaffList(6),
+                    'editorial_board_international' => $template_engine->getAuthors_EStaffList(1),
+
+                    // редакторы = 6 (в шаблоне таких нет и в базе тоже)
+                    'other_editors'                 => $template_engine->getAuthors_EStaffList(6),
+
                     // ответственный секретарь = 8
-                    'estaff_assistant_editor'   =>  $template_engine->getAuthors_EStaffList(8),
+                    'assistant_editor'              =>  $template_engine->getAuthors_EStaffList(8),
                 ];
 
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
@@ -164,8 +170,8 @@ switch ($fetch) {
                 /**
                  * JS
                  */
-                $inner_js_data = [];
-                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
+                // $inner_js_data = [];
+                // $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
 
                 /**
                  * CSS

@@ -93,3 +93,6 @@ UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
 
 Накладываем индексы на все поля.
 
+# Таблица ref_selfhood
+
+Переименовываем в ref_estaff_roles

@@ -293,15 +293,15 @@ class __Template
         $authors = LoadAuthors_ByLetter('0', $this->site_language, 'yes', $estaff_role);
 
         // Первое слово имени выделяем стилем
-        /*$authors = array_map(function ($v){
-            $v['name'] = preg_replace('/^([^\s]+)/','<span class="authors-estufflist-firstword">\1</span>', $v['name']);
+        $authors = array_map(function ($v){
+            $v['name'] = preg_replace('/^([^\s]+)/','<span class="estaff-name-firstword">\1</span>', $v['name']);
             return $v;
         }, $authors);
 
-        die;*/
+        return $authors;
 
 
-        $return = '';
+        /*$return = '';
         $return .= <<<fe_printauthors_estuff_start
 fe_printauthors_estuff_start;
 
@@ -329,7 +329,7 @@ fe_printauthors_estuff_each;
         $return .= <<<fe_printauthors_estuff_end
 fe_printauthors_estuff_end;
 
-        return $return;
+        return $return;*/
     }
 
     /**

@@ -1,43 +1,43 @@
-/* "main.authors.estuff.css"; /* authors/estuff/ */
-.authors-list-as-estuff {}
+/* "main.authors.estaff.css"; /* authors/estaff/ */
+.authors-list-as-estaff {}
 
-.authors-estufflist-name {
+.estaff-name {
     text-decoration: none;
 }
-.authors-estufflist-name:hover {
+.estaff-name:hover {
     text-decoration: underline;
 }
 
-.authors-estufflist-name:visited {
+.estaff-name:visited {
     text-decoration: none;
     color: navy;
 }
 
-.authors-estufflist-firstword { /*выделение фамилии (первого слова в ФИО)*/
+.estaff-name-firstword { /*выделение фамилии (первого слова в ФИО)*/
     color: #2a8eb8;
     font-weight: bold;
 }
 
-#estuff > h1 {
+#estaff > h1 {
     text-align: center;
 }
-#estuff > h2 {
+#estaff > h2 {
     text-align: center;
 }
-#estuff > h3 {
+#estaff > h3 {
     text-align: center;
 }
 
-#estuff ul {
+#estaff ul {
     list-style-type: square;
     font-size: large;
 }
 
-#estuff ul.no-marker {
+#estaff ul.no-marker {
     list-style-type: none;
 }
 
-#estuff ul li {
+#estaff ul li {
     margin-bottom: 1em;
 }
 
@@ -47,7 +47,7 @@
 
 .authors-inlist-name {}
 
-#estuff p {
+#estaff p {
     margin: 0;
     padding: 0;
     display: inline;
