@@ -48,9 +48,6 @@ $main_template_data['banners']    = $template_engine->getBanners(); // возв�
  */
 $main_template_data['last_news_shortlist'] = $template_engine->getLastNews(3); // возвращает рендер websun
 
-/* insert menu from template */
-$main_template_data['main_menu_content'] = $template_engine->getMenu(); // делать через вставку шаблона (сейчас - kwt),
-
 // Main switch
 $fetch  = at( $_GET, 'fetch', '' );
 $with   = at( $_GET, 'with' , '' );
@@ -359,7 +356,7 @@ switch ($fetch) {
         ));
 
         // load last book
-        $last_book = LoadLastBookInfo(); //@todo: ИСПРАВЛЕНО? - СЕЙЧАС возвращается latest сборник по дате, без учета флага is_published + наличие статей в сборнике
+        $last_book = LoadLastBookInfo(); //@todo: СЕЙЧАС возвращается latest сборник по дате, без учета флага is_published + наличие статей в сборнике
 
         if (count($last_book) != 0) {
             $inner_html->override( array(
