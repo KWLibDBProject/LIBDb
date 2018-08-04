@@ -118,7 +118,6 @@ switch ($actor) {
     case 'load_authors_selected_by_letter': {
         // called js from /authors/list
 
-        // $authors_list = $engine->getAuthors_PlainList($_GET['letter']);
         $authors_list = LoadAuthors_ByLetter($_GET['letter'], $lang, 'no');
 
         $template_dir = '$/template.bootstrap24/authors/all/';

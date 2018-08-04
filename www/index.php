@@ -73,13 +73,11 @@ switch ($fetch) {
                 $inner_html_data = [
                     'author_publications'   => $author_publications,
 
-                    'author_publications_display_class' => (empty($author_publications)) ? ' hidden ' : ' ',
                     'author_name'           => $author_information['author_name'] ?? '',
                     'author_title'          => $author_information['author_title'] ?? '',
                     'author_email'          => $author_information['author_email'] ?? '',
                     'author_workplace'      => $author_information['author_workplace'] ?? '',
                     'author_bio'            => $author_information['author_bio'] ?? '',
-                    'author_bio_display_class' => (empty($author_information['author_bio'])) ? ' hidden ' : ' ',
                     'author_photo_id'       => $author_information['author_photo_id'] ?? -1,
                     'author_photo_link'
                             => ($author_information['author_photo_id'] == -1)

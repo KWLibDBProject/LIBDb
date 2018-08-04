@@ -10,12 +10,15 @@
         <p class="author_workplace">{*author_workplace*}</p>
     </div>
 </fieldset>
-<fieldset class="author_bio {*author_bio_display_class*}">
+{?*author_bio*}
+<fieldset class="author_bio">
     <legend>Biography</legend>
     <span class="author_bio">{*author_bio*}</span>
 </fieldset>
+{?}
 
-<fieldset class="author-publications {*author_publications_display_class*}">
+/* {?*articles_list*} */
+<fieldset class="author-publications">
     <legend>Publications</legend>
     <div id="articles_list">
 
@@ -42,3 +45,4 @@
 
     </div>
 </fieldset>
+/* {?} */
