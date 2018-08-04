@@ -171,20 +171,28 @@ switch ($fetch) {
                 break;
             }
             case 'list' : {
+                $template_dir = '$/template.bootstrap24/authors/list/';
+                $template_file_name = "authors__list.{$site_language}";
 
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [];
 
+                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
+                /**
+                 * JS
+                 */
+                $inner_js_data = [];
+                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
 
-                $filename = $tpl_path.'/fetch=authors/with=list/f_authors+w_list.'.$site_language;
+                /**
+                 * CSS
+                 */
+                $inner_css_data = [];
+                $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
 
-                $inner_html = new kwt($filename.".html");
-                $maincontent_html = $inner_html->get();
-
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->get();
-
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
                 break;
             }
         } // end $with authors switch
