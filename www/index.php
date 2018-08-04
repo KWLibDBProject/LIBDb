@@ -123,8 +123,7 @@ switch ($fetch) {
                  * JS
                  */
                 /*
-                $inner_js_data = [
-                ];
+                $inner_js_data = [];
                 $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
                 */
 
@@ -137,11 +136,13 @@ switch ($fetch) {
                 break;
             }
             case 'estaff' : {
-                $filename = $tpl_path.'/fetch=authors/with=estaff/f_authors+w_estaff.'.$site_language;
+                $template_dir = '$/template.bootstrap24/authors/estaff/';
+                $template_file_name = "authors__estaff.{$site_language}";
 
-                /* HTML Template */
-                $inner_html = new kwt($filename.".html");
-                $inner_html->override( array (
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
                     // почетный редактор = 7
                     'estaff_honorary_editor'    => $template_engine->getAuthors_EStaffList(7),
                     // главный редактор = 5
@@ -156,16 +157,22 @@ switch ($fetch) {
                     'estaff_simple_editors'     => $template_engine->getAuthors_EStaffList(6),
                     // ответственный секретарь = 8
                     'estaff_assistant_editor'   =>  $template_engine->getAuthors_EStaffList(8),
-                ));
-                $maincontent_html = $inner_html->getcontent();
+                ];
 
-                /* JS Template */
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->getcontent();
+                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
-                /* CSS Template */
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->getcontent();
+                /**
+                 * JS
+                 */
+                $inner_js_data = [];
+                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
+
+                /**
+                 * CSS
+                 */
+                $inner_css_data = [];
+                $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
+
                 break;
             }
             case 'list' : {

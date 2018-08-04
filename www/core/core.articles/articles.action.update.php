@@ -24,7 +24,7 @@ $q = array(
 
     'refs_ru'           => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
     'refs_en'           => mysqli_real_escape_string($mysqli_link, $_POST['refs_en']),
-    'refs_ua'           => mysqli_real_escape_string($mysqli_link, $_POST['refs_ua']),
+    'refs_ua' => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
 
     'book'              => mysqli_real_escape_string($mysqli_link, $_POST['book']),
     'topic'             => mysqli_real_escape_string($mysqli_link, $_POST['topic']),

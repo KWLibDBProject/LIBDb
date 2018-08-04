@@ -285,12 +285,21 @@ class __Template
      * функция НЕ оборачивает элементы списка в UL, поэтому её вывод надо вставлять
      * внутрь списка в шаблоне
      *
-     * @param $selfhood
+     * @param $estaff_role
      * @return string
      */
-    function getAuthors_EStaffList($selfhood)
+    function getAuthors_EStaffList($estaff_role)
     {
-        $authors = LoadAuthors_ByLetter('0', $this->site_language, 'yes', $selfhood);
+        $authors = LoadAuthors_ByLetter('0', $this->site_language, 'yes', $estaff_role);
+
+        // Первое слово имени выделяем стилем
+        /*$authors = array_map(function ($v){
+            $v['name'] = preg_replace('/^([^\s]+)/','<span class="authors-estufflist-firstword">\1</span>', $v['name']);
+            return $v;
+        }, $authors);
+
+        die;*/
+
 
         $return = '';
         $return .= <<<fe_printauthors_estuff_start

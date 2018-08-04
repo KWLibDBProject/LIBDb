@@ -153,7 +153,7 @@ ifNotLoggedRedirect('/core/');
         <legend>Сборник</legend>
 
         <label for="pages">Статья опубликована на страницах
-            <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>">
+            <input type="text" id="pages" name="pages" value="">
         </label>
 
         <label for="the_book">... сборника:
