@@ -392,7 +392,7 @@ function LoadBookInfo($id)
 function LoadLastBookInfo()
 {
     global $mysqli_link;
-    $r = mysqli_query($mysqli_link, "SELECT * FROM books WHERE published=1 ORDER BY timestamp desc LIMIT 1");
+    $r = mysqli_query($mysqli_link, "SELECT * FROM books WHERE published=1 ORDER BY date desc LIMIT 1"); // is enought for latest published book ?
 
     $ret = [];
     if (@mysqli_num_rows($r)==1) {
@@ -595,7 +595,7 @@ function LoadNewsItem($id, $lang)
 }
 
 /**
- * загружает информацию об авторе в ассциативный массив
+ * загружает информацию об авторе
  *
  * @param $id
  * @param $lang
@@ -604,34 +604,46 @@ function LoadNewsItem($id, $lang)
 function LoadAuthorInformation_ById($id, $lang)
 {
     global $mysqli_link;
-    $ret = [];
+    $author = [];
 
     $q = "SELECT * FROM `authors` WHERE id=$id";
     $r = mysqli_query($mysqli_link, $q);
     if (@mysqli_num_rows($r)>0) {
-        $author = mysqli_fetch_assoc($r);
-        $ret['author_name'] = $author['name_'.$lang];
-        $ret['author_title'] = $author['title_'.$lang];
-        $ret['author_email'] = $author['email'];
-        $ret['author_workplace'] = $author['workplace_'.$lang];
-        $ret['author_bio'] = $author['bio_'.$lang];
-        $ret['author_is_es'] = $author['is_es'];
-        $ret['author_photo_id'] = $author['photo_id'];
+        $result = mysqli_fetch_assoc($r);
+
+        $author = [
+            'author_name'   =>  $result["name_{$lang}"],
+            'author_title'  =>  $result["title_{$lang}"],
+            'author_email'  =>  $result['email'],
+            'author_workplace'  =>  $result["workplace_{$lang}"],
+            'author_bio'        =>  $result["bio_{$lang}"],
+            'author_is_es'      =>  $result["is_es"],
+            'author_photo_id'   =>  $result['photo_id']
+        ];
     }
-    return $ret;
+    return $author;
 }
 
 /**
  * возвращает список статей, которые написал указанный ($id) автор, но только в опубликованных сборниках
  *
+ * Используется для построения списка публикаций у автора (для /author/info )
+ *
+ * @todo: добавить флаг $is_published
+ *
  * @param $id
  * @param $lang
+ * @param $is_published
  * @return array
  */
-function LoadArticles_ByAuthor($id, $lang)
+function LoadArticles_ByAuthor($id, $lang, $is_published = true)
 {
     global $mysqli_link;
     $ret = [];
+
+    $query_published = $is_published ? 1 : 0;
+
+    //@todo: здесь
 
     $q = "SELECT
 articles.id AS aid,
@@ -642,7 +654,7 @@ SUBSTRING(books.date,7,4) AS bdate
 FROM articles, cross_aa, books
 WHERE books.id=articles.book
 AND cross_aa.article = articles.id
-AND books.published=1
+AND books.published= {$query_published}
 AND cross_aa.author = $id
 ORDER BY date_add
 ";

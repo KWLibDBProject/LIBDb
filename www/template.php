@@ -277,47 +277,6 @@ PrintLastNews;
     }
 
     /**
-     * список статей (публикаций) у указанного автора (для /author/info )
-     * @param $id
-     * @return string
-     */
-    public function getArticles_ByAuthor($id)
-    {
-        $ret = '';
-        $articles = LoadArticles_ByAuthor($id, $this->site_language);
-
-        if (count($articles) > 0) {
-            // Начало блока (таблицы) статей у автора
-            $ret .= <<<FE_PrintArticles_ByAuthor_Start
-<table class="articles-by-author-table">
-FE_PrintArticles_ByAuthor_Start;
-
-            // Каждая строка "статья у автора" - из шаблона
-            foreach ($articles as $aid => $article) {
-                $t_a = new kwt($this->template_path.'/_internal/an_article_by_author.html', '<!--{', '}-->');
-                $t_a->override( array(
-                    'btitle'    => $article['btitle'],
-                    'pdfid'     => $article['pdfid'],
-                    'aid'       => $article['aid'],
-                    'atitle'    => $article['atitle'],
-                    'bdate'     => $article['bdate']
-                ) );
-                $ret .= $t_a->get();
-                unset($t_a);
-            }
-
-            // Конец строки статей у автора
-            $ret .= <<<FE_PrintArticles_ByAuthor_End
-</table>
-FE_PrintArticles_ByAuthor_End;
-        } else {
-            $ret .= ''; // нет статей у автора (@todo: Messages::NoArticles_ByAuthor)
-        }
-
-        return $ret;
-    } // getArticles_ByAuthor
-
-    /**
      * сообщение "нет авторов" для разных языков
      * @return string
      */

@@ -49,7 +49,15 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
 
-[todo] : поле `date` legacy, поле `timestamp` 
+
+[todo] : поле `date` legacy, поле `timestamp`
+
+потребуют обновления методы:
+- LoadArticles_ByAuthor()
+- Все методы в админке
+- проверить LoadLastBookInfo()
+
+
 
 # Таблица articles
 

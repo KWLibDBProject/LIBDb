@@ -64,16 +64,15 @@ switch ($fetch) {
                 $template_dir = '$/template.bootstrap24/authors/info/';
                 $template_file_name = "authors__info.{$site_language}";
 
-                // both must be class methods or functions
                 $author_information = LoadAuthorInformation_ById($id, $site_language);
-
-                $author_publications = $template_engine->getArticles_ByAuthor($id); // возвращает HTML-код, его надо развернуть в шаблон
+                $author_publications = LoadArticles_ByAuthor($id, $site_language);
 
                 /**
                  * HTML
                  */
                 $local_html_data = [
                     'author_publications'   => $author_publications,
+
                     'author_publications_display_class' => (empty($author_publications)) ? ' hidden ' : ' ',
                     'author_name'           => $author_information['author_name'] ?? '',
                     'author_title'          => $author_information['author_title'] ?? '',
@@ -357,7 +356,7 @@ switch ($fetch) {
         ));
 
         // load last book
-        $last_book = LoadLastBookInfo(); //@todo: есть проблема - СЕЙЧАС возвращается latest сборник по дате, без учета флага is_published + наличие статей в сборнике
+        $last_book = LoadLastBookInfo(); //@todo: ИСПРАВЛЕНО? - СЕЙЧАС возвращается latest сборник по дате, без учета флага is_published + наличие статей в сборнике
 
         if (count($last_book) != 0) {
             $inner_html->override( array(

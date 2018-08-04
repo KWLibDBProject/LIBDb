@@ -18,6 +18,25 @@
 <fieldset class="author-publications {*author_publications_display_class*}">
     <legend>Публикации</legend>
     <div id="articles_list">
-        {*author_publications*}
+        <table class="articles-by-author-table">
+            {%*author_publications*}
+            <tr>
+                <td class="articles-by-author-table-book-title">
+                    <nobr>{*author_publications:btitle*}</nobr>
+                </td>
+                <td rowspan="2" class="articles-by-author-table-pdficon">
+                    <a href="core/get.file.php?id={*author_publications:pdfid*}"><img class="icon-pdf-32x32" no-src="/files/pdf32x32.png" width="32" height="32" alt=""></a>
+                </td>
+                <td rowspan="2" class="articles-by-author-table-title">
+                    <a href="?fetch=articles&with=info&id={*author_publications:aid*}">{*author_publications:atitle*}</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="articles-by-author-table-book-year">{*author_publications:bdate*}</td>
+            </tr>
+            {%}
+
+            {?!*author_publications*}<tr><td colspan="3">У автора нет статей</td></tr> {?}
+        </table>
     </div>
 </fieldset>
