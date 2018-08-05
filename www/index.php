@@ -354,10 +354,11 @@ switch ($fetch) {
         $page_alias = ($with === '') ? 'default' : $with;
         $maincontent_html = $template_engine->getStaticPage($page_alias);
 
-        /* CSS Template */
-        $filename = $tpl_path.'/fetch=page/page.'.$site_language;
-        $inner_css = new kwt($filename.".css");
-        $maincontent_css = $inner_css->get();
+
+
+
+
+
         break;
     } // case /page
     case 'news' : {
