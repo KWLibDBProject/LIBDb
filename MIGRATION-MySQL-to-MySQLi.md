@@ -37,7 +37,9 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
 
-# Таблица authors 
+# Таблица authors
+
+- Добавляем поле orcid CHAR 16 DEFAULT ''
 
 - Меняем дефолтные значения полей 
 ```

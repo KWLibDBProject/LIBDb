@@ -24,6 +24,14 @@
 .author_email {
     font-weight: bold;
 }
+.author_orcid {
+    font-weight: bold;
+}
+
+.author_orcid + a {
+    text-decoration: underline;
+}
+
 .author_workplace {
     font-style: italic;
 }

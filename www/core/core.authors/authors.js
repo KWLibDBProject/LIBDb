@@ -22,6 +22,7 @@ function Authors_LoadRecord(destination, id, tinyarea_target) // номер за
             $form.find("input[name='title_en']").val( result['data']['title_en'] );
             $form.find("input[name='title_ua']").val( result['data']['title_ua'] );
             $form.find("input[name='email']").val( result['data']['email'] );
+            $form.find("input[name='orcid']").val( result['data']['orcid'] );
             $form.find("input[name='phone']").val( result['data']['phone'] );
             $form.find("textarea[name='workplace_en']").val(result['data']['workplace_en']);
             $form.find("textarea[name='workplace_ru']").val(result['data']['workplace_ru']);

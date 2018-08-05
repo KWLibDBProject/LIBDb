@@ -14,6 +14,7 @@
     <script type="text/javascript" src="authors.js"></script>
 
     <script type="text/javascript" src="../js/jquery.colorbox.js"></script>
+    <script type="text/javascript" src="../js/jquery.inputmask.bundle.min.js"></script>
     <link rel="stylesheet" href="../css/colorbox.css" />
 
     <script type="text/javascript">
@@ -105,6 +106,10 @@
                     return bValid;
                 }).show();
             bindScrollTopAction("#actor-scroll-top");
+
+            // check input mask
+            $("#orcid").inputmask({ regex: "[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}" } );
+
         });
     </script>
 </head>
@@ -145,12 +150,17 @@
     <fieldset>
         <legend>Контактные данные:</legend>
 
-        <label for="email">E-Mail</label><br>
-        <input type="text" name="email" id="email" size="60">
+        <label for="email">E-Mail:</label><br>
+        <input type="email" name="email" id="email" size="60">
 
-        <br>
+        <br />
 
-        <label for="phone">Телефон для связи</label><br>
+        <label for="orcid">ORCID:</label><br>
+        <input type="text" name="orcid" id="orcid" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}" size="60">
+
+        <br />
+
+        <label for="phone">Телефон для связи:</label><br>
         <input type="text" name="phone" id="phone" size="60">
 
     </fieldset>

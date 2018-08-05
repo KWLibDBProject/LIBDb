@@ -616,9 +616,12 @@ function LoadAuthorInformation_ById($id, $lang)
         $author = [
             'author_name'   =>  $result["name_{$lang}"],
             'author_title'  =>  $result["title_{$lang}"],
-            'author_email'  =>  $result['email'],
             'author_workplace'  =>  $result["workplace_{$lang}"],
             'author_bio'        =>  $result["bio_{$lang}"],
+
+            'author_email'  =>  $result['email'],
+            'author_orcid'  =>  $result['orcid'],
+
             'author_is_es'      =>  $result["is_es"],
             'author_photo_id'   =>  $result['photo_id']
         ];
@@ -703,7 +706,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
 
     $order = " ORDER BY authors.name_{$lang}";
 
-    $q = "SELECT id, email,
+    $q = "SELECT id, email, orcid, phone, 
     name_{$lang} AS name,
     title_{$lang} AS title,
     workplace_{$lang} AS workplace

@@ -75,7 +75,10 @@ switch ($fetch) {
 
                     'author_name'           => $author_information['author_name'] ?? '',
                     'author_title'          => $author_information['author_title'] ?? '',
+
                     'author_email'          => $author_information['author_email'] ?? '',
+                    'author_orcid'          => $author_information['author_orcid'] ?? '',
+
                     'author_workplace'      => $author_information['author_workplace'] ?? '',
                     'author_bio'            => $author_information['author_bio'] ?? '',
                     'author_photo_id'       => $author_information['author_photo_id'] ?? -1,

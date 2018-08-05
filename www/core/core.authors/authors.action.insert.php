@@ -17,12 +17,13 @@ $q = array(
     'title_ua'      => trim($_POST['title_ua'] ?? '', ' '),
 
     'email'         => trim($_POST['email'] ?? '', ' '),
+    'orcid'         => trim($_POST['orcid'] ?? '', ' '),
+    'phone'         => trim($_POST['phone'] ?? '', ' '),
 
     'workplace_en'  => strip_tags($_POST['workplace_en'] ?? ''),
     'workplace_ru'  => strip_tags($_POST['workplace_ru'] ?? ''),
     'workplace_ua'  => strip_tags($_POST['workplace_ua'] ?? ''),
 
-    'phone'         => trim($_POST['phone'] ?? '', ' '),
 
     'bio_en'        => $_POST['bio_en'] ?? '',
     'bio_ru'        => $_POST['bio_ru'] ?? '',
