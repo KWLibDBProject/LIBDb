@@ -62,7 +62,7 @@ class __Template
     /**
      * оформляет массив баннеров в LI-список (VIEW!)
      * @return null|string
-     * @todo: EXPORT
+     * @todo: EXPORT to TEMPLATE or INDEX
      */
     public function getBanners()
     {
@@ -86,7 +86,7 @@ class __Template
      * @param $count
      * @return string
      *
-     * @todo: EXPORT
+     * @todo: EXPORT to TEMPLATE or INDEX
      */
     public function getLastNews($count)
     {
@@ -104,46 +104,14 @@ class __Template
     } // GetLastNews
 
     /**
-     * возвращает строку с меню
-     * @return mixed
-     *
-     * @todo: USELESS
-     */
-    public function getMenu()
-    {
-        $main_menu = new kwt($this->template_path."/_menu/menu.{$this->site_language}.html");
-        return $main_menu->get();
-    }
-
-    /**
-     * сообщение "нет статей" для разных языков
-     * @return string
-     * @todo: USELESS
-     */
-    private function messageNoArticles()
-    {
-        $r = '';
-        switch ($this->site_language) {
-            case 'en' : {
-                $r = '<br><strong>No articles found within this search criteria!</strong>'; break;
-            }
-            case 'ru' : {
-                $r = '<br><strong>По заданным критериям поиска статей не найдено!</strong>'; break;
-            }
-            case 'ua' : {
-                $r = '<br><strong>За заданими критеріями пошуку статей не знайдено!</strong>'; break;
-            }
-        }
-        return $r;
-    }
-
-    /**
      * список статей,
      * инфо о каждой статье делается на основе /_internal/item_in_articles_list.html
      *
      * @param $request
      * @param string $with_email
-     * @return string
+     * @return array
+     *
+     * @todo: EXPORT METHOD
      */
     public function getArticlesList($request, $with_email = 'no')
     {
@@ -154,8 +122,6 @@ class __Template
         $articles = LoadArticles_ByQuery($request, $this->site_language);
 
         foreach ($articles as $an_article_id => &$an_article) {
-            // $authors_list = $this->getAuthors_InArticlesList($an_article['authors']);
-            // $an_article['authors_list'] = $authors_list;
             $an_article['authors_list'] = $an_article['authors'];
             $an_article['page_prefix'] = $this->page_prefix;
         }
@@ -197,72 +163,6 @@ class __Template
     }
 
     /**
-     * список авторов в статье
-     * (для поля "авторы" в табличном представлении статей, вызывается в getArticlesList )
-     * @param $authors
-     * @param string $with_email
-     * @return string
-     * @todo: USELESS
-     */
-    public function getAuthors_InArticlesList($authors, $with_email = '')
-    {
-        $ret = '';
-        foreach ($authors as $an_author)
-        {
-            // Иванов И.И., др.тех.наук
-            if ($with_email != '') {
-                $an_author['author_email'] = ' ('.$an_author['author_email'].')';
-            } else { $an_author['author_email'] = ''; }
-
-            // выводит каждый элемент по формату шаблона
-            $t_a = new kwt($this->template_path.'/_internal/an_author_in_articles_list.html', '<!--{', '}-->');
-            $t_a->override( array(
-                'author_id' => $an_author['author_id'],
-                'site_lang' => $this->site_language,
-                'author_name' => $an_author['author_name'],
-                'author_title' => $an_author['author_title'],
-                'author_email' => $an_author['author_email']
-            ) );
-            $ret .= $t_a->get();
-            unset($t_a);
-        }
-        return $ret;
-    }
-
-    /**
-     * сообщение "нет авторов" для разных языков
-     * @return string
-     * @todo: USELESS
-     */
-    private function messageNoPlainAuthors()
-    {
-        $r = '';
-        switch ($this->site_language) {
-            case 'en' : {
-                $r = '<br><strong>Authors not found!</strong>'; break;
-            }
-            case 'ru' : {
-                $r = '<br><strong>Авторы не найдены</strong>'; break;
-            }
-            case 'ua' : {
-                $r = '<br><strong>Автори не знайдені</strong>'; break;
-            }
-        }
-        return $r;
-    }
-
-    /**
-     * список авторов в виде plain/list ( /authors/all для поисковых систем и не только)
-     * @param $letter
-     * @return array
-     * @todo: USELESS
-     */
-    public function getAuthors_PlainList($letter)
-    {
-        return LoadAuthors_ByLetter($letter, $this->site_language, 'no');
-    }
-
-    /**
      * печать нужных авторов ($authors) в расширенной форме для /authors/estuff
      * функция НЕ оборачивает элементы списка в UL, поэтому её вывод надо вставлять
      * внутрь списка в шаблоне
@@ -270,7 +170,7 @@ class __Template
      * @param $estaff_role
      * @return array
      *
-     * @todo: EXPORT
+     * @todo: EXPORT METHOD
      */
     function getAuthors_EStaffList($estaff_role)
     {
@@ -338,24 +238,5 @@ class __Template
 
         return $articles;
     }
-
-    /**
-     * Прототип, переопределяется в конкретном шаблоне
-     * @return null
-     */
-    function getTopics()
-    {
-        return null;
-    }
-
-    /**
-     * Прототип, переопределяется в конкретном шаблоне
-     * @return null
-     */
-    function getBooks()
-    {
-        return null;
-    }
-
 
 }

@@ -1,31 +1,27 @@
 <span class="static-page-content">
-{%static_page_content%}
+{*static_page_content*}
 </span>
         <hr>
-<h3 class="last-book-title">Latest issue <br> {%last_book_title_string%}.</h3>
+<h3 class="last-book-title">Latest issue <br> {*last_book_title_string*}.</h3>
 <fieldset class="books-extended-info">
     <ul>
         <li>
-            <a href="core/get.image.php?id={%last_book_cover_id%}" class="icon-jpg icon lightbox-image">
+            <a href="core/get.image.php?id={*last_book_cover_id*}" class="icon-jpg icon lightbox-image">
                 <img src="/files/books_file_cover.jpg"><br>Cover</a>
         </li>
-        <!-- <li>
-            <a href="core/get.file.php?id={%last_book_title_ru_id%}" class="icon-pdf icon">
-                <img src="/files/books_file_title.jpg"><br>Title (ru)</a>
-        </li>-->
         <li>
-            <a href="core/get.file.php?id={%last_book_title_en_id%}" class="icon-pdf icon">
+            <a href="core/get.file.php?id={*last_book_title_en_id*}" class="icon-pdf icon">
                 <img src="/files/books_file_title_en.jpg"><br>Title</a>
         </li>
-        <!-- <li>
-            <a href="core/get.file.php?id={%last_book_toc_ru_id%}" class="icon-pdf icon">
-                <img src="/files/books_file_toc.jpg"><br>Contents</a>
-        </li> -->
         <li>
-            <a href="core/get.file.php?id={%last_book_toc_en_id%}" class="icon-pdf icon">
+            <a href="core/get.file.php?id={*last_book_toc_en_id*}" class="icon-pdf icon">
                 <img src="/files/books_file_toc_en.jpg"><br>Contents</a>
         </li>
     </ul>
 </fieldset>
 <br>
-{%last_book_content%}
+/* {%last_book_content%} equal to articles/extended/ajax.articles__extended.en.html template */
+/* include it with + ? */
+
+{* + ../articles/extended/ajax.articles__extended.en.html *}
+
