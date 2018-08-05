@@ -218,14 +218,16 @@ switch ($fetch) {
                 /**
                  * HTML
                  */
-                $inner_html_data = [];
+                $inner_html_data = []; // результаты поиска загружаются аяксом, а в шаблонах никаких замещаемых переменных нет (ну, кроме языка)
 
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
                 /**
-                 * JS
+                 * JS - технически мы можем использовать единственный JS-файл с переданным ему <языком сайта>
                  */
-                $inner_js_data = [];
+                $inner_js_data = [
+                    'site_language' =>  $site_language
+                ];
                 $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
 
                 /**
@@ -234,17 +236,6 @@ switch ($fetch) {
                 // $inner_css_data = [];
                 // $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
 
-
-                /*$filename = $tpl_path.'/fetch=articles/with=extended/f_articles+w_extended.'.$site_language;
-
-                $inner_html = new kwt($filename.'.html');
-                $maincontent_html = $inner_html->get();
-
-                $inner_js = new kwt($filename.'.js');
-                $maincontent_js = $inner_js->get();
-
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();*/
                 break;
             }
             case 'topic' : {

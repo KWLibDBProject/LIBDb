@@ -161,41 +161,6 @@ class __Template
         }
 
         return $articles;
-
-        /*$return = '';
-        if (count($articles) > 0)
-        {
-            // хедер таблицы
-            $return .= '<table class="articles-list">';
-
-            // в цикле загружаем шаблон и передаем в него строки таблицы
-            // и результат функции "печать списка авторов на основе $articles['authors'] "
-
-            foreach ($articles as $an_article_id => $an_article) {
-                $authors_list = $this->getAuthors_InArticlesList($an_article['authors']);
-
-                $t_a = new kwt($this->template_path.'/_internal/row_in_articles_list.html', '<!--{', '}-->');
-                $t_a->override(array(
-                    'book_title'        => $an_article['book_title'],
-                    'lal_e_bi'          => $this->page_prefix,
-                    'article_pages'     => $an_article['article_pages'],
-                    'pdfid'             => $an_article['pdfid'],
-                    'article_id'        => $an_article['id'],
-                    'article_title'     => $an_article['article_title'],
-                    'authors_list'      => $authors_list,
-                    'book_year'         => $an_article['book_year'],
-                    'pdf_filename'      => $an_article['pdf_filename']
-                ));
-                $return .= $t_a->get();
-                unset($t_a);
-            } // foreach
-
-            // футер таблицы
-            $return .= '</table>';
-        } else {
-            $return .= $this->messageNoArticles();
-        }
-        return $return;*/
     }
 
     /**
