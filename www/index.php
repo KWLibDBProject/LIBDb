@@ -349,18 +349,6 @@ switch ($fetch) {
         } // end $with articles switch
         break;
     } // end /articles/* case
-    case 'page' : {
-        /* секция вывода статических или условно-статических страниц */
-        $page_alias = ($with === '') ? 'default' : $with;
-        $maincontent_html = $template_engine->getStaticPage($page_alias);
-
-
-
-
-
-
-        break;
-    } // case /page
     case 'news' : {
         /* секция вывода новостей */
         switch ($with) {
@@ -410,9 +398,29 @@ switch ($fetch) {
         break;
     } // end /news/* case
 
+    case 'page' : {
+        /* секция вывода статических или условно-статических страниц */
+        $page_alias = ($with === '') ? 'default' : $with;
+        // $_maincontent_html = $template_engine->getStaticPage($page_alias);
+
+        $template_dir = '$/template.bootstrap24/page/static/';
+        $template_file_name = "page__static.{$site_language}";
+
+        /**
+         * HTML
+         */
+        $inner_html_data = [
+            'page_data'  =>  LoadStaticPage($page_alias, $site_language)
+        ];
+
+        $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
+
+        break;
+    } // case /page
+
     default : {
         // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
-        $template_dir = '$/template.bootstrap24/default/';
+        $template_dir = '$/template.bootstrap24/page/default/';
         $template_file_name = "default.{$site_language}";
 
         // load last book

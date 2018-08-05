@@ -40,6 +40,7 @@ class __Template
      * отображение статической страницы: alias
      * @param $alias
      * @return mixed|string
+     * @todo: USELESS
      */
     public function getStaticPage($alias)
     {
