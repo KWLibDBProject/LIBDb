@@ -62,6 +62,7 @@ class __Template
     /**
      * оформляет массив баннеров в LI-список (VIEW!)
      * @return null|string
+     * @todo: EXPORT
      */
     public function getBanners()
     {
@@ -72,7 +73,7 @@ class __Template
             'all_banners' =>  LoadBanners()
         );
 
-        // перенести в основной шабло как подключение файла с передачей ему параметров
+        // ? перенести в основной шаблон как подключение файла с передачей ему параметров
 
         $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
 
@@ -84,12 +85,11 @@ class __Template
      * новостного блока (справа под сборниками)
      * @param $count
      * @return string
+     *
+     * @todo: EXPORT
      */
     public function getLastNews($count)
     {
-        $return = '';
-        $data = LoadLastNews($this->site_language, $count);
-
         $template_dir = '$/template.bootstrap24/_websun_templates';
         $template_file = "frontpage_news_section.html";
 
@@ -106,6 +106,8 @@ class __Template
     /**
      * возвращает строку с меню
      * @return mixed
+     *
+     * @todo: USELESS
      */
     public function getMenu()
     {
@@ -286,7 +288,9 @@ class __Template
      * внутрь списка в шаблоне
      *
      * @param $estaff_role
-     * @return string
+     * @return array
+     *
+     * @todo: EXPORT
      */
     function getAuthors_EStaffList($estaff_role)
     {
@@ -299,37 +303,6 @@ class __Template
         }, $authors);
 
         return $authors;
-
-
-        /*$return = '';
-        $return .= <<<fe_printauthors_estuff_start
-fe_printauthors_estuff_start;
-
-        if ( sizeof($authors) > 0 ) {
-            foreach ($authors as $i => $an_author ) {
-                $name = $an_author['name'];
-
-                // первое слово в имени обернуть в <span class="authors-estufflist-firstword">
-                $name = preg_replace('/^([^\s]+)/','<span class="authors-estufflist-firstword">\1</span>', $name);
-
-                $title = $an_author['title'];
-                $title = (trim($title) != '') ? "<br><div class=\"smaller\">{$title}</div>" : "";
-
-                $workplace = $an_author['workplace'];
-                $workplace = ($title != '') ? "<div class=\"smaller\">{$workplace}</div>" : "";
-
-                $email = ($an_author['email'] != '') ? "<strong>E-Mail: </strong>{$an_author['email']}" : '';
-
-                $return .= <<<fe_printauthors_estuff_each
-            <li><a class="authors-estufflist-name" href="/?fetch=authors&with=info&id={$an_author['id']}">{$name}</a>{$title}{$workplace}{$email}</li>
-fe_printauthors_estuff_each;
-            }
-        }
-
-        $return .= <<<fe_printauthors_estuff_end
-fe_printauthors_estuff_end;
-
-        return $return;*/
     }
 
     /**
@@ -337,45 +310,53 @@ fe_printauthors_estuff_end;
      * похоже по логике на getArticlesList, но другой формат вывода
      *
      * @param $request
-     * @return string
+     * @return array
+     *
+     * @todo: EXPORT METHOD
      */
     public function getArticles_PlainList($request)
     {
         $articles = LoadArticles_ByQuery($request, $this->site_language);
-        $return = '';
-        if (count($articles)>0)
-        {
-            $return .= <<<PAL_S_Start
-<ul class="articles-list-full">
-PAL_S_Start;
-            foreach ($articles as $an_article)
-            {
-                // превращаем массив из нескольких авторов в строку, разделитель ;
-                // возможно в иных шаблонах потребуется иное представление, то есть нам нужно будет переписать функцию
-                $authors = array();
-                foreach ($an_article['authors'] as $an_author)
-                {
-                    $authors[] = $an_author['author_name'];
-                }
-                $authors_string = implode("; ", $authors);
 
-                // выводит каждый элемент по формату шаблона
-                $t_a = new kwt($this->template_path.'/_internal/plainlist_article_row.html', '<!--{', '}-->');
-                $t_a->override( array(
-                    'id'                => $an_article['id'],
-                    'article_title'     => $an_article['article_title'],
-                    'authors_string'    => $authors_string,
-                    'book_year'         => $an_article['book_year'],
-                    'book_title'        => $an_article['book_title']
-                ) );
-                $return .= $t_a->get();
-                unset($t_a);
+        /*
+         * @HINT
+        Теперь склеим ФИО в строку
+        Если мы не будем использовать склейку в массиве - то нужен итератор по фамилиям в шаблоне. Шаблон будет сложнее.
+
+        Можно двум форычами:
+
+        foreach ($articles as $i => &$an_article) {
+            $authors = [];
+            foreach ( $an_article['authors'] as $an_author) {
+                $authors[] = $an_author['author_name'];
             }
-            $return .= <<<PAL_S_End
-</ul>
-PAL_S_End;
+            $an_article['authors'] = implode(', ', $authors);
         }
-        return $return;
+
+        но мы используем "модный" array_map
+        */
+
+        // переберем все статьи
+        $articles = array_map(function ($v_article){
+
+            // итерируем массив авторов, возвращая только элемент с ФИО у каждого элемента
+            $authors = array_map(function ($v_author){
+                return $v_author['author_name'];
+            }, $v_article['authors']);
+
+            // склеиваем в строчку массив ФИО и присваиваем элементу с ключом `authors` массива статей это значение
+
+            $v_article['authors'] = implode(', ', $authors);
+
+            // возвращаем статью из замыкания
+            return $v_article;
+
+        }, $articles);
+        // возможно, стоит возвращать authors_string
+
+        // printr($articles);
+
+        return $articles;
     }
 
     /**

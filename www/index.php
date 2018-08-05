@@ -305,18 +305,31 @@ switch ($fetch) {
             }
             case 'all' : {
                 // список ВСЕХ СТАТЕЙ - для поисковых систем -- фио, титул, email -> link to author page
-                $filename = $tpl_path.'/fetch=articles/with=all/f_articles+w_all.'.$site_language;
-                $inner_html = new kwt($filename.".html");
-                $inner_html->override( array (
+
+                $template_dir = '$/template.bootstrap24/articles/all/';
+                $template_file_name = "articles__all.{$site_language}";
+
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
                     'all_articles_list' => $template_engine->getArticles_PlainList(array())
-                ));
-                $maincontent_html = $inner_html->get();
+                ];
 
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->get();
+                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                /**
+                 * JS
+                 */
+                // $inner_js_data = [];
+                // $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
+
+                /**
+                 * CSS
+                 */
+                // $inner_css_data = [];
+                // $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
+
                 break;
             }
         } // end $with articles switch
