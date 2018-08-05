@@ -34,19 +34,19 @@ $main_template_data['template_name'] = $CONFIG['frontend_template_name']; // tem
 $main_template_data['rubrics']    = $template_engine->getTopicsTree(); //@TODO: работает - не трогай (там очень уж замороченно, используется HEREDOC)
 
 /**
- * Блок "выпуски" (нужно возвращать ARRAY, который разбирается в шаблоне)
+ * Блок "выпуски" (возвращает рендер WEBSUN. нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$main_template_data['books']      = $template_engine->getBooks(); // возвращает рендер websun
+$main_template_data['books']      = $template_engine->getBooks();
 
 /**
- * Блок "баннеры" (нужно возвращать ARRAY, который разбирается в шаблоне)
+ * Блок "баннеры" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$main_template_data['banners']    = $template_engine->getBanners(); // возвращает рендер websun
+$main_template_data['banners']    = $template_engine->getBanners();
 
 /*
- * Блок "последние новости" (нужно возвращать ARRAY, который разбирается в шаблоне)
+ * Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$main_template_data['last_news_shortlist'] = $template_engine->getLastNews(3); // возвращает рендер websun
+$main_template_data['last_news_shortlist'] = $template_engine->getLastNews(3);
 
 // Main switch
 $fetch  = at( $_GET, 'fetch', '' );
@@ -84,28 +84,17 @@ switch ($fetch) {
                             ?  "/".$tpl_path."/images/no_photo_{$site_language}.png"
                             :  "core/get.image.php?id={$author_information['author_photo_id']}"
                 ];
-
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
                 /**
-                 * JS
+                 * CSS - can load single CSS style file or EXPORT it to common theme file
                  */
-                $inner_js_data = [
-                    "author_is_es" => ($author_information['author_is_es']==1) ? 'block' : 'none'
-                ];
-                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
-
-                /**
-                 * CSS
-                 */
-                $inner_css_data = [];
-                $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
 
                 break;
             }
             case 'all' : {
-                // список ВСЕХ авторов - для поисковых систем
-                // фио, титул, email -> link to author page
+                // список ВСЕХ авторов - для поисковых систем: фио, титул, email -> link to author page
                 $template_dir = '$/template.bootstrap24/authors/all/';
                 $template_file_name = "authors__all.{$site_language}";
 
@@ -113,25 +102,14 @@ switch ($fetch) {
                  * HTML
                  */
                 $inner_html_data = [
-                    // 'all_authors_list' => $template_engine->getAuthors_PlainList('')
                     'all_authors_list'      => LoadAuthors_ByLetter('', $site_language, 'no')
                 ];
-
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
                 /**
-                 * JS
+                 * CSS - can load single CSS style file or EXPORT it to common theme file
                  */
-                /*
-                $inner_js_data = [];
-                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
-                */
-
-                /**
-                 * CSS
-                 */
-                $inner_css_data = [];
-                $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
 
                 break;
             }
@@ -164,20 +142,12 @@ switch ($fetch) {
                     // ответственный секретарь = 8
                     'assistant_editor'              =>  $template_engine->getAuthors_EStaffList(8),
                 ];
-
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
                 /**
-                 * JS
+                 * CSS - can load single CSS style file or EXPORT it to common theme file
                  */
-                // $inner_js_data = [];
-                // $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
-
-                /**
-                 * CSS
-                 */
-                $inner_css_data = [];
-                $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
 
                 break;
             }
@@ -186,23 +156,23 @@ switch ($fetch) {
                 $template_file_name = "authors__list.{$site_language}";
 
                 /**
-                 * HTML
+                 * HTML - used AJAX loaded data
                  */
                 $inner_html_data = [];
-
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
                 /**
-                 * JS
+                 * JS - can load single JS file with exported $language value
                  */
-                $inner_js_data = [];
+                $inner_js_data = [
+                    'site_language' =>  $site_language
+                ];
                 $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
 
                 /**
-                 * CSS
+                 * CSS  - can load single CSS style file or EXPORT it to common theme file
                  */
-                $inner_css_data = [];
-                $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
 
                 break;
             }
@@ -219,7 +189,6 @@ switch ($fetch) {
                  * HTML
                  */
                 $inner_html_data = []; // результаты поиска загружаются аяксом, а в шаблонах никаких замещаемых переменных нет (ну, кроме языка)
-
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
                 /**
@@ -229,12 +198,6 @@ switch ($fetch) {
                     'site_language' =>  $site_language
                 ];
                 $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
-
-                /**
-                 * CSS
-                 */
-                // $inner_css_data = [];
-                // $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
 
                 break;
             }
@@ -332,18 +295,6 @@ switch ($fetch) {
 
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
-                /**
-                 * JS
-                 */
-                // $inner_js_data = [];
-                // $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
-
-                /**
-                 * CSS
-                 */
-                // $inner_css_data = [];
-                // $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
-
                 break;
             }
         } // end $with articles switch
@@ -371,7 +322,6 @@ switch ($fetch) {
                     'news_item_date'    => $the_news_item['date_add'] ?? '',
                     'news_item_text'    => $the_news_item['text'] ?? ''
                 ];
-
                 $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$template_file_name}.html", $template_dir);
 
                 $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
@@ -387,7 +337,6 @@ switch ($fetch) {
                 $local_template_data = [
                     'news_list' => LoadNewsListTOC($site_language)
                 ];
-
                 $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$template_file_name}.html", $template_dir);
 
                 $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
@@ -425,17 +374,17 @@ switch ($fetch) {
         // load last book
         $last_book = LoadLastBookInfo(); //@todo: СЕЙЧАС возвращается latest сборник по дате, без учета флага is_published + наличие статей в сборнике
 
+        $page_data = LoadStaticPage('about', $site_language);
+
         /**
          * HTML
          */
         $inner_html_data = [
-            'static_page_content'   => $template_engine->GetStaticPage('about'),
-            'articles_list'         => $template_engine->getArticlesList([ 'book'  =>  $last_book['id'] ], 'no'),
+            'page_data'             =>  $page_data,
+
+            'articles_list'         =>  $template_engine->getArticlesList([ 'book'  =>  $last_book['id'] ], 'no'),
 
             'last_book'             =>  $last_book,
-
-            'last_book_title'           =>  $last_book['title'],
-            'last_book_year'            =>  $last_book['year'],
         ];
 
         $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
@@ -445,12 +394,6 @@ switch ($fetch) {
          */
         $inner_js_data = [];
         $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
-
-        /**
-         * CSS
-         */
-        // $inner_css_data = [];
-        // $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
 
         break;
     } // end default case

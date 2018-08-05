@@ -139,7 +139,7 @@ function LoadFirstLettersForSelector($lang)
  * @param $lang
  * @return array
  */
-function LoadStaticPage($alias, $lang)
+function LoadStaticPage($alias, $lang = 'en')
 {
     global $mysqli_link;
     $return = array();

@@ -3,7 +3,6 @@ function calledOnSwitchLanguage()
     window.location.hash = '';
 }
 
-
 var siteLanguage = '&lang=ru';
 // load data
 var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist'+siteLanguage);
