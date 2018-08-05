@@ -212,7 +212,30 @@ switch ($fetch) {
     case 'articles' : {
         switch ($with) {
             case 'extended' : {
-                $filename = $tpl_path.'/fetch=articles/with=extended/f_articles+w_extended.'.$site_language;
+                $template_dir = '$/template.bootstrap24/articles/extended/';
+                $template_file_name = "articles__extended.{$site_language}";
+
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [];
+
+                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
+
+                /**
+                 * JS
+                 */
+                $inner_js_data = [];
+                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$template_file_name}.js", $template_dir);
+
+                /**
+                 * CSS
+                 */
+                // $inner_css_data = [];
+                // $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
+
+
+                /*$filename = $tpl_path.'/fetch=articles/with=extended/f_articles+w_extended.'.$site_language;
 
                 $inner_html = new kwt($filename.'.html');
                 $maincontent_html = $inner_html->get();
@@ -221,7 +244,7 @@ switch ($fetch) {
                 $maincontent_js = $inner_js->get();
 
                 $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                $maincontent_css = $inner_css->get();*/
                 break;
             }
             case 'topic' : {

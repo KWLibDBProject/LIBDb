@@ -23,7 +23,7 @@ if ($ref_numrows>0)
         $data['data'][ $row['id'] ] = array(
             'type'      => 'option',
             'value'     => $row['id'],
-            'text'      => returnBooksOptionString($row,$lang,$withoutid)
+            'text'      => returnBooksOptionString($row, $lang, $withoutid)
         );
     }
 } else {

@@ -54,7 +54,7 @@ switch ($actor) {
     case 'get_books_as_optionlist_extended' : {
         $i = 1;
         $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
-        $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";
+        $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";  //@todo: магическая подстановка
         $r = mysqli_query($mysqli_link, $q) or die($q);
         $n = @mysqli_num_rows($r) ;
 
@@ -71,7 +71,7 @@ switch ($actor) {
                 $i++;
             }
         } else {
-            $data['data'][1] = "Добавьте книги (сборники) в базу!!!";
+            $data['data'][1] = "Добавьте книги (сборники) в базу!!!"; //@todo: __lang( message )
             $data['error'] = 1;
         }
         $return = json_encode($data);
@@ -108,13 +108,6 @@ switch ($actor) {
         break;
     }
 
-    case 'load_articles_by_query' : {
-        // Поиск статей - расширенный (/articles/extended/)
-        // called by:     f_articles+w_extended.en.js ->
-        $return = $engine -> getArticlesList($_GET);
-        break;
-    }
-
     case 'load_authors_selected_by_letter': {
         // called js from /authors/list
 
@@ -130,11 +123,33 @@ switch ($actor) {
 
         break;
     }
+
+    case 'load_articles_by_query' : {
+        // Поиск статей - расширенный (/articles/extended/)
+        // called by:     articles__extended.*.js ->
+
+        $template_dir = '$/template.bootstrap24/articles/extended/';
+        $template_file_name = "ajax.articles__extended.{$lang}.html"; // delete row_in_articles_list.html
+
+        $inner_html_data = [
+            'articles_list' =>  $engine -> getArticlesList($_GET),
+            'with_email'    =>  'no',
+            'site_lang'     =>  $lang
+        ];
+
+        $return = \Websun\websun::websun_parse_template_path($inner_html_data, $template_file_name, $template_dir);
+
+        // $return = $engine -> getArticlesList($_GET);
+        break;
+    }
+
     case 'load_articles_expert_search': {
         // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
+        // completly equal load_articles_by_query
         $return = $engine -> getArticlesList($_GET);
         break;
     }
+
     default: {
         $return = 'Unknown request method!';
         break;

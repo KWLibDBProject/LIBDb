@@ -22,7 +22,7 @@ if ($ref_numrows>0)
     $data['error'] = 0;
     while ($row = mysqli_fetch_assoc($result))
     {
-        $data['data'][ $row['id'] ] = returnBooksOptionString($row,$lang,$withoutid); // see core.php
+        $data['data'][ $row['id'] ] = returnBooksOptionString($row, $lang, $withoutid); // see core.php
     }
 } else {
     $data['data'][1] = "Добавьте книги (сборники) в базу!!!";

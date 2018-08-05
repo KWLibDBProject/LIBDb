@@ -118,6 +118,7 @@ class __Template
     /**
      * сообщение "нет статей" для разных языков
      * @return string
+     * @todo: USELESS
      */
     private function messageNoArticles()
     {
@@ -146,9 +147,22 @@ class __Template
      */
     public function getArticlesList($request, $with_email = 'no')
     {
+        // useless: an_author_in_articles_list.html
+        // useless: row_in_articles_list.html
+
         global $mysqli_link;
         $articles = LoadArticles_ByQuery($request, $this->site_language);
-        $return = '';
+
+        foreach ($articles as $an_article_id => &$an_article) {
+            // $authors_list = $this->getAuthors_InArticlesList($an_article['authors']);
+            // $an_article['authors_list'] = $authors_list;
+            $an_article['authors_list'] = $an_article['authors'];
+            $an_article['page_prefix'] = $this->page_prefix;
+        }
+
+        return $articles;
+
+        /*$return = '';
         if (count($articles) > 0)
         {
             // хедер таблицы
@@ -181,7 +195,7 @@ class __Template
         } else {
             $return .= $this->messageNoArticles();
         }
-        return $return;
+        return $return;*/
     }
 
     /**
@@ -223,6 +237,7 @@ class __Template
      * @param $authors
      * @param string $with_email
      * @return string
+     * @todo: USELESS
      */
     public function getAuthors_InArticlesList($authors, $with_email = '')
     {

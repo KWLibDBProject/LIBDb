@@ -99,33 +99,17 @@ function printr($str)
  * @param $lang
  * @param $withoutid
  * @return string
+ *
+ * @todo:
  */
 function returnBooksOptionString($row, $lang, $withoutid)
 {
-    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
-    // по идее можно и с шаблоном, но ну нафиг
-    /*     switch ($lang) {
-            case 'en': {
-                $name = $row['name_en'];
-                $title = $row['title_en'];
-                break;
-            }
-            case 'ru': {
-                $name = $row['name_ru'];
-                $title = $row['title_ru'];
-                break;
-            }
-            case 'ua': {
-                $name = $row['name_ua'];
-                $title = $row['title_ua'];
-                break;
-            }
-        } */
-    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
+    // @todo: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В <SELECT OPTIONS>
+    $id = ($withoutid == 1) ? '' : "[{$row['id']}] " ;
 
     $title = ($row['title'] != '') ? $row['title'] : 'Unnamed';
 
-    return $id."\"$title\"";
+    return "{$id}\"{$title}\"";
 }
 
 /**

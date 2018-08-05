@@ -7,7 +7,6 @@ BuildSelector('letter', lettersList, 'ANY', 0);
 BuildSelectorExtended('book', booksList, 'ANY', 0);
 BuildSelectorExtended('topic', topicsList, 'ANY', 0);
 
-
 url_extended = "ajax.php?actor=load_articles_by_query"+siteLanguage;
 url_expert = "ajax.php?actor=load_articles_expert_search"+siteLanguage;
 
