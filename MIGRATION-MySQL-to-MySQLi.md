@@ -57,10 +57,9 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 [todo] : поле `date` legacy, поле `timestamp`
 
 потребуют обновления методы:
-- LoadArticles_ByAuthor()
 - Все методы в админке
-- проверить LoadLastBookInfo()
-
+- LoadArticles_ByAuthor()
+- LoadLastBookInfo()
 
 
 # Таблица articles

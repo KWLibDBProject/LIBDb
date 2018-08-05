@@ -391,6 +391,9 @@ function LoadBookInfo($id)
 function LoadLastBookInfo()
 {
     global $mysqli_link;
+
+    //@todo: рефакторинг даты
+
     $r = mysqli_query($mysqli_link, "SELECT * FROM books WHERE published=1 ORDER BY date desc LIMIT 1"); // is enought for latest published book ?
 
     $ret = [];

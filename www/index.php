@@ -414,7 +414,6 @@ switch ($fetch) {
         $template_dir = '$/template.bootstrap24/default/';
         $template_file_name = "default.{$site_language}";
 
-
         // load last book
         $last_book = LoadLastBookInfo(); //@todo: СЕЙЧАС возвращается latest сборник по дате, без учета флага is_published + наличие статей в сборнике
 
@@ -425,15 +424,11 @@ switch ($fetch) {
             'static_page_content'   => $template_engine->GetStaticPage('about'),
             'articles_list'         => $template_engine->getArticlesList([ 'book'  =>  $last_book['id'] ], 'no'),
 
-            'last_book_title_string'    => "{$last_book['title']}, {$last_book['year']}",
-            'last_book_cover_id'        => $last_book['file_cover'],
-            'last_book_title_ru_id'     => $last_book['file_title_ru'],
-            'last_book_title_en_id'     => $last_book['file_title_en'],
-            'last_book_toc_ru_id'       => $last_book['file_toc_ru'],
-            'last_book_toc_en_id'       => $last_book['file_toc_en'],
+            'last_book'             =>  $last_book,
+
+            'last_book_title'           =>  $last_book['title'],
+            'last_book_year'            =>  $last_book['year'],
         ];
-
-
 
         $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
@@ -449,41 +444,6 @@ switch ($fetch) {
         // $inner_css_data = [];
         // $maincontent_css = \Websun\websun::websun_parse_template_path($inner_css_data, "{$template_file_name}.css", $template_dir);
 
-
-
-
-
-
-
-        // $filename = $tpl_path.'/_default/default.'.$site_language;
-
-        /*$inner_html = new kwt($filename.".html");
-        $inner_html->override( array(
-            'static_page_content'   => $template_engine->GetStaticPage('about')
-        ));*/
-
-        // load last book
-        /*$last_book = LoadLastBookInfo();
-
-        if (count($last_book) != 0) {
-            $inner_html->override( array(
-                'articles_list'         => $template_engine->getArticlesList([ 'book'  =>  $last_book['id'] ], 'no'),
-                'last_book_title_string'    => "{$last_book['title']}, {$last_book['year']}",
-                'last_book_cover_id'        => $last_book['file_cover'],
-                'last_book_title_ru_id'     => $last_book['file_title_ru'],
-                'last_book_title_en_id'     => $last_book['file_title_en'],
-                'last_book_toc_ru_id'       => $last_book['file_toc_ru'],
-                'last_book_toc_en_id'       => $last_book['file_toc_en'],
-            ));
-        }
-        $maincontent_html = $inner_html->get();
-
-        $inner_js = new kwt($filename.".js");
-        $maincontent_js = $inner_js->get();
-
-        $inner_css = new kwt($filename.".css");
-        $maincontent_css = $inner_css->get();*/
-
         break;
     } // end default case
 
@@ -493,9 +453,6 @@ $main_template_data['content_jquery'] = $maincontent_js;
 $main_template_data['content_html'] = $maincontent_html;
 $main_template_data['content_css'] = $maincontent_css;
 $main_template_data['frontend_assets_mode'] = $CONFIG['frontend_assets_mode'];
-
-// $tpl_index->override($override);
-// $tpl_index->out();
 
 $content = \Websun\websun::websun_parse_template_path($main_template_data, $main_template_file, $main_template_dir);
 $content = preg_replace('/^\h*\v+/m', '', $content);
