@@ -401,7 +401,6 @@ switch ($fetch) {
     case 'page' : {
         /* секция вывода статических или условно-статических страниц */
         $page_alias = ($with === '') ? 'default' : $with;
-        // $_maincontent_html = $template_engine->getStaticPage($page_alias);
 
         $template_dir = '$/template.bootstrap24/page/static/';
         $template_file_name = "page__static.{$site_language}";

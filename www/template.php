@@ -37,30 +37,6 @@ class __Template
     }
 
     /**
-     * отображение статической страницы: alias
-     * @param $alias
-     * @return mixed|string
-     * @todo: USELESS
-     */
-    public function getStaticPage($alias)
-    {
-        $ret = LoadStaticPage($alias, $this->site_language);
-        $return = '';
-        switch ($ret['state']) {
-            case '200': {
-                $return = $ret['content'];
-                break;
-            }
-            case '404': {
-                $html404 = new kwt($this->template_path.'/page404.html');
-                $return = $html404->get();
-                break;
-            }
-        } // switch
-        return $return;
-    } // end GetStaticPage
-
-    /**
      * оформляет массив баннеров в LI-список (VIEW!)
      * @return null|string
      * @todo: EXPORT to TEMPLATE or INDEX
@@ -215,6 +191,8 @@ class __Template
         }
 
         но мы используем "модный" array_map
+
+        возможно, стоит возвращать authors_string, а заменять authors
         */
 
         // переберем все статьи
@@ -233,7 +211,7 @@ class __Template
             return $v_article;
 
         }, $articles);
-        // возможно, стоит возвращать authors_string
+
 
         // printr($articles);
 
