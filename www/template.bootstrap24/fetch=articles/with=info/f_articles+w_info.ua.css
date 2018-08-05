@@ -1,0 +1,23 @@
+.article-content fieldset {
+    margin-top: 1em;
+}
+
+.article-title {
+    text-transform: uppercase;
+}
+.article-abstact {
+    font-style: italic;
+}
+.download-pdf-button {
+    float:right;
+}
+.article-authors-list {
+    margin-top: 0;
+    list-style-type: decimal;
+}
+legend {
+    font-weight: bold;
+}
+.article-doi-visibility {
+    /*article-doi-visibility*/
+}
