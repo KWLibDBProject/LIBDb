@@ -430,7 +430,7 @@ articles.id
 , pdfid
 , doi
 , filestorage.username AS pdf_filename
-, filestorage.stat_date_download AS pdf_last_download_date ";
+, DATE_FORMAT(filestorage.stat_date_download, '%d.%m.%Y') AS pdf_last_download_date ";
 /* дополнительные поля (для /article/info ) */
     $q_select .= "
 , articles.abstract_{$lang} AS article_abstract
@@ -535,7 +535,9 @@ topics.deleted=0 {$query_show_published} ";
 function LoadArticles_ByQuery($get, $lang)
 {
     global $mysqli_link;
+
     $query = BuildQuery($get, $lang);
+
     $res = mysqli_query($mysqli_link, $query) or die("ОШИБКА: Доступ к базе данных ограничен, запрос: ".$query);
     $articles_count = @mysqli_num_rows($res);
     $all_articles = array();
@@ -544,9 +546,24 @@ function LoadArticles_ByQuery($get, $lang)
         while ($an_article = mysqli_fetch_assoc($res))
         {
             $id = $an_article['id'];
+
+            $an_article['pdf_last_download_date'] = __langDate($an_article['pdf_last_download_date'], $lang);
+
             $all_articles[$id] = $an_article;
             $all_articles[$id]['authors'] = LoadAuthors_ByArticle($id, $lang);
-            //@todo: REFACTORING + OVER-OPTIMISATION : для того чтобы обойтись без дополнительного селекта - надо переписать полностью BuildQuery() чтобы она отдавала еще и ВСЕХ авторов пофамильно. Надо ли? У нас не миллион запросов... пока что.
+
+            /*
+             * @todo: здесь делается запрос к базе - извлекаются все авторы у статьи с переданным ID.
+             *
+             * Когда мы выводим /articles/info - это нетяжелый запрос.
+             *
+             * Проблема в том, что для построения полного списка статей таких запросов делается МНОГО.
+             *
+             * Размышления на эту тему есть /core/core.articles/articles.action.list.php - там используется тот же механизм выборки данных
+             * и изложены методы оптимизации.
+             *
+             */
+
         } //end while
     }
     return $all_articles;

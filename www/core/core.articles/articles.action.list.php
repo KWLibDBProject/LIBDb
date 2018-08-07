@@ -10,6 +10,12 @@ book - показать статьи в сборнике
 
 /* этот же запрос существует в frontend.php (DB_BuildQuery)*/
 
+/**
+ * Этот вызов логически очень похож LoadArticles_ByQuery($get, $lang) / BuildQuery($get, $lang)
+ * Возможно, имеет смысл использовать метод для извлечения данных - и в админке показывать больше информации о статье,
+ * тем более что в шаблоне _template.articles.list.html все равно используется только title_ru
+ */
+
 // ttitle -> topic_title
 // btitle -> book_title
 // DATE_FORMAT(date_add, '%d.%m.%Y') as date_add
@@ -17,9 +23,7 @@ book - показать статьи в сборнике
 $query = "
 SELECT 
 DISTINCT articles.id, 
-articles.title_en AS title_en, 
 articles.title_ru AS title_ru, 
-articles.title_ua AS title_ua, 
 udc, 
 pdfid, 
 DATE_FORMAT(date_add, '%d.%m.%Y') as date_add, 

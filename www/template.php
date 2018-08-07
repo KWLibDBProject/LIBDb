@@ -113,9 +113,12 @@ class __Template
      * @param $authors
      * @param string $with_email
      * @return string
+     * @todo: useless
      */
     public function getAuthors_InArticle($authors, $with_email = '')
     {
+        // useless: an_author_in_article_info
+
         $ret = '';
         foreach ($authors as $author_id => $an_author)
         {
