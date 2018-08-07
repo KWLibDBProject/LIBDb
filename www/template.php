@@ -107,42 +107,6 @@ class __Template
     }
 
     /**
-     * список авторов в полной информации о статье!
-     * Передаем массив с авторами (который можно загрузить по-разному)
-     *
-     * @param $authors
-     * @param string $with_email
-     * @return string
-     * @todo: useless
-     */
-    public function getAuthors_InArticle($authors, $with_email = '')
-    {
-        // useless: an_author_in_article_info
-
-        $ret = '';
-        foreach ($authors as $author_id => $an_author)
-        {
-            // Иванов И.И., др.тех.наук
-            if (($with_email != '') && ($an_author['author_email'] != '')) {
-                $an_author['author_email'] = ' ('.$an_author['author_email'].')';
-            } else { $an_author['author_email'] = ''; }
-
-            // выводит каждый элемент по формату шаблона
-            $t_a = new kwt($this->template_path.'/_internal/an_author_in_article_info.html', '<!--{', '}-->');
-            $t_a->override( array(
-                'author_id' => $an_author['author_id'],
-                'site_lang' => $this->site_language,
-                'author_name' => $an_author['author_name'],
-                'author_title' => $an_author['author_title'],
-                'author_email' => $an_author['author_email']
-            ) );
-            $ret .= $t_a->get();
-            unset($t_a);
-        }
-        return $ret;
-    }
-
-    /**
      * печать нужных авторов ($authors) в расширенной форме для /authors/estuff
      * функция НЕ оборачивает элементы списка в UL, поэтому её вывод надо вставлять
      * внутрь списка в шаблоне

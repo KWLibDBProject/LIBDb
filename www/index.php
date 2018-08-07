@@ -259,11 +259,6 @@ switch ($fetch) {
                  */
                 $article_info = LoadArticles_ByQuery(array('article_id' => $id ) , $site_language)[ $id ];
 
-                // printr($article_info);
-                // die;
-
-                // $article_authors = $template_engine->getAuthors_InArticle($article_info['authors'], 'with-email');
-
                 // список авторов, писавших статью
                 $article_authors = $article_info['authors'];
 
@@ -285,49 +280,10 @@ switch ($fetch) {
 
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
-                /** JS: decrared `$('.action-download-pdf').on('click')` action in index file */
-
                 /**
                  * CSS - can load single CSS style file or EXPORT it to common theme file
                  */
                 $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.css", $template_dir);
-
-
-
-
-
-
-                // $filename = $tpl_path.'/fetch=articles/with=info/f_articles+w_info.'.$site_language;
-
-                // $article_info = LoadArticleInformation_ById($id, $site_language); // EQ $article_info = LoadArticles_ByQuery(array('aid' => $id ) , $site_language);
-                // $article_authors = $template_engine->getAuthors_InArticle($article_info['authors'], 'with-email');
-                //@warning: мы вставили в BuildQuery еще несколько полей (article_abstract, article_refs, article_keywords), при поиске по keywords может (!) возникнуть бага -- тесты!
-                // $inner_html = new kwt($filename.'.html', '<!--{%', '%}-->');
-/*                $inner_html->override( array (
-                    'article-title'         => $article_info['article_title'] ?? '',
-                    'article-abstract'      => $article_info['article_abstract'] ?? '',
-                    'article-authors-list'  => $article_authors, // список авторов, писавших статью
-                    'article-keywords'      => $article_info['article_keywords'] ?? '',
-                    'article-book-title'    => $article_info['book_title'] ?? '',
-                    'article-book-year'     => $article_info['book_year'] ?? '',
-                    'article-pdfid'         => $article_info['pdfid'] ?? '',
-                    'article-refs'          => $article_info['article_refs'] ?? '',
-                    'article-doi'           => $article_info['doi'] ?? '',
-                    'article-pdf-last-download-date' => $article_info['pdf_last_download_date']
-                ));
-                if (isset($article_info['keywords']))
-                    $main_template_data['meta_keywords'] = $article_info['keywords'];
-                $maincontent_html = $inner_html->get();*/
-
-                // $inner_js = new kwt($filename.'.js', '/*', '*/');
-                // $inner_js->override( array( "plus_book_id" => "+".$id ) );
-                // $maincontent_js = $inner_js->get();
-
-                // $inner_css = new kwt($filename.".css", '/*', '*/');
-                // $inner_css->override( array(
-//                     'article-doi-visibility' => ($article_info['doi']=='') ? 'display:none;' : ''
-//                ));
-//                $maincontent_css = $inner_css->get();
 
                 break;
             }
