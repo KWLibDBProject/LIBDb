@@ -14,7 +14,7 @@
             </a>
         </td>
         <td class="articles-list-row-article-title">
-            <a href="?fetch=articles&with=info&id={*articles_list:article_id*}">{*articles_list:article_title*}</a>
+            <a href="?fetch=articles&with=info&id={*articles_list:id*}">{*articles_list:article_title*}</a>
         </td>
         <td class="articles-list-row-authors">
             <ul>
@@ -22,7 +22,6 @@
                 <li>
                     <a href="?fetch=authors&with=info&id={*articles_list:authors_list:author_id*}&lang={*site_lang*}">{*articles_list:authors_list:author_name*}</a>, {*articles_list:authors_list:author_title*} {?*with_email="yes"*} ({*articles_list:authors_list:author_email*}) {?}
                 </li>
-
                 {%}
             </ul>
         </td>
@@ -33,5 +32,5 @@
 {?}
 
 {?!*articles_list*}
-<br><strong>За заданими критеріями пошуку статей не знайдено!</strong>
+<br><strong>No articles found within this search criteria!</strong>
 {?}

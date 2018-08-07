@@ -126,9 +126,12 @@ switch ($actor) {
 
     case 'load_articles_by_query' : {
         // Поиск статей - расширенный (/articles/extended/)
-        // called by:     articles__extended.*.js ->
+        // called by:
+        //      articles/extended.*.js
+        //      articles/topic
+        //      articles/book
 
-        $template_dir = '$/template.bootstrap24/articles/extended/';
+        $template_dir = '$/template.bootstrap24/_main_ajax_templates/';
         $template_file_name = "ajax.articles__extended.{$lang}.html"; // delete row_in_articles_list.html
 
         $inner_html_data = [
@@ -137,6 +140,8 @@ switch ($actor) {
             'site_lang'     =>  $lang
         ];
 
+        printr($inner_html_data);
+
         $return = \Websun\websun::websun_parse_template_path($inner_html_data, $template_file_name, $template_dir);
 
         // $return = $engine -> getArticlesList($_GET);
@@ -144,6 +149,7 @@ switch ($actor) {
     }
 
     case 'load_articles_expert_search': {
+        //@TODO: unused
         // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
         // completly equal load_articles_by_query
         $return = $engine -> getArticlesList($_GET);

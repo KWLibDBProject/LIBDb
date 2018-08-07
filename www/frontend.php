@@ -164,21 +164,21 @@ function LoadStaticPage($alias, $lang = 'en')
  * загружает из базы информацию об одной рубрике (тематике) в зависимости от языка
  * @param $id
  * @param $lang
- * @return string
+ * @return array|null [ id, title ]
  */
 function LoadTopicInfo($id, $lang)
 {
     global $mysqli_link;
     $q = "SELECT id, title_{$lang} AS title FROM topics WHERE id={$id}";
     $r = mysqli_query($mysqli_link, $q);
-    $ret = '';
+    $topic = null;
 
     if (@mysqli_num_rows($r) == 1)
     {
         $topic = mysqli_fetch_assoc($r);
-        $ret = $topic['title'];
     }
-    return $ret;
+
+    return $topic;
 }
 
 /**
@@ -417,7 +417,7 @@ function BuildQuery($get, $lang)
     // DATE_FORMAT(date_add, '%d.%m.%Y') as date_add,
 
     $q_select = " SELECT DISTINCT
-articles.id
+  articles.id
 , articles.udc AS article_udc
 , DATE_FORMAT(date_add, '%d.%m.%Y') AS article_add_date
 , articles.title_{$lang} AS article_title

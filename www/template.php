@@ -82,7 +82,6 @@ class __Template
 
     /**
      * список статей,
-     * инфо о каждой статье делается на основе /_internal/item_in_articles_list.html
      *
      * @param $request
      * @param string $with_email
@@ -92,9 +91,6 @@ class __Template
      */
     public function getArticlesList($request, $with_email = 'no')
     {
-        // useless: an_author_in_articles_list.html
-        // useless: row_in_articles_list.html
-
         global $mysqli_link;
         $articles = LoadArticles_ByQuery($request, $this->site_language);
 

@@ -1,9 +1,11 @@
+/* */
 var siteLanguage = '&lang=en';
+
 var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist_extended'+siteLanguage);
 
 BuildSelectorExtended('books', booksList, 'Choose... ', 0);
 
-url = "ajax.php?actor=load_articles_by_query&topic="/*plus_topic_id*/+siteLanguage;
+var url = "ajax.php?actor=load_articles_by_query&topic="/*plus_topic_id*/+siteLanguage;
 
 // если хэш установлен - нужно загрузить статьи согласно выбранным позициям
 // тут нам лишний if не нужен, мы на старте загружаем все статьи

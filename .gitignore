@@ -1,2 +1,3 @@
 www/core/config/config.php
+www/core/config/config.class.php
 www/template.bootstrap24/metrika.*

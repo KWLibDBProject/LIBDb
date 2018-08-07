@@ -83,7 +83,6 @@ FE_PrintTopics_Each;
      */
     public function getBooks()
     {
-        $ret = '';
         $all_books = LoadBooks();
 
         // этот шаблон надо подключать в основном шаблоне, передавая в 'all_books' результат LoadBooks()
@@ -100,17 +99,6 @@ FE_PrintTopics_Each;
 
         return $render_result;
     }
-
-    /**
-     * @param $id
-     * @return string
-     */
-    public function getTopicTitle($id)
-    {
-        $topic = LoadTopicInfo($id, $this->site_language);
-        return $topic;
-    }
-
 
 
 }

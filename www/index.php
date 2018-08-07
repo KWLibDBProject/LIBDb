@@ -16,7 +16,9 @@ $maincontent_css = '';
 // main_template_data
 $main_template_data = array();
 
-$main_template_dir = '$/template.bootstrap24/';
+// $x = \LIBDb\Config::get('frontend_template_name');
+
+$main_template_dir = '$/template.bootstrap24';
 $main_template_file = "index.{$site_language}.html";
 
 // load default index file for template, based on language
@@ -61,7 +63,7 @@ switch ($fetch) {
                 /*расширенная информация по автору + список его статей + фото */
                 $id = intval($_GET['id']);
 
-                $template_dir = '$/template.bootstrap24/authors/info/';
+                $template_dir = "{$main_template_dir}/authors/info/";
                 $template_file_name = "authors__info.{$site_language}";
 
                 $author_information = LoadAuthorInformation_ById($id, $site_language);
@@ -98,7 +100,7 @@ switch ($fetch) {
             }
             case 'all' : {
                 // список ВСЕХ авторов - для поисковых систем: фио, титул, email -> link to author page
-                $template_dir = '$/template.bootstrap24/authors/all/';
+                $template_dir = "{$main_template_dir}/authors/all/";
                 $template_file_name = "authors__all.{$site_language}";
 
                 /**
@@ -117,7 +119,7 @@ switch ($fetch) {
                 break;
             }
             case 'estaff' : {
-                $template_dir = '$/template.bootstrap24/authors/estaff/';
+                $template_dir = "{$main_template_dir}/authors/estaff/";
                 $template_file_name = "authors__estaff.{$site_language}";
 
                 /**
@@ -155,7 +157,7 @@ switch ($fetch) {
                 break;
             }
             case 'list' : {
-                $template_dir = '$/template.bootstrap24/authors/list/';
+                $template_dir = "{$main_template_dir}/authors/list/";
                 $template_file_name = "authors__list.{$site_language}";
 
                 /**
@@ -185,7 +187,7 @@ switch ($fetch) {
     case 'articles' : {
         switch ($with) {
             case 'extended' : {
-                $template_dir = '$/template.bootstrap24/articles/extended/';
+                $template_dir = "{$main_template_dir}/articles/extended/";
                 $template_file_name = "articles__extended.{$site_language}";
 
                 /**
@@ -205,21 +207,27 @@ switch ($fetch) {
                 break;
             }
             case 'topic' : {
-                $filename = $tpl_path.'/fetch=articles/with=topic/f_articles+w_topic.'.$site_language;
                 $id = intval($_GET['id']);
 
-                $inner_html = new kwt($filename.'.html');
-                $inner_html->override(array(
-                    'topic_title' => $template_engine->getTopicTitle($id)
-                ));
-                $maincontent_html = $inner_html->get();
+                $template_dir = "{$main_template_dir}/articles/topic/";
+                $template_file_name = "articles__topic.{$site_language}";
 
-                $inner_js = new kwt($filename.'.js', '/*' ,'*/');
-                $inner_js->override( array( "plus_topic_id" => "+".$id ) );
-                $maincontent_js = $inner_js->get();
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
+                    'topic_title'   =>  LoadTopicInfo($id, $site_language)['title'],
+                    'topic_id'      =>  $id,
+                    'site_language' =>  $site_language
+                ];
+                // результаты поиска загружаются аяксом,
+                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                /**
+                 * JS - технически мы можем использовать единственный JS-файл
+                 */
+                $maincontent_js = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.js", $template_dir);
+
                 break;
             }
             case 'book' : {
@@ -251,7 +259,7 @@ switch ($fetch) {
             case 'info' : {
                 $id = intval($_GET['id']);
 
-                $template_dir = '$/template.bootstrap24/articles/info/';
+                $template_dir = "{$main_template_dir}/articles/info/";
                 $template_file_name = "articles__info.{$site_language}";
 
                 /**
@@ -290,7 +298,7 @@ switch ($fetch) {
             case 'all' : {
                 // список ВСЕХ СТАТЕЙ - для поисковых систем -- фио, титул, email -> link to author page
 
-                $template_dir = '$/template.bootstrap24/articles/all/';
+                $template_dir = "{$main_template_dir}/articles/all/";
                 $template_file_name = "articles__all.{$site_language}";
 
                 /**
@@ -319,7 +327,7 @@ switch ($fetch) {
                     Redirect('?fetch=news&with=list');
                 }
 
-                $template_dir = '$/template.bootstrap24/news/the/';
+                $template_dir = "{$main_template_dir}/news/the/";
                 $template_file_name = "news__the.{$site_language}";
 
                 $the_news_item = LoadNewsItem($id, $site_language);
@@ -338,7 +346,7 @@ switch ($fetch) {
             case 'list' : {
                 /* список новостей */
 
-                $template_dir = '$/template.bootstrap24/news/list/';
+                $template_dir = "{$main_template_dir}/news/list/";
                 $template_file_name = "news__list.{$site_language}";
 
                 $local_template_data = [
@@ -358,7 +366,7 @@ switch ($fetch) {
         /* секция вывода статических или условно-статических страниц */
         $page_alias = ($with === '') ? 'default' : $with;
 
-        $template_dir = '$/template.bootstrap24/page/static/';
+        $template_dir = "{$main_template_dir}/page/static/";
         $template_file_name = "page__static.{$site_language}";
 
         /**
@@ -375,7 +383,7 @@ switch ($fetch) {
 
     default : {
         // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
-        $template_dir = '$/template.bootstrap24/page/default/';
+        $template_dir = "{$main_template_dir}/page/default/";
         $template_file_name = "default.{$site_language}";
 
         // load last book
