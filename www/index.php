@@ -21,9 +21,6 @@ $main_template_data = array();
 $main_template_dir = '$/template.bootstrap24';
 $main_template_file = "index.{$site_language}.html";
 
-// load default index file for template, based on language
-// $tpl_index = new kwt($tpl_path."/index.{$site_language}.html", '<!--{', '}-->' );
-
 // init template engine
 $template_engine = new Template($CONFIG['frontend_template_name'], $site_language); //@todo disable this after full refactoring
 

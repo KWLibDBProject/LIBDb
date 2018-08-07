@@ -1,5 +1,4 @@
 <?php
-require_once('core/core.kwt.php');
 require_once('frontend.php');
 
 /**
