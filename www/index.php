@@ -232,28 +232,26 @@ switch ($fetch) {
             }
             case 'book' : {
                 $id = intval($_GET['id']);
-                $filename = $tpl_path.'/fetch=articles/with=book/f_articles+w_book.'.$site_language;
 
-                $inner_html = new kwt($filename.'.html');
-                $book_row = LoadBookInfo($id);
+                $template_dir = "{$main_template_dir}/articles/book/";
+                $template_file_name = "articles__book.{$site_language}";
 
-                $inner_html->override( array (
-                    'file_cover'    => $book_row['file_cover'] ?? '',
-                    'file_title_ru' => $book_row['file_title_ru'] ?? '',
-                    'file_title_en' => $book_row['file_title_en'] ?? '',
-                    'file_toc_ru'   => $book_row['file_toc_ru'] ?? '',
-                    'file_toc_en'   => $book_row['file_toc_en'] ?? '',
-                    'book_title'    => $book_row['book_title'] ?? '',
-                    'book_year'     => $book_row['book_year'] ?? ''
-                ));
-                $maincontent_html = $inner_html->get();
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
+                    'site_language' =>  $site_language,
+                    'book_id'       =>  $id,
+                    'book_info'     =>  LoadBookInfo($id),
+                ];
+                // результаты поиска загружаются аяксом,
+                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
-                $inner_js = new kwt($filename.'.js', '/*', '*/');
-                $inner_js->override( array( "plus_book_id" => "+".$id ) );
-                $maincontent_js = $inner_js->get();
+                /**
+                 * JS - технически мы можем использовать единственный JS-файл
+                 */
+                $maincontent_js = \Websun\websun::websun_parse_template_path([], "{$template_file_name}.js", $template_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
                 break;
             }
             case 'info' : {

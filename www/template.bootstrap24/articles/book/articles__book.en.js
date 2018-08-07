@@ -1,9 +1,11 @@
-var siteLanguage = '&lang=ua';
-var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optgroup_list'+siteLanguage);
+var siteLanguage = '&lang=' + $("#articles__topic__site_language").val();
+var book_id = + $("#articles__book__book_id").val();
+var url = "ajax.php?actor=load_articles_by_query&book=" + book_id + siteLanguage;
+
+var url_topicsList = 'ajax.php?actor=get_topics_as_optgroup_list'+siteLanguage
+var topicsList = preloadOptionsList( url_topicsList );
 
 BuildSelectorExtended('topics', topicsList, '&nbsp;&nbsp;&nbsp;ANY&nbsp;&nbsp;&nbsp;', 0);
-
-url = "ajax.php?actor=load_articles_by_query&book="/*plus_book_id*/+siteLanguage;
 
 // если хэш установлен - нужно загрузить статьи согласно выбранным позициям
 // тут нам лишний if не нужен, мы на старте загружаем все статьи

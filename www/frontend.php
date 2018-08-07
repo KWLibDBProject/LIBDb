@@ -373,7 +373,18 @@ function LoadLastNews($lang, $count=2)
 function LoadBookInfo($id)
 {
     global $mysqli_link;
-    $query = "SELECT books.title AS book_title, books.year AS book_year, file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en FROM books WHERE id={$id}";
+    $query = "
+    SELECT 
+        books.title AS book_title, 
+        books.year AS book_year, 
+        file_cover, 
+        file_title_ru, 
+        file_title_en, 
+        file_toc_ru, 
+        file_toc_en 
+    FROM books 
+    WHERE id={$id}";
+
     $r = mysqli_query($mysqli_link, $query) or die($query);
 
     $ret = [];

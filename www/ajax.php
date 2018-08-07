@@ -95,6 +95,8 @@ switch ($actor) {
         break;
     }
     case 'get_topics_as_optgroup_list' : {
+        // /articles/book
+
         /* загрузить категории и отдать JSON-объект для построения селекта c группировкой */
         $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
 
@@ -140,11 +142,8 @@ switch ($actor) {
             'site_lang'     =>  $lang
         ];
 
-        printr($inner_html_data);
-
         $return = \Websun\websun::websun_parse_template_path($inner_html_data, $template_file_name, $template_dir);
 
-        // $return = $engine -> getArticlesList($_GET);
         break;
     }
 

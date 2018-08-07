@@ -22,14 +22,14 @@ ifNotLoggedRedirect('/core/');
 
     <script type="text/javascript">
         var authorsList = preloadOptionsList('core.authors/ref.authors.action.getoptionlist.php');
-        var booksList = preloadOptionsList('core.books/ref.books.action.getoptionlist.php');
+        var booksList = preloadOptionsList('core.books/ref.books.action.getoptionlist.php'); // change to NEW link (books.action.getoptionlist)
         var topicsList = preloadOptionsList('core.topics/ref.topics.action.getoptionlist.php');
         var url_extended = "core.articles/articles.action.list.php";
         var url_get_articles_count = ""; //@todo: через ajax.php
 
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            BuildSelector('with_author',authorsList,0);
+            BuildSelector('with_author',authorsList,0); // change to BuildSelectorExtended
             BuildSelector('with_book',booksList,0);
             BuildSelector('with_topic',topicsList,0);
 

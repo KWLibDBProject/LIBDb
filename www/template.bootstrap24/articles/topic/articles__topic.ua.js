@@ -1,9 +1,11 @@
 /* */
-var topic_id = +$("#articles__topic__topic_id").val();
 var siteLanguage = '&lang=' + $("#articles__topic__site_language").val();
+var topic_id = +$("#articles__topic__topic_id").val();
 
-var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist_extended'+siteLanguage);
 var url = "ajax.php?actor=load_articles_by_query&topic=" + topic_id + siteLanguage;
+
+var url_booksList = 'ajax.php?actor=get_books_as_optionlist_extended'+siteLanguage;
+var booksList = preloadOptionsList( url_booksList );
 
 BuildSelectorExtended('books', booksList, 'Choose... ', 0);
 
