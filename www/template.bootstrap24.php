@@ -89,7 +89,7 @@ FE_PrintTopics_Each;
         // этот шаблон надо подключать в основном шаблоне, передавая в 'all_books' результат LoadBooks()
         // ВАЖНО: по аналогии можно написать и TOPICS+TOPIC GROUPS
 
-        $template_dir = '$/template.bootstrap24/_websun_templates';
+        $template_dir = '$/template.bootstrap24/_main_subtemplates';
         $template_file = "frontpage_books_section.html";
 
         $template_data = array(

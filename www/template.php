@@ -43,7 +43,7 @@ class __Template
      */
     public function getBanners()
     {
-        $template_dir = '$/template.bootstrap24/_websun_templates';
+        $template_dir = '$/template.bootstrap24/_main_subtemplates';
         $template_file = "frontpage_banners_section.html";
 
         $template_data = array(
@@ -67,7 +67,7 @@ class __Template
      */
     public function getLastNews($count)
     {
-        $template_dir = '$/template.bootstrap24/_websun_templates';
+        $template_dir = '$/template.bootstrap24/_main_subtemplates';
         $template_file = "frontpage_news_section.html";
 
         $template_data = array(
