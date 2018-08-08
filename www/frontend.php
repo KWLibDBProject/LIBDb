@@ -210,7 +210,7 @@ function LoadTopics($lang)
  * @param int $withoutid
  * @return array
  */
-function LoadTopicsTree($lang, $withoutid=1)
+function LoadTopicsTree($lang, $withoutid = 1)
 {
     global $mysqli_link;
     $withoutid = $withoutid || 1;
@@ -793,4 +793,286 @@ function LoadAuthors_ByArticle($id, $lang)
         }
     }
     return $ret;
+}
+
+
+/**
+ * Функция выводит строку с иерархическим списком категорий (топиков).
+ *
+ * Экспортировано из template.php , должно возвращать на самом деле только массив данных, который интерпретируется в шаблоне
+ * но на деле очень уж сложно и заморочно.
+ *
+ * ПОЭТОМУ НЕ БУДУ ТРОГАТЬ ПОКА ОНО РАБОТАЕТ!!!!
+ *
+ * @param $lang
+ * @return string
+ */
+function printTopicsTree($lang)
+{
+    $all_topics = LoadTopicsTree($lang);
+
+    $ret = '';
+    $last_group = '';
+    $optgroup_found = 0;
+
+    foreach ($all_topics['data'] as $id => $row) {
+        if ($row['type'] == 'group') {
+
+            // add optiongroup
+            if ($last_group != $row['value']) {
+                $last_group = $row['value'];
+                if ($optgroup_found) $ret .= '</div></div>';
+                $optgroup_found++;
+
+                $is_group_expanded = ($optgroup_found == 1) ? ' in ' : '';
+
+                $ret .= <<<getTT_Group
+                    <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#taccordion" data-target="#topics_{$row['value']}">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle">{$row['text']}</a>
+                            </h4>
+                        </div>
+                        <div id="topics_{$row['value']}" class="panel-collapse collapse {$is_group_expanded} list-group etks-topics-list">
+getTT_Group;
+            }
+        }
+
+        if ($row['type'] == 'option') {
+            $id = $row['value'];
+            $title = $row['text'];
+
+            $ret .= <<<FE_PrintTopics_Each
+<a href="?fetch=articles&with=topic&id={$id}" class="list-group-item">{$title}</a>
+FE_PrintTopics_Each;
+
+        }
+
+    }
+
+    if ($optgroup_found) $ret .= '</div></div>';
+
+    return $ret;
+}
+
+/**
+ * Перенесена из template.php , но нигде не используется
+ *
+ * @param $lang
+ * @return string
+ */
+function printTopicsPlain($lang)
+{
+    $all_topics = LoadTopics($lang);
+
+    $ret = '';
+    foreach ($all_topics as $id => $title )
+    {
+        $ret .= <<<FE_PrintTopics_Each
+<a href="?fetch=articles&with=topic&id={$id}" class="list-group-item">{$title}</a>
+FE_PrintTopics_Each;
+    }
+
+    return $ret;
+}
+
+/**
+ * возвращает рендер websun
+ *
+ * ВОЗМОЖНО, нужно возвращать ARRAY, который разбирать в шаблоне
+ * ИЛИ
+ * возвращать ARRAY, а в шаблоне подключать через {* + _main_subtemplates/frontpage_books_section.html *}
+ * только ему передавать надо правильно, чтобы в глобальном оверрайде не затереть лишнего
+ *
+ * @param $template_name
+ * @return mixed
+ */
+function printBooks($template_name)
+{
+    $all_books = LoadBooks();
+
+    // этот шаблон надо подключать в основном шаблоне, передавая в 'all_books' результат LoadBooks()
+    // ВАЖНО: по аналогии можно написать и TOPICS+TOPIC GROUPS
+
+    $template_dir = "$/{$template_name}/_main_subtemplates";
+    $template_file = "frontpage_books_section.html";
+
+    $template_data = array(
+        'all_books' =>  $all_books
+    );
+
+    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
+    return $render_result;
+}
+
+/**
+ * оформляет массив баннеров в LI-список, возвращает РЕНДЕР WEBSUN
+ *
+ * ВОЗМОЖНО, нужно возвращать ARRAY, который разбирать в шаблоне
+ * ИЛИ
+ * возвращать ARRAY, а в шаблоне подключать через {* + _main_subtemplates/frontpage_books_section.html *}
+ * только ему передавать надо правильно, чтобы в глобальном оверрайде не затереть лишнего
+ *
+ * @param $template_name
+ * @return mixed
+ */
+function printBanners($template_name)
+{
+    $template_dir = "$/{$template_name}/_main_subtemplates";
+    $template_file = "frontpage_banners_section.html";
+
+    $template_data = array(
+        'all_banners' =>  LoadBanners()
+    );
+
+    // ? перенести в основной шаблон как подключение файла с передачей ему параметров
+
+    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
+    return $render_result;
+
+}
+
+
+/**
+ * список статей в виде plain/list (для поисковых систем)
+ * похоже по логике на getArticlesList, но другой формат вывода
+ *
+ * @param $request
+ * @return array
+ *
+ */
+function getArticles_PlainList($request, $site_language)
+{
+    $articles = LoadArticles_ByQuery($request, $site_language);
+
+    /*
+     * @HINT
+    Теперь склеим ФИО в строку
+    Если мы не будем использовать склейку в массиве - то нужен итератор по фамилиям в шаблоне. Шаблон будет сложнее.
+
+    Можно двум форычами:
+
+    foreach ($articles as $i => &$an_article) {
+        $authors = [];
+        foreach ( $an_article['authors'] as $an_author) {
+            $authors[] = $an_author['author_name'];
+        }
+        $an_article['authors'] = implode(', ', $authors);
+    }
+
+    но мы используем "модный" array_map
+
+    возможно, стоит возвращать authors_string, а заменять authors
+    */
+
+    // переберем все статьи
+    $articles = array_map(function ($v_article){
+
+        // итерируем массив авторов, возвращая только элемент с ФИО у каждого элемента
+        $authors = array_map(function ($v_author){
+            return $v_author['author_name'];
+        }, $v_article['authors']);
+
+        // склеиваем в строчку массив ФИО и присваиваем элементу с ключом `authors` массива статей это значение
+
+        $v_article['authors'] = implode(', ', $authors);
+
+        // возвращаем статью из замыкания
+        return $v_article;
+
+    }, $articles);
+
+    return $articles;
+}
+
+/**
+ * печать нужных авторов ($authors) в расширенной форме для /authors/estuff
+ * функция НЕ оборачивает элементы списка в UL, поэтому её вывод надо вставлять
+ * внутрь списка в шаблоне
+ *
+ * @param $estaff_role
+ * @return array
+ *
+ */
+function getAuthors_EStaffList($estaff_role, $site_language)
+{
+    $authors = LoadAuthors_ByLetter('0', $site_language, 'yes', $estaff_role);
+
+    // Первое слово имени выделяем стилем
+    $authors = array_map(function ($v){
+        $v['name'] = preg_replace('/^([^\s]+)/','<span class="estaff-name-firstword">\1</span>', $v['name']);
+        return $v;
+    }, $authors);
+
+    return $authors;
+}
+
+/**
+ * Возвращает список статей
+ *
+ * @param $request
+ * @param string $language
+ * @param string $with_email
+ * @return array
+ */
+function getArticlesList($request, $language = 'en', $with_email = 'no')
+{
+    global $mysqli_link;
+    $articles = LoadArticles_ByQuery($request, $language);
+
+    foreach ($articles as $an_article_id => &$an_article) {
+        $an_article['authors_list'] = $an_article['authors'];
+        $an_article['page_prefix'] = getPagesPrefix_forArticles($language);
+    }
+
+    return $articles;
+}
+
+/**
+ * Возвращает префикс страницы в зависимости от языка.
+ *
+ * @param $lang
+ * @return string
+ */
+function getPagesPrefix_forArticles($lang)
+{
+    $result = 'Pp. ';
+    switch ($lang)  {
+        case 'ru':  { $result = 'C. '; break; }
+        case 'ua':  { $result = 'C. '; break; }
+        case 'en':
+        default:
+                    { $result = 'Pp. '; break; }
+
+    } // end switch
+
+    return $result;
+}
+
+/**
+ * возвращает длинную строку с новостями -- результат подставляется в override-переменную
+ * новостного блока (справа под сборниками)
+ *
+ * Это WEBSUN рендер... а должен быть массив.
+ *
+ * @param $template_name
+ * @param int $count
+ * @param string $language
+ * @return mixed
+ */
+function printLastNews($template_name, $count = 3, $language = 'en')
+{
+    $template_dir = "$/{$template_name}/_main_subtemplates";
+    $template_file = "frontpage_news_section.html";
+
+    $template_data = array(
+        'last_news_list' =>  LoadLastNews($language, $count)
+    );
+
+    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
+    return $render_result;
+
 }

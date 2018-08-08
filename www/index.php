@@ -3,7 +3,6 @@ define('__ROOT__', __DIR__);
 
 require_once (__ROOT__ . '/core/__required.php');
 require_once 'frontend.php';
-require_once 'template.bootstrap24.php';
 
 $site_language = GetSiteLanguage();
 
@@ -18,34 +17,27 @@ $main_template_data = array();
 
 // $x = \LIBDb\Config::get('frontend_template_name');
 
-$main_template_dir = '$/template.bootstrap24';
+$template_name = $CONFIG['frontend_template_name']; // 'template.bootstrap24'
+
+$main_template_dir = "$/{$template_name}";
 $main_template_file = "index.{$site_language}.html";
 
-// init template engine
-$template_engine = new Template($CONFIG['frontend_template_name'], $site_language); //@todo disable this after full refactoring
-
 /* Override variables in INDEX.*.HTML template */
-$main_template_data['template_name'] = $CONFIG['frontend_template_name']; // template name , defined in config
+$main_template_data['template_name'] = $template_name; // template name , defined in config
 
-/**
- * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне)
- */
-$main_template_data['rubrics']    = $template_engine->getTopicsTree(); //@TODO: работает - не трогай (там очень уж замороченно, используется HEREDOC)
+/**   * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне) */
+$main_template_data['rubrics']    = printTopicsTree($site_language);
 
-/**
- * Блок "выпуски" (возвращает рендер WEBSUN. нужно возвращать ARRAY, который разбирается в шаблоне)
- */
-$main_template_data['books']      = $template_engine->getBooks();
+/**  * Блок "выпуски" (возвращает рендер WEBSUN. нужно возвращать ARRAY, который разбирается в шаблоне)  */
+$main_template_data['books']      = printBooks($template_name);
 
-/**
- * Блок "баннеры" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне)
- */
-$main_template_data['banners']    = $template_engine->getBanners();
+/**  * Блок "баннеры" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне)  */
+$main_template_data['banners']    = printBanners($template_name);
 
 /*
  * Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне)
  */
-$main_template_data['last_news_shortlist'] = $template_engine->getLastNews(3);
+$main_template_data['last_news_shortlist'] = printLastNews($template_name, 3, $site_language);
 
 // Main switch
 $fetch  = at( $_GET, 'fetch', '' );
@@ -60,7 +52,7 @@ switch ($fetch) {
                 /*расширенная информация по автору + список его статей + фото */
                 $id = intval($_GET['id']);
 
-                $template_dir = "{$main_template_dir}/authors/info/";
+                $template_dir = "$/{$template_name}/authors/info/";
                 $template_file_name = "authors__info.{$site_language}";
 
                 $author_information = LoadAuthorInformation_ById($id, $site_language);
@@ -83,7 +75,7 @@ switch ($fetch) {
                     'author_photo_id'       => $author_information['author_photo_id'] ?? -1,
                     'author_photo_link'
                             => ($author_information['author_photo_id'] == -1)
-                            ?  "/".$tpl_path."/images/no_photo_{$site_language}.png"
+                            ?  "/{$template_name}/_assets/images/no_photo_{$site_language}.png"
                             :  "core/get.image.php?id={$author_information['author_photo_id']}"
                 ];
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
@@ -97,7 +89,7 @@ switch ($fetch) {
             }
             case 'all' : {
                 // список ВСЕХ авторов - для поисковых систем: фио, титул, email -> link to author page
-                $template_dir = "{$main_template_dir}/authors/all/";
+                $template_dir = "$/{$template_name}/authors/all/";
                 $template_file_name = "authors__all.{$site_language}";
 
                 /**
@@ -116,7 +108,7 @@ switch ($fetch) {
                 break;
             }
             case 'estaff' : {
-                $template_dir = "{$main_template_dir}/authors/estaff/";
+                $template_dir = "$/{$template_name}/authors/estaff/";
                 $template_file_name = "authors__estaff.{$site_language}";
 
                 /**
@@ -124,25 +116,25 @@ switch ($fetch) {
                  */
                 $inner_html_data = [
                     // почетный редактор = 7
-                    'honorary_editor'               => $template_engine->getAuthors_EStaffList(7),
+                    'honorary_editor'               => getAuthors_EStaffList(7, $site_language),
 
                     // главный редактор = 5
-                    'chief_editor'                  => $template_engine->getAuthors_EStaffList(5),
+                    'chief_editor'                  => getAuthors_EStaffList(5, $site_language),
 
                     // замглавного редактора = 4
-                    'chief_editor_assistants'       => $template_engine->getAuthors_EStaffList(4),
+                    'chief_editor_assistants'       => getAuthors_EStaffList(4, $site_language),
 
                     // редакционная коллегия = 3
-                    'editorial_board_local'         => $template_engine->getAuthors_EStaffList(3),
+                    'editorial_board_local'         => getAuthors_EStaffList(3, $site_language),
 
                     // международная редакционная коллегия = 1
-                    'editorial_board_international' => $template_engine->getAuthors_EStaffList(1),
+                    'editorial_board_international' => getAuthors_EStaffList(1, $site_language),
 
                     // редакторы = 6 (в шаблоне таких нет и в базе тоже)
-                    'other_editors'                 => $template_engine->getAuthors_EStaffList(6),
+                    'other_editors'                 => getAuthors_EStaffList(6, $site_language),
 
                     // ответственный секретарь = 8
-                    'assistant_editor'              =>  $template_engine->getAuthors_EStaffList(8),
+                    'assistant_editor'              => getAuthors_EStaffList(8, $site_language),
                 ];
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
@@ -154,7 +146,7 @@ switch ($fetch) {
                 break;
             }
             case 'list' : {
-                $template_dir = "{$main_template_dir}/authors/list/";
+                $template_dir = "$/{$template_name}/authors/list/";
                 $template_file_name = "authors__list.{$site_language}";
 
                 /**
@@ -184,7 +176,7 @@ switch ($fetch) {
     case 'articles' : {
         switch ($with) {
             case 'extended' : {
-                $template_dir = "{$main_template_dir}/articles/extended/";
+                $template_dir = "$/{$template_name}/articles/extended/";
                 $template_file_name = "articles__extended.{$site_language}";
 
                 /**
@@ -206,7 +198,7 @@ switch ($fetch) {
             case 'topic' : {
                 $id = intval($_GET['id']);
 
-                $template_dir = "{$main_template_dir}/articles/topic/";
+                $template_dir = "$/{$template_name}/articles/topic/";
                 $template_file_name = "articles__topic.{$site_language}";
 
                 /**
@@ -230,7 +222,7 @@ switch ($fetch) {
             case 'book' : {
                 $id = intval($_GET['id']);
 
-                $template_dir = "{$main_template_dir}/articles/book/";
+                $template_dir = "$/{$template_name}/articles/book/";
                 $template_file_name = "articles__book.{$site_language}";
 
                 /**
@@ -254,7 +246,7 @@ switch ($fetch) {
             case 'info' : {
                 $id = intval($_GET['id']);
 
-                $template_dir = "{$main_template_dir}/articles/info/";
+                $template_dir = "$/{$template_name}/articles/info/";
                 $template_file_name = "articles__info.{$site_language}";
 
                 /**
@@ -293,14 +285,14 @@ switch ($fetch) {
             case 'all' : {
                 // список ВСЕХ СТАТЕЙ - для поисковых систем -- фио, титул, email -> link to author page
 
-                $template_dir = "{$main_template_dir}/articles/all/";
+                $template_dir = "$/{$template_name}/articles/all/";
                 $template_file_name = "articles__all.{$site_language}";
 
                 /**
                  * HTML
                  */
                 $inner_html_data = [
-                    'all_articles_list' => $template_engine->getArticles_PlainList(array())
+                    'all_articles_list' => getArticles_PlainList([], $site_language)
                 ];
 
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
@@ -322,7 +314,7 @@ switch ($fetch) {
                     Redirect('?fetch=news&with=list');
                 }
 
-                $template_dir = "{$main_template_dir}/news/the/";
+                $template_dir = "$/{$template_name}/news/the/";
                 $template_file_name = "news__the.{$site_language}";
 
                 $the_news_item = LoadNewsItem($id, $site_language);
@@ -341,7 +333,7 @@ switch ($fetch) {
             case 'list' : {
                 /* список новостей */
 
-                $template_dir = "{$main_template_dir}/news/list/";
+                $template_dir = "$/{$template_name}/news/list/";
                 $template_file_name = "news__list.{$site_language}";
 
                 $local_template_data = [
@@ -361,7 +353,7 @@ switch ($fetch) {
         /* секция вывода статических или условно-статических страниц */
         $page_alias = ($with === '') ? 'default' : $with;
 
-        $template_dir = "{$main_template_dir}/page/static/";
+        $template_dir = "$/{$template_name}/page/static/";
         $template_file_name = "page__static.{$site_language}";
 
         /**
@@ -378,7 +370,7 @@ switch ($fetch) {
 
     default : {
         // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
-        $template_dir = "{$main_template_dir}/page/default/";
+        $template_dir = "$/{$template_name}/page/default/";
         $template_file_name = "default.{$site_language}";
 
         // load last book
@@ -392,7 +384,7 @@ switch ($fetch) {
         $inner_html_data = [
             'page_data'             =>  $page_data,
 
-            'articles_list'         =>  $template_engine->getArticlesList([ 'book'  =>  $last_book['id'] ], 'no'),
+            'articles_list'         =>  getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, 'no'),
 
             'last_book'             =>  $last_book,
         ];

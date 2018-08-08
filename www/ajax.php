@@ -4,14 +4,11 @@
 define('__ROOT__', __DIR__);
 require_once (__ROOT__ . '/core/__required.php');
 require_once 'frontend.php';
-require_once 'template.bootstrap24.php';
 
 $actor = isset($_GET['actor']) ? $_GET['actor'] : ''; // безопасный результат - проверка в switch
 $lang = isset($_GET['lang']) ? GetRequestLanguage($_GET['lang']) : 'en';
 
 $return = '';
-
-$engine = new Template($tpl_path, $lang);
 
 switch ($actor) {
     case 'get_letters_as_optionlist' : {
@@ -98,7 +95,7 @@ switch ($actor) {
         $template_file_name = "ajax.articles__extended.{$lang}.html"; // delete row_in_articles_list.html
 
         $inner_html_data = [
-            'articles_list' =>  $engine -> getArticlesList($_GET),
+            'articles_list' =>  getArticlesList($_GET, $lang),
             'with_email'    =>  'no',
             'site_lang'     =>  $lang
         ];
@@ -112,7 +109,7 @@ switch ($actor) {
         //@TODO: unused
         // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
         // completly equal load_articles_by_query
-        $return = $engine -> getArticlesList($_GET);
+        $return = getArticlesList($_GET, $lang);
         break;
     }
 
