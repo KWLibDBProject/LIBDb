@@ -25,7 +25,7 @@ $post['permissions'] =
 $q = "SELECT `id` FROM $table WHERE `login` LIKE '$post[login]'";
 $r = mysqli_query($mysqli_link, $q);
 
-if (mysqli_errno($link)==0)
+if (mysqli_errno($mysqli_link)==0)
 {
     // что-то нашли т.е. mysqli_num_rows()>1
     if (mysqli_num_rows($r)==0) {

@@ -11,11 +11,7 @@ $maincontent_html = '';
 $maincontent_js = '';
 $maincontent_css = '';
 
-// init template override array
-// main_template_data
 $main_template_data = array();
-
-// $x = \LIBDb\Config::get('frontend_template_name');
 
 $main_theme_name    = $CONFIG['frontend_template_name']; // 'template.bootstrap24'
 $main_theme_dir     = $CONFIG['frontend_template_name']; // так же, но может измениться ( имя папки без начального и конечного слэша !!!)
@@ -24,6 +20,7 @@ $main_template_file = "index.{$site_language}.html";
 
 /* Override variables in INDEX.*.HTML template */
 $main_template_data['template_name'] = $main_theme_name; // template name , defined in config
+$main_template_data['template_theme_dir'] = $main_theme_dir;
 
 /**   * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне) */
 $main_template_data['rubrics']    = printTopicsTree($site_language);
@@ -34,9 +31,7 @@ $main_template_data['books']      = printBooks($main_theme_dir);
 /**  * Блок "баннеры" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне)  */
 $main_template_data['banners']    = printBanners($main_theme_dir);
 
-/*
- * Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне)
- */
+/* Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне) */
 $main_template_data['last_news_shortlist'] = printLastNews($main_theme_dir, 3, $site_language);
 
 // Main switch
