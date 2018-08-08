@@ -16,7 +16,7 @@ ifNotLoggedRedirect('/core/');
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="core.books/books.css">
 
-    <script type="text/javascript" src="js/core.js"></script>
+    <script type="text/javascript" src="../frontend.js"></script>
 
     <script type="text/javascript" src="js/jquery.colorbox.js"></script>
     <link rel="stylesheet" type="text/css" href="css/colorbox.css" />

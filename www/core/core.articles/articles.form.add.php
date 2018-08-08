@@ -21,12 +21,17 @@ ifNotLoggedRedirect('/core/');
     <link rel="stylesheet" type="text/css" href="articles.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
-    <script type="text/javascript" src="../js/core.js"></script>
+    <script type="text/javascript" src="../../frontend.js"></script>
+    <script type="text/javascript" src="../../frontend.options.js"></script>
     <script type="text/javascript" src="articles.js"></script>
     <script type="text/javascript">
-        var authorsList = preloadOptionsList('../core.authors/ref.authors.action.getoptionlist.php');
-        var booksList = preloadOptionsList('../core.books/ref.books.action.getoptionlist.php');
-        var topicsList = preloadOptionsList('../core.topics/ref.topics.action.getoptionlist.php');
+
+        // загружается старый файл - потому что билдер списка авторов в этом файле не понимает Extended Format
+        // ? InsertAuthorsSelector() ?
+        var authorsList = preloadOptionsList('../core.authors/authors.action.getoptionlist.php?legacyformat');
+
+        var booksListExtended = preloadOptionsList('../core.books/books.action.getoptionlist.php');
+        var topicsListExtended = preloadOptionsList('../core.topics/topics.action.getoptionlist.php?id&nogroup');
 
         var mode = 'new';
 
@@ -65,8 +70,13 @@ ifNotLoggedRedirect('/core/');
             } // ничего не добавляем, у нас просто работает 1 кнопка "добавить"
 
             // load selectors
-            BuildSelector('book',booksList,currentBook);
-            BuildSelector('topic',topicsList,currentTopic);
+            BuildSelectorExtended('book', booksListExtended, "Выбрать...", 0);
+            BuildSelectorExtended('topic', topicsListExtended, "Выбрать...", 0);
+
+            // старый вариант: - legacy:
+            // BuildSelectorLegacy('book', booksList, currentBook);
+            // BuildSelectorLegacy('topic', topicsList, currentTopic);
+
 
             // WIDGETS
             $("#datepicker").datepicker({
@@ -85,7 +95,11 @@ ifNotLoggedRedirect('/core/');
 
             // bindings
             // bind ADD AUTHOR button
-            $(".al-add").on('click',function(){ InsertAuthorSelector("#authors_list",lastAuthorNumber); lastAuthorNumber++; });
+            $(".al-add").on('click',function(){
+                InsertAuthorSelector("#authors_list",lastAuthorNumber);
+                lastAuthorNumber++;
+            });
+
             // bind remove 'X' button for each author
             $("#authors_list").on('click',".al-delete",function(){ $('li[data-li="'+$(this).attr('data-al')+'"]').remove(); });
 

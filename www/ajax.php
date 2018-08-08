@@ -20,38 +20,10 @@ switch ($actor) {
         $return = json_encode($data);
         break;
     }
-    case 'get_books_as_optionlist' : {
-        /* deprecated - данная опция не позволяет делать произвольную сортировку
-        в отдаваемом селекте. Вне зависимости от метода выборки селект будет отсортирован
-        по id таблицы. Причиной тому - "примитивный" BuildSelector, не учитывающий
-        группировку элементов. Категорически рекомендуется использовать "extended" варианты,
-        а во 2 редакции использовать ТОЛЬКО их с рефакторингом имен функций и запросов!!!
-
-        Важно: в ядре старый функционал используется в файле ref.books.get.optionlist.php
-        новый - в файле без ref. накоден, но нигде не используется.
-        */
-        /* загрузить сборники и отдать JSON-объект для построения селекта */
-        $withoutid = isset($_GET['withoutid']) ? $_GET['withoutid'] : 1;
-        $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";
-        $r = mysqli_query($mysqli_link, $q) or die($q);
-        $n = @mysqli_num_rows($r) ;
-
-        if ($n > 0)
-        {
-            $data['error'] = 0;
-            while ($row = mysqli_fetch_assoc($r))
-            {
-                $data['data'][ $row['id'] ] = returnBooksOptionString($row, $lang, $withoutid); // see core.php
-                // $data['data'][] = returnBooksOptionString($row, $lang, $withoutid); // see core.php
-            }
-        } else {
-            $data['data'][1] = "Добавьте книги (сборники) в базу!!!";
-            $data['error'] = 1;
-        }
-        $return = json_encode($data);
-        break;
-    }
     case 'get_books_as_optionlist_extended' : {
+
+        // BETTER: request to /core/core.books/books.action.getoptionlist.php
+
         $i = 1;
         $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
         $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";  //@todo: магическая подстановка
@@ -63,10 +35,13 @@ switch ($actor) {
             $data['error'] = 0;
             while ($row = mysqli_fetch_assoc($r))
             {
+                $ov_id = ($withoutid == 1) ? '' : "[{$row['id']}]" ;
+                $option_value = "{$ov_id} {$row['title']}";
+
                 $data['data'][ $i ] = array(
                     'type'      => 'option',
                     'value'     => $row['id'],
-                    'text'      => returnBooksOptionString($row, $lang, $withoutid)
+                    'text'      => $option_value // returnBooksOptionString($row, $lang, $withoutid)
                 );
                 $i++;
             }
@@ -78,24 +53,10 @@ switch ($actor) {
         break;
 
     }
-    case 'get_topics_as_option_list' : {
-        /* загрузить категории и отдать JSON-объект для построения селекта */
-        $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
-
-        $data['data'] = LoadTopics($lang);
-
-        if (sizeof($data['data'])) {
-            $data['error'] = 0;
-            $data['state'] = 'ok';
-        } else {
-            $data['data'][1] = "Добавьте тематические разделы в базу!!!";
-            $data['error'] = 1;
-        }
-        $return = json_encode($data);
-        break;
-    }
     case 'get_topics_as_optgroup_list' : {
         // /articles/book
+
+        // BETTER : request to /core/core.topics/topicgroups.action.getoptionlist.php
 
         /* загрузить категории и отдать JSON-объект для построения селекта c группировкой */
         $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;

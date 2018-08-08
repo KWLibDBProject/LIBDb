@@ -16,7 +16,7 @@ ifNotLoggedRedirect('/core/');
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="core.pages/pages.css">
 
-    <script src="js/core.js"></script>
+    <script src="../frontend.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

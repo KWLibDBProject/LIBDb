@@ -18,9 +18,8 @@ ifNotLoggedRedirect('/core/');
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
 
-    <script type="text/javascript" src="js/core.js"></script>
     <script type="text/javascript" src="js/core.excel.js"></script>
-    <script type="text/javascript" src="/frontend.js"></script>
+    <script type="text/javascript" src="../frontend.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

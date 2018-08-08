@@ -5,6 +5,8 @@ $ref_name = 'books';
 
 $book_id = $_POST['book_id'];
 
+//@todo: use Datetime->
+
 $q = array(
     'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
     'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']),

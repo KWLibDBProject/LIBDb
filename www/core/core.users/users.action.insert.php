@@ -8,7 +8,6 @@ if (!IsSet($_POST['ref_name'])) {
 }
 $table = 'users';
 
-$now = ConvertTimestampToDate();
 $post = array(
     'name'          => mysqli_real_escape_string($mysqli_link, $_POST['name']),
     'email'         => mysqli_real_escape_string($mysqli_link, $_POST['email']),

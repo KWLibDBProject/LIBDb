@@ -2,28 +2,46 @@
 // отдает JSON объект для селектора "топики"
 require_once '../__required.php'; // $mysqli_link
 
-$lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
+$flag_lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
 
-$lang = getAllowedValue($lang, array(
+$flag_lang = getAllowedValue($flag_lang, array(
     'ru', 'en', 'ua'
 ));
 
-$withoutid = isset($_GET['id']) ? 1 : 0;
+/**
+ Новое поведение: теперь можно задать в GET флаги:
+ - id - наличие добавляет к строчкам селекта [id]
+ - nogroup - наличие отключает группировку по супергруппам
 
-$query = "
+ Задавать значения ключей не обязательно!
+ */
+
+$flag_with_id = isset($_GET['id']) ? 1 : 0;
+$flag_nogroup = isset($_GET['nogroup']) ? 1 : 0;
+
+$query_with_groups = "
 SELECT
 topics.id,
-topics.title_{$lang} AS title_topic,
-topicgroups.title_{$lang}  AS title_group
+topics.title_{$flag_lang} AS title_topic,
+topicgroups.title_{$flag_lang}  AS title_group
 FROM topics
 LEFT JOIN topicgroups ON topicgroups.id = topics.rel_group
-ORDER BY topicgroups.title_{$lang}, topics.title_{$lang}
+ORDER BY topicgroups.title_{$flag_lang}, topics.title_{$flag_lang}
 ";
 
+$query_no_groups = "
+SELECT 
+topics.id,
+topics.title_{$flag_lang} AS title_topic,
+'' AS title_group
+FROM topics
+";
+
+$query = $flag_nogroup ? $query_no_groups : $query_with_groups;
 
 $result = mysqli_query($mysqli_link, $query) or die($query);
 
-$ref_numrows = @mysqli_num_rows($result) ;
+$ref_numrows = @mysqli_num_rows($result);
 
 if ($ref_numrows>0)
 {
@@ -31,7 +49,8 @@ if ($ref_numrows>0)
     $data['error'] = 0;
     $data['count'] = $ref_numrows;
     $i = 1;
-    $group = '';
+    $group = ''; // no optiongroup
+
     while ($row = mysqli_fetch_assoc($result))
     {
         if ($group != $row['title_group']) {
@@ -49,7 +68,7 @@ if ($ref_numrows>0)
         $data['data'][ $i ] = array(
             'type'      => 'option',
             'value'     => $row['id'],
-            'text'      => $row['title_topic']
+            'text'      =>  ($flag_with_id ? "[{$row['id']}] " : '') . $row['title_topic']
         );
         $i++;
     }

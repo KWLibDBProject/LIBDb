@@ -12,7 +12,6 @@ if (!IsSet($_POST['caller'])) {
     $result['error'] = 1; $result['message'] .= 'Unknown caller!'; print(json_encode($result)); exit();
 }
 
-$now = ConvertTimestampToDate();
 $q = array(
     'udc'           => str_replace(" ", "", mysqli_real_escape_string($mysqli_link, $_POST['udc'])),
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
@@ -26,13 +25,11 @@ $q = array(
     'keywords_ua'   => mysqli_real_escape_string($mysqli_link, $_POST['keywords_ua']),
     'refs_ru'       => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
     'refs_en'       => mysqli_real_escape_string($mysqli_link, $_POST['refs_en']),
-    'refs_ua' => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
+    'refs_ua'       => mysqli_real_escape_string($mysqli_link, $_POST['refs_ru']),
     'book'          => mysqli_real_escape_string($mysqli_link, $_POST['book']),
     'topic'         => mysqli_real_escape_string($mysqli_link, $_POST['topic']),
     'pages'         => mysqli_real_escape_string($mysqli_link, $_POST['pages']),
     'doi'           => mysqli_real_escape_string($mysqli_link, $_POST['doi']),
-
-    // 'add_date'      => mysqli_real_escape_string($mysqli_link, $_POST['add_date']),
 
     'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
 );

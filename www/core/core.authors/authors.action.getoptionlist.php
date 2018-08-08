@@ -8,10 +8,21 @@ $lang = getAllowedValue($lang, array(
     'en', 'ru', 'ua'
 ));
 
-$withoutid = isset($_GET['withoutid']) ? 1 : 0;
+$flag_without_id = isset($_GET['withoutid']) ? 1 : 0;
 
+$flag_legacy_format = isset($_GET['legacyformat']) ? 1 : 0;
 
-$query = "SELECT * FROM authors";
+$flag_with_orcid = isset($_GET['withorcid']) ? 1 : 0;
+
+$query = "
+SELECT
+id, 
+name_{$lang} as name,
+title_{$lang} as title,
+orcid 
+
+FROM authors";
+
 if ($result = mysqli_query($mysqli_link, $query)) {
     $ref_numrows = @mysqli_num_rows($result) ;
 
@@ -19,13 +30,27 @@ if ($result = mysqli_query($mysqli_link, $query)) {
     {
         $data['error'] = 0;
         $data['state'] = 'ok';
+
         while ($row = mysqli_fetch_assoc($result))
         {
-            $data['data'][ $row['id'] ] = array(
-                'type'      => 'option',
-                'value'     => $row['id'],
-                'text'      => returnAuthorsOptionString($row, $lang, $withoutid)
-            );
+            $prefix = (!$flag_without_id ? "[{$row['id']}]" : '');
+            $option_value = "{$prefix} {$row['name']}, {$row['title']}";
+
+            if ($flag_with_orcid && ($row['orcid'] != '')) {
+                $option_value .= " ({$row['orcid']})";
+            }
+
+            if ($flag_legacy_format) {
+                $row_result = $option_value;
+            } else {
+                $row_result = [
+                    'type'      => 'option',
+                    'value'     => $row['id'],
+                    'text'      => $option_value
+                ];
+            }
+
+            $data['data'][ $row['id'] ] = $row_result;
         }
     } else {
         $data['data']['1'] = 'Добавьте авторов в базу!!!';

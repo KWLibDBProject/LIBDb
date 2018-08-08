@@ -94,115 +94,6 @@ function printr($str)
 /* Три функции возврата данных в option соотв. селекта */
 /* объявление переехало в frontend_.php */
 
-/**
- * @param $row
- * @param $lang
- * @param $withoutid
- * @return string
- *
- * @todo:
- */
-function returnBooksOptionString($row, $lang, $withoutid)
-{
-    // @todo: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В <SELECT OPTIONS>
-    $id = ($withoutid == 1) ? '' : "[{$row['id']}] " ;
-
-    $title = ($row['title'] != '') ? $row['title'] : 'Unnamed';
-
-    return "{$id}\"{$title}\"";
-}
-
-/**
- * @param $row
- * @param $lang
- * @param $withoutid
- * @return string
- */
-function returnAuthorsOptionString($row, $lang, $withoutid)
-{
-    // @todo: ВАЖНО: ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ (оформить функцией на основе шаблона? )
-    // по идее можно и с шаблоном, но ну нафиг
-    $name = ''; $title = '';
-    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
-    switch ($lang) {
-        case 'en': {
-            $name = $row['name_en'];
-            $title = $row['title_en'];
-            break;
-        }
-        case 'ru': {
-            $name = $row['name_ru'];
-            $title = $row['title_ru'];
-            break;
-        }
-        case 'ua': {
-            $name = $row['name_ua'];
-            $title = $row['title_ua'];
-            break;
-        }
-    }
-    return $id.$name." , ".$title;
-}
-
-/**
- * @param $row
- * @param $lang
- * @param $withoutid
- * @return string
- */
-function returnTopicsOptionString($row, $lang, $withoutid)
-{
-    //ТУТ ЗАДАЕТСЯ ФОРМАТ ВЫВОДА ДАННЫХ В СЕЛЕКТ
-    $title = '';
-    switch ($lang) {
-        case 'en': {
-            $title = $row['title_en'];
-            break;
-        }
-        case 'ru': {
-            $title = $row['title_ru'];
-            break;
-        }
-        case 'ua': {
-            $title = $row['title_ua'];
-            break;
-        }
-    }
-    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
-    $title = ($title != '') ? $title : '< NONAME >';
-
-    return $id.$title;
-}
-
-/**
- * @param $row
- * @param $lang
- * @param $withoutid
- * @return string
- */
-function returnNewsOptionString($row, $lang, $withoutid) // © Thomas Moroh
-{
-    $id = ($withoutid==1) ? '' : "[{$row['id']}] " ;
-    switch ($lang) {
-        case 'en': {
-            $name = $row['text_en'];
-            $title = $row['title_en'];
-            break;
-        }
-        case 'ru': {
-            $name = $row['text_ru'];
-            $title = $row['title_ru'];
-            break;
-        }
-        case 'ua': {
-            $name = $row['text_ua'];
-            $title = $row['title_ua'];
-            break;
-        }
-    }
-    return $id."$name $title";
-}
-
 /*
 sell also:
 http://www.tools4noobs.com/online_php_functions/date_parse/
@@ -213,6 +104,7 @@ http://www.php.net/manual/ru/function.mktime.php
 /**
  * @param $str_date
  * @return array
+ * @todo: USELESS
  */
 function ConvertDateToArray($str_date)
 {
@@ -224,6 +116,7 @@ function ConvertDateToArray($str_date)
  * @param $str_date
  * @param string $format
  * @return int
+ * @todo: REFACTORING
  */
 function ConvertDateToTimestamp($str_date, $format="d.m.Y")
 {
@@ -234,6 +127,7 @@ function ConvertDateToTimestamp($str_date, $format="d.m.Y")
 /**
  * @param string $format
  * @return string
+ * @todo: DELETE after date refactoring
  */
 function ConvertTimestampToDate($format = '%Y-%m-%d %H:%M:%S')
 {
@@ -281,8 +175,10 @@ function getAllowedRef( $data, $allowed_values_array )
 /**
  * Проверяет заданную переменную на допустимость (на основе массива допустымых значений)
  * и если находит - возвращает её. В противном случае возвращает NULL.
+ *
  * @param $data
  * @param $allowed_values_array
+ * @return null|mixed
  */
 function getAllowedValue( $data, $allowed_values_array )
 {

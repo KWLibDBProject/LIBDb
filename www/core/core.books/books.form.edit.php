@@ -104,18 +104,19 @@ if ($id != -1)
 <head>
     <title>Сборники -- редактирование</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="../js/jquery.ui.datepicker.rus.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.ui.datepicker.rus.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
-    <script src="../js/jquery.colorbox.js"></script>
+    <script type="text/javascript" src="../js/jquery.colorbox.js"></script>
     <link rel="stylesheet" href="../css/colorbox.css" />
 
     <link rel="stylesheet" type="text/css" href="books.css">
     <link rel="stylesheet" type="text/css" href="../css/core.admin.css">
 
-    <script src="../js/core.js"></script>
+    <script type="text/javascript" src="../../frontend.js"></script>
+    <script type="text/javascript" src="../../frontend.options.js"></script>
 
     <script type="text/javascript">
         var we_can_delete_file = false;
@@ -127,17 +128,13 @@ if ($id != -1)
                 '1' : 'Да (опубликован)'
             }
         };
-        function ShowErrorMessage(message)
-        {
-            alert(message);
-        }
 
         $(document).ready(function () {
             if (0 == isBookExists) {
                 $('#form_book').hide();
                 $('#no_book_warning').show();
             } else {
-                BuildSelector('is_book_ready', is_published, <?php echo $book['published'] ?>);
+                BuildSelector('is_book_ready', is_published, '', <?php echo $book['published'] ?>);
             }
 
             $(".button-exit").on('click',function(event){

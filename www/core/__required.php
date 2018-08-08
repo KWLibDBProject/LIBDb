@@ -8,7 +8,6 @@ ini_set('pcre.backtrack_limit', 1024*1024); // 1 Mб
 require_once 'config/config.php';
 require_once 'core.php';
 require_once 'core.db.php';
-require_once 'core.kwt.php';
 require_once 'core.filestorage.php';
 require_once 'core.kwlogger.php';
 require_once 'websun.php';

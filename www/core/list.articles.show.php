@@ -13,25 +13,31 @@ ifNotLoggedRedirect('/core/');
 <head>
     <title>Список статей</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/core.js"></script>
-    <script src="/frontend.js"></script>
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../frontend.js"></script>
+    <script type="text/javascript" src="../frontend.options.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="core.articles/articles.css">
 
     <script type="text/javascript">
-        var authorsList = preloadOptionsList('core.authors/ref.authors.action.getoptionlist.php');
-        var booksList = preloadOptionsList('core.books/ref.books.action.getoptionlist.php'); // change to NEW link (books.action.getoptionlist)
-        var topicsList = preloadOptionsList('core.topics/ref.topics.action.getoptionlist.php');
         var url_extended = "core.articles/articles.action.list.php";
-        var url_get_articles_count = ""; //@todo: через ajax.php
+
+        var url_get_articles_count = ""; // ЗАЧЕМ оно нам? через ajax.php
+
+        var booksList = preloadOptionsList('core.books/books.action.getoptionlist.php');
+
+        var topicsList = preloadOptionsList('core.topics/topics.action.getoptionlist.php');
+
+        var authorsList = preloadOptionsList('core.authors/authors.action.getoptionlist.php');
+
+
 
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            BuildSelector('with_author',authorsList,0); // change to BuildSelectorExtended
-            BuildSelector('with_book',booksList,0);
-            BuildSelector('with_topic',topicsList,0);
+            BuildSelectorExtended('with_author',authorsList, '');
+            BuildSelectorExtended('with_book',booksList, '');
+            BuildSelectorExtended('with_topic',topicsList, '');
 
             setSelectorsByHash(".search_selector");
             $(".hash_selectors").on('change', '.search_selector', function(){
@@ -49,7 +55,7 @@ ifNotLoggedRedirect('/core/');
                 query = '';
             }
 
-            //@todo: дергаем базу на предмет количества статей
+            //??? дергаем базу на предмет количества статей
 
             // загружаем статьи согласно стартовым селекторам
             $("#articles_list").empty().load(url_extended + query);
@@ -97,20 +103,34 @@ ifNotLoggedRedirect('/core/');
 <hr>
 <fieldset class="hash_selectors">
     <legend>Критерии отбора</legend>
-    <dl>
-        <dt>Автор:</dt>
-        <dd>
-            <select name="with_author" class="search_selector"><option value="0">ЛЮБОЙ</option></option></select>
-        </dd>
-        <dt>Тематический раздел: </dt>
-        <dd>
-            <select name="with_topic" class="search_selector"><option value="0">ЛЮБОЙ</option></select>
-        </dd>
-        <dt>Сборник (книга):</dt>
-        <dd>
-            <select name="with_book" class="search_selector"><option value="0">ЛЮБОЙ</option></select>
-        </dd>
-    </dl>
+
+    <table border="0">
+        <tr>
+            <td>
+                Автор:
+            </td>
+            <td>
+                <select name="with_author" class="search_selector"><option value="0">ЛЮБОЙ</option></option></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Тематический раздел:&nbsp;&nbsp;&nbsp;
+            </td>
+            <td>
+                <select name="with_topic" class="search_selector"><option value="0">ЛЮБОЙ</option></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Сборник (книга):
+            </td>
+            <td>
+                <select name="with_book" class="search_selector"><option value="0">ЛЮБОЙ</option></select>
+            </td>
+        </tr>
+    </table>
+    <hr/>
     <button id="button-show-withselection" class="button-large">Показать выбранное</button>
     <button id="button-reset-selection" class="button-large">Сбросить критерии</button>
     <button id="button-show-all" class="button-large hidden">Показать ВСЕ статьи</button>

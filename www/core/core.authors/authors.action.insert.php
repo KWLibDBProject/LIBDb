@@ -3,10 +3,8 @@ require_once '../__required.php'; // $mysqli_link
 
 $table = 'authors';
 
-printr($_POST);
+// printr($_POST);
 
-
-$now = ConvertTimestampToDate();
 $q = array(
     'name_ru'       => trim($_POST['name_ru'] ?? '', ' '),
     'name_en'       => trim($_POST['name_en'] ?? '', ' '),

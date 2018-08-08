@@ -10,22 +10,19 @@ ifNotLoggedRedirect('/core/');
 <head>
     <title>Сборники -- добавление</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="../js/jquery.ui.datepicker.rus.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.ui.datepicker.rus.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
 
     <link rel="stylesheet" type="text/css" href="../css/core.admin.css">
     <link rel="stylesheet" type="text/css" href="books.css">
 
-    <script src="../js/core.js"></script>
+    <script type="text/javascript" src="../../frontend.js"></script>
+    <script type="text/javascript" src="../../frontend.options.js"></script>
+
 
     <script type="text/javascript">
-        function ShowErrorMessage(message)
-        {
-            alert(message);
-        }
-
         $(document).ready(function () {
         $("#actor-exit").on('click',function(event){
             window.location.href = '../list.books.show.php';

@@ -10,7 +10,8 @@
     <link rel="stylesheet" type="text/css" href="authors.css">
     <style type="text/css"></style>
 
-    <script type="text/javascript" src="../js/core.js"></script>
+    <script type="text/javascript" src="../../frontend.js"></script>
+    <script type="text/javascript" src="../../frontend.options.js"></script>
     <script type="text/javascript" src="authors.js"></script>
 
     <script type="text/javascript" src="../js/jquery.colorbox.js"></script>
@@ -31,16 +32,22 @@
                 $(".actor-button-remove").show().on('click',function(event){
                     window.location.href = 'authors.action.remove.php?id='+author_id;
                 });
+
+                BuildSelector('selfhood', selfhoodList, '', currentSelfhood);
+
             } else {
-                $("select[name='selfhood']").prop('disabled', true); // значение селекта 'selfhood' для нового автора
+
+                BuildSelector('selfhood', selfhoodList, '', 0);
+                DisableSelectorByName('selfhood');
+
+                // $("select[name='selfhood']").prop('disabled', true); // значение селекта 'selfhood' для нового автора
             }
             /* флажки установим (полностью отвязывая блок с файлами от оверрайда шаблона)
             для ADD (author_id == -1) - true, EDIT: false */
             $("button[name='file_current_id_show']").prop('disabled', (author_id == -1) );
 
-
             //@hint: создать селектор 'selfhood' (мы создаем его, лишь узнав текущее значение)
-            BuildSelector('selfhood', selfhoodList, currentSelfhood);
+
 
             $(".actor-button-exit").on('click',function(event){
                 window.location.href = '/core/list.authors.show.php';
