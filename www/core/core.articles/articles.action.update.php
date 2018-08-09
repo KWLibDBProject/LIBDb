@@ -6,8 +6,6 @@ $result['error'] = 0;
 
 $article_id = $_POST['article_id'];
 
-$link = ConnectDB();
-
 $q = array(
     'udc'               => str_replace(" ", "", mysqli_real_escape_string($mysqli_link, $_POST['udc'])),
     'title_en'          => trim(mysqli_real_escape_string($mysqli_link, $_POST['title_en'])),
@@ -92,7 +90,7 @@ $template_dir = '$/core/_templates';
 $template_file = "ref.all_timed_callback.html";
 
 $template_data = array(
-    'time'          => $CONFIG['callback_timeout'] ?? 15,
+    'time'          => Config::get('callback_timeout') ?? 15,
     'target'        => '../list.articles.show.php',
     'button_text'   => 'Вернуться к списку статей',
 );

@@ -1,5 +1,6 @@
 <?php
 define('__ROOT__', __DIR__);
+define('__CONFIG__', __DIR__ . 'config');
 
 require_once (__ROOT__ . '/core/__required.php');
 require_once 'frontend.php';
@@ -13,8 +14,8 @@ $maincontent_css = '';
 
 $main_template_data = array();
 
-$main_theme_name    = $CONFIG['frontend_template_name']; // 'template.bootstrap24'
-$main_theme_dir     = $CONFIG['frontend_template_name']; // так же, но может измениться ( имя папки без начального и конечного слэша !!!)
+$main_theme_name    = Config::get('frontend/theme/frontend_template_name');
+$main_theme_dir     = Config::get('frontend/theme/template_dir');
 
 $main_template_file = "index.{$site_language}.html";
 
@@ -382,7 +383,7 @@ switch ($fetch) {
 $main_template_data['content_jquery'] = $maincontent_js;
 $main_template_data['content_html'] = $maincontent_html;
 $main_template_data['content_css'] = $maincontent_css;
-$main_template_data['frontend_assets_mode'] = $CONFIG['frontend_assets_mode'];
+$main_template_data['frontend_assets_mode'] = Config::get('frontend/assets_mode');
 
 $content = \Websun\websun::websun_parse_template_path($main_template_data, $main_template_file, "$/{$main_theme_dir}");
 $content = preg_replace('/^\h*\v+/m', '', $content);

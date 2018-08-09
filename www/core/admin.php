@@ -3,6 +3,9 @@
  * User: Arris
  * Date: 03.08.2018, time: 4:08
  */
+define('__ROOT__', '/');
+define('__CONFIG__', '/config');
+
 require_once '__required.php'; // $mysqli_link
 
 $SID = session_id();

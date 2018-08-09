@@ -5,14 +5,20 @@
  */
 ini_set('pcre.backtrack_limit', 1024*1024); // 1 Mб
 
-require_once 'config/config.php';
+require_once 'class.config.php';
+require_once 'class.filestorage.php';
+require_once 'class.kwlogger.php';
+require_once 'class.websun.php';
 require_once 'core.php';
 require_once 'core.db.php';
-require_once 'core.filestorage.php';
-require_once 'core.kwlogger.php';
-require_once 'websun.php';
 
-// require_once 'config/config.class.php';
+Config::init([
+    '/'             =>  'config/config.php',
+    'filestorage'   =>  'config/filestorage.php',
+    'kwlogger'      =>  'config/logging.php'
+]);
+
+// Config::dump();
 
 $mysqli_link = ConnectDB();
 

@@ -34,6 +34,7 @@ $q = array(
     'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
 );
 
+
 // теперь нам нужно вставить данные в БАЗУ
 $qstr = MakeInsert($q,'articles');
 $res = mysqli_query($mysqli_link, $qstr) or Die("Невозможно вставить данные в базу  ".$qstr);
@@ -79,7 +80,7 @@ $template_dir = '$/core/_templates';
 $template_file = "ref.all_timed_callback.html";
 
 $template_data = array(
-    'time'          => $CONFIG['callback_timeout'] ?? 15,
+    'time'          => Config::get('callback_timeout') ?? 15,
     'target'        => '../list.articles.show.php',
     'button_text'   => 'Вернуться к списку статей',
 );

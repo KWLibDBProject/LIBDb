@@ -3,8 +3,6 @@ require_once '../__required.php'; // $mysqli_link
 
 $table = 'authors';
 
-// printr($_POST);
-
 $q = array(
     'name_ru'       => trim($_POST['name_ru'] ?? '', ' '),
     'name_en'       => trim($_POST['name_en'] ?? '', ' '),
@@ -65,7 +63,7 @@ if (isAjaxCall()) {
         $template_file = "ref.all_timed_callback.html";
 
         $template_data = array(
-            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'time'          => Config::get('callback_timeout') ?? 15,
             'target'        => '/core/list.authors.show.php',
             'button_text'   => 'Вернуться к списку авторов',
             'message'       => "Автор добавлен в базу данных, его внутренний идентификатор = {$new_author_id}"

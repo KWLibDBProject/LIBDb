@@ -19,7 +19,7 @@ data_comment varchar 64
 
 $reference = isset($_GET['ref']) ? $_GET['ref'] : ''; // вообще то если ref не задано - работать не с чем
 
-$reference = getAllowedRef( $reference , $CONFIG['allowed_abstract_refs']);
+$reference = getAllowedRef( $reference , Config::get('allowed_abstract_refs'));
 
 $return = '';
 

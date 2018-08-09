@@ -31,7 +31,7 @@ $template_dir = '$/core/_templates';
 $template_file = "ref.all_timed_callback.html";
 
 $template_data = array(
-    'time'          => $CONFIG['callback_timeout'] ?? 15,
+    'time'          => Config::get('callback_timeout') ?? 15,
     'target'        => '../list.articles.show.php',
     'button_text'   => 'Вернуться к списку статей',
 );

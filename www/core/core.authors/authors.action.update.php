@@ -63,7 +63,7 @@ if (isAjaxCall()) {
         $template_file = "ref.all_timed_callback.html";
 
         $template_data = array(
-            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'time'          => Config::get('callback_timeout') ?? 15,
             'target'        => '/core/list.authors.show.php',
             'button_text'   => 'Вернуться к списку авторов',
             'message'       => "Информация об авторе c внутренним идентификатором {$id} обновлена"

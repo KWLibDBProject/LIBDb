@@ -5,8 +5,8 @@ define('__ROOT__', __DIR__);
 require_once (__ROOT__ . '/core/__required.php');
 require_once 'frontend.php';
 
-$main_theme_name    = $CONFIG['frontend_template_name']; // 'template.bootstrap24'
-$main_theme_dir     = $CONFIG['frontend_template_name']; // так же, но может измениться (имя папки с темой в корне, но только имя папки!!!)
+$main_theme_name    = Config::get('frontend/theme/frontend_template_name');
+$main_theme_dir     = Config::get('frontend/theme/template_dir');
 
 $actor = isset($_GET['actor']) ? $_GET['actor'] : ''; // безопасный результат - проверка в switch
 $lang = isset($_GET['lang']) ? GetRequestLanguage($_GET['lang']) : 'en';

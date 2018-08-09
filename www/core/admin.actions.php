@@ -19,11 +19,11 @@ switch ($action) {
         $result = DBLoginCheck($_POST['login'], $_POST['md5password']);
 
         if ($result['error']==0) {
-            $_SESSION[ $CONFIG['session']['user_id'] ] = $result['id'];
-            $_SESSION[ $CONFIG['session']['user_permissions']] = $result['permissions'];
+            $_SESSION[ Config::get('session/user_id') ] = $result['id'];
+            $_SESSION[ Config::get('session/user_permissions')] = $result['permissions'];
 
-            setcookie( $CONFIG['cookies']['user_is_logged'], $result['id'], 0, '/');
-            setcookie( $CONFIG['cookies']['user_permissions'], $result['permissions'], 0, '/'); //ENCRYPT COOKIE ?
+            setcookie( Config::get('cookies/user_is_logged'), $result['id'], 0, '/');
+            setcookie( Config::get('cookies/user_permissions'),  $result['permissions'], 0, '/');
 
             Redirect('/core/admin.php');
         } else {
@@ -42,14 +42,14 @@ ERRORMESSAGE
     case 'try:logout': {
         kwLogger::logEvent('login', 'userlist', $_SESSION['u_username'], 'User logged out');
 
-        $key_cookie_is_logged = $CONFIG['cookies']['user_is_logged'];
-        $key_session_is_logged = $CONFIG['session']['user_is_logged'];
+        $key_cookie_is_logged = Config::get('cookies/user_is_logged');
+        $key_session_is_logged = Config::get('session/user_is_logged');
 
-        $key_cookie_u_permissions = $CONFIG['cookies']['user_permissions'];
-        $key_session_u_permissions = $CONFIG['session']['user_permissions'];
+        $key_cookie_u_permissions = Config::get('cookies/user_permissions');
+        $key_session_u_permissions = Config::get('session/user_permissions');
 
-        $key_cookie_u_id = $CONFIG['cookies']['user_id'];
-        $key_session_u_id = $CONFIG['session']['user_id'];
+        $key_cookie_u_id = Config::get('cookies/user_id');
+        $key_session_u_id = Config::get('session/user_id');
 
         setcookie( $key_cookie_is_logged, FALSE, -1, '/');
         unset($_COOKIE[ $key_cookie_is_logged ]);

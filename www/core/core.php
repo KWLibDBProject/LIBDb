@@ -58,10 +58,8 @@ function Redirect($url)
  */
 function isLogged()
 {
-    global $CONFIG;
-
-    $key_session_userid = $CONFIG['session']['user_id'];
-    $key_cookie_is_logged = $CONFIG['cookies']['user_is_logged'];
+    $key_session_userid = Config::get('session/user_id');
+    $key_cookie_is_logged = Config::get('cookies/user_is_logged');
 
     // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
     $we_are_logged = !empty($_SESSION);
@@ -208,8 +206,7 @@ function at($array, $key, $default)
 
 function ossl_encrypt($data)
 {
-    global $CONFIG;
-    $OPENSSL_ENCRYPTION_KEY = $CONFIG['OPENSSL_ENCRYPTION_KEY'];
+    $OPENSSL_ENCRYPTION_KEY = Config::get('OPENSSL_ENCRYPTION_KEY');
 
     $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
     $iv = openssl_random_pseudo_bytes($ivlen);
@@ -222,8 +219,7 @@ function ossl_encrypt($data)
 
 function ossl_decrypt($data)
 {
-    global $CONFIG;
-    $OPENSSL_ENCRYPTION_KEY = $CONFIG['OPENSSL_ENCRYPTION_KEY'];
+    $OPENSSL_ENCRYPTION_KEY = Config::get('OPENSSL_ENCRYPTION_KEY');
 
     $c = base64_decode($data);
     $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");

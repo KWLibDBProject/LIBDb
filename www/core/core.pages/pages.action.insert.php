@@ -35,7 +35,7 @@ if (isAjaxCall()) {
         $template_file = "ref.all_timed_callback.html";
 
         $template_data = array(
-            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'time'          => Config::get('callback_timeout') ?? 15,
             'target'        => '../list.pages.show.php',
             'button_text'   => 'Вернуться к списку страниц',
             'message'       => 'Статическая страница добавлена'

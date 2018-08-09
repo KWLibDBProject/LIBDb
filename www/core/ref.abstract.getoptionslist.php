@@ -4,8 +4,7 @@ require_once '__required.php'; // $mysqli_link
 // отдает JSON объект для построения selector/options list на основе абстрактного справочника
 $ref = (isset($_GET['ref'])) ? $_GET['ref'] : '';
 
-$ref = getAllowedValue( $ref, $CONFIG['allowed_abstract_refs'] );
-//@todo: Config::get('allowed', 'allowed_abstract_ref');
+$ref = getAllowedValue($ref, Config::get('allowed_abstract_refs'));
 
 if (!empty($ref))
 {

@@ -33,9 +33,7 @@ function GetRequestLanguage($request_string)
  */
 function GetSiteLanguage()
 {
-    global $CONFIG;
-
-    $cookie_name = $CONFIG['cookie_site_language'];
+    $cookie_name = Config::get('cookie_site_language');
 
     $lang = 'en';
     if (isset($_COOKIE[ $cookie_name ]) && $_COOKIE[ $cookie_name ] != '') {
@@ -295,24 +293,25 @@ ORDER BY books.title DESC ";
 
     $all_books = [];
 
-    while ($book_any = mysqli_fetch_assoc($br)) {
-        $book = [
-            'year'      =>  $book_any['year'],
-            'bid'       =>  $book_any['bid'],
-            'title'     =>  $book_any['title'],
-            'count'     =>  $book_any['articles_count'],
-            'is_active' =>  $is_active
-        ];
+    if ($br) {
+        while ($book_any = mysqli_fetch_assoc($br)) {
+            $book = [
+                'year'      =>  $book_any['year'],
+                'bid'       =>  $book_any['bid'],
+                'title'     =>  $book_any['title'],
+                'count'     =>  $book_any['articles_count'],
+                'is_active' =>  $is_active
+            ];
 
-        // kwt-variant
-        // $all_books[ $book_any['year'] ][ $book_any['bid'] ] = $book;
+            // websun variant
+            $all_books[ $book_any['year'] ]['yearly_books'][ $book_any['bid'] ] = $book;
+            $all_books[ $book_any['year'] ]['is_active'] = $is_active;
 
-        // websun variant
-        $all_books[ $book_any['year'] ]['yearly_books'][ $book_any['bid'] ] = $book;
-        $all_books[ $book_any['year'] ]['is_active'] = $is_active;
-
-        $is_active = 0;
+            $is_active = 0;
+        }
     }
+
+
 
     return $all_books;
 }

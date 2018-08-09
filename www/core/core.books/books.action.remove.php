@@ -60,7 +60,7 @@ if (!IsSet($_GET['id'])) {
         $template_file = "ref.all_timed_callback.html";
 
         $template_data = array(
-            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'time'          => Config::get('callback_timeout') ?? 15,
             'target'        => '../list.books.show.php',
             'button_text'   => 'Вернуться к списку сборников',
             'message'       => $result['message']

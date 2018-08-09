@@ -10,7 +10,6 @@ if (!IsSet($_GET['ref_name'])) {
 } else {
     $table = 'topicgroups';
     $id = intval($_GET["id"]);
-    $link = ConnectDB();
 
     $q = "DELETE FROM {$table} WHERE id = {$id} ";
     if ($r = mysqli_query($mysqli_link, $q)) {

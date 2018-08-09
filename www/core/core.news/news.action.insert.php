@@ -3,8 +3,6 @@ require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'news';
 
-
-
 $q = array(
     'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
 
@@ -46,7 +44,7 @@ if (isAjaxCall()) {
         $template_file = "ref.all_timed_callback.html";
 
         $template_data = array(
-            'time'          => $CONFIG['callback_timeout'] ?? 15,
+            'time'          => Config::get('callback_timeout') ?? 15,
             'target'        => '../list.news.show.php',
             'button_text'   => 'Вернуться к списку новостей',
             'message'       => 'Новость добавлена'

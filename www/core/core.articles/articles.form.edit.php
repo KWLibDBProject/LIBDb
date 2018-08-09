@@ -216,7 +216,7 @@ if ($numarticles == 1)
         <legend>Выпускные данные:</legend>
 
         <label for="the_topic">Тематический раздел (рубрика): </label>
-        <select name="topic" id="the_topic"></select>
+        <select name="topic" id="the_topic" required></select>
 
         <label for="udc">УДК:</label>
         <input type="text" name="udc" id="udc" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['udc']; ?>">
@@ -226,15 +226,15 @@ if ($numarticles == 1)
         <legend>Сборник</legend>
 
         <label for="pages">Статья опубликована на страницах
-            <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>">
+            <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>" required>
         </label>
 
         <label for="the_book">... сборника:
-            <select name="book" id="the_book"></select>
+            <select name="book" id="the_book" required></select>
         </label>
         <br/>
         <label for="datepicker">Дата приема на публикацию:
-            <input type="text" id="datepicker" name="date_add" value="<?php echo $the_article['date_add']; ?>">
+            <input type="text" id="datepicker" name="date_add" value="<?php echo $the_article['date_add']; ?>" required>
         </label>
         <label for="doi">DOI:
             <input type="text" id="doi" name="doi" value="<?php echo $the_article['doi']; ?>" size="40">

@@ -7,9 +7,10 @@ require_once('config/config.php');
  */
 function ConnectDB()
 {
-    global $CONFIG;
-    $link = mysqli_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password'], $CONFIG['database'], $CONFIG['port'])
-            or die("Can't establish connection to '{$CONFIG['hostname']}' for user '{$CONFIG['username']}' at '{$CONFIG['database']}' database");
+    $db_config = Config::get('database');
+
+    $link = mysqli_connect($db_config['hostname'], $db_config['username'], $db_config['password'], $db_config['database'], $db_config['port'])
+            or die("Can't establish connection to '{$db_config['hostname']}' for user '{$db_config['username']}' at '{$db_config['database']}' database");
     mysqli_query($link, "SET NAMES utf8");
     return $link;
 }
@@ -52,7 +53,6 @@ function DB_EscapeArray( $array )
 
 function MakeInsertEscaped($array, $table, $where = "")
 {
-    global $mysqli_link;
     $arr = DB_EscapeArray( $array );
     $query = "INSERT INTO $table ";
 
@@ -110,10 +110,9 @@ function MakeUpdate($arr, $table, $where="")
 
 function DBLoginCheck($login, $password)
 {
-    global $CONFIG;
     global $mysqli_link;
     // возвращает массив с полями "error" и "message"
-    $link = ConnectDB();
+
     // логин мы передали точно совершенно, мы это проверили в скрипте, а пароль может быть и пуст
     // а) логин не существует
     // б) логин существует, пароль неверен
