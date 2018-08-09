@@ -30,7 +30,8 @@ $template_data = [
         'news'      =>  DBGetCount('id', 'news')
     ],
     'resources' =>  [
-        'disk_space_available'  =>  ConvertToHumanBytes( disk_free_space( FileStorage::getStorageDir() ) , 1)
+        'disk_space_available'  =>  ConvertToHumanBytes( disk_free_space( FileStorage::getStorageDir() ) , 1),
+        'max_upload_filesize'   =>  ini_get('upload_max_filesize')
     ],
     'limits'    =>  [
         'post_max_size'         => ini_get('post_max_size'),
