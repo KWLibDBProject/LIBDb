@@ -36,6 +36,8 @@ $main_template_data['all_banners']  = LoadBanners();
 // $main_template_data['last_news_shortlist'] = printLastNews($main_theme_dir, 3, $site_language);
 $main_template_data['last_news_list'] = LoadLastNews($site_language, 3);
 
+$main_template_data['meta'] = Config::get('frontend_meta');
+
 // Main switch
 $fetch  = at( $_GET, 'fetch', '' );
 $with   = at( $_GET, 'with' , '' );
@@ -254,7 +256,7 @@ switch ($fetch) {
                     'site_lang'             => $site_language
                 ];
 
-                if (isset($article_info['keywords']) && $article_info['keywords'] != '') $main_template_data['meta_keywords'] = $article_info['keywords'];
+                if (isset($article_info['keywords']) && $article_info['keywords'] != '') $main_template_data['meta']['keywords'] = $article_info['keywords'];
 
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
@@ -385,6 +387,8 @@ $main_template_data['content_jquery'] = $maincontent_js;
 $main_template_data['content_html'] = $maincontent_html;
 $main_template_data['content_css'] = $maincontent_css;
 $main_template_data['frontend_assets_mode'] = Config::get('frontend/assets_mode');
+
+$main_template_data['meta']['copyright'] = Config::get('meta/copyright', '');
 
 $content = \Websun\websun::websun_parse_template_path($main_template_data, $main_template_file, "$/{$main_theme_dir}");
 $content = preg_replace('/^\h*\v+/m', '', $content);
