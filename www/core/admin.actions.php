@@ -1,6 +1,6 @@
 <?php
 /**
- * User: Arris
+ * User: Karel Wintersky
  * Date: 03.08.2018, time: 4:18
  */
 // prepare data

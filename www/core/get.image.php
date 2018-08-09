@@ -7,7 +7,7 @@ $is_downloading = isset($_SERVER['HTTP_REFERER']);
 
 if ($id != -1) {
 
-    FileStorage::init($mysqli_link);
+    // FileStorage::init($mysqli_link);
     $file_info = FileStorage::getFileInfo($id); //@todo: а если файла нет? см. ниже getFileContent()
 
     /* update stat_download_counter

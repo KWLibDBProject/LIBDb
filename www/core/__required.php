@@ -14,7 +14,7 @@ require_once 'core.db.php';
 
 Config::init([
     '/'             =>  'config/config.php',
-    'filestorage'   =>  'config/filestorage.php',
+    'filestorage'   =>  'config/config.filestorage.php',
     'kwlogger'      =>  'config/config.logging.php'
 ]);
 

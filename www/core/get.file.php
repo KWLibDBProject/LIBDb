@@ -4,7 +4,8 @@ require_once '__required.php'; // $mysqli_link
 // сделать возможность просмотра файла как по АЙДИ, так и по ЮЗЕРНЕЙМ
 $fid = IsSet($_GET['id']) ? intval($_GET['id']) : Die();
 
-FileStorage::init($mysqli_link);
+// FileStorage::init($mysqli_link); // already in required
+
 $file_info = FileStorage::getFileInfo($fid);
 
 if (!$file_info) {

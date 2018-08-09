@@ -6,19 +6,22 @@ require_once('class.kwlogger.php');
 /**
  *
  */
-class FileStorage extends FileStorageConfig
+class FileStorage
 {
     /**
      * @var mysqli
      */
     private static $mysqli_link;
 
+    public static $config = [];
+
     /**
      * @param $mysqli_link
      */
-    public static function init($mysqli_link)
+    public static function init($mysqli_link, $config)
     {
         self::$mysqli_link = $mysqli_link;
+        self::$config = $config;
     }
 
     /* возвращает blob-строку пустого PDF-файла */
@@ -72,7 +75,7 @@ class FileStorage extends FileStorageConfig
      */
     private static function getSQLTable()
     {
-        return parent::$config['table'];
+        return self::$config['table'];
     }
 
     /**
@@ -83,7 +86,7 @@ class FileStorage extends FileStorageConfig
      */
     private static function getRealFileName($filename)
     {
-        $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(parent::$config['path'], '/') . '/' . $filename;
+        $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(self::$config['path'], '/') . '/' . $filename;
         return $filename;
     }
 
@@ -94,7 +97,7 @@ class FileStorage extends FileStorageConfig
      */
     public static function getStorageDir()
     {
-        return rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(parent::$config['path'], '/') . '/';
+        return rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(self::$config['path'], '/') . '/';
     }
 
     /* построение внутреннего имени на основе информации о файле */
@@ -176,7 +179,7 @@ class FileStorage extends FileStorageConfig
     {
         $file_content = floadfile($fileinfo['tempname']);
 
-        if (parent::$config['save_to_disk']) {
+        if (self::$config['save_to_disk']) {
             // save to file
             $filename = self::getRealFileName($fileinfo['internal_name']);
             $fh = @fopen($filename, "wb");
@@ -193,7 +196,7 @@ class FileStorage extends FileStorageConfig
             usleep(100000);// sleep 0.1 sec
         }
 
-        if (parent::$config['save_to_db'])
+        if (self::$config['save_to_db'])
         {
             $qc = MakeUpdate(array(
                 'content' => mysqli_real_escape_string(self::$mysqli_link, $file_content)
@@ -238,9 +241,9 @@ class FileStorage extends FileStorageConfig
     public static function getFileContent($id)
     {
         $ret = '';
-        if (parent::$config['return_data_from'] == 'table') {
+        if (self::$config['return_data_from'] == 'table') {
             $ret = self::__getFileContent_db($id);
-        } else if (parent::$config['return_data_from'] == 'disk') {
+        } else if (self::$config['return_data_from'] == 'disk') {
             $ret = self::__getFileContent_disk($id);
         } else $ret = null;
         return $ret;
@@ -350,6 +353,8 @@ class FileStorage extends FileStorageConfig
             $now = ConvertTimestampToDate();
             $file_info = array(
                 'username'      => $file_array['name'],
+
+                // legacy? наследие денвера?
                 'tempname'      => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\', ($file_array['tmp_name'])) : ($file_array['tmp_name']),
                 'filesize'      => $file_array['size'],
                 'relation'      => $related_id,
@@ -563,8 +568,3 @@ class FileStorage extends FileStorageConfig
 
 } // class
 
-//@TODO: filestorage maintanance
-/*
-оповещение о "лишних" записях о файлах в базе (не найден на диске)
-оповещение о "лишних" файлах на диске (не найден в базе)
-*/
