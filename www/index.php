@@ -24,18 +24,17 @@ $main_template_data['template_name'] = $main_theme_name; // template name , defi
 $main_template_data['template_theme_dir'] = $main_theme_dir;
 
 /**   * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне) */
-$main_template_data['rubrics']    = printTopicsTree($site_language);
+$main_template_data['rubrics']    = printTopicsTree($site_language);    //@todo: когда-нибудь это надо отрефакторить
 
 /**  * Блок "выпуски"  */
-// $main_template_data['books']        = printBooks($main_theme_dir); // рендер WEBSUN
 $main_template_data['all_books']    = LoadBooks();
 
 /**  * Блок "баннеры" */
-// $main_template_data['banners']    = printBanners($main_theme_dir); // рендер WEBSUN
 $main_template_data['all_banners']  = LoadBanners();
 
 /* Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне) */
-$main_template_data['last_news_shortlist'] = printLastNews($main_theme_dir, 3, $site_language);
+// $main_template_data['last_news_shortlist'] = printLastNews($main_theme_dir, 3, $site_language);
+$main_template_data['last_news_list'] = LoadLastNews($site_language, 3);
 
 // Main switch
 $fetch  = at( $_GET, 'fetch', '' );

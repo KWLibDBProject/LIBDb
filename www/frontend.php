@@ -876,69 +876,6 @@ FE_PrintTopics_Each;
 }
 
 /**
- * возвращает рендер websun
- *
- * ВОЗМОЖНО, нужно возвращать ARRAY, который разбирать в шаблоне
- * ИЛИ
- * возвращать ARRAY, а в шаблоне подключать через {* + _main_subtemplates/frontpage_books_section.html *}
- * только ему передавать надо правильно, чтобы в глобальном оверрайде не затереть лишнего
- *
- * @param $template_name
- * @return mixed
- *
- * @todo: useless, в главном шаблоне используем LoadBanners() и подключаем файл через {* +... *}
- */
-function printBooks($template_name)
-{
-    $all_books = LoadBooks();
-
-    // этот шаблон надо подключать в основном шаблоне, передавая в 'all_books' результат LoadBooks()
-    // ВАЖНО: по аналогии можно написать и TOPICS+TOPIC GROUPS
-
-    $template_dir = "$/{$template_name}/_main_subtemplates";
-    $template_file = "frontpage_books_section.html";
-
-    $template_data = array(
-        'all_books' =>  $all_books
-    );
-
-    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
-
-    return $render_result;
-}
-
-/**
- * оформляет массив баннеров в LI-список, возвращает РЕНДЕР WEBSUN
- *
- * ВОЗМОЖНО, нужно возвращать ARRAY, который разбирать в шаблоне
- * ИЛИ
- * возвращать ARRAY, а в шаблоне подключать через {* + _main_subtemplates/frontpage_books_section.html *}
- * только ему передавать надо правильно, чтобы в глобальном оверрайде не затереть лишнего
- *
- * @param $template_name
- * @return mixed
- *
- * @todo: useless, в главном шаблоне используем LoadBanners() и подключаем файл через {* +... *}
- */
-function printBanners($template_name)
-{
-    $template_dir = "$/{$template_name}/_main_subtemplates";
-    $template_file = "frontpage_banners_section.html";
-
-    $template_data = array(
-        'all_banners' =>  LoadBanners()
-    );
-
-    // ? перенести в основной шаблон как подключение файла с передачей ему параметров
-
-    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
-
-    return $render_result;
-
-}
-
-
-/**
  * список статей в виде plain/list (для поисковых систем)
  * похоже по логике на getArticlesList, но другой формат вывода
  *
@@ -1054,6 +991,10 @@ function getPagesPrefix_forArticles($lang)
     return $result;
 }
 
+
+/* ============================================ USELESS METHODS ========================================= */
+
+
 /**
  * возвращает длинную строку с новостями -- результат подставляется в override-переменную
  * новостного блока (справа под сборниками)
@@ -1064,6 +1005,8 @@ function getPagesPrefix_forArticles($lang)
  * @param int $count
  * @param string $language
  * @return mixed
+ *
+ * @todo: useless, в главном шаблоне используем LoadLastNews() и подключаем файл через {* +... *}
  */
 function printLastNews($template_name, $count = 3, $language = 'en')
 {
@@ -1073,6 +1016,68 @@ function printLastNews($template_name, $count = 3, $language = 'en')
     $template_data = array(
         'last_news_list' =>  LoadLastNews($language, $count)
     );
+
+    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
+    return $render_result;
+
+}
+
+/**
+ * возвращает рендер websun
+ *
+ * ВОЗМОЖНО, нужно возвращать ARRAY, который разбирать в шаблоне
+ * ИЛИ
+ * возвращать ARRAY, а в шаблоне подключать через {* + _main_subtemplates/frontpage_books_section.html *}
+ * только ему передавать надо правильно, чтобы в глобальном оверрайде не затереть лишнего
+ *
+ * @param $template_name
+ * @return mixed
+ *
+ * @todo: useless, в главном шаблоне используем LoadBooks() и подключаем файл через {* +... *}
+ */
+function printBooks($template_name)
+{
+    $all_books = LoadBooks();
+
+    // этот шаблон надо подключать в основном шаблоне, передавая в 'all_books' результат LoadBooks()
+    // ВАЖНО: по аналогии можно написать и TOPICS+TOPIC GROUPS
+
+    $template_dir = "$/{$template_name}/_main_subtemplates";
+    $template_file = "frontpage_books_section.html";
+
+    $template_data = array(
+        'all_books' =>  $all_books
+    );
+
+    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+
+    return $render_result;
+}
+
+/**
+ * оформляет массив баннеров в LI-список, возвращает РЕНДЕР WEBSUN
+ *
+ * ВОЗМОЖНО, нужно возвращать ARRAY, который разбирать в шаблоне
+ * ИЛИ
+ * возвращать ARRAY, а в шаблоне подключать через {* + _main_subtemplates/frontpage_books_section.html *}
+ * только ему передавать надо правильно, чтобы в глобальном оверрайде не затереть лишнего
+ *
+ * @param $template_name
+ * @return mixed
+ *
+ * @todo: useless, в главном шаблоне используем LoadBanners() и подключаем файл через {* +... *}
+ */
+function printBanners($template_name)
+{
+    $template_dir = "$/{$template_name}/_main_subtemplates";
+    $template_file = "frontpage_banners_section.html";
+
+    $template_data = array(
+        'all_banners' =>  LoadBanners()
+    );
+
+    // ? перенести в основной шаблон как подключение файла с передачей ему параметров
 
     $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
 
