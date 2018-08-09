@@ -885,6 +885,8 @@ FE_PrintTopics_Each;
  *
  * @param $template_name
  * @return mixed
+ *
+ * @todo: useless, в главном шаблоне используем LoadBanners() и подключаем файл через {* +... *}
  */
 function printBooks($template_name)
 {
@@ -915,6 +917,8 @@ function printBooks($template_name)
  *
  * @param $template_name
  * @return mixed
+ *
+ * @todo: useless, в главном шаблоне используем LoadBanners() и подключаем файл через {* +... *}
  */
 function printBanners($template_name)
 {
