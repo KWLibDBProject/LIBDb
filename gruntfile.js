@@ -44,9 +44,4 @@ module.exports = function(grunt) {
 
     // 4. Указываем, какие задачи выполняются, когда мы вводим «grunt» в терминале
     grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
-/*
- <link rel="stylesheet" href="/styles.min.css">
- <script type="text/javascript" src="/scripts.min.js"></script>
-
- */
 };

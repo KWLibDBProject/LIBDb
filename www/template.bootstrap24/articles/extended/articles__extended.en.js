@@ -1,3 +1,4 @@
+/* articles__extended */
 var siteLanguage = '&lang=en';
 var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optgroup_list'+siteLanguage);
 var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist_extended'+siteLanguage);
@@ -64,3 +65,4 @@ $("#button-toggle-search").on('click',function(){
     $('#extended_search').toggle();
     $('#expert_search').toggle();
 });
+/* articles__extended */

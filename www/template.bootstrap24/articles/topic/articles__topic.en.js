@@ -1,4 +1,4 @@
-/* */
+/* articles__topic */
 var topic_id = +$("#articles__topic__topic_id").val();
 var siteLanguage = '&lang=' + $("#articles__topic__site_language").val();
 
@@ -30,3 +30,4 @@ $("#button-show-all").on('click',function(){
 $('#articles_list').on('click','.more_info',function(){
     location.href = '?fetch=articles&with=info&id='+$(this).attr('name')+siteLanguage;
 });
+/* articles__topic */

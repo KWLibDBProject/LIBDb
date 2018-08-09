@@ -80,7 +80,7 @@ switch ($fetch) {
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS style file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.css", $subtemplate_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
@@ -98,7 +98,7 @@ switch ($fetch) {
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS style file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.css", $subtemplate_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
@@ -134,7 +134,7 @@ switch ($fetch) {
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS style file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.css", $subtemplate_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
@@ -149,14 +149,14 @@ switch ($fetch) {
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /**
-                 * Здесь можно использовать единый JS-файл с замещаемым значением, но я оставлю так - в файле генерируется
-                 * select/option с дефолтным значением (пока везде на английском, но это, возможно, надо будет изменить)
+                 * Здесь можно использовать единый JS-файл с замещаемым значением, но я оставлю так - в файле используется
+                 * select/option с дефолтным значением
                  */
                 $inner_js_data = [ 'site_language' =>  $site_language ];
                 $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
                 /** single CSS style file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.css", $subtemplate_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
@@ -201,8 +201,10 @@ switch ($fetch) {
                 // результаты поиска загружаются аяксом,
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                /** single JS file */
-                $maincontent_js = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.js", $subtemplate_dir);
+                /** используются разные JS-файлы
+                 * можно было бы сделать один и передавать ему заменяемую переменную, но это лишний код для её генерации на основе языка
+                 */
+                $maincontent_js = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
                 break;
             }
@@ -223,8 +225,8 @@ switch ($fetch) {
                 // результаты поиска загружаются аяксом,
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                /** single JS file */
-                $maincontent_js = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.js", $subtemplate_dir);
+                /* JS */
+                $maincontent_js = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
                 break;
             }
@@ -261,7 +263,7 @@ switch ($fetch) {
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.css", $subtemplate_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
@@ -310,7 +312,7 @@ switch ($fetch) {
                 $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.css", $subtemplate_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
@@ -326,7 +328,7 @@ switch ($fetch) {
                 $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.en.css", $subtemplate_dir);
+                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
@@ -374,9 +376,9 @@ switch ($fetch) {
 
         $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-        /** single JS file */
-        $inner_js_data = [];
-        $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.en.js", $subtemplate_dir);
+        /** JS file */
+        $inner_js_data = [ 'site_language' => $site_language ];
+        $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
         break;
     } // end default case

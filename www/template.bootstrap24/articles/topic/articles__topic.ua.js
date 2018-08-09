@@ -1,4 +1,4 @@
-/* */
+/* articles__topic */
 var siteLanguage = '&lang=' + $("#articles__topic__site_language").val();
 var topic_id = +$("#articles__topic__topic_id").val();
 
@@ -7,7 +7,7 @@ var url = "ajax.php?actor=load_articles_by_query&topic=" + topic_id + siteLangua
 var url_booksList = 'ajax.php?actor=get_books_as_optionlist_extended'+siteLanguage;
 var booksList = preloadOptionsList( url_booksList );
 
-BuildSelectorExtended('books', booksList, 'Choose... ', 0);
+BuildSelectorExtended('books', booksList, 'Вибрати...', 0);
 
 // если хэш установлен - можно? загрузить статьи согласно выбранным позициям
 // мы на старте загружаем все статьи
@@ -30,3 +30,4 @@ $("#button-show-all").on('click',function(){
 $('#articles_list').on('click','.more_info',function(){
     location.href = '?fetch=articles&with=info&id='+$(this).attr('name')+siteLanguage;
 });
+/* articles__topic */

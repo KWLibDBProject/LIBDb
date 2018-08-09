@@ -482,5 +482,3 @@ function debugger($input, $trace = FALSE, $halt = FALSE){
         exit();
     }
 }
-
-?>

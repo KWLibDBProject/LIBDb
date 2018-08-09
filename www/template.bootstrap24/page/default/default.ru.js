@@ -1,4 +1,4 @@
-var siteLanguage = '&lang=ru';
+// var siteLanguage = '&lang=ru';
 
 // attach lightbox event to image above lightbox area
 $(".books-extended-info").on('click','.lightbox-image',function(){
