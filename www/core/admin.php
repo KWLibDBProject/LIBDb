@@ -25,7 +25,8 @@ $template_data = [
         'authors'   =>  DBGetCount('id', 'authors'),
         'books'     =>  DBGetCount('id', 'books'),
         'files'     =>  DBGetCount('id', 'filestorage'),
-        'events'    =>  DBGetCount('id', 'eventlog'),
+        'events'    =>  DBGetCount('id', Config::get('kwlogger/log_table_event')),
+        'downloads' =>  DBGetCount('id', Config::get('kwlogger/log_table_download')),
         'news'      =>  DBGetCount('id', 'news')
     ],
     'resources' =>  [

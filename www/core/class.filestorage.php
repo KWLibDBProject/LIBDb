@@ -355,8 +355,8 @@ class FileStorage extends FileStorageConfig
                 'relation'      => $related_id,
                 'filetype'      => $file_array['type'],
                 'collection'    => $collection,
-                'stat_date_insert'  =>  $now,
-                'stat_date_update'  =>  $now
+                'stat_date_insert'  =>  $now, // возложить на БД
+                'stat_date_update'  =>  $now // возложить на БД
             );
             $file_info['internal_name'] = self::getInternalFileName($file_info);
 
@@ -469,9 +469,15 @@ class FileStorage extends FileStorageConfig
         @mysqli_query(self::$mysqli_link, $query);
     }
 
-    public static function statLogDownloadEvent($id, $message)
+    /**
+     * Логгирует событие скачивания файла - идентификатор файла и реферрер (обычно)
+     *
+     * @param $file_id
+     * @param $message
+     */
+    public static function statLogDownloadEvent($file_id, $message)
     {
-        kwLogger::logEvent('Download', self::getSQLTable(), $id, $message);
+        kwLogger::logEventDownload( $file_id, $message );
     }
 
     /* static function for file icons */

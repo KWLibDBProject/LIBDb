@@ -3,16 +3,16 @@ require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'books';
 
-$now = ConvertTimestampToDate();
+$now = ConvertTimestampToDate(); // удалить
 $q = array(
     'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
-    'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']),
+    'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']), // must be mysql date format
     'contentpages'  => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
     'published'     => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
-    'year'          => substr(mysqli_real_escape_string($mysqli_link, $_POST['book_date']), 6, 4),
-    'timestamp'     => ConvertDateToTimestamp(mysqli_real_escape_string($mysqli_link, $_POST['book_date'])),
-    'stat_date_insert'  =>  $now,
-    'stat_date_update'  =>  $now
+    'year'          => substr(mysqli_real_escape_string($mysqli_link, $_POST['book_date']), 6, 4), // не нужно
+    'timestamp'     => ConvertDateToTimestamp(mysqli_real_escape_string($mysqli_link, $_POST['book_date'])), // зачем???
+    'stat_date_insert'  =>  $now, // БД
+    'stat_date_update'  =>  $now // БД
 );
 
 $qstr = MakeInsert($q, $ref_name);

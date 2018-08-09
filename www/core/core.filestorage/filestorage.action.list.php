@@ -74,7 +74,7 @@ if ($r) {
 
         }
         $filestorage_item['internal_name_link'] = '<a href="/files/storage/'.$filestorage_item['internal_name'].'" target="_blank">'.$filestorage_item['internal_name'].'</a>';
-        $filestorage_item['stat_date_insert'] = date('d/m/Y', strtotime($filestorage_item['stat_date_insert']));
+        $filestorage_item['stat_date_insert'] = date('d/m/Y', strtotime($filestorage_item['stat_date_insert'])); //@todo: проверить формат
 
         $filestorage_list[ $filestorage_item['id'] ] = $filestorage_item;
     }

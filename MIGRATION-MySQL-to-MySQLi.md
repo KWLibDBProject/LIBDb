@@ -97,3 +97,38 @@ UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
 # Таблица ref_selfhood
 
 Переименовываем в ref_estaff_roles
+
+# Таблица eventlog
+
+- Меняем тип `ip` на `char(16)`
+- Меняем datetime на `DEFAULT CURRENT_TIMESTAMP`
+- Меняем тип `user` на smallint
+- Тип таблицы MyISAM
+
+# Таблица eventlog_download
+```
+
+CREATE TABLE `eventlog_download` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `element` int(11) DEFAULT NULL,
+  `referrer` varchar(255) DEFAULT NULL,
+  `ip` char(16) DEFAULT NULL,
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
+
+```
+Переносим данные из eventlog в eventlog_download :
+
+```
+INSERT INTO eventlog_download (element, referrer, ip, `datetime`)
+
+SELECT element, `comment`, ip, `datetime` FROM eventlog
+WHERE `action` = 'Download'
+```
+
+И удаляем из старой таблицы:
+```
+DELETE FROM eventlog WHERE `action` = 'Download'
+```
+

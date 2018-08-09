@@ -15,15 +15,15 @@ require_once 'core.db.php';
 Config::init([
     '/'             =>  'config/config.php',
     'filestorage'   =>  'config/filestorage.php',
-    'kwlogger'      =>  'config/logging.php'
+    'kwlogger'      =>  'config/config.logging.php'
 ]);
 
 // Config::dump();
 
 $mysqli_link = ConnectDB();
 
-kwLogger::init($mysqli_link);
-FileStorage::init($mysqli_link);
+kwLogger::init($mysqli_link, Config::get('kwlogger'));
+FileStorage::init($mysqli_link, Config::get('filestorage'));
 
 // check errors
 $storage_folder = FileStorage::getStorageDir();

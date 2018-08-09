@@ -2,13 +2,16 @@
 /* version 1.1 */
 require_once('config/config.logging.php');
 
-class kwLogger extends kwLoggerConfig
+class kwLogger
 {
     private static $mysqli_link;
 
-    public static function init($mysqli_link)
+    private static $config = [];
+
+    public static function init($mysqli_link, $config)
     {
         self::$mysqli_link = $mysqli_link;
+        self::$config = $config;
     }
 
     /**
@@ -18,10 +21,9 @@ class kwLogger extends kwLoggerConfig
      * @param string $where
      * @return string
      */
-    private static function makeInsertStatement($record, $where="")
+    private static function makeInsertStatement($table, $record, $where="")
     {
-        $table = self::$log_table;
-        $query = "INSERT INTO $table ";
+        $query = "INSERT INTO {$table} ";
 
         $keys = " ( ";
         $vals = " ( ";
@@ -40,18 +42,24 @@ class kwLogger extends kwLoggerConfig
      */
     private static function ConvertTimestampToDate()
     {
-        return strftime(self::$log_datetime_format);
+        return (new DateTime())->format( self::$config['log_datetime_format'] );
     }
 
     private static function prepare( $array, $target = 'db' )
     {
         $return = null;
+
         if ($target == 'db' || $target == 'mysql') {
+
             foreach( $array as $key => $value )
                 $return [ $key ] = mysqli_real_escape_string(self::$mysqli_link,  $value );
+
         } elseif ($target == 'json' || $target == 'file') {
+
             $return = json_encode($array) . "\r\n";
+
         } elseif ($target == 'csv') {
+
             // see http://stackoverflow.com/a/16353448
             $fp = fopen('php://temp', 'r+');
             fputcsv($fp, $array, ',', '"');
@@ -59,28 +67,59 @@ class kwLogger extends kwLoggerConfig
             $data = fread($fp, 1048576);
             fclose($fp);
             $return = rtrim($data, "\n");
+
         }
         return $return;
     }
 
-    /* log event */
-    public static function logEvent($action='?', $affected_table='*', $affected_element='--', $comment = 'none')
+    /**
+     *
+     * @param int $affected_element
+     * @param string $referrer
+     * @return int
+     */
+    public static function logEventDownload($affected_element = 0, $referrer = '')
     {
-        $entry = array(
+        $entry = [
+            'element'       =>  $affected_element,
+            'referrer'      =>  $referrer,
+            'ip'            =>  self::getIP(),
+        ];
+
+        $query = self::makeInsertStatement( self::$config['log_table_download'], $entry);
+
+        mysqli_query(self::$mysqli_link, $query )
+            or self::_die('Error addind data to eventlog_download table, query data saved to error.log : ' . $query);
+
+        return mysqli_errno(self::$mysqli_link);
+    }
+
+    /**
+     * Log custom event
+     *
+     * @param string $action
+     * @param string $affected_table
+     * @param string $affected_element
+     * @param string $comment
+     * @return int
+     */
+    public static function logEvent($action='?', $affected_table='*', $affected_element='-', $comment='-')
+    {
+        $entry = [
             'action'        =>  $action,
             'table'         =>  $affected_table,
             'element'       =>  $affected_element,
             'comment'       =>  $comment,
-            'ip'            =>  $_SERVER['REMOTE_ADDR'],
-            'datetime'      =>  self::ConvertTimestampToDate(),
-            // нельзя получить доступ к сессии без session_start() , поэтому сохраняем данные из кукисов
-            // 'user'          =>  (isset($_SESSION[ self::$log_userid_key_in_session ])) ? $_SESSION[ self::$log_userid_key_in_session ] : -1
-            'user'          => $_COOKIE[ self::$log_userid_key_in_cookies ] ?? -1
-        );
-        $query = self::makeInsertStatement($entry);
-        mysqli_query(self::$mysqli_link, $query ) or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
+            'ip'            =>  self::getIP(),
+            'user'          =>  $_COOKIE[ Config::get('cookies/user_id') ] ?? -1
+        ];
+        $query = self::makeInsertStatement(self::$config['log_table_event'], $entry);
+        mysqli_query(self::$mysqli_link, $query )
+            or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
         return mysqli_errno(self::$mysqli_link);
     }
+
+
 
     /* override die function */
     public static function _die($message = '-', $dataset = array())
@@ -90,17 +129,18 @@ class kwLogger extends kwLoggerConfig
             'table'         =>  '-',
             'element'       =>  self::prepare( $dataset , 'csv' ),
             'comment'       =>  $message,
-            'ip'            =>  $_SERVER['REMOTE_ADDR'],
+            'ip'            =>  self::getIP(),
             'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  $_SESSION[ self::$log_userid_key_in_session ] ?? 0
+            'user'          =>  $_SESSION[ Config::get('session/user_id') ] ?? 0
         );
         $die_message = '';
+
         if (!empty($dataset)) {
             $entry [ 'element' ] = self::prepare( $dataset , 'csv' );
             $die_message = print_r($dataset, true);
         }
 
-        $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . self::$log_file;
+        $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . self::$config['log_file'];
 
         $f = fopen( $filename , 'a+' );
         fwrite($f, self::prepare( $entry, 'file' ));
@@ -108,53 +148,29 @@ class kwLogger extends kwLoggerConfig
         die( $message . $die_message);
     }
 
-
-
-    /* ================================= TEST FUNCTIONS  ================================= */
-    public static function log_to_file($action='?', $affected_table='*', $affected_element='--', $comment = 'none')
+    /**
+     * Returns IP address
+     * @return string $ip
+     */
+    protected static function getIP()
     {
-        $entry = array(
-            'action'        =>  $action,
-            'table'         =>  $affected_table,
-            'element'       =>  $affected_element,
-            'comment'       =>  $comment,
-            'ip'            =>  $_SERVER['REMOTE_ADDR'],
-            'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  $_SESSION[ self::$log_userid_key_in_session ] ?? 0
-        );
-        $f = fopen( $_SERVER['DOCUMENT_ROOT'].self::$log_file , 'a+' );
-        fwrite($f, self::prepare( $entry, 'file' ));
-        fclose($f);
-    }
+        if (getenv('HTTP_CLIENT_IP')) {
+            $ipAddress = getenv('HTTP_CLIENT_IP');
+        } elseif (getenv('HTTP_X_FORWARDED_FOR')) {
+            $ipAddress = getenv('HTTP_X_FORWARDED_FOR');
+        } elseif (getenv('HTTP_X_FORWARDED')) {
+            $ipAddress = getenv('HTTP_X_FORWARDED');
+        } elseif (getenv('HTTP_FORWARDED_FOR')) {
+            $ipAddress = getenv('HTTP_FORWARDED_FOR');
+        } elseif (getenv('HTTP_FORWARDED')) {
+            $ipAddress = getenv('HTTP_FORWARDED');
+        } elseif (getenv('REMOTE_ADDR')) {
+            $ipAddress = getenv('REMOTE_ADDR');
+        } else {
+            $ipAddress = '127.0.0.1';
+        }
 
-    public static function log_to_csv($action='?', $affected_table='*', $affected_element='--', $comment = 'none')
-    {
-        $entry = array(
-            'action'        =>  $action,
-            'table'         =>  $affected_table,
-            'element'       =>  $affected_element,
-            'comment'       =>  $comment,
-            'ip'            =>  $_SERVER['REMOTE_ADDR'],
-            'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  $_SESSION[ self::$log_userid_key_in_session ] ?? 0
-        );
-        $f = fopen( $_SERVER['DOCUMENT_ROOT'].self::$log_file , 'a+' );
-        fputcsv( $f, $entry );
-        fclose($f);
-    }
-
-    public static function _print_error_string($action='?', $affected_table='*', $affected_element='--', $comment = 'none')
-    {
-        $entry = array(
-            'action'        =>  $action,
-            'table'         =>  $affected_table,
-            'element'       =>  $affected_element,
-            'comment'       =>  $comment,
-            'ip'            =>  $_SERVER['REMOTE_ADDR'],
-            'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  $_SESSION[ self::$log_userid_key_in_session ] ?? 0
-        );
-        return self::prepare( $entry, 'csv' );
+        return $ipAddress;
     }
 
 }
