@@ -79,14 +79,17 @@ if ($numarticles == 1)
     <script type="text/javascript">
         // загружается старый файл - потому что билдер списка авторов в этом файле не понимает Extended Format
         // ? InsertAuthorsSelector() ?
+        // Здесь, для авторов, legacyformat СТРОГО ОБЯЗАТЕЛЕН
         var authorsList = preloadOptionsList('../core.authors/authors.action.getoptionlist.php?legacyformat');
 
         var booksListExtended = preloadOptionsList('../core.books/books.action.getoptionlist.php');
-        var topicsListExtended = preloadOptionsList('../core.topics/topics.action.getoptionlist.php?id&nogroup');
+
+        // nogroup - без группировки, id - с айди в []
+        var topicsListExtended = preloadOptionsList('../core.topics/topics.action.getoptionlist.php?id');
 
         var mode = 'edit';
         // loaded values for 'EDIT' mode
-        currAuthorsList = <?php echo $the_currAuthList; ?>; // getCurrentAuthorsSelection, используется только для EDIT
+        currAuthorsList = <?php echo $the_currAuthList; ?>;
         var loadedAuthorsNum = <?php echo $the_loadedAuthorsNum; ?>;
         var lastAuthorNumber = <?php echo $the_loadedAuthorsNum+1; ?>;
         var currentBook = <?php echo $the_currentBook; ?>;
@@ -126,7 +129,7 @@ if ($numarticles == 1)
                 changeYear: true,
                 dateFormat: 'dd.mm.yy',
                 minDate: '01.01.2003',
-                maxDate: '01.01.2020',
+                maxDate: '01.01.2025',
                 showButtonPanel: true,
                 showOn: "both",
                 buttonImageOnly: true,

@@ -28,15 +28,18 @@ ifNotLoggedRedirect('/core/');
 
         // загружается старый файл - потому что билдер списка авторов в этом файле не понимает Extended Format
         // ? InsertAuthorsSelector() ?
+        // Здесь, для авторов, legacyformat СТРОГО ОБЯЗАТЕЛЕН
         var authorsList = preloadOptionsList('../core.authors/authors.action.getoptionlist.php?legacyformat');
 
         var booksListExtended = preloadOptionsList('../core.books/books.action.getoptionlist.php');
-        var topicsListExtended = preloadOptionsList('../core.topics/topics.action.getoptionlist.php?id&nogroup');
+
+        // nogroup - без группировки, id - с айди в []
+        var topicsListExtended = preloadOptionsList('../core.topics/topics.action.getoptionlist.php?id');
 
         var mode = 'new';
 
         // loaded values
-        currAuthorsList = { }; // getCurrentAuthorsSelection, используется только для EDIT
+        currAuthorsList = { };
         var loadedAuthorsNum = 0;
         var lastAuthorNumber = 1;
         var currentBook = 1;
@@ -73,18 +76,13 @@ ifNotLoggedRedirect('/core/');
             BuildSelectorExtended('book', booksListExtended, "Выбрать...", 0);
             BuildSelectorExtended('topic', topicsListExtended, "Выбрать...", 0);
 
-            // старый вариант: - legacy:
-            // BuildSelectorLegacy('book', booksList, currentBook);
-            // BuildSelectorLegacy('topic', topicsList, currentTopic);
-
-
-            // WIDGETS
+           // WIDGETS
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: 'dd.mm.yy',
                 minDate: '01.01.2003',
-                maxDate: '01.01.2020',
+                maxDate: '01.01.2025',
                 showButtonPanel: true,
                 showOn: "both",
                 buttonImageOnly: true,
