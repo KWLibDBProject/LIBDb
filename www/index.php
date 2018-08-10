@@ -19,10 +19,19 @@ $main_theme_dir     = Config::get('frontend/theme/template_dir');
 
 $main_template_file = "index.{$site_language}.html";
 
-
-
 /**
-Устанавливаем значения для основного шаблона | Override variables in INDEX.*.HTML template
+ *  Устанавливаем значения для основного шаблона | Override variables in INDEX.*.HTML template
+ *
+ *  ВОЗМОЖНО это надо делать через $main_template = new Template(filename, filepath);
+ *
+ *  а потом
+ *
+ *  $main_template->set('template_name', $main_theme_name);
+ *
+ *  или
+ *
+ *  $main_template->set('inner_html', $subtemplate->render() )
+ *
 */
 $main_template_data['template_name'] = $main_theme_name; // template name , defined in config
 $main_template_data['template_theme_dir'] = $main_theme_dir;
@@ -380,7 +389,6 @@ switch ($fetch) {
 
 } // end global (fetch) switch
 
-
 /**
  * Заполняем значения для главного шаблона
  */
@@ -389,6 +397,9 @@ switch ($fetch) {
  * И структуру меню можно генерировать динамически (на основе YAML или JSON), и я языковые надписи брать из theme.en.json
 
  $main_template_data['frontend']['menu']['title'] = Theme::get('site/title');
+ *
+
+ $main_template_data['theme'] = Theme::all()
 
  */
 

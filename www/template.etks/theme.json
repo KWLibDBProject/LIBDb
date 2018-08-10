@@ -15,6 +15,9 @@
       }
     ]
   },
+  "metrics": [
+    "metrika.google-analytics.html", "metrika.yandex.html"
+  ],
   "dictionary": {
     "item1" : "text1"
   }
