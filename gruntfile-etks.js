@@ -7,10 +7,10 @@ module.exports = function(grunt) {
         concat: {
             js: {
                 src: [
-                    'www/template.bootstrap24/_assets/jquery/jquery-1.11.0.js',
-                    'www/template.bootstrap24/_assets/bootstrap/bootstrap.js',
-                    'www/template.bootstrap24/_assets/jquery/jquery.colorbox.min.js',
-                    'www/template.bootstrap24/_assets/jquery/jquery.cookie.js',
+                    'www/template.etks/_assets/jquery/jquery-1.11.0.js',
+                    'www/template.etks/_assets/bootstrap/bootstrap.js',
+                    'www/template.etks/_assets/jquery/jquery.colorbox.min.js',
+                    'www/template.etks/_assets/jquery/jquery.cookie.js',
                     'www/frontend.js',
                     'www/frontend.options.js ',
                 ],
@@ -28,10 +28,10 @@ module.exports = function(grunt) {
             target: {
                 files: {
                     'www/styles.min.css': [
-                        'www/template.bootstrap24/_assets/bootstrap/bootstrap.css',
-                        'www/template.bootstrap24/_assets/bootstrap/bootstrap-theme.css',
-                        'www/template.bootstrap24/_assets/colorbox.css',
-                        'www/template.bootstrap24/theme.css'
+                        'www/template.etks/_assets/bootstrap/bootstrap.css',
+                        'www/template.etks/_assets/bootstrap/bootstrap-theme.css',
+                        'www/template.etks/_assets/colorbox.css',
+                        'www/template.etks/theme.css'
                     ]
                 }
             }
