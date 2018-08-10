@@ -1,0 +1,21 @@
+{
+  "site": {
+    "title": "ETKS.OPU.UA"
+  },
+  "menu": {
+    "en": [
+      {
+        "item": 1, "type": "item", "class": "active", "href": "/", "text": "ETKS.OPU.UA", "parent": 0
+      },
+      {
+        "item": 2, "type:": "dropdown", "class": "", "href": "", "text": "About", "parent": 0
+      },
+      {
+        "item": 2, "type:": "item", "class": "", "href": "?fetch=page&with=pubethics", "text": "Publishing ethics", "parent": 0
+      }
+    ]
+  },
+  "dictionary": {
+    "item1" : "text1"
+  }
+}

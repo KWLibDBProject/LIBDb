@@ -19,26 +19,21 @@ $main_theme_dir     = Config::get('frontend/theme/template_dir');
 
 $main_template_file = "index.{$site_language}.html";
 
-/* Override variables in INDEX.*.HTML template */
+
+
+/**
+Устанавливаем значения для основного шаблона | Override variables in INDEX.*.HTML template
+*/
 $main_template_data['template_name'] = $main_theme_name; // template name , defined in config
 $main_template_data['template_theme_dir'] = $main_theme_dir;
 
-/**   * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне) */
-$main_template_data['rubrics']    = printTopicsTree($site_language);    //@todo: когда-нибудь это надо отрефакторить
-
-/**  * Блок "выпуски"  */
-$main_template_data['all_books']    = LoadBooks();
-
-/**  * Блок "баннеры" */
-$main_template_data['all_banners']  = LoadBanners();
-
-/* Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне) */
-// $main_template_data['last_news_shortlist'] = printLastNews($main_theme_dir, 3, $site_language);
-$main_template_data['last_news_list'] = LoadLastNews($site_language, 3);
-
+/** META  */
 $main_template_data['meta'] = Config::get('frontend_meta');
+$main_template_data['meta']['copyright'] = Config::get('meta/copyright', '');
 
-// Main switch
+/**
+ * Main switch
+ */
 $fetch  = at( $_GET, 'fetch', '' );
 $with   = at( $_GET, 'with' , '' );
 
@@ -385,12 +380,39 @@ switch ($fetch) {
 
 } // end global (fetch) switch
 
+
+/**
+ * Заполняем значения для главного шаблона
+ */
+/**
+ * Есть мнение (2018-08-10), что надо анализировать файл theme.json , в котором типа всё написано...
+ * И структуру меню можно генерировать динамически (на основе YAML или JSON), и я языковые надписи брать из theme.en.json
+
+ $main_template_data['frontend']['menu']['title'] = Theme::get('site/title');
+
+ */
+
+/**   * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне) */
+$main_template_data['rubrics']    = printTopicsTree($site_language);    //@todo: когда-нибудь это надо отрефакторить
+
+/**  * Блок "выпуски"  */
+$main_template_data['all_books']    = LoadBooks();
+
+/**  * Блок "баннеры" */
+$main_template_data['all_banners']  = LoadBanners();
+
+/* Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне) */
+$main_template_data['last_news_list'] = LoadLastNews($site_language, 3);
+
+
+/** Контент  */
 $main_template_data['content_jquery'] = $maincontent_js;
 $main_template_data['content_html'] = $maincontent_html;
 $main_template_data['content_css'] = $maincontent_css;
+
+/** Тип ассетов */
 $main_template_data['frontend_assets_mode'] = Config::get('frontend/assets_mode');
 
-$main_template_data['meta']['copyright'] = Config::get('meta/copyright', '');
 
 $content = \Websun\websun::websun_parse_template_path($main_template_data, $main_template_file, "$/{$main_theme_dir}");
 $content = preg_replace('/^\h*\v+/m', '', $content);
