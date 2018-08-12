@@ -177,7 +177,7 @@ if ($id != -1)
                 changeYear: true,
                 dateFormat: 'dd.mm.yy',
                 minDate: '01.01.2003',
-                maxDate: '01.01.2020',
+                maxDate: '01.01.2025',
                 showButtonPanel: true
             });
             $("#book_title").focus();

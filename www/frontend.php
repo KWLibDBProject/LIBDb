@@ -273,6 +273,8 @@ function LoadBooks()
     global $mysqli_link;
     $all_books = [];
 
+    //@todo:book = books.published => published_status, books.year AS year => YEAR(books.published_date) AS year
+
     $bq = "SELECT
 books.title AS title,
 books.year  AS year,
@@ -371,6 +373,8 @@ function LoadLastNews($lang, $count=2)
  */
 function LoadBookInfo($id)
 {
+    //@todo: books 'book.year as book_year' => YEAR(published_date) AS book_year
+
     global $mysqli_link;
     $query = "
     SELECT 
@@ -425,6 +429,9 @@ function BuildQuery($get, $lang)
     global $mysqli_link;
 
     // DATE_FORMAT(date_add, '%d.%m.%Y') as date_add,
+
+    //@todo:book 'books.year AS book_year' => YEAR(books.published_date) AS book_year
+    //@todo:book
 
     $q_select = " SELECT DISTINCT
   articles.id
@@ -494,6 +501,7 @@ topics.id = articles.topic {$query_show_published} ";
         ? " AND authors.id = " . intval($get['aid'])
         : "";
 
+    //@todo:book 'AND books.year = ...' => 'AND YEAR(books.published_date) = ...'
     $q_extended .= (IsSet($get['year']) && ($get['year'] != 0))
         ? " AND books.year = " . intval($get['year'])
         : "";
