@@ -6,4 +6,4 @@ www/core/config/config.php
 www/template.bootstrap24/metrika.*
 node_modules
 package-lock.json
-
+vendor

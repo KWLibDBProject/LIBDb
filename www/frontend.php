@@ -707,10 +707,10 @@ ORDER BY date_add
  * @param $letter
  * @param $lang
  * @param string $is_es
- * @param $selfhood
+ * @param $estaff_role
  * @return array
  */
-function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
+function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1)
 {
     global $mysqli_link;
     $authors = array();
@@ -724,11 +724,11 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
     $where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
 
     // check for 'is author in editorial stuff', default is 'no'
-    $where_es = ($is_es != 'no') ? ' AND is_es=1 ' : '';
+    $where_es = ($is_es != 'no') ? ' AND is_es = 1 ' : '';
 
-    // optional parameter selfhood (for extended estuff)
-    $where_selfhood = ($selfhood != -1 )
-        ? " AND selfhood= " . intval($selfhood)
+    // optional parameter estaff_role (for extended estuff)
+    $where_estaff_role = ($estaff_role != -1 )
+        ? " AND estaff_role = " . intval($estaff_role)
         : " ";
 
     $order = " ORDER BY authors.name_{$lang}";
@@ -740,7 +740,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $selfhood=-1)
     FROM authors
     WHERE deleted=0
     {$where_es}
-    {$where_selfhood}
+    {$where_estaff_role}
     {$where_like}
     {$order}";
 

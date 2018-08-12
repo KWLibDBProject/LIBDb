@@ -29,7 +29,7 @@ $q = array(
     'is_es'         => (($_POST['is_es'] ?? 'off') == 'on') ? 1 : 0,
 
     /* Роль в редколлегии */
-    'selfhood'      => $_POST['selfhood'] ?? 0,
+    'estaff_role'      => $_POST['estaff_role'] ?? 0,
 );
 $qstr = MakeInsertEscaped( $q, $table );
 

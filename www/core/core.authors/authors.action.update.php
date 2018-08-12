@@ -29,7 +29,7 @@ $q = array(
     'is_es'         => (($_POST['is_es'] ?? 'off') == 'on') ? 1 : 0,
 
     /* Роль в редколлегии: @todo: доп-проверка, если он не in_es - то 0 ? */
-    'selfhood'      => $_POST['selfhood'] ?? 0,
+    'estaff_role'      => $_POST['estaff_role'] ?? 0,
 );
 $qstr = MakeUpdateEscaped($q, $ref_name, "WHERE id=$id");
 

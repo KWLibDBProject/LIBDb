@@ -111,7 +111,7 @@ switch ($fetch) {
                 $subtemplate_filename = "authors__estaff";
 
                 /**
-                 * HTML, warning, MAGIC NUMBERS (see table `ref_selfhood`)
+                 * HTML, warning, MAGIC NUMBERS (see table `ref_estaff_roles`)
                  */
                 $inner_html_data = [
                     // почетный редактор = 7

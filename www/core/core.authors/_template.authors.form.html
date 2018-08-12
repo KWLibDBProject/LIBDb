@@ -24,40 +24,35 @@
         $(document).ready(function () {
             $.ajaxSetup({cache: false, async: false});
 
-            var selfhoodList = preloadOptionsList('../ref.abstract.getoptionslist.php?ref=ref_selfhood');
-            var currentSelfhood = 0;
+            var estaff_roles_list = preloadOptionsList('../ref.abstract.getoptionslist.php?ref=ref_estaff_roles');
+            var current_estaff_role = 0;
 
             if (author_id != -1) {
-                currentSelfhood = Authors_LoadRecord("#form_edit_author", author_id, 'bio');
+                current_estaff_role = Authors_LoadRecord("#form_edit_author", author_id, 'bio');
                 $(".actor-button-remove").show().on('click',function(event){
                     window.location.href = 'authors.action.remove.php?id='+author_id;
                 });
 
-                BuildSelector('selfhood', selfhoodList, '', currentSelfhood);
+                BuildSelector('estaff_role', estaff_roles_list, '', current_estaff_role);
 
             } else {
 
-                BuildSelector('selfhood', selfhoodList, '', 0);
-                DisableSelectorByName('selfhood');
-
-                // $("select[name='selfhood']").prop('disabled', true); // значение селекта 'selfhood' для нового автора
+                BuildSelector('estaff_role', estaff_roles_list, '', 0);
+                DisableSelectorByName('estaff_role');
             }
             /* флажки установим (полностью отвязывая блок с файлами от оверрайда шаблона)
             для ADD (author_id == -1) - true, EDIT: false */
             $("button[name='file_current_id_show']").prop('disabled', (author_id == -1) );
-
-            //@hint: создать селектор 'selfhood' (мы создаем его, лишь узнав текущее значение)
-
 
             $(".actor-button-exit").on('click',function(event){
                 window.location.href = '/core/list.authors.show.php';
             });
 
             $("#is_es").on('change', function(event){
-                $("select[name='selfhood']").prop('disabled', !this.checked);
-                // Участник редколлегии КАК МИНИМУМ тех-редактор, сменим значение селектора 'selfhood'
+                $("select[name='estaff_role']").prop('disabled', !this.checked);
+                // Участник редколлегии КАК МИНИМУМ тех-редактор, сменим значение селектора 'estaff_role'
                 //@hint: +this.checked преобразует bool -> int
-                $("select[name='selfhood'] option[value='"+ this.checked +"']").prop("selected",true);
+                $("select[name='estaff_role'] option[value='"+ this.checked +"']").prop("selected", true);
             });
 
             /* photo actors */
@@ -199,7 +194,7 @@
                 Роль в редакционной коллегии:
             </dt>
             <dd>
-                <select name="selfhood">
+                <select name="estaff_role">
                     <option value="0">[0] НЕТ</option>
                 </select>
             </dd>

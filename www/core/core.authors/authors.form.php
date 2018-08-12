@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
         'form_call_script'      => 'authors.action.update.php',
         'submit_button_text'    => 'СОХРАНИТЬ ИЗМЕНЕНИЯ',
         'page_title'            => 'Авторы -- редактирование',
-        'author_selfhood'       => 0,
+        'author_estaff_role'       => 0,
         'file_current_flag_show' => '',
         'file_current_flag_delete' => '',
     ];
@@ -26,7 +26,7 @@ if (isset($_GET['id'])) {
         'form_call_script'      => 'authors.action.insert.php',
         'submit_button_text'    => 'ДОБАВИТЬ АВТОРА',
         'page_title'            => 'Авторы -- добавление',
-        'author_selfhood'       => 0,
+        'author_estaff_role'       => 0,
         'file_current_flag_show' => 'disabled',
         'file_current_flag_delete' => '',
     ];

@@ -132,3 +132,8 @@ WHERE `action` = 'Download'
 DELETE FROM eventlog WHERE `action` = 'Download'
 ```
 
+# selfhood -> estaff_roles
+
+- Переименовываем таблицу `ref_selfhood` в `ref_estaff_roles`
+
+В таблице `authors` переименовываем поле `selfhood` в `estaff_role` 
