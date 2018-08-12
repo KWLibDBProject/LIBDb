@@ -398,8 +398,6 @@ switch ($fetch) {
  * И структуру меню можно генерировать динамически (на основе YAML или JSON), и я языковые надписи брать из theme.en.json
 
  $main_template_data['frontend']['menu']['title'] = Theme::get('site/title');
- *
-
  $main_template_data['theme'] = Theme::all()
 
  */
@@ -416,16 +414,22 @@ $main_template_data['all_banners']  = LoadBanners();
 /* Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне) */
 $main_template_data['last_news_list'] = LoadLastNews($site_language, 3);
 
-
 /** Контент  */
 $main_template_data['content_jquery'] = $maincontent_js;
 $main_template_data['content_html'] = $maincontent_html;
 $main_template_data['content_css'] = $maincontent_css;
 
 /** Тип ассетов */
-$main_template_data['frontend_assets_mode'] = Config::get('frontend/assets_mode');
+// $main_template_data['frontend_assets_mode'] = Config::get('frontend/assets_mode');
 
+$main_template_data['frontend'] = [
+    'assets_mode'   =>  Config::get('frontend/assets_mode', 'development'),
+    'assets_version'=>  Config::get('frontend/assets_version', '')
+];
 
 $content = \Websun\websun::websun_parse_template_path($main_template_data, $main_template_file, "$/{$main_theme_dir}");
 $content = preg_replace('/^\h*\v+/m', '', $content);
 echo $content;
+
+printf("\r\n<!-- Total time: %s sec, Memory Used (current): %s , Memory Used (max): %s ", round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4), formatBytes(memory_get_usage()), formatBytes(memory_get_peak_usage()));
+

@@ -29,9 +29,9 @@
     <!-- /Development -->
     {?}
 
-    {?*frontend_assets_mode="production"*}
-    <link rel="stylesheet" href="/styles.min.css">
-    <script type="text/javascript" src="/scripts.min.js"></script>
+    {?*frontend.assets_mode="production"*}
+    <link rel="stylesheet" href="/styles.min.css{?*frontend.assets_version*}?ver={*frontend.assets_version*}{?}">
+    <script type="text/javascript" src="/scripts.min.js{?*frontend.assets_version*}?ver={*frontend.assets_version*}{?}"></script>
     {?}
 
     <script type="text/javascript">
@@ -208,7 +208,6 @@
 </div>
 
 {?*frontend_assets_mode="production"*}
-
 {* + metrika.google-analytics.html *}
 {* + metrika.yandex.html *}
 {?}

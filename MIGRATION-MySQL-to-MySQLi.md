@@ -33,12 +33,17 @@ UPDATE news SET publish_date = STR_TO_DATE(date_add, '%d.%m.%Y')
 
 - Добавляем поле orcid CHAR 16 DEFAULT ''
 - Удаляем поле `deleted`
+- переименовываем поле `selfhood` в `estaff_role`
 
 - Меняем дефолтные значения полей 
 ```
 `stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
+
+# selfhood -> estaff_roles
+
+- Переименовываем таблицу `ref_selfhood` в `ref_estaff_roles`
 
 # Таблица books
 
@@ -69,6 +74,14 @@ UPDATE books SET published_date = STR_TO_DATE(date, '%d.%m.%Y')
 UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
 ```
 - Удаляем `date_add_legacy`
+
+- Меняем дефолтные значения полей
+```
+`stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
+`stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+```
+
+[todo] Переименовываем поле `date_add` в `publish_date` ?
 
 # Таблица users
 
@@ -141,8 +154,3 @@ WHERE `action` = 'Download'
 DELETE FROM eventlog WHERE `action` = 'Download'
 ```
 
-# selfhood -> estaff_roles
-
-- Переименовываем таблицу `ref_selfhood` в `ref_estaff_roles`
-
-В таблице `authors` переименовываем поле `selfhood` в `estaff_role` 
