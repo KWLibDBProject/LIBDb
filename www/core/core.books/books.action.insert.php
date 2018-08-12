@@ -8,9 +8,13 @@ $q = array(
     'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
     'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']), // must be mysql date format
     'contentpages'  => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
-    'published'     => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
+    'published_status'     => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
+
+    //@todo: убрать
     'year'          => substr(mysqli_real_escape_string($mysqli_link, $_POST['book_date']), 6, 4), // не нужно
     'timestamp'     => ConvertDateToTimestamp(mysqli_real_escape_string($mysqli_link, $_POST['book_date'])), // зачем???
+
+    //@todo: убрать
     'stat_date_insert'  =>  $now, // БД
     'stat_date_update'  =>  $now // БД
 );

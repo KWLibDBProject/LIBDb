@@ -15,6 +15,7 @@ $q = array(
     'text_ru'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ru']),
     'text_ua'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ua']),
 
+    //@todo: ненужное поле
     'timestamp'     => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('U'),
 );
 

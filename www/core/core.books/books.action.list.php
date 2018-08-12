@@ -5,9 +5,21 @@ require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'books';
 
-$query = "SELECT books.id AS book_id, books.title, books.date, contentpages, published, file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en,
+//@todo:date - GROUP BY books.year => GROUP BY YEAR(books.published_date)
+
+$query = "
+SELECT 
+books.id AS book_id, 
+books.title, 
+books.date, 
+contentpages, 
+published_status, 
+file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en,
  COUNT(articles.book) AS book_articles_count
- FROM books LEFT JOIN articles ON books.id=articles.book
+ FROM books 
+ 
+ LEFT JOIN articles ON books.id=articles.book
+ 
  GROUP BY books.id, books.title, books.year
  ORDER BY books.title DESC";
 

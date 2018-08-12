@@ -365,7 +365,7 @@ switch ($fetch) {
         $subtemplate_filename = "default";
 
         // load last book
-        $last_book = LoadLastBookInfo(); //@todo: СЕЙЧАС возвращается latest сборник по дате, без учета флага is_published + наличие статей в сборнике
+        $last_book = LoadLastBookInfo(); //@todo: СЕЙЧАС возвращается latest сборник по дате, без учета флага published_status + наличия статей в сборнике
 
         $page_data = LoadStaticPage('about', $site_language);
 

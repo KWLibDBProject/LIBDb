@@ -266,6 +266,7 @@ ORDER BY topicgroups.display_order, topics.title_{$lang}
 
 /**
  * загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом
+ *
  * @return array
  */
 function LoadBooks()
@@ -285,10 +286,14 @@ FROM books, articles
 
 WHERE
  articles.book = books.id AND  
- books.published = 1
+ books.published_status = 1
 
 GROUP BY books.title
-ORDER BY books.title DESC ";
+ORDER BY 
+books.year DESC, 
+books.title ASC";
+
+    // было: books.year AS year
 
     $br = mysqli_query($mysqli_link, $bq);
     $is_active = 1;
@@ -350,6 +355,10 @@ function LoadLastNews($lang, $count=2)
 {
     global $mysqli_link;
     $ret = array();
+
+    //@todo: timestamp поле лишнее, сортировать надо по date_add
+    //@todo: добавить 'where date_add < now()'
+
     $query = "SELECT id, title_{$lang} AS title, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news ORDER BY timestamp DESC LIMIT {$count}";
     $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
     $res_numrows = @mysqli_num_rows($res);
@@ -400,6 +409,9 @@ function LoadBookInfo($id)
 /**
  * возвращает ассоциативный массив из базы с информацией о ПОСЛЕДНЕМ опубликованном сборнике
  * или {} если нет такого
+ *
+ * @todo: работает криво, грузит не тот сборник
+ *
  * @return array
  */
 function LoadLastBookInfo()
@@ -407,8 +419,9 @@ function LoadLastBookInfo()
     global $mysqli_link;
 
     //@todo: рефакторинг даты
+    //@todo:date  - `date` => published_date
 
-    $r = mysqli_query($mysqli_link, "SELECT * FROM books WHERE published=1 ORDER BY date desc LIMIT 1"); // is enought for latest published book ?
+    $r = mysqli_query($mysqli_link, "SELECT * FROM books WHERE published_status = 1 ORDER BY date desc LIMIT 1"); // is enought for latest published book ?
 
     $ret = [];
     if (@mysqli_num_rows($r)==1) {
@@ -597,6 +610,9 @@ function LoadNewsListTOC($lang, $limit = 15)
     global $mysqli_link;
     $ret = null;
 
+    //@todo: нужно ORDER BY date_add
+    //@todo: нужно WHERE date_add < NOW()
+
     $query = "SELECT id, title_{$lang} AS title, DATE_FORMAT(date_add, '%d.%m.%Y') as date FROM news ORDER BY timestamp DESC LIMIT {$limit}";
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
@@ -669,8 +685,6 @@ function LoadAuthorInformation_ById($id, $lang)
  *
  * Используется для построения списка публикаций у автора (для /author/info )
  *
- * @todo: добавить флаг $is_published
- *
  * @param $id
  * @param $lang
  * @param $is_published
@@ -694,7 +708,7 @@ SUBSTRING(books.date,7,4) AS bdate
 FROM articles, cross_aa, books
 WHERE books.id=articles.book
 AND cross_aa.article = articles.id
-AND books.published= {$query_published}
+AND books.published_status = {$query_published}
 AND cross_aa.author = $id
 ORDER BY date_add
 ";

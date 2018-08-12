@@ -94,7 +94,7 @@ if ($id != -1)
 
     } else {
         $isBookExists = 0;
-        $book['published'] = 0;
+        $book['published_status'] = 0;
     }
 } else {
     Die('Некорректный вызов! ');
@@ -134,7 +134,7 @@ if ($id != -1)
                 $('#form_book').hide();
                 $('#no_book_warning').show();
             } else {
-                BuildSelector('is_book_ready', is_published, '', <?php echo $book['published'] ?>);
+                BuildSelector('is_book_ready', is_published, '', <?php echo $book['published_status'] ?>);
             }
 
             $(".button-exit").on('click',function(event){

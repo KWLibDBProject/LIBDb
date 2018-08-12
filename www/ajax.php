@@ -26,7 +26,7 @@ switch ($actor) {
 
         $i = 1;
         $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
-        $q = "SELECT * FROM books WHERE published = 1 ORDER BY SUBSTRING(title, 6, 2)";  //@todo: магическая подстановка
+        $q = "SELECT * FROM books WHERE published_status = 1 ORDER BY title";  //@todo: тут ORDER по названию
         $r = mysqli_query($mysqli_link, $q) or die($q);
         $n = @mysqli_num_rows($r) ;
 
@@ -41,7 +41,7 @@ switch ($actor) {
                 $data['data'][ $i ] = array(
                     'type'      => 'option',
                     'value'     => $row['id'],
-                    'text'      => $option_value // returnBooksOptionString($row, $lang, $withoutid)
+                    'text'      => $option_value
                 );
                 $i++;
             }

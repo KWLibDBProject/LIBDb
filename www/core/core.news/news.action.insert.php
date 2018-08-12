@@ -4,6 +4,8 @@ require_once '../__required.php'; // $mysqli_link
 $ref_name = 'news';
 
 $q = array(
+    //@todo: переименовать в publish_date в шаблонах и базе - дата добавления != дата публикации
+
     'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
 
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
@@ -19,7 +21,6 @@ $q = array(
 /*
 with PDO:
 'date_add'      => "STR_TO_DATE('{$_POST['date_add']}', '%d.%m.%Y')" //@PDO
-'timestamp'     => 'NOW()'
  */
 
 

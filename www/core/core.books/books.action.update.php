@@ -11,9 +11,13 @@ $q = array(
     'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
     'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']), // конвертировать в date format
     'contentpages'  => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
-    'published'     => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
+    'published_status'     => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
+
+    //@todo:date убрать
     'year'          => substr(mysqli_real_escape_string($mysqli_link, $_POST['book_date']), 6, 4), // тоже не нужно, будем брать
     'timestamp'     => ConvertDateToTimestamp(mysqli_real_escape_string($mysqli_link, $_POST['book_date'])), // зачем?
+
+    //@todo: убрать, этим занимается БД
     'stat_date_update' => ConvertTimestampToDate() // это задача БД
 );
 
