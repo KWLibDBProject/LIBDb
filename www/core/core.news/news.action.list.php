@@ -5,7 +5,7 @@ $ref_name = 'news';
 
 $year = $_GET['year'] ?? '';
 
-$query = "SELECT id, title_ru, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news WHERE 1=1 ";
+$query = "SELECT id, title_ru, DATE_FORMAT(publish_date, '%d.%m.%Y') as publish_date FROM news WHERE 1=1 ";
 $res = mysqli_query($mysqli_link, $query) or die($query);
 
 $news_list = [];

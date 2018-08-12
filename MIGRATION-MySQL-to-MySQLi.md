@@ -1,36 +1,28 @@
 # ФИКС языкового кода
 
-ВЕЗДЕ, включая таблицы `uk` исправляем на `ua`
+Во ВСЕХ таблицах в именах полей `uk` меняем на `ua`
 
 # Таблица news
 
 Для конвертации legacy-даты в правильный формат недостаточно просто изменить тип ячейки. 
 
-- Переименовываем старое поле в `date_add_legacy`
-- Добавляем поле `date_add`
+- Добавляем поле `publish_date`
 - Конвертируем:
 ```
-UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
+UPDATE news SET publish_date = STR_TO_DATE(date_add, '%d.%m.%Y')
 ```
-- Удаляем legacy-поля `date_add_legacy` и `date_year`
+- Удаляем legacy-поля `date_add`, `date_year`, `timestamp`
 
-- Соответственно фиксим выборки данных
-```
-"SELECT id, title_ru, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news"
-```
-- ...и вставку контента
-```
-'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
-'timestamp'     => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('U'),
-```
 - Меняем дефолтные значения полей 
 ```
 `stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
 
+
 # Таблица staticpages
 
+- Удаляем поле `deleted` 
 - Меняем дефолтные значения полей 
 ```
 `stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -40,6 +32,7 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 # Таблица authors
 
 - Добавляем поле orcid CHAR 16 DEFAULT ''
+- Удаляем поле `deleted`
 
 - Меняем дефолтные значения полей 
 ```
@@ -49,23 +42,26 @@ UPDATE news SET DATE_ADD = STR_TO_DATE(date_add_legacy, '%d.%m.%Y')
 
 # Таблица books
 
+- Удаляем поле `deleted`
 - Меняем дефолтные значения полей 
 ```
 `stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
+- Поле `published` переименовываем в `published_status`
 
+- Создаем поле `published_date` типа `DATE`
 
-[todo] : поле `date` legacy, поле `timestamp`
+- Конвертируем:
+```
+UPDATE books SET published_date = STR_TO_DATE(date, '%d.%m.%Y')
+```
 
-потребуют обновления методы:
-- Все методы в админке
-- LoadArticles_ByAuthor()
-- LoadLastBookInfo()
-
+Теперь поля `date`, `timestamp` и `year` не нужны, их можно удалить. 
 
 # Таблица articles
 
+- Удаляем поле `deleted`
 - Переименовываем поле `add_date` в `date_add_legacy`
 - Создаем поле `date_add DATE`
 - конвертируем:
@@ -77,11 +73,16 @@ UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
 # Таблица users
 
 - Удаляем поле `password`
+- Меняем тип полей `name`, `email`, `login`, `phone` на `varchar(250)`
 - Меняем дефолтные значения полей 
 ```
 `stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
+
+# Таблица topics
+
+- Удаляем поле `deleted`
 
 # Таблица filestorage
 - Меняем дефолтные значения полей 
@@ -89,6 +90,14 @@ UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
 `stat_date_insert` DATETIME DEFAULT CURRENT_TIMESTAMP,
 `stat_date_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ```
+- переименовываем поле `collection` в `collection_legacy`
+- создаем поле `collection` типа `ENUM('articles', 'authors', 'books', 'pages')`
+- выполняем обновление поля:
+```
+UPDATE filestorage SET `collection` = `collection_legacy`
+```
+- удаляем поле `collection_legacy` 
+- Накладываем индексы на поля: `relation` и `collection`
 
 # Таблица cross_aa
 
@@ -96,7 +105,7 @@ UPDATE articles SET `date_add` = STR_TO_DATE(date_add_legacy, '%d/%m/%Y')
 
 # Таблица ref_selfhood
 
-Переименовываем в ref_estaff_roles
+Переименовываем в `ref_estaff_roles`
 
 # Таблица eventlog
 

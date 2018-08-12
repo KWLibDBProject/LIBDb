@@ -308,9 +308,10 @@ switch ($fetch) {
 
                 $the_news_item = LoadNewsItem($id, $site_language);
 
+                //@todo: Почему не просто 'news_item' => $the_news_item с доступом по news_item.title / publish_date / text?
                 $local_template_data = [
                     'news_item_title'   => $the_news_item['title'] ?? '',
-                    'news_item_date'    => $the_news_item['date_add'] ?? '',
+                    'news_item_date'    => $the_news_item['publish_date'] ?? '',
                     'news_item_text'    => $the_news_item['text'] ?? ''
                 ];
                 $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);

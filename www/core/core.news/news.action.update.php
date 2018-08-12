@@ -5,18 +5,17 @@ $ref_name = 'news';
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 
 $q = array(
-    'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
+    'publish_date'      => DateTime::createFromFormat('d.m.Y', $_POST['publish_date'])->format('Y-m-d'),
 
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
+
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
     'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
     'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua']),
+
     'text_en'       => mysqli_real_escape_string($mysqli_link, $_POST['text_en']),
     'text_ru'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ru']),
     'text_ua'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ua']),
-
-    //@todo: ненужное поле
-    'timestamp'     => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('U'),
 );
 
 $qstr = MakeUpdate($q, $ref_name, " WHERE id=$id ");

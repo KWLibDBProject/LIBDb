@@ -4,24 +4,18 @@ require_once '../__required.php'; // $mysqli_link
 $ref_name = 'news';
 
 $q = array(
-    //@todo: переименовать в publish_date в шаблонах и базе - дата добавления != дата публикации
-
-    'date_add'      => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('Y-m-d'),
+    'publish_date'      => DateTime::createFromFormat('d.m.Y', $_POST['publish_date'])->format('Y-m-d'),
 
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
+
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
     'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
     'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua']),
+
     'text_en'       => mysqli_real_escape_string($mysqli_link, $_POST['text_en']),
     'text_ru'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ru']),
     'text_ua'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ua']),
-
-    'timestamp'     => DateTime::createFromFormat('d.m.Y', $_POST['date_add'])->format('U'),
 );
-/*
-with PDO:
-'date_add'      => "STR_TO_DATE('{$_POST['date_add']}', '%d.%m.%Y')" //@PDO
- */
 
 
 $qstr = MakeInsert($q, $ref_name);

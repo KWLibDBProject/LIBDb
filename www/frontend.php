@@ -357,17 +357,27 @@ function LoadLastNews($lang, $count=2)
     global $mysqli_link;
     $ret = array();
 
-    //@todo: timestamp поле лишнее, сортировать надо по date_add
-    //@todo: добавить 'where date_add < now()'
+    //@todo: + timestamp поле лишнее, сортировать надо по date_add
+    //@todo: + добавить 'where date_add < now()'
+    //@todo: date_add -> publish_date
 
-    $query = "SELECT id, title_{$lang} AS title, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news ORDER BY timestamp DESC LIMIT {$count}";
+    // дело в том, что поле date уже существует
+    $query = "
+    SELECT id, 
+    title_{$lang} AS title, 
+    DATE_FORMAT(publish_date, '%d.%m.%Y') as publish_date 
+    FROM news
+    WHERE publish_date < NOW() 
+    ORDER BY publish_date 
+    DESC LIMIT {$count}";
+
     $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
     $res_numrows = @mysqli_num_rows($res);
     $i = 1;
     if ($res_numrows > 0)
     {
         while ($row = mysqli_fetch_assoc($res)) {
-            $row['date_add'] = __langDate($row['date_add'], $lang); // websun variant
+            $row['publish_date'] = __langDate($row['publish_date'], $lang); // websun variant
 
             $ret[ $i ] = $row;
             $i++;
@@ -389,7 +399,7 @@ function LoadBookInfo($id)
     $query = "
     SELECT 
         books.title AS book_title, 
-        books.year AS book_year, 
+        YEAR(published_date) AS book_year, 
         file_cover, 
         file_title_ru, 
         file_title_en, 
@@ -618,19 +628,25 @@ function LoadNewsListTOC($lang, $limit = 15)
     global $mysqli_link;
     $ret = null;
 
-    //@todo: нужно ORDER BY date_add
-    //@todo: нужно WHERE date_add < NOW()
+    //@todo: + нужно ORDER BY date_add
+    //@todo: + нужно WHERE date_add < NOW()
+
+    //@todo: + date_add -> publish_date
 
     $query = "
     SELECT 
-    id, 
-    title_{$lang} AS title, 
-    DATE_FORMAT(date_add, '%d.%m.%Y') as date 
-    FROM news 
-    
-    ORDER BY timestamp 
-    
-    DESC LIMIT {$limit}";
+        id, 
+        title_{$lang} AS title, 
+        DATE_FORMAT(publish_date, '%d.%m.%Y') as publish_date 
+    FROM
+        news 
+    WHERE 
+        publish_date < NOW()
+    ORDER BY 
+        publish_date DESC 
+    LIMIT 
+        {$limit}";
+
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
         while ($row = mysqli_fetch_assoc($r)) {
@@ -654,7 +670,17 @@ function LoadNewsItem($id, $lang)
 {
     global $mysqli_link;
     $ret = null;
-    $query = "SELECT id, title_{$lang} AS title, text_{$lang} AS text, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM news where id={$id}";
+    $query = "
+    SELECT 
+        id, 
+        title_{$lang} AS title, 
+        text_{$lang} AS text, 
+        DATE_FORMAT(publish_date, '%d.%m.%Y') as publish_date 
+    FROM 
+        news 
+    WHERE 
+        id={$id}";
+
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
         if (@mysqli_num_rows($r) > 0) {
