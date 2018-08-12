@@ -80,8 +80,8 @@ ifNotLoggedRedirect('/core/');
             <input type="text" name="book_title" id="book_title">
         </div>
         <div class="field">
-            <label for="book_datepicker">Дата (год) выпуска:</label>
-            <input type="text" class="book_datepicker" id="book_datepicker" name="book_date">
+            <label for="book_datepicker">Дата выпуска:</label>
+            <input type="text" class="book_datepicker" id="book_datepicker" name="book_publish_date">
         </div>
         <div class="field">
             <label for="book_contentpages">Страницы со статьями:</label>
@@ -99,27 +99,27 @@ ifNotLoggedRedirect('/core/');
         <legend>Файлы</legend>
         <div class="field">
             <label for="file_cover">Обложка (изображение)</label>
-            <input type="file" name="file_cover" id="file_cover" size="80">
+            <input type="file" name="file_cover" id="file_cover" size="80" required>
             <button class="file-unlink" name="file_cover" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_title_ru">Титульный лист, кириллический (PDF-file)</label>
-            <input type="file" name="file_title_ru" id="file_title_ru" size="80">
+            <input type="file" name="file_title_ru" id="file_title_ru" size="80" required>
             <button class="file-unlink" name="file_title_ru" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_title_en">Титульный лист, английский (PDF-file)</label>
-            <input type="file" name="file_title_en" id="file_title_en" size="80">
+            <input type="file" name="file_title_en" id="file_title_en" size="80" required>
             <button class="file-unlink" name="file_title_en" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_toc_ru">Оглавление (PDF-file)</label>
-            <input type="file" name="file_toc_ru" id="file_toc_ru" size="80">
+            <input type="file" name="file_toc_ru" id="file_toc_ru" size="80" required>
             <button class="file-unlink" name="file_toc_ru" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_toc_en">Table of contents (PDF-file)</label>
-            <input type="file" name="file_toc_en" id="file_toc_en" size="80">
+            <input type="file" name="file_toc_en" id="file_toc_en" size="80" required>
             <button class="file-unlink" name="file_toc_en" disabled>X</button>
         </div>
     </fieldset>

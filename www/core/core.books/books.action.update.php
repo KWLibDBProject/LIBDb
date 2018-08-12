@@ -9,16 +9,17 @@ $book_id = $_POST['book_id'];
 
 $q = array(
     'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
-    'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']), // конвертировать в date format
     'contentpages'  => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
-    'published_status'     => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
+    'published_status'  => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
+    'published_date'    => DateTime::createFromFormat('d.m.Y', $_POST['book_publish_date'])->format('Y-m-d'),
 
+    // 'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']), // конвертировать в date format
     //@todo:date убрать
-    'year'          => substr(mysqli_real_escape_string($mysqli_link, $_POST['book_date']), 6, 4), // тоже не нужно, будем брать
-    'timestamp'     => ConvertDateToTimestamp(mysqli_real_escape_string($mysqli_link, $_POST['book_date'])), // зачем?
+    // 'year'          => substr(mysqli_real_escape_string($mysqli_link, $_POST['book_date']), 6, 4), // тоже не нужно, будем брать
+    // 'timestamp'     => ConvertDateToTimestamp(mysqli_real_escape_string($mysqli_link, $_POST['book_date'])), // зачем?
 
     //@todo: убрать, этим занимается БД
-    'stat_date_update' => ConvertTimestampToDate() // это задача БД
+    // 'stat_date_update' => ConvertTimestampToDate() // это задача БД
 );
 
 $qstr = MakeUpdate($q, $ref_name, " WHERE id = {$book_id}");

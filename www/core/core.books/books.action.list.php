@@ -5,13 +5,14 @@ require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'books';
 
-//@todo:date - GROUP BY books.year => GROUP BY YEAR(books.published_date)
+//@todo + GROUP BY books.year => GROUP BY YEAR(books.published_date)
+//@todo + books.date => DATE_FORMAT(books.published_date, '%d.%m.%Y') as date
 
 $query = "
 SELECT 
 books.id AS book_id, 
 books.title, 
-books.date, 
+DATE_FORMAT(books.published_date, '%d.%m.%Y') as date, 
 contentpages, 
 published_status, 
 file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en,
@@ -20,7 +21,7 @@ file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en,
  
  LEFT JOIN articles ON books.id=articles.book
  
- GROUP BY books.id, books.title, books.year
+ GROUP BY books.id, books.title, YEAR(books.published_date)
  ORDER BY books.title DESC";
 
 $res = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое справочника! ".$query);

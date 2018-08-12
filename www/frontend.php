@@ -272,28 +272,29 @@ ORDER BY topicgroups.display_order, topics.title_{$lang}
 function LoadBooks()
 {
     global $mysqli_link;
-    $all_books = [];
 
-    //@todo:book = books.published => published_status, books.year AS year => YEAR(books.published_date) AS year
+    //@todo  +  book = books.published => published_status,
+    //@todo  +  books.year AS year => YEAR(books.published_date) AS year
 
-    $bq = "SELECT
-books.title AS title,
-books.year  AS year,
-books.id    AS bid,
-COUNT(books.id) AS articles_count
+    $bq = "
+SELECT
+    books.title AS title,
+    YEAR(books.published_date) AS year,
+    books.id    AS bid,
+    COUNT(books.id) AS articles_count
 
-FROM books, articles
+FROM 
+    books, articles
 
 WHERE
- articles.book = books.id AND  
- books.published_status = 1
+    articles.book = books.id AND  
+    books.published_status = 1
 
-GROUP BY books.title
-ORDER BY 
-books.year DESC, 
-books.title ASC";
-
-    // было: books.year AS year
+GROUP BY 
+    books.title
+ORDER BY
+    YEAR(books.published_date) DESC, 
+    books.title ASC";
 
     $br = mysqli_query($mysqli_link, $bq);
     $is_active = 1;
@@ -382,7 +383,7 @@ function LoadLastNews($lang, $count=2)
  */
 function LoadBookInfo($id)
 {
-    //@todo: books 'book.year as book_year' => YEAR(published_date) AS book_year
+    //@todo: + books 'book.year as book_year' => YEAR(published_date) AS book_year
 
     global $mysqli_link;
     $query = "
@@ -410,7 +411,7 @@ function LoadBookInfo($id)
  * возвращает ассоциативный массив из базы с информацией о ПОСЛЕДНЕМ опубликованном сборнике
  * или {} если нет такого
  *
- * @todo: работает криво, грузит не тот сборник
+ * @todo: работает криво, грузит не тот сборник ? После рефакторинга v.1.77 возможно работает нормально
  *
  * @return array
  */
@@ -418,10 +419,18 @@ function LoadLastBookInfo()
 {
     global $mysqli_link;
 
-    //@todo: рефакторинг даты
-    //@todo:date  - `date` => published_date
+    //@todo: +
+    //@todo:date  + `date` => published_date
 
-    $r = mysqli_query($mysqli_link, "SELECT * FROM books WHERE published_status = 1 ORDER BY date desc LIMIT 1"); // is enought for latest published book ?
+
+    $query = "
+    SELECT * 
+    FROM books 
+    WHERE published_status = 1 
+    ORDER BY published_date DESC 
+    LIMIT 1";
+
+    $r = mysqli_query($mysqli_link, $query); // is enought for latest published book ?
 
     $ret = [];
     if (@mysqli_num_rows($r)==1) {
@@ -443,8 +452,7 @@ function BuildQuery($get, $lang)
 
     // DATE_FORMAT(date_add, '%d.%m.%Y') as date_add,
 
-    //@todo:book 'books.year AS book_year' => YEAR(books.published_date) AS book_year
-    //@todo:book
+    //@todo:book  + 'books.year AS book_year' => YEAR(books.published_date) AS book_year
 
     $q_select = " SELECT DISTINCT
   articles.id
@@ -455,7 +463,7 @@ function BuildQuery($get, $lang)
 , articles.topic
 , books.title AS book_title
 , topics.title_{$lang} AS topic_title
-, books.year AS book_year
+, YEAR(books.published_date) AS book_year
 , articles.pages AS article_pages
 , pdfid
 , doi
@@ -514,9 +522,9 @@ topics.id = articles.topic {$query_show_published} ";
         ? " AND authors.id = " . intval($get['aid'])
         : "";
 
-    //@todo:book 'AND books.year = ...' => 'AND YEAR(books.published_date) = ...'
+    //@todo:book + 'AND books.year = ...' => 'AND YEAR(books.published_date) = ...'
     $q_extended .= (IsSet($get['year']) && ($get['year'] != 0))
-        ? " AND books.year = " . intval($get['year'])
+        ? " AND YEAR(books.published_date) = " . intval($get['year'])
         : "";
 
     /* Expert search conditions */
@@ -526,7 +534,6 @@ topics.id = articles.topic {$query_show_published} ";
         /* пример: AND articles.udc LIKE '%621%' */
         /* пример: AND articles.add_date LIKE '%2013' */
         /* пример: AND (articles.keywords_en LIKE '%robot%' OR ... OR ... )*/
-        /*@todo: critical: экранировать значения: possible SQL injection and script crush! */
 
         $q_expert .= ($get['expert_name'] != '')
             ? " AND authors.name_{$lang} LIKE '" . mysqli_real_escape_string($mysqli_link, $get['expert_name']) . "%' "
@@ -536,6 +543,7 @@ topics.id = articles.topic {$query_show_published} ";
             ? " AND articles.udc LIKE '%" . mysqli_real_escape_string($mysqli_link, $get['expert_udc']) . "%' "
             : "";
 
+        //@todo: к какой таблице относится эта наша date_add? articles?
         $q_expert .= ($get['expert_add_date'] != '')
             ? " AND DATE_FORMAT(date_add, '%d.%m.%Y') LIKE '%" . mysqli_real_escape_string($mysqli_link, $get['expert_add_date']) . "' "
             : "";
@@ -613,7 +621,16 @@ function LoadNewsListTOC($lang, $limit = 15)
     //@todo: нужно ORDER BY date_add
     //@todo: нужно WHERE date_add < NOW()
 
-    $query = "SELECT id, title_{$lang} AS title, DATE_FORMAT(date_add, '%d.%m.%Y') as date FROM news ORDER BY timestamp DESC LIMIT {$limit}";
+    $query = "
+    SELECT 
+    id, 
+    title_{$lang} AS title, 
+    DATE_FORMAT(date_add, '%d.%m.%Y') as date 
+    FROM news 
+    
+    ORDER BY timestamp 
+    
+    DESC LIMIT {$limit}";
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
         while ($row = mysqli_fetch_assoc($r)) {
@@ -697,15 +714,19 @@ function LoadArticles_ByAuthor($id, $lang, $is_published = true)
 
     $query_published = $is_published ? 1 : 0;
 
-    //@todo: здесь
+    //@todo +
+    //@todo + SUBSTRING(books.date,7,4) AS bdate' => 'YEAR(books.published_date) as bdate
+    // переименовать bdate в book_year - и поменять в шаблонах
 
     $q = "SELECT
 articles.id AS aid,
 articles.title_{$lang} AS atitle,
 articles.pdfid,
 books.title AS btitle,
-SUBSTRING(books.date,7,4) AS bdate
+YEAR(books.published_date) AS bdate
+
 FROM articles, cross_aa, books
+
 WHERE books.id=articles.book
 AND cross_aa.article = articles.id
 AND books.published_status = {$query_published}

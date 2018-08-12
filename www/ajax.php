@@ -26,7 +26,15 @@ switch ($actor) {
 
         $i = 1;
         $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
-        $q = "SELECT * FROM books WHERE published_status = 1 ORDER BY title";  //@todo: тут ORDER по названию
+        $q = "
+        SELECT * 
+        FROM books 
+        WHERE published_status = 1 
+        ORDER BY YEAR(published_date) DESC, title ASC";
+
+
+        //@todo: тут ORDER по названию
+
         $r = mysqli_query($mysqli_link, $q) or die($q);
         $n = @mysqli_num_rows($r) ;
 

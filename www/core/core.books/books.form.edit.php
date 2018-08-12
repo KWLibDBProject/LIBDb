@@ -9,7 +9,17 @@ $id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($id != -1)
 {
-    $q = "select * from books where id=$id";
+    // $q = "select * from books where id=$id";
+
+    $q = "
+    SELECT 
+    id, title, published_status, contentpages,
+    DATE_FORMAT(published_date, '%d.%m.%Y') as published_date,
+    file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en
+    FROM books
+    WHERE id = {$id}
+    ";
+
     $r = mysqli_query($mysqli_link, $q) or die("Death at : $q");
 
     if (@mysqli_num_rows($r) > 0) {
@@ -249,7 +259,7 @@ if ($id != -1)
         </div>
         <div class="field">
             <label for="book_datepicker">Дата (год) выпуска:</label>
-            <input type="text" class="book_datepicker" id="book_datepicker" name="book_date" value="<?php echo $book['date']?>">
+            <input type="text" class="book_datepicker" id="book_datepicker" name="book_publish_date" value="<?php echo $book['published_date']?>">
         </div>
         <div class="field">
             <label for="book_contentpages">Страницы со статьями:</label>
