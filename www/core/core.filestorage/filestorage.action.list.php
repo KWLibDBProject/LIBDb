@@ -6,7 +6,7 @@ require_once '../__required.php'; // $mysqli_link
 $collection = at($_GET, 'collection', 'all');
 $collection = getAllowedValue( $collection , array(
     'all', 'articles', 'authors', 'books'
-));
+), 'all');
 
 $where =
     ($collection != "all")
@@ -23,20 +23,22 @@ $sortorder  =
 $sort_type = $_GET['sort-type'] ?? 'id';
 $sort_type = getAllowedValue( $sort_type, array(
     'id', 'username', 'stat_date_insert', 'filesize', 'relation', 'stat_download_counter'
-));
+), '');
 
 $sortby =
     (!empty($sort_type) && $sort_type != 'id')
     ? " ORDER BY {$sort_type} {$sortorder} "
     : ' ';
 
-$fs_table = FileStorageConfig::$config['table'];
+$fs_table = FileStorage::getStorageTable();
 
+/* move to method */
 $q = "
 SELECT id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter, stat_date_insert
 FROM {$fs_table} {$where} {$sortby}";
 
 $r = @mysqli_query($mysqli_link, $q);
+/**/
 
 $filestorage_list = [];
 if ($r) {

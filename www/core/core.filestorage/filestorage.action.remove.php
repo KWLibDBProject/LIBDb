@@ -25,7 +25,7 @@ $field = getAllowedValue( $field, array(
     'file_toc_en'
 ));
 
-if ($id != -1)
+if ($id != -1 && $owner && $field) //@more secure - check all input params
 {
     $result['message'] = '';
 

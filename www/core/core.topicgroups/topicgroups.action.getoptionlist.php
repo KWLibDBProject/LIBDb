@@ -6,7 +6,7 @@ $lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
 
 $lang = getAllowedValue($lang, array(
     'ru', 'en', 'ua'
-));
+), 'en');
 
 $withoutid = isset($_GET['id']) ? 1 : 0;
 

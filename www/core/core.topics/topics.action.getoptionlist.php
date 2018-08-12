@@ -6,7 +6,7 @@ $flag_lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
 
 $flag_lang = getAllowedValue($flag_lang, array(
     'ru', 'en', 'ua'
-));
+), 'en');
 
 /**
  Новое поведение: теперь можно задать в GET флаги:

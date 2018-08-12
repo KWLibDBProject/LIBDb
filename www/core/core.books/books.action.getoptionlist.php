@@ -2,16 +2,17 @@
 require_once '../__required.php'; // $mysqli_link
 // отдает JSON объект для селектора 'books'
 
+//@todo: input param 'lang' is useless
+
 $lang = isset($_GET['lang']) ? $_GET['lang'] : 'ru';
 
 $lang = getAllowedValue( $lang, array(
     'ru', 'en', 'ua'
-));
+), 'en');
 
 $withoutid = isset($_GET['withoutid']) ? 1 : 0;
 
 $flag_with_id = isset($_GET['id']) ? 1 : 0;
-
 
 $query = "SELECT * FROM books ";
 $result = mysqli_query($mysqli_link, $query) or die($query);

@@ -107,7 +107,7 @@ function ConvertDateByLang($date_as_string, $lang)
 function LoadFirstLettersForSelector($lang)
 {
     global $mysqli_link;
-    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors WHERE deleted=0 ORDER BY name_{$lang}";
+    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors ORDER BY name_{$lang}"; // was "where deleted=0, but is ALWAYS = 0
     $qr = mysqli_query($mysqli_link, $ql);
 
     if ($qr)
@@ -465,9 +465,9 @@ articles.pdfid = filestorage.id AND
 authors.id = cross_aa.author AND
 articles.id = cross_aa.article AND
 books.id = articles.book AND
-topics.id = articles.topic AND
-articles.deleted = 0 AND
-topics.deleted=0 {$query_show_published} ";
+topics.id = articles.topic {$query_show_published} ";
+    // removed 'articles.deleted = 0`, 'cause it is ALWAYS equal 0
+    // removed 'topics.deleted = 0', 'cause it is ALWAYS equal 0 too
 
     $q_final = " GROUP BY articles.title_{$lang} ORDER BY articles.id ";
 
@@ -738,11 +738,14 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1)
     title_{$lang} AS title,
     workplace_{$lang} AS workplace
     FROM authors
-    WHERE deleted=0
+    WHERE 1=1
     {$where_es}
     {$where_estaff_role}
     {$where_like}
-    {$order}";
+    {$order}"; // removed 'deleted = 0' cause it is ALWAYS equal 0.
+    // '1=1' - нужно как условие, которое всегда истина. Следом могут идти другие условия с союзами AND.
+    // Это лишнее условие нужно, чтобы не сломалсь SQL-выражение и не нужно было морочиться с добавлением AND по условию.
+    // Технически, было бы правильно записать все условия в массив, а потом применить array_map или implode для сборки WHERE-блока
 
     $r = mysqli_query($mysqli_link, $q) or Die(0);
 

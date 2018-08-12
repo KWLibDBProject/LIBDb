@@ -15,6 +15,8 @@ class FileStorage
 
     public static $config = [];
 
+    private static $filestorage_table = '';
+
     /**
      * @param $mysqli_link
      */
@@ -22,6 +24,7 @@ class FileStorage
     {
         self::$mysqli_link = $mysqli_link;
         self::$config = $config;
+        self::$filestorage_table = $config['table'];
     }
 
     /* возвращает blob-строку пустого PDF-файла */
@@ -563,6 +566,11 @@ class FileStorage
             } // end while
         }
         return $result;
+    }
+
+    public static function getStorageTable()
+    {
+        return self::$filestorage_table;
     }
 
 

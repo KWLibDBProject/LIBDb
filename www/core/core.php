@@ -172,13 +172,14 @@ function getAllowedRef( $data, $allowed_values_array )
 
 /**
  * Проверяет заданную переменную на допустимость (на основе массива допустымых значений)
- * и если находит - возвращает её. В противном случае возвращает NULL.
+ * и если находит - возвращает её. В противном случае возвращает $default_value (по умолчанию NULL).
  *
  * @param $data
  * @param $allowed_values_array
+ * @param $default_value
  * @return null|mixed
  */
-function getAllowedValue( $data, $allowed_values_array )
+function getAllowedValue( $data, $allowed_values_array, $default_value = NULL )
 {
     if (empty($data)) {
         return NULL;
