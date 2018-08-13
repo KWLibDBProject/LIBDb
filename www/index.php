@@ -434,5 +434,5 @@ $content = \Websun\websun::websun_parse_template_path($main_template_data, $main
 $content = preg_replace('/^\h*\v+/m', '', $content);
 echo $content;
 
-printf("\r\n<!-- Total time: %s sec, Memory Used (current): %s , Memory Used (max): %s ", round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4), formatBytes(memory_get_usage()), formatBytes(memory_get_peak_usage()));
+printf("\r\n<!-- Total time: %s sec, Memory Used (current): %s , Memory Used (max): %s -->", round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4), formatBytes(memory_get_usage()), formatBytes(memory_get_peak_usage()));
 
