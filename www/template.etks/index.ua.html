@@ -13,7 +13,7 @@
     <link rel="icon" href="{*template_theme_dir*}/_assets/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="{*template_theme_dir*}/_assets/favicon.ico" type="image/x-icon" />
 
-    {?*frontend_assets_mode="development"*}
+    {?*frontend.assets_mode="development"*}
     <!-- Development -->
     <link rel="stylesheet" href="/{*template_theme_dir*}/_assets/bootstrap/bootstrap.css">
     <link rel="stylesheet" href="/{*template_theme_dir*}/_assets/bootstrap/bootstrap-theme.css">
@@ -39,7 +39,7 @@
             $.ajaxSetup({cache: false});
 
             // get site language from cookies, if language not defined - set "EN"
-            if (!getCookie('libdb_sitelanguage')) { setCookie('libdb_sitelanguage', 'en', 3600*24*30) }
+            if (!getCookie('{*frontend.cookie_site_language*}')) { setCookie('{*frontend.cookie_site_language*}', 'en', 3600*24*30) }
 
             {*content_jquery*}
 
@@ -52,7 +52,7 @@
             // Language switch
             $(".action-switch-language").on('click', function(){
                 if (!$(this).hasClass('lang-active')) {
-                    setCookie('libdb_sitelanguage', $(this).attr('data-lang'), 3600*24*30 );
+                    setCookie('{*frontend.cookie_site_language*}', $(this).attr('data-lang'), 3600*24*30 );
                     calledOnSwitchLanguage();
                     location.reload();
                 }
@@ -207,7 +207,7 @@
 
 </div>
 
-{?*frontend_assets_mode="production"*}
+{?*frontend.assets_mode="production"*}
 {* + metrika.google-analytics.html *}
 {* + metrika.yandex.html *}
 {?}

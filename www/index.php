@@ -258,7 +258,9 @@ switch ($fetch) {
                     'article_pdfid'         => $article_info['pdfid'] ?? '',
                     'article_refs'          => $article_info['article_refs'] ?? '',
                     'article_doi'           => $article_info['doi'] ?? '',
-                    'article_pdf_last_download_date' => $article_info['pdf_last_download_date'],
+                    'article_pdf_last_download_date'
+                                            => $article_info['pdf_last_download_date'],
+
                     'site_lang'             => $site_language
                 ];
 
@@ -423,8 +425,9 @@ $main_template_data['content_css'] = $maincontent_css;
 // $main_template_data['frontend_assets_mode'] = Config::get('frontend/assets_mode');
 
 $main_template_data['frontend'] = [
-    'assets_mode'   =>  Config::get('frontend/assets_mode', 'development'),
-    'assets_version'=>  Config::get('frontend/assets_version', '')
+    'assets_mode'           =>  Config::get('frontend/assets_mode', 'development'),
+    'assets_version'        =>  Config::get('frontend/assets_version', ''),
+    'cookie_site_language'  =>  Config::get('cookie_site_language', 'libdb_sitelanguage')
 ];
 
 $content = \Websun\websun::websun_parse_template_path($main_template_data, $main_template_file, "$/{$main_theme_dir}");

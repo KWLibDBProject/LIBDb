@@ -2,14 +2,6 @@
 /* ------------------------------- Служебные функции ----------------------------- */
 
 /**
- * @param $data
- */
-function debug($data)
-{
-    print('<pre>'.print_r($data, true).'</pre>');
-}
-
-/**
  *
  * @param $request_string
  * @return string       -- sql-безопасный результат
@@ -67,7 +59,7 @@ $TRANSLATED_MONTHS = array(
 function __langDate($date_as_string, $lang)
 {
     global $TRANSLATED_MONTHS;
-    $date_as_array = date_parse_from_format('d.m.Y',$date_as_string);
+    $date_as_array = date_parse_from_format('d.m.Y', $date_as_string);
 
     $day = $date_as_array['day'] ?? '';
     $month = $TRANSLATED_MONTHS[$lang][ $date_as_array['month'] ] ?? '';
@@ -84,9 +76,6 @@ function __langDate($date_as_string, $lang)
  */
 function ConvertDateByLang($date_as_string, $lang)
 {
-    // в PHP младше 5.2 date_parse() не определена. Смотри stewarddb.
-    /* $return = date("d M Y", strtotime($date_as_string)); */
-
     global $TRANSLATED_MONTHS;
 
     if (function_exists('date_parse_from_format')) {
@@ -273,9 +262,6 @@ function LoadBooks()
 {
     global $mysqli_link;
 
-    //@todo  +  book = books.published => published_status,
-    //@todo  +  books.year AS year => YEAR(books.published_date) AS year
-
     $bq = "
 SELECT
     books.title AS title,
@@ -357,11 +343,6 @@ function LoadLastNews($lang, $count=2)
     global $mysqli_link;
     $ret = array();
 
-    //@todo: + timestamp поле лишнее, сортировать надо по date_add
-    //@todo: + добавить 'where date_add < now()'
-    //@todo: date_add -> publish_date
-
-    // дело в том, что поле date уже существует
     $query = "
     SELECT id, 
     title_{$lang} AS title, 
@@ -393,8 +374,6 @@ function LoadLastNews($lang, $count=2)
  */
 function LoadBookInfo($id)
 {
-    //@todo: + books 'book.year as book_year' => YEAR(published_date) AS book_year
-
     global $mysqli_link;
     $query = "
     SELECT 
@@ -428,10 +407,6 @@ function LoadBookInfo($id)
 function LoadLastBookInfo()
 {
     global $mysqli_link;
-
-    //@todo: +
-    //@todo:date  + `date` => published_date
-
 
     $query = "
     SELECT * 
@@ -479,12 +454,14 @@ function BuildQuery($get, $lang)
 , doi
 , filestorage.username AS pdf_filename
 , DATE_FORMAT(filestorage.stat_date_download, '%d.%m.%Y') AS pdf_last_download_date ";
+
 /* дополнительные поля (для /article/info ) */
     $q_select .= "
 , articles.abstract_{$lang} AS article_abstract
 , articles.refs_{$lang} AS article_refs
 , articles.keywords_{$lang} AS article_keywords
 ";
+
     // $q_select_expert = ", articles.keywords_{$lang}";
     $q_select .= "
 , books.id AS book_id
@@ -621,17 +598,13 @@ function LoadArticles_ByQuery($get, $lang)
 /**
  * загружает данные для списка новостей [id] => [id => '', title => '', date => '']
  * @param $lang
+ * @param $limit
  * @return null|string
  */
 function LoadNewsListTOC($lang, $limit = 15)
 {
     global $mysqli_link;
     $ret = null;
-
-    //@todo: + нужно ORDER BY date_add
-    //@todo: + нужно WHERE date_add < NOW()
-
-    //@todo: + date_add -> publish_date
 
     $query = "
     SELECT 
@@ -702,7 +675,7 @@ function LoadAuthorInformation_ById($id, $lang)
     global $mysqli_link;
     $author = [];
 
-    $q = "SELECT * FROM `authors` WHERE id=$id";
+    $q = "SELECT * FROM `authors` WHERE id={$id}";
     $r = mysqli_query($mysqli_link, $q);
     if (@mysqli_num_rows($r)>0) {
         $result = mysqli_fetch_assoc($r);
@@ -740,8 +713,6 @@ function LoadArticles_ByAuthor($id, $lang, $is_published = true)
 
     $query_published = $is_published ? 1 : 0;
 
-    //@todo +
-    //@todo + SUBSTRING(books.date,7,4) AS bdate' => 'YEAR(books.published_date) as bdate
     // переименовать bdate в book_year - и поменять в шаблонах
 
     $q = "SELECT
@@ -770,7 +741,9 @@ ORDER BY date_add
 
 /**
  * загрузка списка авторов с отбором по первой букве (в зависимости от языка)
- * значение буквы по умолчанию '0', что означает ВСЕ авторы // @todo: рефакторнинг: замена на *
+ * значение буквы по умолчанию '0', что означает ВСЕ авторы
+
+// @todo: рефакторнинг: замена на *
  * функция используется в аякс-ответах, в выгрузке полного списка авторов и выгрузке списка авторов по первой букве
  *
  * @param $letter
@@ -811,7 +784,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1)
     {$where_es}
     {$where_estaff_role}
     {$where_like}
-    {$order}"; // removed 'deleted = 0' cause it is ALWAYS equal 0.
+    {$order}";
     // '1=1' - нужно как условие, которое всегда истина. Следом могут идти другие условия с союзами AND.
     // Это лишнее условие нужно, чтобы не сломалсь SQL-выражение и не нужно было морочиться с добавлением AND по условию.
     // Технически, было бы правильно записать все условия в массив, а потом применить array_map или implode для сборки WHERE-блока
@@ -836,10 +809,6 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1)
 function LoadArticleInformation_ById($id, $lang)
 {
     $articles = LoadArticles_ByQuery(array('article_id' => $id ) , $lang)[$id];
-
-    // если использовать reset() - вроде бы более корректно - вернет 1 элемент массива или FALSE если элемента нет или он приводится к FALSE
-    // $articles = reset($articles);
-
     return $articles;
 }
 
@@ -856,9 +825,21 @@ function LoadAuthors_ByArticle($id, $lang)
 {
     global $mysqli_link;
 
-    $q = "SELECT authors.id AS author_id, name_{$lang} AS author_name, title_{$lang} AS author_title , email AS author_email FROM authors, cross_aa WHERE cross_aa.author = authors.id AND cross_aa.article=$id ORDER BY name_{$lang}";
+    $query = "
+    SELECT 
+        authors.id AS author_id, 
+        name_{$lang} AS author_name, 
+        title_{$lang} AS author_title, 
+        email AS author_email 
+    FROM 
+        authors, cross_aa 
+    WHERE 
+        cross_aa.author = authors.id AND 
+        cross_aa.article={$id} 
+    ORDER BY name_{$lang}";
+
     $ret = array();
-    if ($r = mysqli_query($mysqli_link, $q)) {
+    if ($r = mysqli_query($mysqli_link, $query)) {
         while ($row = @mysqli_fetch_assoc($r)) {
             $ret[ $row['author_id'] ] = $row;
         }
@@ -922,27 +903,6 @@ FE_PrintTopics_Each;
     }
 
     if ($optgroup_found) $ret .= '</div></div>';
-
-    return $ret;
-}
-
-/**
- * Перенесена из template.php , но нигде не используется
- *
- * @param $lang
- * @return string
- */
-function printTopicsPlain($lang)
-{
-    $all_topics = LoadTopics($lang);
-
-    $ret = '';
-    foreach ($all_topics as $id => $title )
-    {
-        $ret .= <<<FE_PrintTopics_Each
-<a href="?fetch=articles&with=topic&id={$id}" class="list-group-item">{$title}</a>
-FE_PrintTopics_Each;
-    }
 
     return $ret;
 }
@@ -1064,95 +1024,3 @@ function getPagesPrefix_forArticles($lang)
 }
 
 
-/* ============================================ USELESS METHODS ========================================= */
-
-
-/**
- * возвращает длинную строку с новостями -- результат подставляется в override-переменную
- * новостного блока (справа под сборниками)
- *
- * Это WEBSUN рендер... а должен быть массив.
- *
- * @param $template_name
- * @param int $count
- * @param string $language
- * @return mixed
- *
- * @todo: useless, в главном шаблоне используем LoadLastNews() и подключаем файл через {* +... *}
- */
-function printLastNews($template_name, $count = 3, $language = 'en')
-{
-    $template_dir = "$/{$template_name}/_main_subtemplates";
-    $template_file = "frontpage_news_section.html";
-
-    $template_data = array(
-        'last_news_list' =>  LoadLastNews($language, $count)
-    );
-
-    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
-
-    return $render_result;
-
-}
-
-/**
- * возвращает рендер websun
- *
- * ВОЗМОЖНО, нужно возвращать ARRAY, который разбирать в шаблоне
- * ИЛИ
- * возвращать ARRAY, а в шаблоне подключать через {* + _main_subtemplates/frontpage_books_section.html *}
- * только ему передавать надо правильно, чтобы в глобальном оверрайде не затереть лишнего
- *
- * @param $template_name
- * @return mixed
- *
- * @todo: useless, в главном шаблоне используем LoadBooks() и подключаем файл через {* +... *}
- */
-function printBooks($template_name)
-{
-    $all_books = LoadBooks();
-
-    // этот шаблон надо подключать в основном шаблоне, передавая в 'all_books' результат LoadBooks()
-    // ВАЖНО: по аналогии можно написать и TOPICS+TOPIC GROUPS
-
-    $template_dir = "$/{$template_name}/_main_subtemplates";
-    $template_file = "frontpage_books_section.html";
-
-    $template_data = array(
-        'all_books' =>  $all_books
-    );
-
-    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
-
-    return $render_result;
-}
-
-/**
- * оформляет массив баннеров в LI-список, возвращает РЕНДЕР WEBSUN
- *
- * ВОЗМОЖНО, нужно возвращать ARRAY, который разбирать в шаблоне
- * ИЛИ
- * возвращать ARRAY, а в шаблоне подключать через {* + _main_subtemplates/frontpage_books_section.html *}
- * только ему передавать надо правильно, чтобы в глобальном оверрайде не затереть лишнего
- *
- * @param $template_name
- * @return mixed
- *
- * @todo: useless, в главном шаблоне используем LoadBanners() и подключаем файл через {* +... *}
- */
-function printBanners($template_name)
-{
-    $template_dir = "$/{$template_name}/_main_subtemplates";
-    $template_file = "frontpage_banners_section.html";
-
-    $template_data = array(
-        'all_banners' =>  LoadBanners()
-    );
-
-    // ? перенести в основной шаблон как подключение файла с передачей ему параметров
-
-    $render_result = \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
-
-    return $render_result;
-
-}
