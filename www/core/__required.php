@@ -3,12 +3,16 @@
  * User: Karel Wintersky
  * Date: 31.07.2018, time: 16:57
  */
-ini_set('pcre.backtrack_limit', 1024*1024); // 1 Mб
+ini_set('pcre.backtrack_limit', 16*1024*1024); // 16 Mб
+ini_set('pcre.recursion_limit', 16*1024*1024);
 
 require_once 'class.config.php';
 require_once 'class.filestorage.php';
 require_once 'class.kwlogger.php';
+
 require_once 'class.websun.php';
+require_once 'websun.php';
+
 require_once 'core.php';
 require_once 'core.db.php';
 

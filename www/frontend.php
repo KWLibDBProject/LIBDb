@@ -752,7 +752,7 @@ ORDER BY date_add
  * @param $estaff_role
  * @return array
  */
-function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1)
+function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $limit = 0)
 {
     global $mysqli_link;
     $authors = array();
@@ -763,17 +763,19 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1)
         $letter = mysqli_real_escape_string($mysqli_link, $letter);
     }
 
-    $where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
+    $query_limit = ($limit == 0) ? "" : " LIMIT {$limit}";
+
+    $query_where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
 
     // check for 'is author in editorial stuff', default is 'no'
-    $where_es = ($is_es != 'no') ? ' AND is_es = 1 ' : '';
+    $query_where_es = ($is_es != 'no') ? ' AND is_es = 1 ' : '';
 
     // optional parameter estaff_role (for extended estuff)
-    $where_estaff_role = ($estaff_role != -1 )
+    $query_where_estaff_role = ($estaff_role != -1 )
         ? " AND estaff_role = " . intval($estaff_role)
         : " ";
 
-    $order = " ORDER BY authors.name_{$lang}";
+    $query_order = " ORDER BY authors.name_{$lang}";
 
     $q = "SELECT id, email, orcid, phone, 
     name_{$lang} AS name,
@@ -781,10 +783,13 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1)
     workplace_{$lang} AS workplace
     FROM authors
     WHERE 1=1
-    {$where_es}
-    {$where_estaff_role}
-    {$where_like}
-    {$order}";
+    {$query_where_es}
+    {$query_where_estaff_role}
+    {$query_where_like}
+    {$query_order}
+    {$query_limit}
+    
+    /* LIMIT 338 */";
     // '1=1' - нужно как условие, которое всегда истина. Следом могут идти другие условия с союзами AND.
     // Это лишнее условие нужно, чтобы не сломалсь SQL-выражение и не нужно было морочиться с добавлением AND по условию.
     // Технически, было бы правильно записать все условия в массив, а потом применить array_map или implode для сборки WHERE-блока

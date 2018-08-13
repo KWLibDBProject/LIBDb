@@ -81,14 +81,17 @@ switch ($actor) {
 
     case 'load_authors_selected_by_letter': {
         // called js from /authors/list
+        $get_limit = $_GET['limit'] ?? 0;
 
-        $authors_list = LoadAuthors_ByLetter($_GET['letter'], $lang, 'no');
+        $authors_list = LoadAuthors_ByLetter($_GET['letter'], $lang, 'no', -1, $get_limit); // LIMIT added for DEBUG purposes
 
         $template_dir = "$/{$main_theme_dir}/authors/all/";
         $template_file_name = "authors__all.{$lang}";
         $inner_html_data = [
             'all_authors_list' => $authors_list
         ];
+
+        // $return = websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
         $return = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
