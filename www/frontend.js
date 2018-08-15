@@ -9,16 +9,28 @@ String.prototype.fulltrim = String.prototype.fulltrim || function(){return this.
 
 /* Разделить строку по параметрам © http://a2x.ru/?p=140 */
 /* возвращает массив вида 'valuename' => 'valuedata' */
-function getQuery( queryString , limiter)
+function getQuery( queryString , limiter )
 {
     var vars = queryString.split((limiter || '&')); //делим строку по & - parama1=1
+
     var arr = [];
     for (var i=0 , vl = vars.length; i < vl; i++)
     {
-        var pair = vars[i].split("="); //делим параметр со значением по =, и пишем в ассоциативный массив arr['param1'] = 1
+        var pair = vars[i].split("=");
         arr[pair[0]] = pair[1];
     }
+
     return arr;
+}
+
+function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split('=');
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
 }
 
 function setHashBySelectors(search_selector)
@@ -54,11 +66,29 @@ function setHashBySelectors(search_selector)
     }
 }
 
+function setSelectorsByHash_NEW(target)
+{
+    var sel_name;
+    var sel_value;
+    var hashes_obj = parseQuery((window.location.hash).substr(1));
+
+    console.log(hashes_obj);
+
+    $.each( $(target), function (id, data) {
+        sel_name = $(data).attr('name');
+        sel_value = hashes_obj[sel_name] != '' ? hashes_obj[sel_name] : 0;
+
+        $(target+"[name="+sel_name+"] option[value="+sel_value+"]").prop("selected",true);
+    });
+}
+
 function setSelectorsByHash(target)
 {
     var sel_name;
     var sel_value;
     var hashes_arr = getQuery((window.location.hash).substr(1));
+
+    var hashes_obj = parseQuery((window.location.hash).substr(1));
 
     $.each( $(target), function(id, data) {
         sel_name = $(data).attr('name'); // selector's name attribute

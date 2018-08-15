@@ -3,21 +3,19 @@ require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'authors';
 
+$select_letter = $_GET['letter'] ?? '0';
+
 $sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru " : '';
 
-if ( (!isset($_GET['letter'])) || ($_GET['letter'] != '0') ) {
-    $letter = substr($_GET['letter'], 0, 6);
-    $like = " authors.name_ru LIKE '{$letter}%'";
-    $sort_order = " ORDER BY name_ru ";
+if ($select_letter != '0') {
+    $where_like = " WHERE authors.name_ru LIKE '{$select_letter}%'";
 } else {
-    $like = '';
+    $where_like = '';
 }
-
-$where = ($like != '') ? " WHERE {$like}" : "";
 
 $authors_list = [];
 
-$query = "SELECT * FROM authors {$where} {$sort_order}";
+$query = "SELECT * FROM authors {$where_like} {$sort_order}";
 $res = mysqli_query($mysqli_link, $query) or die($query);
 $authors_count = @mysqli_num_rows($res) ;
 
@@ -30,11 +28,14 @@ if ($authors_count > 0) {
 }
 
 $template_dir = '$/core/core.authors';
-$template_file = "_template.authors.list.html";
+// $template_file = "_template.authors.list.html";
+
+$template_file = ($authors_count > 0) ? "_template.authors.list.html" : "_template.authors.list-empty.html";
 
 $template_data = array(
-    'authors_list' =>  $authors_list
+    'authors_count' =>  count($authors_list),
+    'authors_list'  =>  $authors_list
 );
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);
 

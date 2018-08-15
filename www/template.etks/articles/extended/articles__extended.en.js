@@ -1,8 +1,9 @@
 /* articles__extended */
 var siteLanguage = '&lang=en';
+
+var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist'+siteLanguage);
 var topicsList = preloadOptionsList('ajax.php?actor=get_topics_as_optgroup_list'+siteLanguage);
 var booksList = preloadOptionsList('ajax.php?actor=get_books_as_optionlist_extended'+siteLanguage);
-var lettersList = preloadOptionsList('ajax.php?actor=get_letters_as_optionlist'+siteLanguage);
 
 BuildSelector('letter', lettersList, 'ANY', 0);
 BuildSelectorExtended('book', booksList, 'ANY', 0);
@@ -15,6 +16,7 @@ url_expert = "ajax.php?actor=load_articles_expert_search"+siteLanguage;
 wlh = (window.location.hash).substr(1);
 if (wlh !== '') {
     $("#articles_list").empty().load(url_extended + '&' + wlh);
+    setSelectorsByHash_NEW('.search_selector');
 }
 
 $("#button-show-withselection").on('click',function(){

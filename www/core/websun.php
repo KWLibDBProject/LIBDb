@@ -639,6 +639,11 @@ class websun {
 				$template
 			); 
 		 	// пояснения к рег. выражению см. в find_and_parse_cycle
+
+        if ($out === NULL) {
+            printf("Find_and_parse_if REPORT: Template length = %s , PCRE Error is <strong>%s</strong><br>",
+                strlen($template), array_flip(get_defined_constants(true)['pcre'])[preg_last_error()]);
+        }
 		
 		if ($this->profiling) 
 			$this->write_time(__FUNCTION__, $start, microtime(1));

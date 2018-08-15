@@ -91,9 +91,9 @@ switch ($actor) {
             'all_authors_list' => $authors_list
         ];
 
-        // $return = websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
+        $return = websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
-        $return = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
+        // $return = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
 
         break;
     }

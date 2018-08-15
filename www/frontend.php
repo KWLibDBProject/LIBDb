@@ -763,8 +763,6 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
         $letter = mysqli_real_escape_string($mysqli_link, $letter);
     }
 
-    $query_limit = ($limit == 0) ? "" : " LIMIT {$limit}";
-
     $query_where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
 
     // check for 'is author in editorial stuff', default is 'no'
@@ -776,6 +774,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
         : " ";
 
     $query_order = " ORDER BY authors.name_{$lang}";
+    // $query_order = " ORDER BY id";
 
     $q = "SELECT id, email, orcid, phone, 
     name_{$lang} AS name,
@@ -787,9 +786,8 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     {$query_where_estaff_role}
     {$query_where_like}
     {$query_order}
-    {$query_limit}
     
-    /* LIMIT 338 */";
+    ";
     // '1=1' - нужно как условие, которое всегда истина. Следом могут идти другие условия с союзами AND.
     // Это лишнее условие нужно, чтобы не сломалсь SQL-выражение и не нужно было морочиться с добавлением AND по условию.
     // Технически, было бы правильно записать все условия в массив, а потом применить array_map или implode для сборки WHERE-блока
@@ -801,6 +799,9 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
             $authors[ $i['id'] ] = $i;
         }
     }
+    // echo '<pre>';
+    // var_dump($authors); // die;
+
     return $authors;
 }
 

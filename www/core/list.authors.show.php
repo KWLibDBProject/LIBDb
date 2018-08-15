@@ -29,10 +29,10 @@ ifNotLoggedRedirect('/core/');
 
             var lettersList = preloadOptionsList('/ajax.php?actor=get_letters_as_optionlist&'+siteLanguage);
 
-            BuildSelector('letter', lettersList, 0);
+            BuildSelector('letter', lettersList, 'Выбрать...', 0);
 
             // bind hash selectors
-            setSelectorsByHash(".search_selector");
+            setSelectorsByHash_NEW(".search_selector");
             $(".hash_selectors").on('change', '.search_selector', function(){
                 setHashBySelectors();
                 // enable or disable button if first letter selected
