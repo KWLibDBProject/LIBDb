@@ -1,0 +1,55 @@
+/* authors__estaff */
+.authors-list-as-estaff {}
+
+.estaff-name {
+    text-decoration: none;
+}
+.estaff-name:hover {
+    text-decoration: underline;
+}
+
+.estaff-name:visited {
+    text-decoration: none;
+    color: navy;
+}
+
+.estaff-name-firstword { /*выделение фамилии (первого слова в ФИО)*/
+    color: #2a8eb8;
+    font-weight: bold;
+}
+
+#estaff > h1 {
+    text-align: center;
+}
+#estaff > h2 {
+    text-align: center;
+}
+#estaff > h3 {
+    text-align: center;
+}
+
+#estaff ul {
+    list-style-type: square;
+    font-size: large;
+}
+
+#estaff ul.no-marker {
+    list-style-type: none;
+}
+
+#estaff ul li {
+    margin-bottom: 1em;
+}
+
+.smaller-text {
+    font-size: smaller;
+}
+
+.authors-inlist-name {}
+
+#estaff p {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+/* authors__estaff */
