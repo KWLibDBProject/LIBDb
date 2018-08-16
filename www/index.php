@@ -369,6 +369,9 @@ switch ($fetch) {
 
         // load last book
         $last_book = LoadLastBookInfo(); //@todo: СЕЙЧАС возвращается latest сборник по дате, без учета флага published_status + наличия статей в сборнике
+        $last_book_id = $last_book['id'] ?? FALSE;
+
+        $last_book_articles_list = $last_book_id ? getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, 'no') : [];
 
         $page_data = LoadStaticPage('about', $site_language);
 
@@ -377,7 +380,7 @@ switch ($fetch) {
          */
         $inner_html_data = [
             'page_data'             =>  $page_data,
-            'articles_list'         =>  getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, 'no'),
+            'articles_list'         =>  $last_book_articles_list,
             'last_book'             =>  $last_book,
         ];
 
