@@ -5,6 +5,16 @@
  *
  * MOVE it to ArrisFramework
  */
+/*
+
+Правильное решение - сначала биндить правила (во внутреннюю структуру соответствия правило=>коллбэк
+
+Потом вызывать start(), который проанализирует get, пройдется по правилам и вызовет нужное.
+
+TODO: сделать распознание коллбэка как 'Class@Method' или 'Class@' (= __invoke), а не только как замыкания
+
+*/
+
 
 /**
  * Class LegacyRouter
@@ -32,6 +42,12 @@ class LegacyRouter {
 
     private static $is_request_routed = false;
 
+    private static $namespace = '';
+
+    public static function bindNamespace($namespace) {
+        self::$namespace = $namespace;
+    }
+
     public static function bindRoute($source, $route_keys, $default_settings = null) {
         self::$source = $source;
 
@@ -41,11 +57,92 @@ class LegacyRouter {
         }
     }
 
-    public static function action($route_values, callable $callback, ...$args) {
-        $is_callable = is_callable($callback);
+    public static function route($route_values, $callback, ...$args){
+        $namespace = self::$namespace;
+        $parameters = $args; // $this->getParameters();
+
+        $can_call = false;
+        /*
+        роутинг может быть:
+        - строка
+        - массив
+        */
+        if (empty($route_values)) return false;
+
+        // explode routing by glue
+        if (gettype($route_values) == 'string') {
+            $routing = explode(self::GLUE, $route_values);
+        }
+
+        // check routing rule
+        foreach ($route_values as $index => $value) {
+            $source_value = self::$source[ self::$keys[ $index ] ] ?? null;
+            $route_value = $route_values[ $index ];
+
+            $can_call = $can_call && ($source_value == $route_value);
+        }
+
+        if (!$can_call) return false; // на самом деле записываем в массив коллбеков сопоставление "правило" => "коллбэк"
+
+        /* $callback может быть:
+        - коллбэк как анонимная функция
+        - строка без собачки (то есть имя функции) - функция или класс
+        - строка с собачкой и методом
+        - строка с :: и методом
+        */
+
+        if (is_callable($callback)) {
+            self::$is_request_routed = true;
+            return call_user_func_array($callback, self::$source);
+        }
+
+        // это 'Class@method'
+        if (strpos($callback, '@') > 1) {
+            $controller = explode('@', $callback);
+
+            $className = ($namespace !== null && $controller[0][0] !== '\\') ? $namespace . '\\' . $controller[0] : $controller[0];
+
+            $class = self::loadClass($className);
+            $method = $controller[1] ?? null;
+
+            // Это
+            if (is_null($method)) {
+                self::$is_request_routed = true;
+                call_user_func_array($class, $parameters);
+            }
+
+            if (method_exists($class, $method) === false) {
+                // throw new \Exception(sprintf('Method "%s" does not exist in class "%s"', $method, $className), 404);
+                return false;
+            }
+
+            self::$is_request_routed = true;
+            return call_user_func_array([$class, $method], $parameters);
+        }
+
+        // это коллбэк 'Class::method'
+        if (strpos($callback, '::') > 1) {
+            self::$is_request_routed = true;
+            call_user_func_array($callback, $parameters);
+        }
+
+        if (function_exists($callback)) {
+            self::$is_request_routed = true;
+            return call_user_func_array($callback, self::$source);
+        }
+
+        return false;
+
+    }
+
+
+    public static function action($route_values, $callback, ...$args) {
+        if (empty($route_values)) return false;
+
+        $is_callable_function = is_callable($callback);
         $can_call = true;
 
-        if (!$is_callable) return false;
+        // if (!$is_callable_function) return false;
 
         // explode routing by glue
         if (gettype($route_values) == 'string') {
@@ -60,7 +157,8 @@ class LegacyRouter {
             $can_call = $can_call && ($source_value == $route_value);
         }
 
-        if ($is_callable && $can_call) {
+        /* Render callback function */
+        if ($is_callable_function && $can_call) {
             self::$is_request_routed = true;
             return call_user_func_array($callback, self::$source);
         }
@@ -68,7 +166,7 @@ class LegacyRouter {
         return false;
     }
 
-    public static function get($index, $default_value){
+    public static function get_value($index, $default_value){
         return (array_key_exists($index, self::$source) && self::$source[ $index ]) ? self::$source[ $index ] :  $default_value;
     }
 
@@ -79,13 +177,58 @@ class LegacyRouter {
 
         return false;
     }
+
+    public static function start(){
+
+    }
+
+    /**
+     * Из PeCee/SimpleRouter
+     *
+     * @param string $className
+     * @return mixed
+     * @throws Exception
+     */
+    private static function loadClass(string $className)
+    {
+        if (class_exists($className) === false) {
+            // throw new Exception(sprintf('Class "%s" does not exist', $className), 404);
+            return false;
+        }
+        return new $className();
+    }
 }
 
 if (!function_exists('input')) {
     function input($index, $default_value) {
-        return LegacyRouter::get($index, $default_value);
+        return LegacyRouter::get_value($index, $default_value);
     }
 }
+/*
+Примеры:
+
+LegacyRouter::action('authors/info', 'Authors@Info');
+
+LegacyRouter::action(['foo', 'bar'], function (){
+    $id = input('id', 0);
+    $j  = input('j', 0);
+    echo "/foo/bar => id = {$id} , j = {$j}";
+});
+
+LegacyRouter::action('authors/info', function (){
+    echo "/authors/info";
+});
+
+
+LegacyRouter::default(function (){
+    echo "No other routers fired, called default router";
+});
+
+
+
+
+ */
+
 
 /*
 
@@ -100,9 +243,5 @@ class x {
 $x = new x();
 print_r(array_map($x, array('a')));
 ?>
-
-
-
-
 
 */
