@@ -57,27 +57,28 @@ class LegacyRouter {
         }
     }
 
-    public static function route($route_values, $callback, ...$args){
+    public static function route($route_rule, $callback, ...$args){
         $namespace = self::$namespace;
         $parameters = $args; // $this->getParameters();
 
-        $can_call = false;
+        $can_call = true;
+
         /*
         роутинг может быть:
         - строка
         - массив
         */
-        if (empty($route_values)) return false;
+        if (empty($route_rule)) return false;
 
         // explode routing by glue
-        if (gettype($route_values) == 'string') {
-            $routing = explode(self::GLUE, $route_values);
+        if (gettype($route_rule) == 'string') {
+            $route_rule = explode(self::GLUE, $route_rule);
         }
 
         // check routing rule
-        foreach ($route_values as $index => $value) {
+        foreach ($route_rule as $index => $value) {
             $source_value = self::$source[ self::$keys[ $index ] ] ?? null;
-            $route_value = $route_values[ $index ];
+            $route_value = $route_rule[ $index ];
 
             $can_call = $can_call && ($source_value == $route_value);
         }
