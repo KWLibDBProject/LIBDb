@@ -245,3 +245,18 @@ function formatBytes($bytes, $precision = 2) {
     return round($bytes, $precision) . ' ' . $units[$pow];
 }
 
+
+/**
+ * Enable or disable JIT-compilation for PCRE
+ *
+ * http://php.net/manual/ru/pcre.configuration.php#ini.pcre.jit
+ *
+ * Required for
+ */
+function pcre_jit_disable(){
+    ini_set('pcre.jit', 0);
+}
+
+function pcre_jit_enable(){
+    ini_set('pcre.jit', 1);
+}
