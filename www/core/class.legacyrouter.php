@@ -25,7 +25,7 @@
  * Метод default() вызывает функцию в любом случае, не попавшем в набор правил (во всех остальных случаях)
  */
 class LegacyRouter {
-    const VERSION = '1.4';
+    const VERSION = '1.5';
     const GLUE = '/';
 
     private static $source = [];
@@ -38,6 +38,8 @@ class LegacyRouter {
     private static $CALLBACKS = [];
 
     private static $CALLBACK_DEFAULT = [];
+
+    private static $callback_parameters = [];
 
     /* === PUBLIC METHODS === */
 
@@ -58,6 +60,17 @@ class LegacyRouter {
         foreach ($route_keys as $rk_value) {
             self::$keys[] = $rk_value;
         }
+    }
+
+    /**
+     * Пробрасывает список параметров в коллбэк-класс
+     *
+     * @todo: лучше вызывать как bindCallbackParams('classname', [])
+     *
+     * @param $parameters_list
+     */
+    public static function bindCallbackParams($parameters_list) {
+        self::$callback_parameters = $parameters_list;
     }
 
     /**
@@ -150,6 +163,16 @@ class LegacyRouter {
         return new $className();
     }
 
+    private static function getParameters($called_params){
+        $default_params = [];
+
+        if (count(self::$callback_parameters) !== 0) {
+            $default_params = self::$callback_parameters;
+        }
+
+        return array_merge($default_params, $called_params);
+    }
+
     /**
      * Вызывает коллбэк
      *
@@ -163,6 +186,8 @@ class LegacyRouter {
             self::$is_request_routed = true;
             return call_user_func_array($callback, self::$source);
         }
+
+        $parameters = self::getParameters($parameters);
 
         // вызов динамического класса
         if (strpos($callback, '@') > 1) {
@@ -215,7 +240,6 @@ class LegacyRouter {
 
         return null;
     }
-
 }
 
 // HELPERS
