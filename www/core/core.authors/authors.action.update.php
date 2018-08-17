@@ -4,7 +4,7 @@ require_once '../__required.php'; // $mysqli_link
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 $ref_name = 'authors';
 
-$q = array(
+$dataset = array(
     'name_ru'       => trim($_POST['name_ru'] ?? '', ' '),
     'name_en'       => trim($_POST['name_en'] ?? '', ' '),
     'name_ua'       => trim($_POST['name_ua'] ?? '', ' '),
@@ -31,7 +31,12 @@ $q = array(
     /* Роль в редколлегии: @todo: доп-проверка, если он не in_es - то 0 ? */
     'estaff_role'      => $_POST['estaff_role'] ?? 0,
 );
-$qstr = MakeUpdateEscaped($q, $ref_name, "WHERE id=$id");
+
+$dataset['firstletter_name_en'] = mb_substr( $dataset['name_en'], 0, 1 );
+$dataset['firstletter_name_ru'] = mb_substr( $dataset['name_ru'], 0, 1 );
+$dataset['firstletter_name_ua'] = mb_substr( $dataset['name_ua'], 0, 1 );
+
+$qstr = MakeUpdateEscaped($dataset, $ref_name, "WHERE id=$id");
 
 $res = mysqli_query($mysqli_link, $qstr);
 
