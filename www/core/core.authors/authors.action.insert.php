@@ -3,7 +3,7 @@ require_once '../__required.php'; // $mysqli_link
 
 $table = 'authors';
 
-$q = array(
+$dataset = array(
     'name_ru'       => trim($_POST['name_ru'] ?? '', ' '),
     'name_en'       => trim($_POST['name_en'] ?? '', ' '),
     'name_ua'       => trim($_POST['name_ua'] ?? '', ' '),
@@ -20,7 +20,6 @@ $q = array(
     'workplace_ru'  => strip_tags($_POST['workplace_ru'] ?? ''),
     'workplace_ua'  => strip_tags($_POST['workplace_ua'] ?? ''),
 
-
     'bio_en'        => $_POST['bio_en'] ?? '',
     'bio_ru'        => $_POST['bio_ru'] ?? '',
     'bio_ua'        => $_POST['bio_ua'] ?? '',
@@ -31,7 +30,12 @@ $q = array(
     /* Роль в редколлегии */
     'estaff_role'      => $_POST['estaff_role'] ?? 0,
 );
-$qstr = MakeInsertEscaped( $q, $table );
+
+$dataset['firstletter_name_en'] = mb_substr( $dataset['name_en'], 0, 1 );
+$dataset['firstletter_name_ru'] = mb_substr( $dataset['name_ru'], 0, 1 );
+$dataset['firstletter_name_ua'] = mb_substr( $dataset['name_ua'], 0, 1 );
+
+$qstr = MakeInsertEscaped( $dataset, $table );
 
 $res = mysqli_query($mysqli_link, $qstr) or die("Error at $qstr");
 

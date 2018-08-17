@@ -42,22 +42,22 @@ CREATE TABLE `authors` (
   `phone` char(60) DEFAULT NULL COMMENT 'Телефон',
   `is_es` smallint(11) DEFAULT '0' COMMENT 'Входит ли автор в редколлегию',
   `estaff_role` smallint(11) DEFAULT '0' COMMENT 'роль в редколлегии',
-  `name_en` char(100) DEFAULT NULL COMMENT 'ФИО автора (англ)',
-  `name_ru` char(100) DEFAULT NULL COMMENT 'ФИО автора (рус)',
-  `name_ua` char(100) DEFAULT NULL COMMENT 'ФИО автора (укр)',
-  `workplace_en` char(254) DEFAULT NULL COMMENT 'Место работы (англ)',
-  `workplace_ru` char(254) DEFAULT NULL COMMENT 'Место работы (рус)',
-  `workplace_ua` char(254) DEFAULT NULL COMMENT 'Место работы (укр)',
-  `title_en` char(100) DEFAULT NULL COMMENT 'учёное звание (англ)',
-  `title_ru` char(100) DEFAULT NULL COMMENT 'учёное звание (рус)',
-  `title_ua` char(100) DEFAULT NULL COMMENT 'учёное звание (укр)',
+  `name_en` varchar(255) DEFAULT NULL COMMENT 'ФИО автора (англ)',
+  `name_ru` varchar(255) DEFAULT NULL COMMENT 'ФИО автора (рус)',
+  `name_ua` varchar(255) DEFAULT NULL COMMENT 'ФИО автора (укр)',
+  `workplace_en` varchar(255) DEFAULT NULL COMMENT 'Место работы (англ)',
+  `workplace_ru` varchar(255) DEFAULT NULL COMMENT 'Место работы (рус)',
+  `workplace_ua` varchar(255) DEFAULT NULL COMMENT 'Место работы (укр)',
+  `title_en` varchar(255) DEFAULT NULL COMMENT 'учёное звание (англ)',
+  `title_ru` varchar(255) DEFAULT NULL COMMENT 'учёное звание (рус)',
+  `title_ua` varchar(255) DEFAULT NULL COMMENT 'учёное звание (укр)',
   `bio_en` longtext COMMENT 'Биография автора (англ)',
   `bio_ru` longtext COMMENT 'Биография автора (рус)',
   `bio_ua` longtext COMMENT 'Биография автора (укр)',
   `stat_date_insert` datetime DEFAULT CURRENT_TIMESTAMP,
   `stat_date_update` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `banners` */
 
