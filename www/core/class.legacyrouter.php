@@ -25,7 +25,7 @@
  * Метод default() вызывает функцию в любом случае, не попавшем в набор правил (во всех остальных случаях)
  */
 class LegacyRouter {
-    const VERSION = '1.5';
+    const VERSION = '1.6';
     const GLUE = '/';
 
     private static $source = [];
@@ -120,10 +120,18 @@ class LegacyRouter {
             $can_call = true;
             $rule_values = explode('/', $ruleset['rule']);
 
+            // var_dump($rule_values);
+
             // check routing rule
             foreach ($rule_values as $index => $rule_key) {
-                $can_call = $can_call && ($source[ self::$keys[$index] ] == $rule_key);
+
+                $can_call   = $can_call
+                            && array_key_exists($index, self::$keys)
+                            && array_key_exists(self::$keys[ $index], $source)
+                            && ($source[ self::$keys[$index] ] == $rule_key);
             }
+
+            // var_dump($can_call);
 
             if (!$can_call) continue;
 
@@ -144,6 +152,15 @@ class LegacyRouter {
      */
     public static function input($index, $default_value){
         return (array_key_exists($index, self::$source) && self::$source[ $index ]) ? self::$source[ $index ] :  $default_value;
+    }
+
+    /**
+     * Возвращает список callback-параметров
+     *
+     * @return array
+     */
+    public static function args() {
+        return self::$callback_parameters;
     }
 
     /* === PRIVATE METHODS === */
@@ -189,8 +206,14 @@ class LegacyRouter {
 
         $parameters = self::getParameters($parameters);
 
+/*        echo '<pre>';
+        var_dump($parameters);
+        var_dump($callback);
+*/
+
         // вызов динамического класса
         if (strpos($callback, '@') > 1) {
+
             $controller = explode('@', $callback);
 
             $className = (self::$namespace !== null && $controller[0][0] !== '\\') ? self::$namespace . '\\' . $controller[0] : $controller[0];
