@@ -3,8 +3,8 @@
  * User: Karel Wintersky
  * Date: 31.07.2018, time: 16:57
  */
-ini_set('pcre.backtrack_limit', 16*1024*1024); // 16 Mб
-ini_set('pcre.recursion_limit', 16*1024*1024);
+ini_set('pcre.backtrack_limit', 2*1024*1024); // 2 Mб
+ini_set('pcre.recursion_limit', 2*1024*1024);
 
 require_once 'class.config.php';
 require_once 'class.filestorage.php';
@@ -17,7 +17,9 @@ require_once 'core.php';
 require_once 'core.db.php';
 
 Config::init([
-    '/'             =>  'config/config.php',
+    'config/config.php',
+    'config/config.db.php',
+
     'filestorage'   =>  'config/config.filestorage.php',
     'kwlogger'      =>  'config/config.logging.php'
 ]);

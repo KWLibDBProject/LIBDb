@@ -46,6 +46,30 @@ $main_template_data['meta']['copyright'] = Config::get('meta/copyright', '');
 $fetch  = at( $_GET, 'fetch', '' );
 $with   = at( $_GET, 'with' , '' );
 
+/**
+ * ВАЖНО !!!
+ *
+ * Так как шаблоны ETKS и AAIT в основном совпадают (различия только в "рамке картины", в некоторых элементах
+ * основного шаблона, а внутренний контент и шаблоны не отличаются, имеет смысл создать шаблон-родитель в папке
+ * `template`, к элементам которого мы будем обращаться, генерируя "суб-контент".
+ *
+ * Таким образом, снижается нагрузка на своевременное обновление обоих шаблонов.
+ *
+ * В будущем, возможно, стоит перейти на класс WebSunTemplater, который должен выяснять существование нужного ему файла
+ * в папке конкретного шаблона и, если его не находит - обращаться к шаблону-родителю.
+ *
+ * В случае же НЕОБХОДИМОСТИ разделения к примеру, страницы /template/page/default на две разных в зависимости от ETKS или AAIT
+ * нам нужно будет
+ *
+ * 1. исправить пути в секции switch/switch
+ * 2. скопировать файлы template/page/default в template.etks/page/default И template.aait/page/default
+ * 3. соответственно изменить эти шаблоны ИНДИВИДУАЛЬНО
+ *
+ * Путь к ТЕМЕ находится в переменной $main_theme_dir
+ *
+ *
+ */
+
 // А теперь надо загрузить контент в основной блок
 switch ($fetch) {
     case 'authors' : {
@@ -347,7 +371,7 @@ switch ($fetch) {
         /* секция вывода статических или условно-статических страниц */
         $page_alias = ($with === '') ? 'default' : $with;
 
-        $subtemplate_dir = "$/{$main_theme_dir}/page/static/";
+        $subtemplate_dir = "$/template/page/static/";
         $subtemplate_filename = "page__static";
 
         /**
@@ -366,7 +390,7 @@ switch ($fetch) {
 
     default : {
         // это статическая страница "о журнале" + список статей в последнем выпуске
-        $subtemplate_dir = "$/{$main_theme_dir}/page/default/";
+        $subtemplate_dir = "$/template/page/default/";
         $subtemplate_filename = "default";
 
         // load last book
