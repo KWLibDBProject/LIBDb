@@ -269,7 +269,7 @@ switch ($fetch) {
             case 'info' : {
                 $id = intval($_GET['id']);
 
-                $subtemplate_dir = "$/{$main_theme_dir}/articles/info/";
+                $subtemplate_dir = "$/template/articles/info/";
                 $subtemplate_filename = "articles__info";
 
                 /**
@@ -296,12 +296,13 @@ switch ($fetch) {
                     'site_lang'             => $site_language
                 ];
 
-                if (isset($article_info['keywords']) && $article_info['keywords'] != '') $main_template_data['meta']['keywords'] = $article_info['keywords'];
+                if (isset($article_info['keywords']) && $article_info['keywords'] != '')
+                    $main_template_data['meta']['keywords'] = $article_info['keywords'];
 
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
