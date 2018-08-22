@@ -221,26 +221,26 @@ switch ($fetch) {
                 break;
             }
             case 'topic' : {
-                $id = intval($_GET['id']);
+                $id = intval($_GET['id']) ?? 0;
 
-                $subtemplate_dir = "$/{$main_theme_dir}/articles/topic/";
+                $subtemplate_dir = "$/template/articles/topic/";
                 $subtemplate_filename = "articles__topic";
 
                 /**
                  * HTML
                  */
                 $inner_html_data = [
-                    'topic_title'   =>  LoadTopicInfo($id, $site_language)['title'],
+                    'topic_data'    =>  LoadTopicInfo($id, $site_language),
                     'topic_id'      =>  $id,
                     'site_language' =>  $site_language
                 ];
                 // результаты поиска загружаются аяксом,
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** используются разные JS-файлы
                  * можно было бы сделать один и передавать ему заменяемую переменную, но это лишний код для её генерации на основе языка
                  */
-                $maincontent_js = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
+                $maincontent_js = websun_parse_template_path([], "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
                 break;
             }

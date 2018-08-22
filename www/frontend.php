@@ -158,16 +158,19 @@ function LoadStaticPage($alias, $lang = 'en')
 function LoadTopicInfo($id, $lang)
 {
     global $mysqli_link;
-    $q = "SELECT id, title_{$lang} AS title FROM topics WHERE id={$id}";
-    $r = mysqli_query($mysqli_link, $q);
-    $topic = null;
 
-    if (@mysqli_num_rows($r) == 1)
+    $topic_info = [];
+    if ($id == 0) return $topic_info;
+
+    $query = "SELECT id, title_{$lang} AS title FROM topics WHERE id={$id}";
+    $topic_result = mysqli_query($mysqli_link, $query);
+
+    if (@mysqli_num_rows($topic_result) == 1)
     {
-        $topic = mysqli_fetch_assoc($r);
+        $topic_info = mysqli_fetch_assoc($topic_result);
     }
 
-    return $topic;
+    return $topic_info;
 }
 
 /**
