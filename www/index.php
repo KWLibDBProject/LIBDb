@@ -167,24 +167,24 @@ switch ($fetch) {
                 break;
             }
             case 'list' : {
-                $subtemplate_dir = "$/{$main_theme_dir}/authors/list/";
+                $subtemplate_dir = "$/template/authors/list/";
                 $subtemplate_filename = "authors__list";
 
                 /**
                  * HTML - used AJAX loaded data
                  */
                 $inner_html_data = [];
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /**
                  * Здесь можно использовать единый JS-файл с замещаемым значением, но я оставлю так - в файле используется
                  * select/option с дефолтным значением
                  */
                 $inner_js_data = [ 'site_language' =>  $site_language ];
-                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
+                $maincontent_js = websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
                 /** single CSS style file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
