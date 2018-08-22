@@ -114,19 +114,27 @@ switch ($fetch) {
             }
             case 'all' : {
                 // список ВСЕХ авторов - для поисковых систем: фио, титул, email -> link to author page
-                $subtemplate_dir = "$/{$main_theme_dir}/authors/all/";
+                $subtemplate_dir = "$/template/authors/all/";
                 $subtemplate_filename = "authors__all";
 
                 /**
                  * HTML
                  */
                 $inner_html_data = [
-                    'all_authors_list'      => LoadAuthors_ByLetter('', $site_language, 'no')
+                    'site_language'         =>  $site_language,
+                    'all_authors_list'      =>  LoadAuthors_ByLetter('', $site_language, 'no')
                 ];
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+
+                // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.
+                $subtemplate_filename_html
+                    = (! empty($inner_html_data['all_authors_list']) )
+                    ? "{$subtemplate_filename}.{$site_language}.html"
+                    : "authors__all__notfound.html";
+
+                $maincontent_html = websun_parse_template_path($inner_html_data, $subtemplate_filename_html, $subtemplate_dir);
 
                 /** single CSS style file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
