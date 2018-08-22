@@ -79,7 +79,7 @@ switch ($fetch) {
                 /*расширенная информация по автору + список его статей + фото */
                 $id = intval($_GET['id'] ?? 0);
 
-                $subtemplate_dir = "$/{$main_theme_dir}/authors/info/";
+                $subtemplate_dir = "$/template/authors/info/";
                 $subtemplate_filename = "authors__info";
 
                 $author_information = LoadAuthorInformation_ById($id, $site_language);
@@ -105,10 +105,10 @@ switch ($fetch) {
                                 ?  "/{$main_theme_dir}/_assets/images/no_photo_{$site_language}.png"
                                 :  "core/get.image.php?id={$author_information['author_photo_id']}"
                 ];
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS style file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }

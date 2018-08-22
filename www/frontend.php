@@ -717,7 +717,7 @@ function LoadArticles_ByAuthor($id, $lang, $is_published = true)
 
     // переименовать bdate в book_year - и поменять в шаблонах
 
-    $q = "SELECT
+    $query = "SELECT
 articles.id AS aid,
 articles.title_{$lang} AS atitle,
 articles.pdfid,
@@ -732,7 +732,7 @@ AND books.published_status = {$query_published}
 AND cross_aa.author = $id
 ORDER BY date_add
 ";
-    $r = mysqli_query($mysqli_link, $q);
+    $r = mysqli_query($mysqli_link, $query);
     if (@mysqli_num_rows($r) > 0) {
         while ($article = mysqli_fetch_assoc($r)) {
             $list [ $article['aid'] ] = $article;

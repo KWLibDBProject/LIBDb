@@ -158,7 +158,7 @@ class FileStorage
                 if (file_exists($internal_file_name)) {
                     $h = fopen($internal_file_name, "rb");
                     // $ret = fread($h, $d['filesize']);
-                    $ret = fread($h, filesize($internal_file_name));
+                    $ret = fread($h, filesize($internal_file_name)); //@todo: не обрабатывается ситуация "вернули FALSE"!!!
                     fclose($h);
                 } else {
                     $ret = null; // catch file not found in storage directory
