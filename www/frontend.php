@@ -597,12 +597,12 @@ function LoadArticles_ByQuery($get, $lang)
  * загружает данные для списка новостей [id] => [id => '', title => '', date => '']
  * @param $lang
  * @param $limit
- * @return null|string
+ * @return array
  */
 function LoadNewsListTOC($lang, $limit = 15)
 {
     global $mysqli_link;
-    $ret = null;
+    $list = [];
 
     $query = "
     SELECT 
@@ -621,11 +621,11 @@ function LoadNewsListTOC($lang, $limit = 15)
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
         while ($row = mysqli_fetch_assoc($r)) {
-            $ret[ $row['id'] ] = $row;
+            $list[ $row['id'] ] = $row;
         }
     }
 
-    return $ret;
+    return $list;
 }
 
 /*  */
@@ -635,12 +635,13 @@ function LoadNewsListTOC($lang, $limit = 15)
  *
  * @param $id
  * @param $lang
- * @return array|null|string
+ * @return array
  */
 function LoadNewsItem($id, $lang)
 {
     global $mysqli_link;
-    $ret = null;
+    $news_item = [];
+
     $query = "
     SELECT 
         id, 
@@ -655,10 +656,10 @@ function LoadNewsItem($id, $lang)
     $r = @mysqli_query($mysqli_link, $query);
     if ($r) {
         if (@mysqli_num_rows($r) > 0) {
-            $ret = mysqli_fetch_assoc($r);
+            $news_item = mysqli_fetch_assoc($r);
         }
     }
-    return $ret;
+    return $news_item;
 }
 
 /**

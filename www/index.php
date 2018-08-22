@@ -337,7 +337,7 @@ switch ($fetch) {
                     Redirect('?fetch=news&with=list');
                 }
 
-                $subtemplate_dir = "$/{$main_theme_dir}/news/the/";
+                $subtemplate_dir = "$/template/news/the/";
                 $subtemplate_filename = "news__the";
 
                 $the_news_item = LoadNewsItem($id, $site_language);
@@ -348,26 +348,26 @@ switch ($fetch) {
                     'news_item_date'    => $the_news_item['publish_date'] ?? '',
                     'news_item_text'    => $the_news_item['text'] ?? ''
                 ];
-                $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
             case 'list' : {
                 /* список новостей */
 
-                $subtemplate_dir = "$/{$main_theme_dir}/news/list/";
+                $subtemplate_dir = "$/template/news/list/";
                 $subtemplate_filename = "news__list";
 
                 $local_template_data = [
                     'news_list' => LoadNewsListTOC($site_language)
                 ];
-                $maincontent_html = \Websun\websun::websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
