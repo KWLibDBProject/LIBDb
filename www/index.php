@@ -126,6 +126,8 @@ switch ($fetch) {
                 ];
 
                 // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.
+                // поэтому мы подставляем соотв. файл шаблона в зависимости от - пусты или нет данные?
+
                 $subtemplate_filename_html
                     = (! empty($inner_html_data['all_authors_list']) )
                     ? "{$subtemplate_filename}.{$site_language}.html"
@@ -309,7 +311,7 @@ switch ($fetch) {
             case 'all' : {
                 // список ВСЕХ СТАТЕЙ - для поисковых систем -- фио, титул, email -> link to author page
 
-                $subtemplate_dir = "$/{$main_theme_dir}/articles/all/";
+                $subtemplate_dir = "$/template/articles/all/";
                 $subtemplate_filename = "articles__all";
 
                 /**
@@ -319,7 +321,14 @@ switch ($fetch) {
                     'all_articles_list' => getArticles_PlainList([], $site_language)
                 ];
 
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных - Ломается прекомпиляция PCRE-выражения.
+                // поэтому мы подставляем соотв. файл шаблона в зависимости от - пусты или нет данные?
+                $subtemplate_filename_html
+                    = (! empty($inner_html_data['all_articles_list']) )
+                    ? "{$subtemplate_filename}.{$site_language}.html"
+                    : "articles__all__notfound.html";
+
+                $maincontent_html = websun_parse_template_path($inner_html_data, $subtemplate_filename_html, $subtemplate_dir);
 
                 break;
             }
