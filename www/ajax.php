@@ -96,6 +96,10 @@ switch ($actor) {
             'all_authors_list'  => $authors_list
         ];
 
+        // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.
+        // поэтому мы подставляем соотв. файл шаблона в зависимости от - пусты или нет данные?
+        // можно было бы использовать ТРИ файла с разными строками, но я решил чуть усложнить шаблон,
+        // но обойтись одним файлом с проверкой языка сайта - и разными сообщениями
         $subtemplate_filename_html
             = (! empty($inner_html_data['all_authors_list']) )
             ? "{$template_file_name}.{$lang}.html"
@@ -113,16 +117,25 @@ switch ($actor) {
         //      articles/topic
         //      articles/book
 
-        $template_dir = "$/{$main_theme_dir}/_main_ajax_templates/";
-        $template_file_name = "ajax.articles__extended.{$lang}.html"; // delete row_in_articles_list.html
-
         $inner_html_data = [
             'articles_list' =>  getArticlesList($_GET, $lang),
             'with_email'    =>  'no',
-            'site_lang'     =>  $lang
+            'site_language' =>  $lang
         ];
 
-        $return = \Websun\websun::websun_parse_template_path($inner_html_data, $template_file_name, $template_dir);
+        // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.
+        // поэтому мы подставляем соотв. файл шаблона в зависимости от - пусты или нет данные?
+        // можно было бы использовать ТРИ файла с разными строками, но я решил чуть усложнить шаблон,
+        // но обойтись одним файлом с проверкой языка сайта - и разными сообщениями
+
+        $template_file_name
+            = (!empty($inner_html_data['articles_list']))
+            ? "ajax.articles__extended.{$lang}.html"
+            : "ajax.articles__extemded__notfound.html";
+
+        $template_dir = "$/template/_main_ajax_templates/";
+
+        $return = websun_parse_template_path($inner_html_data, $template_file_name, $template_dir);
 
         break;
     }

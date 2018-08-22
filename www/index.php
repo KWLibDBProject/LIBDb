@@ -127,6 +127,8 @@ switch ($fetch) {
 
                 // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.
                 // поэтому мы подставляем соотв. файл шаблона в зависимости от - пусты или нет данные?
+                // можно было бы использовать ТРИ файла с разными строками, но я решил чуть усложнить шаблон,
+                // но обойтись одним файлом с проверкой языка сайта - и разными сообщениями
 
                 $subtemplate_filename_html
                     = (! empty($inner_html_data['all_authors_list']) )
@@ -295,7 +297,7 @@ switch ($fetch) {
                     'article_pdf_last_download_date'
                                             => $article_info['pdf_last_download_date'],
 
-                    'site_lang'             => $site_language
+                    'site_language'         => $site_language
                 ];
 
                 if (isset($article_info['keywords']) && $article_info['keywords'] != '')
@@ -321,8 +323,10 @@ switch ($fetch) {
                     'all_articles_list' => getArticles_PlainList([], $site_language)
                 ];
 
-                // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных - Ломается прекомпиляция PCRE-выражения.
+                // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.
                 // поэтому мы подставляем соотв. файл шаблона в зависимости от - пусты или нет данные?
+                // можно было бы использовать ТРИ файла с разными строками, но я решил чуть усложнить шаблон,
+                // но обойтись одним файлом с проверкой языка сайта - и разными сообщениями
                 $subtemplate_filename_html
                     = (! empty($inner_html_data['all_articles_list']) )
                     ? "{$subtemplate_filename}.{$site_language}.html"

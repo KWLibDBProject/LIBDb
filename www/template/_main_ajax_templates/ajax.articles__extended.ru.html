@@ -1,4 +1,4 @@
-{?*articles_list*}
+
 <table class="articles-list">
 
     {%*articles_list*}
@@ -20,7 +20,7 @@
             <ul>
                 {%*articles_list:authors_list*}
                 <li>
-                    <a href="?fetch=authors&with=info&id={*articles_list:authors_list:author_id*}&lang={*site_lang*}">{*articles_list:authors_list:author_name*}</a>, {*articles_list:authors_list:author_title*} {?*with_email="yes"*} ({*articles_list:authors_list:author_email*}) {?}
+                    <a href="?fetch=authors&with=info&id={*articles_list:authors_list:author_id*}&lang={*site_language*}">{*articles_list:authors_list:author_name*}</a>, {*articles_list:authors_list:author_title*} {?*with_email="yes"*} ({*articles_list:authors_list:author_email*}) {?}
                 </li>
 
                 {%}
@@ -30,7 +30,3 @@
     {%}
 
 </table>
-{?}
-{?!*articles_list*}
-<br><strong>По заданным критериям поиска статей не найдено!</strong>
-{?}
