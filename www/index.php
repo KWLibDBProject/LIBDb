@@ -131,7 +131,7 @@ switch ($fetch) {
                 break;
             }
             case 'estaff' : {
-                $subtemplate_dir = "$/{$main_theme_dir}/authors/estaff/";
+                $subtemplate_dir = "$/template/authors/estaff/";
                 $subtemplate_filename = "authors__estaff";
 
                 /**
@@ -159,10 +159,10 @@ switch ($fetch) {
                     // ответственный секретарь = 8
                     'assistant_editor'              => getAuthors_EStaffList(8, $site_language),
                 ];
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /** single CSS style file */
-                $maincontent_css = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }

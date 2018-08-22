@@ -757,7 +757,9 @@ ORDER BY date_add
 function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $limit = 0)
 {
     global $mysqli_link;
-    $authors = array();
+
+    $authors = [];
+
     // check for letter, '0' is ANY first letter
     if ($letter == '') {
         $letter = '0';
@@ -778,7 +780,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     $query_order = " ORDER BY authors.name_{$lang}";
     // $query_order = " ORDER BY id";
 
-    $q = "SELECT id, email, orcid, phone, 
+    $query = "SELECT id, email, orcid, phone, 
     name_{$lang} AS name,
     title_{$lang} AS title,
     workplace_{$lang} AS workplace
@@ -794,7 +796,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     // Это лишнее условие нужно, чтобы не сломалсь SQL-выражение и не нужно было морочиться с добавлением AND по условию.
     // Технически, было бы правильно записать все условия в массив, а потом применить array_map или implode для сборки WHERE-блока
 
-    $r = mysqli_query($mysqli_link, $q) or Die(0);
+    $r = mysqli_query($mysqli_link, $query) or Die(0); //@todo: error report/throw ?
 
     if ( @mysqli_num_rows($r) > 0 ) {
         while ($i = mysqli_fetch_assoc($r)) {
