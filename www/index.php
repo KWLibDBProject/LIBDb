@@ -202,21 +202,21 @@ switch ($fetch) {
     case 'articles' : {
         switch ($with) {
             case 'extended' : {
-                $subtemplate_dir = "$/{$main_theme_dir}/articles/extended/";
+                $subtemplate_dir = "$/template/articles/extended/";
                 $subtemplate_filename = "articles__extended";
 
                 /**
                  * HTML
                  */
                 $inner_html_data = []; // результаты поиска загружаются аяксом, а в шаблонах никаких замещаемых переменных нет (ну, кроме языка)
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /**
                  * Здесь можно использовать единый JS-файл с замещаемым значением, но я оставлю так - в файле генерируется
                  * select/option с дефолтным значением (пока везде на английском, но это, возможно, надо будет изменить)
                  */
                 $inner_js_data = [ 'site_language' =>  $site_language ];
-                $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
+                $maincontent_js = websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
                 break;
             }
