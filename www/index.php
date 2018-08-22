@@ -102,7 +102,7 @@ switch ($fetch) {
                     'author_photo_id'       => $author_information['author_photo_id'] ?? -1,
                     'author_photo_link'
                             => (($author_information['author_photo_id'] ?? -1) == -1)
-                                ?  "/{$main_theme_dir}/_assets/images/no_photo_{$site_language}.png"
+                                ?  "/template/_assets/images/no_photo_{$site_language}.png"
                                 :  "core/get.image.php?id={$author_information['author_photo_id']}"
                 ];
                 $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
@@ -262,6 +262,8 @@ switch ($fetch) {
                     'book_id'       =>  $id,
                     'book_info'     =>  LoadBookInfo($id),
                 ];
+                //@todo: в шаблоне используются ссылки на /files/books_file_cover , которые МОГУТ отличаться для разных шаблонов. Надо передать путь к этим файлам
+
                 // результаты поиска загружаются аяксом,
                 $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
@@ -434,6 +436,8 @@ switch ($fetch) {
             'articles_list'         =>  $last_book_articles_list,
             'last_book'             =>  $last_book,
         ];
+
+        //@todo: в шаблоне используются ссылки на /files/books_file_cover , которые МОГУТ отличаться для разных шаблонов. Надо передать путь к этим файлам
 
         $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 

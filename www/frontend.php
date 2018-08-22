@@ -96,15 +96,18 @@ function ConvertDateByLang($date_as_string, $lang)
 function LoadFirstLettersForSelector($lang)
 {
     global $mysqli_link;
-    $ql = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors ORDER BY name_{$lang}"; // was "where deleted=0, but is ALWAYS = 0
-    $qr = mysqli_query($mysqli_link, $ql);
+    // $query = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors ORDER BY name_{$lang}"; // was "where deleted=0, but is ALWAYS = 0
 
-    if ($qr)
+    $query = "SELECT DISTINCT firstletter_name_{$lang} AS letter FROM authors ORDER BY firstletter_name_{$lang}";
+
+    $query_response = mysqli_query($mysqli_link, $query);
+
+    if ($query_response)
     {
-        $qn = @mysqli_num_rows($qr);
+        $qn = @mysqli_num_rows($query_response);
         if ($qn > 0) {
             $return['error'] = 0;
-            while ($letter = mysqli_fetch_assoc($qr)) {
+            while ($letter = mysqli_fetch_assoc($query_response)) {
                 $return['data'][ "{$letter['letter']}" ] = "{$letter['letter']}";
             }
         } else {
@@ -113,7 +116,7 @@ function LoadFirstLettersForSelector($lang)
         }
     } else {
         $return['error'] = 2;
-        $return['data'] = $ql;
+        $return['data'] = $query;
     }
     return $return;
 }
@@ -443,7 +446,8 @@ function BuildQuery($get, $lang)
 
     // DATE_FORMAT(date_add, '%d.%m.%Y') as date_add,
 
-    $q_select = " SELECT DISTINCT
+    $q_select = "
+SELECT DISTINCT
   articles.id
 , articles.udc AS article_udc
 , DATE_FORMAT(date_add, '%d.%m.%Y') AS article_add_date
@@ -471,7 +475,8 @@ function BuildQuery($get, $lang)
 , books.id AS book_id
     ";
 
-    $q_from = " FROM
+    $q_from = "
+FROM
 articles
 , books, topics
 , cross_aa

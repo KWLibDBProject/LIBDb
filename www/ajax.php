@@ -25,17 +25,17 @@ switch ($actor) {
         // BETTER: request to /core/core.books/books.action.getoptionlist.php
 
         $i = 1;
-        $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
-        $q = "
+        $withoutid = intval($_GET['withoutid'] ?? 1); // isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
+        $query = "
+        
         SELECT * 
         FROM books 
         WHERE published_status = 1 
         ORDER BY YEAR(published_date) DESC, title ASC";
 
+        //ORDER по названию?
 
-        //@todo: тут ORDER по названию
-
-        $r = mysqli_query($mysqli_link, $q) or die($q);
+        $r = mysqli_query($mysqli_link, $query) or die($query);
         $n = @mysqli_num_rows($r) ;
 
         if ($n > 0)
@@ -64,10 +64,11 @@ switch ($actor) {
     case 'get_topics_as_optgroup_list' : {
         // /articles/book
 
-        // BETTER : request to /core/core.topics/topicgroups.action.getoptionlist.php
+        //@todo: BETTER : request to /core/core.topics/topicgroups.action.getoptionlist.php
 
         /* загрузить категории и отдать JSON-объект для построения селекта c группировкой */
-        $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
+
+        $withoutid = intval( $_GET['withoutid'] ?? 1);  // $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
 
         $data = LoadTopicsTree($lang, $withoutid);
         if ($data['data'][1]['value'] != -1 ) {
@@ -141,9 +142,15 @@ switch ($actor) {
     }
 
     case 'load_articles_expert_search': {
-        //@TODO: unused
+        break;
+
+        // так как не используется - делаем BREAK для избегания уязвимости
+
         // Поиск статей - экспертный ( в keywords может быть склеенная плюсом строчка )
         // completly equal load_articles_by_query
+
+        // надо еще отфильтровать $_GET
+
         $return = getArticlesList($_GET, $lang);
         break;
     }
