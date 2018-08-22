@@ -377,6 +377,10 @@ function LoadLastNews($lang, $count=2)
 function LoadBookInfo($id)
 {
     global $mysqli_link;
+    $book_info = [];
+
+    if ($id == 0) return $book_info;
+
     $query = "
     SELECT 
         books.title AS book_title, 
@@ -391,11 +395,10 @@ function LoadBookInfo($id)
 
     $r = mysqli_query($mysqli_link, $query) or die($query);
 
-    $ret = [];
     if (@mysqli_num_rows($r)==1) {
-        $ret = mysqli_fetch_assoc($r);
+        $book_info = mysqli_fetch_assoc($r);
     }
-    return $ret;
+    return $book_info;
 }
 
 /**

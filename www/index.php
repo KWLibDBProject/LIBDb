@@ -245,9 +245,9 @@ switch ($fetch) {
                 break;
             }
             case 'book' : {
-                $id = intval($_GET['id']);
+                $id = intval($_GET['id']) ?? 0;
 
-                $subtemplate_dir = "$/{$main_theme_dir}/articles/book/";
+                $subtemplate_dir = "$/template/articles/book/";
                 $subtemplate_filename = "articles__book";
 
                 /**
@@ -259,10 +259,10 @@ switch ($fetch) {
                     'book_info'     =>  LoadBookInfo($id),
                 ];
                 // результаты поиска загружаются аяксом,
-                $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
                 /* JS */
-                $maincontent_js = \Websun\websun::websun_parse_template_path([], "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
+                $maincontent_js = websun_parse_template_path([], "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
                 break;
             }
