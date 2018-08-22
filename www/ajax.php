@@ -81,19 +81,27 @@ switch ($actor) {
 
     case 'load_authors_selected_by_letter': {
         // called js from /authors/list
-        $get_limit = $_GET['limit'] ?? 0;
+        // АНАЛОГ /authors/all !!!
 
-        $authors_list = LoadAuthors_ByLetter($_GET['letter'], $lang, 'no', -1, $get_limit); // LIMIT added for DEBUG purposes
+        // $get_limit = $_GET['limit'] ?? 0;
+        // LIMIT added for DEBUG purposes
 
-        $template_dir = "$/{$main_theme_dir}/authors/all/";
-        $template_file_name = "authors__all.{$lang}";
+        $authors_list = LoadAuthors_ByLetter($_GET['letter'], $lang, 'no', -1 /*, $get_limit */);
+
+        $template_dir = "$/template/authors/all/";
+        $template_file_name = "authors__all";
+
         $inner_html_data = [
-            'all_authors_list' => $authors_list
+            'site_language'     => $lang,
+            'all_authors_list'  => $authors_list
         ];
 
-        $return = websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
+        $subtemplate_filename_html
+            = (! empty($inner_html_data['all_authors_list']) )
+            ? "{$template_file_name}.{$lang}.html"
+            : "authors__all__notfound.html";
 
-        // $return = \Websun\websun::websun_parse_template_path($inner_html_data, "{$template_file_name}.html", $template_dir);
+        $return = websun_parse_template_path($inner_html_data, $subtemplate_filename_html, $template_dir);
 
         break;
     }
