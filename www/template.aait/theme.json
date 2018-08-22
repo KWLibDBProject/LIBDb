@@ -20,5 +20,14 @@
   ],
   "dictionary": {
     "item1" : "text1"
+  },
+  "template_files": {
+
+    "page/default": {
+      "html"  : "$/page/default/default.?.html",
+      "css"   : "$/page/default/default.css",
+      "js"    : "$/page/default/default.js"
+    }
+
   }
 }

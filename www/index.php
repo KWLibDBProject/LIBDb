@@ -53,7 +53,7 @@ switch ($fetch) {
         switch ($with) {
             case 'info': {
                 /*расширенная информация по автору + список его статей + фото */
-                $id = intval($_GET['id']);
+                $id = intval($_GET['id'] ?? 0);
 
                 $subtemplate_dir = "$/{$main_theme_dir}/authors/info/";
                 $subtemplate_filename = "authors__info";
@@ -77,9 +77,9 @@ switch ($fetch) {
                     'author_bio'            => $author_information['author_bio'] ?? '',
                     'author_photo_id'       => $author_information['author_photo_id'] ?? -1,
                     'author_photo_link'
-                            => ($author_information['author_photo_id'] == -1)
-                            ?  "/{$main_theme_dir}/_assets/images/no_photo_{$site_language}.png"
-                            :  "core/get.image.php?id={$author_information['author_photo_id']}"
+                            => (($author_information['author_photo_id'] ?? -1) == -1)
+                                ?  "/{$main_theme_dir}/_assets/images/no_photo_{$site_language}.png"
+                                :  "core/get.image.php?id={$author_information['author_photo_id']}"
                 ];
                 $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
@@ -354,21 +354,24 @@ switch ($fetch) {
          * HTML
          */
         $inner_html_data = [
-            'page_data'  =>  LoadStaticPage($page_alias, $site_language)
+            'site_language' =>  $site_language,
+            'page_alias'    =>  $page_alias,
+            'page_data'     =>  LoadStaticPage($page_alias, $site_language)
         ];
 
-        $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+        $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
         break;
     } // case /page
 
     default : {
-        // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
+        // это статическая страница "о журнале" + список статей в последнем выпуске
         $subtemplate_dir = "$/{$main_theme_dir}/page/default/";
         $subtemplate_filename = "default";
 
         // load last book
-        $last_book = LoadLastBookInfo(); //@todo: СЕЙЧАС возвращается latest сборник по дате, без учета флага published_status + наличия статей в сборнике
+
+        $last_book = LoadLastBookInfo();
         $last_book_id = $last_book['id'] ?? FALSE;
 
         $last_book_articles_list = $last_book_id ? getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, 'no') : [];
@@ -379,16 +382,18 @@ switch ($fetch) {
          * HTML
          */
         $inner_html_data = [
+            'site_language'         =>  $site_language,
+            'page_alias'            =>  'about',
             'page_data'             =>  $page_data,
             'articles_list'         =>  $last_book_articles_list,
             'last_book'             =>  $last_book,
         ];
 
-        $maincontent_html = \Websun\websun::websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+        $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
         /** JS file */
         $inner_js_data = [ 'site_language' => $site_language ];
-        $maincontent_js = \Websun\websun::websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
+        $maincontent_js = websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.js", $subtemplate_dir);
 
         break;
     } // end default case

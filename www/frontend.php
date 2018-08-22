@@ -140,9 +140,11 @@ function LoadStaticPage($alias, $lang = 'en')
         $a = mysqli_fetch_assoc($res);
         $return['content']  = $a['pagecontent'];
         $return['state']    = '200';
+        $return['alias']    = $alias;
     } else {
         $return['content']  = '';
         $return['state']    = '404';
+        $return['alias']    = $alias;
     }
     return $return;
 }
@@ -398,9 +400,7 @@ function LoadBookInfo($id)
 
 /**
  * возвращает ассоциативный массив из базы с информацией о ПОСЛЕДНЕМ опубликованном сборнике
- * или {} если нет такого
- *
- * @todo: работает криво, грузит не тот сборник ? После рефакторинга v.1.77 возможно работает нормально
+ * или [] если нет такого
  *
  * @return array
  */
@@ -415,13 +415,13 @@ function LoadLastBookInfo()
     ORDER BY published_date DESC 
     LIMIT 1";
 
-    $r = mysqli_query($mysqli_link, $query); // is enought for latest published book ?
+    $r = mysqli_query($mysqli_link, $query);
 
-    $ret = [];
+    $book_info = [];
     if (@mysqli_num_rows($r)==1) {
-        $ret = mysqli_fetch_assoc($r);
+        $book_info = mysqli_fetch_assoc($r);
     }
-    return $ret;
+    return $book_info;
 }
 
 /**
@@ -436,8 +436,6 @@ function BuildQuery($get, $lang)
     global $mysqli_link;
 
     // DATE_FORMAT(date_add, '%d.%m.%Y') as date_add,
-
-    //@todo:book  + 'books.year AS book_year' => YEAR(books.published_date) AS book_year
 
     $q_select = " SELECT DISTINCT
   articles.id
@@ -675,6 +673,8 @@ function LoadAuthorInformation_ById($id, $lang)
     global $mysqli_link;
     $author = [];
 
+    if ($id == 0) return $author;
+
     $q = "SELECT * FROM `authors` WHERE id={$id}";
     $r = mysqli_query($mysqli_link, $q);
     if (@mysqli_num_rows($r)>0) {
@@ -709,7 +709,9 @@ function LoadAuthorInformation_ById($id, $lang)
 function LoadArticles_ByAuthor($id, $lang, $is_published = true)
 {
     global $mysqli_link;
-    $ret = [];
+    $list = [];
+
+    if ($id == 0) return $list;
 
     $query_published = $is_published ? 1 : 0;
 
@@ -733,10 +735,10 @@ ORDER BY date_add
     $r = mysqli_query($mysqli_link, $q);
     if (@mysqli_num_rows($r) > 0) {
         while ($article = mysqli_fetch_assoc($r)) {
-            $ret [ $article['aid'] ] = $article;
+            $list [ $article['aid'] ] = $article;
         }
     }
-    return $ret;
+    return $list;
 }
 
 /**
@@ -799,8 +801,6 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
             $authors[ $i['id'] ] = $i;
         }
     }
-    // echo '<pre>';
-    // var_dump($authors); // die;
 
     return $authors;
 }
@@ -949,6 +949,7 @@ function getArticles_PlainList($request, $site_language)
     $articles = array_map(function ($v_article){
 
         // итерируем массив авторов, возвращая только элемент с ФИО у каждого элемента
+
         $authors = array_map(function ($v_author){
             return $v_author['author_name'];
         }, $v_article['authors']);

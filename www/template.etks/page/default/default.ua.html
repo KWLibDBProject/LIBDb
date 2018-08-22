@@ -1,10 +1,9 @@
 <span class="static-page-content">
-    /* {*static_page_content*} */
-
     {* + ../static/page__static.ua.html*}
-
 </span>
+
 <hr>
+{?*last_book*}
 <h3 class="last-book-title">Останній випуск журналу <br> {*last_book.title*}, {*last_book.year*} рік.</h3>
 <fieldset class="books-extended-info">
     <ul>
@@ -22,6 +21,7 @@
         </li>
     </ul>
 </fieldset>
+{?}
 <br>
 /* {%last_book_content%} equal to articles/extended/ajax.articles__extended.ua.html template */
 
