@@ -12,12 +12,12 @@ if(empty($SID)) session_start();*/
     <title>Справочник: Тематические разделы</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
-    <link rel="stylesheet" type="text/css" href="css/core.ui.css">
+    <script src="_assets/jquery-1.10.2.min.js"></script>
+    <script src="_assets/jquery-ui-1.10.3.custom.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="_assets/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="_assets/core.ui.css">
 
-    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="_assets/core.admin.css">
 
     <script src="core.topics/topics.js"></script>
 

@@ -115,16 +115,15 @@ WHERE
 <head>
     <title>Сборники -- редактирование</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.ui.datepicker.rus.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
+    <script type="text/javascript" src="../_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery.ui.datepicker.rus.js"></script>
+    <script type="text/javascript" src="../_assets/jquery.colorbox.js"></script>
 
-    <script type="text/javascript" src="../js/jquery.colorbox.js"></script>
-    <link rel="stylesheet" href="../css/colorbox.css" />
-
+    <link rel="stylesheet" type="text/css" href="../_assets/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/colorbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_assets/core.admin.css">
     <link rel="stylesheet" type="text/css" href="books.css">
-    <link rel="stylesheet" type="text/css" href="../css/core.admin.css">
 
     <script type="text/javascript" src="../../frontend.js"></script>
     <script type="text/javascript" src="../../frontend.options.js"></script>

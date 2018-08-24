@@ -12,7 +12,7 @@ var tiny_config = {
             strikethrough : {inline : 'del'},
             underline : {inline : 'span', 'classes' : 'underline', exact : true}
         },
-        templates: "/core/js/tinymce/templates/templates.json",
+        // templates: "/core/_assets/tinymce/templates/templates.json",
         insertdatetime_formats: ["%d.%m.%Y", "%H:%m", "%d/%m/%Y"],
         contextmenu: "link image responsivefilemanager | inserttable cell row column deletetable | charmap",
         toolbar1: "pastetext | undo redo | link unlink anchor | forecolor backcolor | styleselect formatselect fontsizeselect | template | print preview code | pastetext removeformat",
@@ -21,9 +21,9 @@ var tiny_config = {
         // responsive filemanager
         relative_urls: false,
         document_base_url: "/filestorage/",
-        external_filemanager_path:"/core/js/filemanager/",
+        external_filemanager_path:"/core/_assets/filemanager/",
         filemanager_title:"Responsive Filemanager" ,
-        external_plugins: { "filemanager" : "/core/js/filemanager/plugin.js"}
+        external_plugins: { "filemanager" : "/core/_assets/filemanager/plugin.js"}
     },
     'no-menu' : {
         forced_root_block : "",
@@ -63,7 +63,7 @@ var tiny_config = {
             underline : {inline : 'span', 'classes' : 'underline', exact : true}
         },
         contextmenu : "link image responsivefilemanager | inserttable cell row column deletetable | charmap",
-        templates   : "/core/js/tinymce/templates/templates.json",
+        // templates   : "/core/_assets/tinymce/templates/templates.json",
         insertdatetime_formats: ["%d.%m.%Y", "%H:%m", "%d/%m/%Y"],
         toolbar1    : "bold italic underline subscript superscript strikethrough | charmap | pastetext | undo redo | link unlink anchor | print preview code | pastetext removeformat",
         image_advtab: true // advanced tab (without rel or class add)

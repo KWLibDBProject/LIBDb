@@ -172,9 +172,9 @@ EACH_BANNER;
     <title>Работа со справочником баннеров</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
+    <script src="_assets/jquery-1.10.2.min.js"></script>
+    <script src="_assets/jquery-ui-1.10.3.custom.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="_assets/jquery-ui-1.10.3.custom.min.css">
 
     <style type="text/css">
         body {

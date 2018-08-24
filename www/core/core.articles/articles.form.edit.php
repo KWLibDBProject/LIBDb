@@ -72,15 +72,15 @@ if ($numarticles == 1)
 <head>
     <title>Редактирование статьи</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.ui.datepicker.rus.js"></script>
-    <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
-    <script type="text/javascript" src="../js/tinymce.config.js"></script>
+    <script type="text/javascript" src="../_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery.ui.datepicker.rus.js"></script>
+    <script type="text/javascript" src="../_assets/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../_assets/tinymce.config.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/core.admin.css">
     <link rel="stylesheet" type="text/css" href="articles.css">
-    <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/jquery-ui-1.10.3.custom.min.css">
 
     <script type="text/javascript" src="../../frontend.js"></script>
     <script type="text/javascript" src="../../frontend.options.js"></script>
@@ -142,7 +142,7 @@ if ($numarticles == 1)
                 showButtonPanel: true,
                 showOn: "both",
                 buttonImageOnly: true,
-                buttonImage: "../css/images/calendar.gif"
+                buttonImage: "../_assets/images/calendar.gif"
             });
             $("#abstract_tabs").tabs();
             $("#keywords_tabs").tabs();

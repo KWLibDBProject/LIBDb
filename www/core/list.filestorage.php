@@ -13,13 +13,13 @@ if(empty($SID)) session_start();*/
     <title>FileStorage::List</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="js/jquery.colorbox.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/colorbox.css" />
+    <script src="_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="_assets/jquery.colorbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="_assets/colorbox.css" />
 
-    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="_assets/core.admin.css">
 
-    <script type="text/javascript" src="js/core.excel.js"></script>
+    <script type="text/javascript" src="_assets/core.excel.js"></script>
     <script type="text/javascript" src="../frontend.js"></script>
 
     <script type="text/javascript">

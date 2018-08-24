@@ -35,12 +35,12 @@
 }
 
 .button-edit-icon {
-    background-image: url('../css/edit48x48.png');
+    background-image: url('../_assets/images/edit48x48.png');
     width:50px;
     height:50px;
 }
 .button-download-icon {
-    background-image:url('../css/pdf48x48.png');
+    background-image:url('../_assets/images/pdf48x48.png');
     width:50px;
     height:50px;
 }
@@ -113,11 +113,11 @@ a.icon {
 }
 .icon-jpg:before {
     content: " ";
-    background: url(../css/jpeg24x24.png);
+    background: url(../_assets/images/jpeg24x24.png);
 }
 .icon-pdf:before {
     content: " ";
-    background: url(../css/pdf24x24.png);
+    background: url(../_assets/images/pdf24x24.png);
 }
 
 /* список определений, выровненный горизонтально  */

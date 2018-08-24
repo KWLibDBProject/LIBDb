@@ -13,10 +13,10 @@ if(empty($SID)) session_start();*/
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <script src="js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="js/jquery.colorbox.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/colorbox.css" />
+    <script type="text/javascript" src="_assets/jquery.colorbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="_assets/colorbox.css" />
 
-    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="_assets/core.admin.css">
     <link rel="stylesheet" type="text/css" href="core.authors/authors.css">
 
     <script src="core.authors/authors.js"></script>

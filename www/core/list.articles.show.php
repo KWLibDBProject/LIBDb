@@ -15,11 +15,11 @@ require_once '__required.php'; // $mysqli_link
 <head>
     <title>Список статей</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="_assets/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="../frontend.js"></script>
     <script type="text/javascript" src="../frontend.options.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="_assets/core.admin.css">
     <link rel="stylesheet" type="text/css" href="core.articles/articles.css">
 
     <script type="text/javascript">

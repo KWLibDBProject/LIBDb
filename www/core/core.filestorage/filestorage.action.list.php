@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 /* @todo: оптимизировать блок. его как-то можно сократить, ведь неустановенность коллекции === all !*/
