@@ -89,7 +89,7 @@ class FileStorage
      */
     private static function getRealFileName($filename)
     {
-        $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(self::$config['path'], '/') . '/' . $filename;
+        $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(self::$config['path_storage'], '/') . '/' . $filename;
         return $filename;
     }
 
@@ -100,7 +100,7 @@ class FileStorage
      */
     public static function getStorageDir()
     {
-        return rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(self::$config['path'], '/') . '/';
+        return rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . trim(self::$config['path_storage'], '/') . '/';
     }
 
     /* построение внутреннего имени на основе информации о файле */
@@ -490,13 +490,13 @@ class FileStorage
 
     /* static function for file icons */
     /**
-     * @param $type
+     * @param $mime_type
      * @return string
      */
-    public static function getIconFile($type)
+    public static function getIconFile($mime_type)
     {
-        $path = '/files/';
-        $ext_a = explode('/',$type);
+        $path = '/template/_assets_/images/';
+        $ext_a = explode('/', $mime_type);
         switch ($ext_a[1]) {
             case 'pdf': {
                 $icon = 'fav-document-pdf.png'; break;
@@ -505,7 +505,7 @@ class FileStorage
                 $icon = 'fav-image-jpeg.png'; break;
             }
             default: {
-            $icon = 'fav-image-jpeg.png'; break;
+                $icon = 'fav-image-jpeg.png'; break;
             }
         }
         return $path.$icon;

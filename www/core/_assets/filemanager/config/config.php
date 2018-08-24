@@ -2,6 +2,8 @@
 session_start();
 mb_internal_encoding('UTF-8');
 
+$filestorage_config = include '../../config/config.filestorage.php';
+
 $base_folder = ''; // path to base script from site root (without ending slash)
 
 //------------------------------------------------------------------------------
@@ -22,11 +24,26 @@ $base_folder = ''; // path to base script from site root (without ending slash)
 //    |   |   |   |- responsivefilemanager
 //    |   |   |   |   |- plugin.min.js
 
-$base_url ="http://".$_SERVER['HTTP_HOST'];  // DON'T TOUCH (base url (only domain) of site (without final /)).
+/*$base_url ="http://".$_SERVER['HTTP_HOST'];  // DON'T TOUCH (base url (only domain) of site (without final /)).
 $upload_dir = $base_folder . '/files/upload/'; // path from base_url to base of upload folder (with start and final /)
 $current_path = '../../../files/upload/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder
-$thumbs_base_path = '../../../files/thumbs/'; // relative path from filemanager folder to thumbs folder (with final /)
+$thumbs_base_path = '../../../files/thumbs/'; // relative path from filemanager folder to thumbs folder (with final /)*/
+
+/* LIBDb Values */
+// DON'T TOUCH (base url (only domain) of site (without final /)).
+$base_url ="http://".$_SERVER['HTTP_HOST'];
+
+// path from base_url to base of upload folder (with start and final /)
+$upload_dir = "{$base_folder}/{$filestorage_config['path_files']}/upload/";
+
+// relative path from filemanager folder to upload folder (with final /)
+$current_path = "../../../{$filestorage_config['path_files']}/upload/";
+
+// relative path from filemanager folder to thumbs folder (with final /)
+$thumbs_base_path = "../../../{$filestorage_config['path_files']}/thumbs/";
+
+/* /LIBDb */
 
 // OPTIONAL SECURITY
 // if set to true only those will access RF whose url contains the access key(akey) like: 
