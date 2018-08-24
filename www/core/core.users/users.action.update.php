@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
@@ -11,18 +12,16 @@ $id = intval($_POST['id']);
 $table = 'users';
 
 $post = array(
-    'name'          => mysqli_real_escape_string($mysqli_link, $_POST['name']),
-    'email'         => mysqli_real_escape_string($mysqli_link, $_POST['email']),
-    'permissions'   => mysqli_real_escape_string($mysqli_link, $_POST['permissions']),
-    'login'         => trim(mysqli_real_escape_string($mysqli_link, $_POST['login'])),
-    'phone'         => mysqli_real_escape_string($mysqli_link, $_POST['phone']),
-    'md5password'   => md5(trim(mysqli_real_escape_string($mysqli_link, $_POST['password']))),
+    'name'          => mysqli_real_escape_string($mysqli_link, trim($_POST['name']) ),
+    'email'         => mysqli_real_escape_string($mysqli_link, trim($_POST['email']) ),
+    'permissions'   => mysqli_real_escape_string($mysqli_link, $_POST['permissions'] ),
+    'login'         => mysqli_real_escape_string($mysqli_link, trim($_POST['login']) ),
+    'phone'         => mysqli_real_escape_string($mysqli_link, trim($_POST['phone']) ),
+    'md5password'   => md5(mysqli_real_escape_string($mysqli_link, trim($_POST['password']))),
 );
-// нельзя создать админа
-$post['permissions'] =
-    ($post['permissions'] > 254)
-    ? 254
-    : $post['permissions'];
+
+// обновить права доступа до админа тоже нельзя
+$post['permissions'] = min($post['permissions'], 254);
 
 $q = "SELECT `id` FROM {$table} WHERE `login` LIKE '$post[login]'";
 $r = mysqli_query($mysqli_link, $q);

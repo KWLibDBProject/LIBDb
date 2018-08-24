@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '__required.php'; // $mysqli_link
 
 // отдает JSON объект для построения selector/options list на основе абстрактного справочника

@@ -10,7 +10,6 @@ require_once 'class.config.php';
 require_once 'class.filestorage.php';
 require_once 'class.kwlogger.php';
 
-require_once 'class.websun.php';
 require_once 'websun.php';
 
 require_once 'core.php';
@@ -23,6 +22,25 @@ Config::init([
     'filestorage'   =>  'config/config.filestorage.php',
     'kwlogger'      =>  'config/config.logging.php'
 ]);
+
+$SID = session_id();
+if(empty($SID)) session_start();
+
+if (__ACCESS_MODE__ == 'admin' && !isLogged()) {
+
+    Redirect('/core/admin.actions.php');
+
+} elseif (__ACCESS_MODE__ == 'admin:main' && !isLogged()) {
+
+    Redirect('/core/admin.actions.php');
+
+} elseif (__ACCESS_MODE__ == 'admin:actions') {
+    // все ок
+} elseif (__ACCESS_MODE__ == 'admin') {
+    // все ок
+} else {
+
+}
 
 // Config::dump();
 

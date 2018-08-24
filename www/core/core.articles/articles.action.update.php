@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $result['message'] = '';
@@ -100,4 +101,4 @@ $template_data['message']
     ? ('Информация о статье в базе обновлена... ' . ($result['error_message'] ?? ''))
     : $result['message'];
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);

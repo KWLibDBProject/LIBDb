@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $result = [
@@ -41,5 +42,5 @@ $template_data['message']
     ? ('Статья удалена из базы данных')
     : $result['message'];
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);
 

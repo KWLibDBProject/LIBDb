@@ -1,4 +1,6 @@
 <?php
+define('__ACCESS_MODE__', 'frontend');
+
 require_once '../__required.php'; // $mysqli_link
 // отдает JSON объект для селектора 'books'
 

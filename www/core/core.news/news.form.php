@@ -1,10 +1,19 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $news_id = isset($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($news_id != -1) {
-    $query = "SELECT *, DATE_FORMAT(publish_date, '%d.%m.%Y') as publish_date FROM news WHERE id=$news_id";
+    $query = "
+SELECT 
+    *, DATE_FORMAT(publish_date, '%d.%m.%Y') as publish_date 
+FROM 
+    news 
+WHERE 
+    id={$news_id}
+    ";
+
     $res = mysqli_query($mysqli_link, $query) or die("Unable to execute mysqli request: ".$query);
 
     if (mysqli_num_rows($res) > 0) {
@@ -30,4 +39,4 @@ $template_data = [
     'comment'       => $data['comment'] ?? '',
 ];
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);

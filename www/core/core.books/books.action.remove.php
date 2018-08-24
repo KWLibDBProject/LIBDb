@@ -1,9 +1,8 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 // удалить сборник, если в нем есть статьи НЕЛЬЗЯ
-
-// @todo: проверка прав на удаление (в сессии ли мы и кто мы?)
 
 $table = 'books';
 
@@ -65,6 +64,6 @@ if (!IsSet($_GET['id'])) {
             'button_text'   => 'Вернуться к списку сборников',
             'message'       => $result['message']
         );
-        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }

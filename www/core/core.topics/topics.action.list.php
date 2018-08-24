@@ -1,6 +1,6 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
-$ref_name = 'topics';
 
 $query = "SELECT * FROM topics";
 $res = mysqli_query($mysqli_link, $query) or die('$msg->say("errors/mysqli_query_error",$query)');
@@ -23,4 +23,4 @@ $template_data = array(
     'topics_list' =>  $topics_list
 );
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);

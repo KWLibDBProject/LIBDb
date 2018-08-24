@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $SID = session_id();
@@ -12,7 +13,14 @@ if (isset($_GET['id']))
     Redirect('/core/list.articles.show.php');
 }
 
-$query = "SELECT *, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM articles WHERE id= {$id}"; // получаем СТАТЬЮ
+// Технически, ответ уже будет содержать date_add, но этой конструкцией мы добавляем еще одно поле `date_add` в ответ.
+// В результате обычного запроса из консоли (к примеру) в ответе будет два столбца с date_add
+// первый - во внутреннем формате DATE (то есть 2018-08-23), а второй в отформатированном
+//
+// ДАЛЕЕ, когда мы скажем $the_article = mysqli_fetch_assoc($res_article)
+//                                  - в date_add запишется сначала первое значение, а потом второе
+
+$query = "SELECT *, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM articles WHERE id= {$id}";
 
 $res_article = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое статьи! ".$query);
 
@@ -21,8 +29,9 @@ $numarticles = mysqli_num_rows($res_article);
 if ($numarticles == 1)
 {
     $the_article = mysqli_fetch_assoc($res_article);
-// получаем авторов
-    $query = "select * from cross_aa where article=$id";
+
+    // получаем авторов
+    $query = "select * from cross_aa where article={$id}";
     $res_authors = mysqli_query($mysqli_link, $query) or die("Невозможно получить кросс-таблицу автор X статья! ".$query);
 
     $numauthors = @mysqli_num_rows($res_authors);

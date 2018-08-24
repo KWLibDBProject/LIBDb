@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
@@ -36,9 +37,9 @@ $dataset['firstletter_name_en'] = mb_substr( $dataset['name_en'], 0, 1 );
 $dataset['firstletter_name_ru'] = mb_substr( $dataset['name_ru'], 0, 1 );
 $dataset['firstletter_name_ua'] = mb_substr( $dataset['name_ua'], 0, 1 );
 
-$qstr = MakeUpdateEscaped($dataset, $ref_name, "WHERE id=$id");
+$query = MakeUpdateEscaped($dataset, $ref_name, "WHERE id=$id");
 
-$res = mysqli_query($mysqli_link, $qstr);
+$res = mysqli_query($mysqli_link, $query);
 
 if (!empty($res)) {
     $new_author_id = $id; // айди автора в базе, он нужен для вставки фото
@@ -49,11 +50,11 @@ if (!empty($res)) {
             FileStorage::addFile($_FILES['file_new_input'], $new_author_id, 'authors', 'photo_id');
         }
     }
-    $result['message'] = $qstr;
+    $result['message'] = $query;
     $result['error'] = 0;
 }
 else {
-    die("Unable to insert data to DB!  ".$qstr);
+    die("Unable to insert data to DB!  ".$query);
 }
 
 kwLogger::logEvent('Update', 'authors', $new_author_id, "Author updated, id is {$new_author_id}" );
@@ -73,7 +74,7 @@ if (isAjaxCall()) {
             'button_text'   => 'Вернуться к списку авторов',
             'message'       => "Информация об авторе c внутренним идентификатором {$id} обновлена"
         );
-        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
 
     }
 }

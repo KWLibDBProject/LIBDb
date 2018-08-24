@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'frontend');
 require_once '../__required.php'; // $mysqli_link
 
 // отдает JSON объект для селектора "авторы"
@@ -16,12 +17,13 @@ $flag_with_orcid = isset($_GET['withorcid']) ? 1 : 0;
 
 $query = "
 SELECT
-id, 
-name_{$lang} as name,
-title_{$lang} as title,
-orcid 
-
-FROM authors";
+    id, 
+    name_{$lang} as name,
+    title_{$lang} as title,
+    orcid 
+FROM 
+    authors
+";
 
 if ($result = mysqli_query($mysqli_link, $query)) {
     $ref_numrows = @mysqli_num_rows($result) ;

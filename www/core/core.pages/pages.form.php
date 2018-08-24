@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $SID = session_id();
@@ -15,7 +16,6 @@ if ($page_id != -1) {
         $data = mysqli_fetch_assoc($res);
     }
 }
-
 
 $template_dir = '$/core/core.pages/';
 $template_file = "_template.pages.form.html";
@@ -35,4 +35,4 @@ $template_data = array(
     'alias'             => $data['alias'] ?? '',
 );
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);

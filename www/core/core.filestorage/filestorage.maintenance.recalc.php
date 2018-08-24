@@ -7,17 +7,19 @@ ifNotLoggedRedirect('/core/');
 
 $result = FileStorage::recalcFilesSize();
 
-kwLogger::logEvent('Maintenance', 'filestorage', '*',
-    "{$result['total_files_found']} records in FILESTORAGE scanned. " .
-    "Fixed: {$result['total_files_fixed']} files. " .
-    "Errors: {$result['total_files_error']}. ");
+kwLogger::logEvent(
+    'Maintenance',
+    'filestorage',
+    '*',
+    "{$result['total_files_found']} records in FILESTORAGE scanned. 
+    Fixed: {$result['total_files_fixed']} files. 
+    Errors: {$result['total_files_error']}. ");
 
 $exit_message = $_GET['target'] ?? '';
 $exit_message =
     $exit_message == 'iframe'
         ? '<a href="#" onclick="javascript:window.parent.closeIframe()">Закрыть</a>'
         : '<a href="/core/"><<< Назад в административный раздел</a>';
-
 
 $template_dir = '$/core/core.filestorage';
 $template_file = "_template.filestorage.recalc_sizes.html";
@@ -31,6 +33,6 @@ $template_data = array(
     'exit_message'          =>  $exit_message
 );
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);
 die;
 

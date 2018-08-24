@@ -779,7 +779,8 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
         $letter = mysqli_real_escape_string($mysqli_link, $letter);
     }
 
-    $query_where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
+    // $query_where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
+    $query_where_like = ($letter != '0') ? " AND authors.authors.firstletter_name_{$lang} = '{$letter}'" : " ";
 
     // check for 'is author in editorial stuff', default is 'no'
     $query_where_es = ($is_es != 'no') ? ' AND is_es = 1 ' : '';

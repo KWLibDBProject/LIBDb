@@ -1,9 +1,11 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
+/*$SID = session_id();
+if(empty($SID)) session_start();*/
+
 require_once '__required.php'; // $mysqli_link
 
-$SID = session_id();
-if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
+// ifNotLoggedRedirect('/core/');
 
 //@todo: не загружать статьи если их больше 100, вместо этого писать сообщение об этом
 

@@ -1,26 +1,27 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-$SID = session_id();
+/*$SID = session_id();
 if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
+ifNotLoggedRedirect('/core/');*/
 
 $id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($id != -1)
 {
-    // $q = "select * from books where id=$id";
-
-    $q = "
-    SELECT 
+    $query = "
+SELECT 
     id, title, published_status, contentpages,
     DATE_FORMAT(published_date, '%d.%m.%Y') as published_date,
     file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en
-    FROM books
-    WHERE id = {$id}
-    ";
+FROM 
+    books
+WHERE 
+    id = {$id}
+";
 
-    $r = mysqli_query($mysqli_link, $q) or die("Death at : $q");
+    $r = mysqli_query($mysqli_link, $query) or die("Death at : $query");
 
     if (@mysqli_num_rows($r) > 0) {
         $book = mysqli_fetch_assoc($r);
@@ -97,7 +98,7 @@ if ($id != -1)
         $articles_count = 0;
 
         //func
-        $qt = "SELECT COUNT(book) as bcount FROM articles WHERE book=$id";
+        $qt = "SELECT COUNT(book) as bcount FROM articles WHERE book={$id}";
         $rt = mysqli_query($mysqli_link, $qt);
         $articles_count = mysqli_fetch_assoc($rt)['bcount'];
         //end

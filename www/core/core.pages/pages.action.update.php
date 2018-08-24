@@ -1,10 +1,11 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'staticpages';
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 
-$q = array(
+$dataset = array(
     'alias'         => mysqli_real_escape_string($mysqli_link, $_POST['alias'] ?? ''),
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment'] ?? ''),
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en'] ?? ''),
@@ -15,15 +16,15 @@ $q = array(
     'content_ua'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ua'] ?? ''),
 );
 
-$qstr = MakeUpdate($q, $ref_name, " WHERE id={$id} ");
+$query = MakeUpdate($dataset, $ref_name, " WHERE id={$id} ");
 
-if ($res = mysqli_query($mysqli_link, $qstr)) {
-    $result['message'] = $qstr;
+if ($res = mysqli_query($mysqli_link, $query)) {
+    $result['message'] = $query;
     $result['error'] = 0;
     kwLogger::logEvent('Update', 'pages', $id, "Static page updated, id = {$id}");
 }
 else {
-    Die("Unable to insert data to DB!  ".$qstr);
+    Die("Unable to insert data to DB!  ".$query);
 }
 
 
@@ -41,6 +42,6 @@ if (isAjaxCall()) {
             'button_text'   => 'Вернуться к списку страниц',
             'message'       => 'Статическая страница обновлена'
         );
-        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }

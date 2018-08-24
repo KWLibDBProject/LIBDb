@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 /* файл вызывается черех аякс лоадер
@@ -109,8 +110,10 @@ $an_article['authors_list'] записывать собранный массив
 $template_dir = '$/core/core.articles';
 $template_file = "_template.articles.list.html";
 
+$template_file = (!empty($articles_list)) ? "_template.articles.list.html" : "_template.articles.not-found.html";
+
 $template_data = array(
     'articles_list' =>  $articles_list
 );
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);

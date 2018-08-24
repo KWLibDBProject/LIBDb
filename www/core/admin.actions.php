@@ -3,16 +3,18 @@
  * User: Karel Wintersky
  * Date: 03.08.2018, time: 4:18
  */
-// prepare data
-require_once '__required.php'; // $mysqli_link
+define('__ACCESS_MODE__', 'admin:actions');
+
 $SID = session_id();
 if(empty($SID)) session_start();
+
+require_once '__required.php'; // $mysqli_link
 
 $action = $_GET['try:action'] ?? 'form';
 
 unset($_GET);
 
-isLogged();
+// isLogged();
 
 switch ($action) {
     case 'try:login': {
@@ -63,19 +65,18 @@ ERRORMESSAGE
         unset($_COOKIE[ $key_cookie_u_id ]);
         unset($_SESSION[ $key_session_u_id ]);  // instead of = -1;
 
-        Redirect('/core/admin.php');
+        Redirect('/core/');
 
         break;
     }
     case 'form':
     default: {
-
         $template_dir = '$/core/_templates';
         $template_file = "admin.form.login.html";
         $template_data = [
             'action'    =>  $action,
         ];
-        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
 
         break;
     }

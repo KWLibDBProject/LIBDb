@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 // с помощью этого скрипта мы загружаем данные и проставляем их в поля формы редактирования, используя JS
@@ -8,8 +9,8 @@ $ref_name = 'authors';
 $item_id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($item_id != -1) {
-    $query = "SELECT * FROM {$ref_name} WHERE id={$item_id}";
-    $res = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое $ref_name");
+    $query = "SELECT * FROM authors WHERE id={$item_id}";
+    $res = mysqli_query($mysqli_link, $query) or die("Death on: {$query}");
     $ref_numrows = mysqli_num_rows($res);
 
     if ($ref_numrows == 1) {

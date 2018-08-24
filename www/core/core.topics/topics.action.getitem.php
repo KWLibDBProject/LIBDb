@@ -1,4 +1,6 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
+
 require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'topics';

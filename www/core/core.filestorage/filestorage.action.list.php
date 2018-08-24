@@ -2,6 +2,7 @@
 require_once '../__required.php'; // $mysqli_link
 
 /* @todo: оптимизировать блок. его как-то можно сократить, ведь неустановенность коллекции === all !*/
+
 // коллекция
 $collection = at($_GET, 'collection', 'all');
 $collection = getAllowedValue( $collection , array(
@@ -34,8 +35,13 @@ $fs_table = FileStorage::getStorageTable();
 
 /* move to method */
 $q = "
-SELECT id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter, stat_date_insert
-FROM {$fs_table} {$where} {$sortby}";
+SELECT 
+    id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter, stat_date_insert
+FROM 
+    {$fs_table} 
+{$where} 
+{$sortby}
+";
 
 $r = @mysqli_query($mysqli_link, $q);
 /**/
@@ -91,5 +97,5 @@ $template_data = array(
     'filestorage_list' =>  $filestorage_list
 );
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);
 

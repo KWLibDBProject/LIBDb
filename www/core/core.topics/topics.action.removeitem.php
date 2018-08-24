@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 // удалить рубрику (топик), если в ней есть статьи НЕЛЬЗЯ
 require_once '../__required.php'; // $mysqli_link
 

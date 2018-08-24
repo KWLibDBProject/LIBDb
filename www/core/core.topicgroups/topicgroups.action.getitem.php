@@ -1,10 +1,10 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-$ref_name = 'topicgroups';
-$item_id = IsSet($_GET['id']) ? intval($_GET['id']) : 1;
+$item_id = $_GET['id'] ?? 1;
 
-$query = "SELECT * FROM $ref_name WHERE id=$item_id";
+$query = "SELECT * FROM topicgroups WHERE id={$item_id}";
 $res = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое справочника! ".$query);
 $ref_numrows = mysqli_num_rows($res);
 

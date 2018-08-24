@@ -8,9 +8,14 @@
  * Date: 10.08.2018, time: 14:02
  *
  * It is a better version for ArrisFramework\App ,INI_Confg and other classes
+ *
+ * Added: set, caching
+ *
+ * @todo: move to ArrisFrameWork
  */
 class Theme
 {
+    const VERSION = '1.2';
     private static $GLUE = '.';
 
     /**

@@ -2,6 +2,8 @@
 // Здесь собраны функции-ответы на вывод различных данных, передаваемых аяксом.
 // в основном это ответы на разные селекторы
 define('__ROOT__', __DIR__);
+define('__ACCESS_MODE__', 'frontend');
+
 require_once (__ROOT__ . '/core/__required.php');
 require_once 'frontend.php';
 
@@ -132,7 +134,7 @@ switch ($actor) {
         $template_file_name
             = (!empty($inner_html_data['articles_list']))
             ? "ajax.articles__extended.{$lang}.html"
-            : "ajax.articles__extemded__notfound.html";
+            : "ajax.articles__extended__notfound.html";
 
         $template_dir = "$/template/_main_ajax_templates/";
 

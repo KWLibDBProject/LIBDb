@@ -1,29 +1,20 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'books';
 
 $book_id = $_POST['book_id'];
 
-//@todo: use Datetime->
-
-$q = array(
+$dataset = array(
     'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
     'contentpages'  => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
     'published_status'  => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
     'published_date'    => DateTime::createFromFormat('d.m.Y', $_POST['book_publish_date'])->format('Y-m-d'),
-
-    // 'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']), // конвертировать в date format
-    //@todo:date убрать
-    // 'year'          => substr(mysqli_real_escape_string($mysqli_link, $_POST['book_date']), 6, 4), // тоже не нужно, будем брать
-    // 'timestamp'     => ConvertDateToTimestamp(mysqli_real_escape_string($mysqli_link, $_POST['book_date'])), // зачем?
-
-    //@todo: убрать, этим занимается БД
-    // 'stat_date_update' => ConvertTimestampToDate() // это задача БД
 );
 
-$qstr = MakeUpdate($q, $ref_name, " WHERE id = {$book_id}");
-$res = mysqli_query($mysqli_link, $qstr) or Die("Невозможно обновить данные в базе  ".$qstr);
+$query = MakeUpdate($dataset, $ref_name, " WHERE id = {$book_id}");
+$res = mysqli_query($mysqli_link, $query) or Die("Невозможно обновить данные в базе  ".$query);
 
 if (count($_FILES)>0) {
     // Если массив $_FILES не пуст - это означает, что файлы присоединили.
@@ -43,7 +34,6 @@ if (count($_FILES)>0) {
 
 kwLogger::logEvent('Update', 'books', $book_id, "Updated book, id = {$book_id}");
 
-
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
@@ -60,5 +50,5 @@ if (isAjaxCall()) {
     $template_data['message'] = ($result['error'] == 0) ? 'Сборник обновлен' : $result['message'];
 
 
-    echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+    echo websun_parse_template_path($template_data, $template_file, $template_dir);
 }

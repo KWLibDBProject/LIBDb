@@ -1,6 +1,6 @@
 <?php
 define('__ROOT__', __DIR__);
-define('__CONFIG__', __DIR__ . 'config');
+define('__ACCESS_MODE__', 'frontend');
 
 require_once (__ROOT__ . '/core/__required.php');
 require_once 'frontend.php';
@@ -78,6 +78,8 @@ switch ($fetch) {
             case 'info': {
                 /*расширенная информация по автору + список его статей + фото */
                 $id = intval($_GET['id'] ?? 0);
+
+                //@todo: не обрабатывается ситуация "автора с ID нет в БД"
 
                 $subtemplate_dir = "$/template/authors/info/";
                 $subtemplate_filename = "authors__info";
@@ -258,9 +260,10 @@ switch ($fetch) {
                  * HTML
                  */
                 $inner_html_data = [
-                    'site_language' =>  $site_language,
-                    'book_id'       =>  $id,
-                    'book_info'     =>  LoadBookInfo($id),
+                    'site_language'     =>  $site_language,
+                    'book_id'           =>  $id,
+                    'book_info'         =>  LoadBookInfo($id),
+                    'template_folder'   =>  $main_theme_dir
                 ];
                 //@todo: в шаблоне используются ссылки на /files/books_file_cover , которые МОГУТ отличаться для разных шаблонов. Надо передать путь к этим файлам
 
@@ -435,6 +438,7 @@ switch ($fetch) {
             'page_data'             =>  $page_data,
             'articles_list'         =>  $last_book_articles_list,
             'last_book'             =>  $last_book,
+            'template_folder'       =>  $main_theme_dir
         ];
 
         //@todo: в шаблоне используются ссылки на /files/books_file_cover , которые МОГУТ отличаться для разных шаблонов. Надо передать путь к этим файлам
@@ -453,14 +457,6 @@ switch ($fetch) {
 /**
  * Заполняем значения для главного шаблона
  */
-/**
- * Есть мнение (2018-08-10), что надо анализировать файл theme.json , в котором типа всё написано...
- * И структуру меню можно генерировать динамически (на основе YAML или JSON), и я языковые надписи брать из theme.en.json
-
- $main_template_data['frontend']['menu']['title'] = Theme::get('site/title');
- $main_template_data['theme'] = Theme::all()
-
- */
 
 /**   * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне) */
 $main_template_data['rubrics']    = printTopicsTree($site_language);    //@todo: когда-нибудь это надо отрефакторить
@@ -471,7 +467,7 @@ $main_template_data['all_books']    = LoadBooks();
 /**  * Блок "баннеры" */
 $main_template_data['all_banners']  = LoadBanners();
 
-/* Блок "последние новости" (возвращает рендер WEBSUN, нужно возвращать ARRAY, который разбирается в шаблоне) */
+/* Блок "последние новости" */
 $main_template_data['last_news_list'] = LoadLastNews($site_language, 3);
 
 /** Контент  */
@@ -480,15 +476,13 @@ $main_template_data['content_html'] = $maincontent_html;
 $main_template_data['content_css'] = $maincontent_css;
 
 /** Тип ассетов */
-// $main_template_data['frontend_assets_mode'] = Config::get('frontend/assets_mode');
-
 $main_template_data['frontend'] = [
     'assets_mode'           =>  Config::get('frontend/assets_mode', 'development'),
     'assets_version'        =>  Config::get('frontend/assets_version', ''),
     'cookie_site_language'  =>  Config::get('cookie_site_language', 'libdb_sitelanguage')
 ];
 
-$content = \Websun\websun::websun_parse_template_path($main_template_data, $main_template_file, "$/{$main_theme_dir}");
+$content = websun_parse_template_path($main_template_data, $main_template_file, "$/{$main_theme_dir}");
 $content = preg_replace('/^\h*\v+/m', '', $content);
 echo $content;
 

@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'frontend');
 require_once '__required.php'; // $mysqli_link
 
 // сделать возможность просмотра файла как по АЙДИ, так и по ЮЗЕРНЕЙМ
@@ -14,7 +15,9 @@ if (!$file_info) {
     $file_info['username'] = 'file not found.pdf';
     $file_info['filesize'] = 632;
     $file_info['content'] = FileStorage::getEmptyFile('pdf');
+
 } else {
+
     $file_info['content'] = FileStorage::getFileContent($fid);
 
     if ($file_info['content'] == null) {
@@ -53,6 +56,9 @@ header ("Content-Length: " . $file_info['filesize']);
 header ("Age: 0");
 header ("Proxy-Connection: close");
 header('Accept-Ranges: bytes');
+
 print($file_info['content']);
+
 flush();
+
 exit();

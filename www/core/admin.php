@@ -4,16 +4,16 @@
  * Date: 03.08.2018, time: 4:08
  */
 define('__ROOT__', '/');
-define('__CONFIG__', '/config');
-
-require_once '__required.php'; // $mysqli_link
+define('__ACCESS_MODE__', 'admin:main');
 
 $SID = session_id();
 if(empty($SID)) session_start();
 
-if (!isLogged()) {
+require_once '__required.php'; // $mysqli_link
+
+/*if (!isLogged()) {
     Redirect('admin.actions.php');
-}
+}*/
 
 // prepare data
 $template_dir = '$/core/_templates';
@@ -41,6 +41,6 @@ $template_data = [
 ];
 
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);
 
  

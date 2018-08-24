@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $table = 'authors';
@@ -35,9 +36,9 @@ $dataset['firstletter_name_en'] = mb_substr( $dataset['name_en'], 0, 1 );
 $dataset['firstletter_name_ru'] = mb_substr( $dataset['name_ru'], 0, 1 );
 $dataset['firstletter_name_ua'] = mb_substr( $dataset['name_ua'], 0, 1 );
 
-$qstr = MakeInsertEscaped( $dataset, $table );
+$query = MakeInsertEscaped( $dataset, $table );
 
-$res = mysqli_query($mysqli_link, $qstr) or die("Error at $qstr");
+$res = mysqli_query($mysqli_link, $query) or die("Error at $query");
 
 if (!empty($res)) {
     $new_author_id = mysqli_insert_id($mysqli_link); // айди автора в базе, он нужен для вставки фото
@@ -49,11 +50,11 @@ if (!empty($res)) {
             FileStorage::addFile($_FILES['file_new_input'], $new_author_id, 'authors', 'photo_id');
         }
     }
-    $result['message'] = $qstr;
+    $result['message'] = $query;
     $result['error'] = 0;
 }
 else {
-    Die("Unable to insert data to DB!  ".$qstr);
+    die("Unable to insert data to DB!  ".$query);
 }
 
 kwLogger::logEvent('Add', 'authors', $new_author_id, "Author added, new id is {$new_author_id}" );
@@ -72,7 +73,7 @@ if (isAjaxCall()) {
             'button_text'   => 'Вернуться к списку авторов',
             'message'       => "Автор добавлен в базу данных, его внутренний идентификатор = {$new_author_id}"
         );
-        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
 
     }
 }

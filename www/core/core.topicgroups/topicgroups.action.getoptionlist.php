@@ -1,4 +1,6 @@
 <?php
+define('__ACCESS_MODE__', 'frontend');
+
 // отдает JSON объект для селектора "топики"
 require_once '../__required.php'; // $mysqli_link
 

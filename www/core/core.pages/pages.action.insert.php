@@ -1,9 +1,10 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'staticpages';
 
-$q = array(
+$dataset = array(
     'alias'         => mysqli_real_escape_string($mysqli_link, $_POST['alias'] ?? ''),
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment'] ?? ''),
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en'] ?? ''),
@@ -13,16 +14,16 @@ $q = array(
     'content_ru'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ru'] ?? ''),
     'content_ua'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ua'] ?? ''),
 );
-$qstr = MakeInsert($q, $ref_name);
+$query = MakeInsert($dataset, 'staticpages');
 
-if ($res = mysqli_query($mysqli_link, $qstr)) {
-    $result['message'] = $qstr;
+if ($res = mysqli_query($mysqli_link, $query)) {
+    $result['message'] = $query;
     $result['error'] = 0;
     $record_id = mysqli_insert_id($mysqli_link);
     kwLogger::logEvent('Add', 'pages', $record_id, "Static page added, id = {$record_id}");
 }
 else {
-    Die("Unable to insert data to DB!  ".$qstr);
+    Die("Unable to insert data to DB!  ".$query);
 }
 
 
@@ -40,6 +41,6 @@ if (isAjaxCall()) {
             'button_text'   => 'Вернуться к списку страниц',
             'message'       => 'Статическая страница добавлена'
         );
-        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }

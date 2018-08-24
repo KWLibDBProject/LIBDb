@@ -1,5 +1,4 @@
 <table border="1" width="100%">
-    {?*articles_list*}
     <tr>
         <th width="3%">id</th>
         <th>Тематический<br> раздел</th>
@@ -7,17 +6,16 @@
         <th width="7%">УДК</th>
         <th>Авторы</th>
         <th>Название</th>
-        <th width="7%">Дата</th>
-        <th width="105" colspan="1">Control<br><small>PDF info</small></th>
+        <th>PDF</th>
+        <th width="7%">Дата<br><small>(добавления)</small></th>
+        <th width="">Edit</th>
     </tr>
 
-
     {%*articles_list*}
-
     <tr>
-        <td>{*articles_list:id*}</td>
+        <td class="centred_cell">{*articles_list:id*}</td>
         <td>{*articles_list:ttitle*}</td>
-        <td><nobr>{*articles_list:btitle*}</nobr></td>
+        <td class="centred_cell"><nobr>{*articles_list:btitle*}</nobr></td>
         <td>{*articles_list:udc*}</td>
         <td>
             {?*articles_list:authors_list*}
@@ -31,17 +29,13 @@
             {?}
         </td>
         <td><small>{*articles_list:title_ru*}</small></td>
-        <td class="center_cell"><small>{*articles_list:date_add*}</small></td>
-        <td>
+        <td class="centred_cell">
             <button class="action-download-pdf button-download-icon" name="{*articles_list:pdffile.id*}" data-text="Show PDF"></button>
+        </td>
+        <td class="center_cell"><small>{*articles_list:date_add*}</small></td>
+        <td class="centred_cell">
             <button class="action-edit button-edit-icon" name="{*articles_list:id*}" data-text="Edit"></button>
         </td>
     </tr>
     {%}
-    {?}
-
-    {?!*articles_list*}
-    <tr><td colspan="8">Статей не найдено</td></tr>
-    {?}
-
 </table>

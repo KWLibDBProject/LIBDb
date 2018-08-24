@@ -1,13 +1,10 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $id = IsSet($_GET['id']) ? intval($_GET['id']) : Die();
 
 // удалить из таблицы filestorage
-// вообще-то это избыточно, достаточно "update articles set pdfid = -1 where id = $id" :)
-
-FileStorage::init($mysqli_link);
-
 $pdf_relation = FileStorage::getRelById($id);
 
 $a_result = mysqli_query($mysqli_link, "UPDATE articles SET pdfid=-1 WHERE id={$pdf_relation}") or Die("Die on: UPDATE articles RELATION field");

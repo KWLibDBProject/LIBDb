@@ -1,4 +1,6 @@
 <?php
+define('__ACCESS_MODE__', 'frontend');
+
 require_once '__required.php'; // $mysqli_link
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : -1;

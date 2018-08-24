@@ -1,17 +1,19 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'authors';
 
 $select_letter = $_GET['letter'] ?? '0';
 
-$sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru " : '';
-
 if ($select_letter != '0') {
-    $where_like = " WHERE authors.name_ru LIKE '{$select_letter}%'";
+    // $where_like = " WHERE authors.name_ru LIKE '{$select_letter}%'";
+    $where_like = " WHERE authors.firstletter_name_ru = '{$select_letter}'";
 } else {
     $where_like = '';
 }
+
+$sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru " : '';
 
 $authors_list = [];
 
@@ -28,9 +30,8 @@ if ($authors_count > 0) {
 }
 
 $template_dir = '$/core/core.authors';
-// $template_file = "_template.authors.list.html";
 
-$template_file = ($authors_count > 0) ? "_template.authors.list.html" : "_template.authors.list-empty.html";
+$template_file = ($authors_count > 0) ? "_template.authors.list.html" : "_template.authors.not-found.html";
 
 $template_data = array(
     'authors_count' =>  count($authors_list),

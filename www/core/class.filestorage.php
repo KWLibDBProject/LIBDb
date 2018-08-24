@@ -353,32 +353,32 @@ class FileStorage
     {
         if ($file_array['tmp_name'] != '')
         {
-            $now = ConvertTimestampToDate();
             $file_info = array(
                 'username'      => $file_array['name'],
 
                 // legacy? наследие денвера?
-                'tempname'      => ($_SERVER['REMOTE_ADDR']==="127.0.0.1") ? str_replace('\\','\\\\', ($file_array['tmp_name'])) : ($file_array['tmp_name']),
+                'tempname'      => ($_SERVER['REMOTE_ADDR']==="127.0.0.1")
+                                    ? str_replace('\\','\\\\', ($file_array['tmp_name']))
+                                    : ($file_array['tmp_name']),
                 'filesize'      => $file_array['size'],
                 'relation'      => $related_id,
                 'filetype'      => $file_array['type'],
                 'collection'    => $collection,
-                'stat_date_insert'  =>  $now, // возложить на БД
-                'stat_date_update'  =>  $now // возложить на БД
             );
             $file_info['internal_name'] = self::getInternalFileName($file_info);
 
             /* insert fileinfo to DB */
             $q = MakeInsert($file_info, self::getSQLTable());
             mysqli_query(self::$mysqli_link, $q) or kwLogger::_die("Death on $q");
-            $last_file_id = mysqli_insert_id(self::$mysqli_link) or Die("Не удалось получить id последнего добавленного файла !");
+
+            $last_file_id = mysqli_insert_id(self::$mysqli_link) or kwLogger::_die("Не удалось получить id последнего добавленного файла !");
 
             self::appendFileContent($file_info, $last_file_id);
 
             $q_api = MakeUpdate(array( $related_field_in_table => $last_file_id ),
                                 $collection,
                                 " WHERE id= $related_id ");
-            mysqli_query(self::$mysqli_link, $q_api) or Die("Death on update {$collection} table with request: ".$q_api);
+            mysqli_query(self::$mysqli_link, $q_api) or kwLogger::_die("Death on update {$collection} table with request: ".$q_api);
             $ret = $last_file_id;
 
             kwLogger::logEvent('Add', 'filestorage', $last_file_id, "Added {$file_info['username']} file to collection = {$file_info['collection']}, owner is {$file_info['relation']}, fileid is {$last_file_id}");

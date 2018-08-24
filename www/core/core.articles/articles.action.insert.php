@@ -1,4 +1,5 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $SID = session_id();
@@ -12,7 +13,7 @@ if (!IsSet($_POST['caller'])) {
     $result['error'] = 1; $result['message'] .= 'Unknown caller!'; print(json_encode($result)); exit();
 }
 
-$q = array(
+$dataset = array(
     'udc'           => str_replace(" ", "", mysqli_real_escape_string($mysqli_link, $_POST['udc'])),
     'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
     'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
@@ -36,8 +37,8 @@ $q = array(
 
 
 // теперь нам нужно вставить данные в БАЗУ
-$qstr = MakeInsert($q,'articles');
-$res = mysqli_query($mysqli_link, $qstr) or Die("Невозможно вставить данные в базу  ".$qstr);
+$query = MakeInsert($dataset,'articles');
+$res = mysqli_query($mysqli_link, $query) or Die("Невозможно вставить данные в базу  ".$query);
 $article_id = mysqli_insert_id($mysqli_link) or Die("Не удалось получить id последней добавленной записи!");
 
 if (IsSet($_FILES)) {
@@ -90,5 +91,5 @@ $template_data['message']
     ? ('Статья добавлена... ' . ($result['error_message'] ?? ''))
     : $result['message'];
 
-echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+echo websun_parse_template_path($template_data, $template_file, $template_dir);
 

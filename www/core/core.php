@@ -5,19 +5,6 @@
  * @param $filename
  * @return string
  */
-function floadpdf($filename)
-{
-    $fh = fopen($filename,"rb");
-    $real_filesize = filesize($filename);
-    $blobdata = fread($fh, $real_filesize);
-    fclose($fh);
-    return $blobdata;
-}
-
-/**
- * @param $filename
- * @return string
- */
 function floadfile($filename)
 {
     $fh = fopen($filename,"rb");
@@ -63,6 +50,7 @@ function isLogged()
 
     // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
     $we_are_logged = !empty($_SESSION);
+
     $we_are_logged = $we_are_logged && isset($_SESSION[ $key_session_userid  ]);
     $we_are_logged = $we_are_logged && $_SESSION[ $key_session_userid ] !== -1;
 
@@ -77,6 +65,7 @@ function isLogged()
  * */
 function ifNotLoggedRedirect($path = "/")
 {
+    return true;
     if (!isLogged()) { header('Location: '.$path); die(); }
 }
 
@@ -99,38 +88,8 @@ http://php.fnlist.com/date_time/mktime
 http://www.php.net/manual/ru/function.mktime.php
 */
 
-/**
- * @param $str_date
- * @return array
- * @todo: USELESS
- */
-function ConvertDateToArray($str_date)
-{
-    $date_as_array = date_parse_from_format('d.m.Y', $str_date);
-    return $date_as_array;
-}
 
-/**
- * @param $str_date
- * @param string $format
- * @return int
- * @todo: REFACTORING
- */
-function ConvertDateToTimestamp($str_date, $format="d.m.Y")
-{
-    $date_array = date_parse_from_format($format, $str_date);
-    return mktime(12, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
-}
 
-/**
- * @param string $format
- * @return string
- * @todo: DELETE after date refactoring
- */
-function ConvertTimestampToDate($format = '%Y-%m-%d %H:%M:%S')
-{
-    return strftime($format, time());
-}
 
 /*
 Converts value (filesize) to human-friendly view like '5.251 M', 339.645 K or 4.216 K

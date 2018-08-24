@@ -1,10 +1,11 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'news';
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 
-$q = array(
+$dataset = array(
     'publish_date'      => DateTime::createFromFormat('d.m.Y', $_POST['publish_date'])->format('Y-m-d'),
 
     'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
@@ -18,15 +19,15 @@ $q = array(
     'text_ua'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ua']),
 );
 
-$qstr = MakeUpdate($q, $ref_name, " WHERE id=$id ");
+$query = MakeUpdate($dataset, $ref_name, " WHERE id=$id ");
 
-if ($res = mysqli_query($mysqli_link, $qstr)) {
+if ($res = mysqli_query($mysqli_link, $query)) {
     $result['message'] = 'Новость обновлена';
     $result['error'] = 0;
     kwLogger::logEvent('Update', 'news', $id, "News record updated, id = {$id}");
 }
 else {
-    Die("Unable to insert data to DB!  ".$qstr);
+    Die("Unable to insert data to DB!  ".$query);
 }
 
 if (isAjaxCall()) {
@@ -43,6 +44,6 @@ if (isAjaxCall()) {
             'button_text'   => 'Вернуться к списку новостей',
             'message'       => 'Новость обновлена'
         );
-        echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }

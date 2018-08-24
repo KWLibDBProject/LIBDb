@@ -1,27 +1,18 @@
 <?php
+define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'books';
 
-// $now = ConvertTimestampToDate(); // удалить
-$q = array(
+$dataset = array(
     'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
     'contentpages'  => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
     'published_status'  => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
     'published_date'    => DateTime::createFromFormat('d.m.Y', $_POST['book_publish_date'])->format('Y-m-d'),
-
-    //@todo: убрать
-    // 'date'          => mysqli_real_escape_string($mysqli_link, $_POST['book_date']), // must be mysql date format
-    // 'year'          => substr(mysqli_real_escape_string($mysqli_link, $_POST['book_date']), 6, 4), // не нужно
-    // 'timestamp'     => ConvertDateToTimestamp(mysqli_real_escape_string($mysqli_link, $_POST['book_date'])), // зачем???
-
-    //@todo: убрать
-    // 'stat_date_insert'  =>  $now, // БД
-    // 'stat_date_update'  =>  $now // БД
 );
 
-$qstr = MakeInsert($q, $ref_name);
-$res = mysqli_query($mysqli_link, $qstr) or die("Невозможно вставить данные в базу  ".$qstr);
+$query = MakeInsert($dataset, $ref_name);
+$sql_result = mysqli_query($mysqli_link, $query) or die("Невозможно вставить данные в базу  ".$query);
 $book_id = mysqli_insert_id($mysqli_link) or die("Не удалось получить id последней добавленной записи!");
 
 
@@ -57,6 +48,5 @@ if (isAjaxCall()) {
 
     $template_data['message'] = ($result['error'] == 0) ? 'Сборник добавлен' : $result['message'];
 
-
-    echo \Websun\websun::websun_parse_template_path($template_data, $template_file, $template_dir);
+    echo websun_parse_template_path($template_data, $template_file, $template_dir);
 }
