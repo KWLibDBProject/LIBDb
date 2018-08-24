@@ -16,7 +16,7 @@
     ]
   },
   "metrics": [
-    "metrika.google-analytics.html", "metrika.yandex.html"
+    "metrika.etks.google-analytics.html", "metrika.etks.yandex.html"
   ],
   "dictionary": {
     "item1" : "text1"

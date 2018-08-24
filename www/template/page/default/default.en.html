@@ -9,21 +9,21 @@
     <ul>
         <li>
             <a href="core/get.image.php?id={*last_book.file_cover*}" class="icon-jpg icon lightbox-image">
-                <img src="/files/books_file_cover.jpg"><br>Cover</a>
+                <img src="/{*template_folder*}/_assets/images/books_file_cover.jpg"><br>Cover</a>
         </li>
         <li>
             <a href="core/get.file.php?id={*last_book.file_title_en*}" class="icon-pdf icon">
-                <img src="/files/books_file_title_en.jpg"><br>Title</a>
+                <img src="/{*template_folder*}/_assets/images/books_file_title_en.jpg"><br>Title</a>
         </li>
         <li>
             <a href="core/get.file.php?id={*last_book.file_toc_en*}" class="icon-pdf icon">
-                <img src="/files/books_file_toc_en.jpg"><br>Contents</a>
+                <img src="/{*template_folder*}/_assets/images/books_file_toc_en.jpg"><br>Contents</a>
         </li>
     </ul>
 </fieldset>
 {?}
 <br>
-/* {%last_book_content%} equal to articles/extended/ajax.articles__extended.en.html template */
+/* `last_book_content` identical with `articles/extended/ajax.articles__extended.en.html` template */
 
 {* + ../../_main_ajax_templates/ajax.articles__extended.en.html *}
 

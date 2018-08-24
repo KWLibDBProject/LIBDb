@@ -2,9 +2,7 @@
 
 body {
     background: #EAF2E6;
-    background: url(../files/bg_paper_01.jpg) scroll repeat;
-/*    background: url(/files/bg_new_year_2015.jpg) scroll repeat; */
-/*    background: url(../files/bg_spring_grayscale.jpg) scroll repeat; */
+    background: url(_assets/images/bg_default.jpg) scroll repeat;
 }
 
 a {
@@ -331,21 +329,12 @@ legend {
 
 /* END : Articles list by query */
 
-
-/*
-Важно:
-в каталогах шаблона-темы вы можете найти многочисленные CSS-файлы.
-Стили, указанные там, должны ПЕРЕОПРЕДЕЛЯТЬ (override) стили, указанные в этом файле
-это позволит индивидуальные страницы раскрасить в какие-то свои цвета
-*/
-
-/* possibly useless styles */
 .icon {}
 .icon-jpg {}
 .icon-pdf {}
 
 #download-pdf { /* useless */
-    background-image:url('../files/pdf-icon-128x128.png');
+    background-image:url('../template/_assets/images/pdf-icon-128x128.png');
     width:128px;
     height:132px;
     background-color: transparent;
@@ -355,5 +344,5 @@ legend {
     display: inline-block;
     margin-right: 5px;
     vertical-align: -50%;
-    content: url(../files/pdf16x16.png)
+    content: url('../template/_assets/images/pdf16x16.png')
 }
