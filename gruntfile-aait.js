@@ -31,7 +31,7 @@ module.exports = function(grunt) {
                         'www/template/_assets/bootstrap/bootstrap.css',
                         'www/template/_assets/bootstrap/bootstrap-theme.css',
                         'www/template/_assets/colorbox.css',
-                        'www/template.etks/theme.css'
+                        'www/template.aait/theme.css'
                     ]
                 }
             }

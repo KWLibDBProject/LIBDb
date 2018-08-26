@@ -12,7 +12,7 @@ if(empty($SID)) session_start();*/
     <title>Справочник: Сборники</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="_assets/jquery-1.10.2.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="_assets/core.admin.css">
     <link rel="stylesheet" type="text/css" href="core.books/books.css">

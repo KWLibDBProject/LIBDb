@@ -12,7 +12,7 @@ if(empty($SID)) session_start();*/
     <title>Справочник: Список авторов</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="_assets/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="_assets/jquery.colorbox.js"></script>
     <link rel="stylesheet" type="text/css" href="_assets/colorbox.css" />
 

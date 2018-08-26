@@ -5,8 +5,6 @@ require_once '__required.php'; // $mysqli_link
 // сделать возможность просмотра файла как по АЙДИ, так и по ЮЗЕРНЕЙМ
 $fid = IsSet($_GET['id']) ? intval($_GET['id']) : Die();
 
-// FileStorage::init($mysqli_link); // already in required
-
 $file_info = FileStorage::getFileInfo($fid);
 
 if (!$file_info) {
@@ -27,16 +25,15 @@ if (!$file_info) {
         $file_info['username'] = 'file not found.pdf';
         $file_info['filesize'] = 632;
     } else {
-        $current_state = $_SERVER['HTTP_REFERER'];
+        $current_state = $_SERVER['HTTP_REFERER'] ?? '';
     }
 
     /* update stat_download_counter
     but only for really downloaded files, not fetched via control panel */
-    if (strpos($_SERVER['HTTP_REFERER'], '/core/') == false ){
+    if (strpos( ($_SERVER['HTTP_REFERER'] ?? ''), '/core/') == false ) {
         FileStorage::statUpdateDownloadCounter($fid);
         FileStorage::statLogDownloadEvent($fid, $current_state);
     }
-
 }
 
 header ("HTTP/1.1 200 OK");

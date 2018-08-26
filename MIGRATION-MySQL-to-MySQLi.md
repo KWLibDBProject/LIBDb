@@ -112,6 +112,23 @@ UPDATE filestorage SET `collection` = `collection_legacy`
 - удаляем поле `collection_legacy` 
 - Накладываем индексы на поля: `relation` и `collection`
 
+- Добавляем поля:
+```
+store_type ENUM('blob', 'cloud', 'disk') DEFAULT 'disk' COMMENT 'тип хранилища файла (blob - в БД, cloud - облако, disk - локально)'
+cloud_storage VARCHAR(255) COMMENT 'идентификатор хранилища в облаке'
+cloud_container VARCHAR(255) COMMENT 'идентификатор контейнера в облаке'
+```
+
+# Таблица filestorage_blob
+
+```
+CREATE TABLE `filestorage_blob` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` longblob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
 # Таблица cross_aa
 
 Накладываем индексы на все поля.

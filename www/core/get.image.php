@@ -5,7 +5,7 @@ require_once '__required.php'; // $mysqli_link
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : -1;
 
-$is_downloading = isset($_SERVER['HTTP_REFERER']);
+$is_downloading = isset($_SERVER['HTTP_REFERER']) ;
 
 if ($id != -1) {
 
