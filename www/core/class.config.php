@@ -83,10 +83,15 @@ class Config {
         return true;
     }
 
-    public static function dump()
+    public static function d()
     {
         echo '<pre>';
         print_r(self::$config);
+    }
+
+    public static function dd()
+    {
+        self::d();
         die;
     }
 

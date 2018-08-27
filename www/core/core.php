@@ -45,8 +45,8 @@ function Redirect($url)
  */
 function isLogged()
 {
-    $key_session_userid = Config::get('session/user_id');
-    $key_cookie_is_logged = Config::get('cookies/user_is_logged');
+    $key_session_userid = Config::get('auth:session/user_id');
+    $key_cookie_is_logged = Config::get('auth:cookies/user_is_logged');
 
     // вот тут мы проверямем куки и сессию на предмет "залогинились ли мы"
     $we_are_logged = !empty($_SESSION);

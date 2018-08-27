@@ -265,7 +265,6 @@ switch ($fetch) {
                     'book_info'         =>  LoadBookInfo($id),
                     'template_folder'   =>  $main_theme_dir
                 ];
-                //@todo: в шаблоне используются ссылки на /files/books_file_cover , которые МОГУТ отличаться для разных шаблонов. Надо передать путь к этим файлам
 
                 // результаты поиска загружаются аяксом,
                 $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
@@ -441,8 +440,6 @@ switch ($fetch) {
             'template_folder'       =>  $main_theme_dir
         ];
 
-        //@todo: в шаблоне используются ссылки на /files/books_file_cover , которые МОГУТ отличаться для разных шаблонов. Надо передать путь к этим файлам
-
         $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
         /** JS file */
@@ -477,8 +474,8 @@ $main_template_data['content_css'] = $maincontent_css;
 
 /** Тип ассетов */
 $main_template_data['frontend'] = [
-    'assets_mode'           =>  Config::get('frontend/assets_mode', 'development'),
-    'assets_version'        =>  Config::get('frontend/assets_version', ''),
+    'assets_mode'           =>  Config::get('frontend_assets/assets_mode', 'development'),
+    'assets_version'        =>  Config::get('frontend_assets/assets_version', ''),
     'cookie_site_language'  =>  Config::get('cookie_site_language', 'libdb_sitelanguage')
 ];
 

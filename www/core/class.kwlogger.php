@@ -1,6 +1,5 @@
 <?php
-/* version 1.1 */
-require_once('config/config.logging.php');
+/* version 1.2 */
 
 class kwLogger
 {
@@ -111,7 +110,7 @@ class kwLogger
             'element'       =>  $affected_element,
             'comment'       =>  $comment,
             'ip'            =>  self::getIP(),
-            'user'          =>  $_COOKIE[ Config::get('cookies/user_id') ] ?? -1
+            'user'          =>  $_COOKIE[ Config::get('auth:cookies/user_id') ] ?? -1
         ];
         $query = self::makeInsertStatement(self::$config['log_table_event'], $entry);
         mysqli_query(self::$mysqli_link, $query )
@@ -131,7 +130,7 @@ class kwLogger
             'comment'       =>  $message,
             'ip'            =>  self::getIP(),
             'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  $_SESSION[ Config::get('session/user_id') ] ?? 0
+            'user'          =>  $_SESSION[ Config::get('auth:session/user_id') ] ?? 0
         );
         $die_message = '';
 

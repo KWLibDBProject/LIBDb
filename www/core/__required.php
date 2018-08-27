@@ -15,39 +15,28 @@ require_once 'websun.php';
 require_once 'core.php';
 require_once 'core.db.php';
 
-Config::init([
+/*Config::init([
     'config/config.php',
     'config/config.db.php',
 
     'filestorage'   =>  'config/config.filestorage.php',
     'kwlogger'      =>  'config/config.logging.php'
-]);
+]);*/
+Config::init(['config/config.php']);
 
 $SID = session_id();
 if(empty($SID)) session_start();
 
 if (__ACCESS_MODE__ == 'admin' && !isLogged()) {
-
     Redirect('/core/admin.actions.php');
-
 } elseif (__ACCESS_MODE__ == 'admin:main' && !isLogged()) {
-
     Redirect('/core/admin.actions.php');
-
-} elseif (__ACCESS_MODE__ == 'admin:actions') {
-    // все ок
-} elseif (__ACCESS_MODE__ == 'admin') {
-    // все ок
-} else {
-
-}
-
-// Config::dump();
+} elseif (__ACCESS_MODE__ == 'admin:actions') {} elseif (__ACCESS_MODE__ == 'admin') {} else {}
 
 $mysqli_link = ConnectDB();
 
 kwLogger::init($mysqli_link, Config::get('kwlogger'));
-FileStorage::init($mysqli_link, Config::get('filestorage'));
+FileStorage::init($mysqli_link, Config::get('storage'));
 
 // check errors
 $storage_folder = FileStorage::getStorageDir();

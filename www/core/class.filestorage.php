@@ -1,6 +1,5 @@
 <?php
 require_once('core.php');
-require_once('config/config.filestorage.php');
 require_once('class.kwlogger.php');
 
 /**
@@ -24,7 +23,7 @@ class FileStorage
     {
         self::$mysqli_link = $mysqli_link;
         self::$config = $config;
-        self::$filestorage_table = $config['table'];
+        self::$filestorage_table = $config['sql_table'];
     }
 
     /* возвращает blob-строку пустого PDF-файла */
@@ -33,7 +32,16 @@ class FileStorage
      */
     private  static function __getEmptyPDF()
     {
-        $data = "JVBERi0xLjQNCjEgMCBvYmoNCjw8IC9UeXBlIC9DYXRhbG9nIC9PdXRsaW5lcyAyIDAgUiAvUGFnZXMgMyAwIFIgPj4NCmVuZG9iag0KMiAwIG9iag0KPDwgL1R5cGUgT3V0bGluZXMgL0NvdW50IDAgPj4NCmVuZG9iag0KMyAwIG9iag0KPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFs0IDAgUl0gL0NvdW50IDEgPj4NCmVuZG9iag0KNCAwIG9iag0KPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAzIDAgUiAvTWVkaWFCb3ggWzAgMCA2MTIgNzkyXSAvQ29udGVudHMgNSAwIFIgL1Jlc291cmNlcyA8PCAvUHJvY1NldCA2IDAgUiA+PiA+Pg0KZW5kb2JqDQo1IDAgb2JqDQo8PCAvTGVuZ3RoIDM1ID4+DQpzdHJlYW0NCoUgUGFnZS1tYXJraW5nIG9wZXJhdG9ycyCFDQplbmRzdHJlYW0gDQplbmRvYmoNCjYgMCBvYmoNClsvUERGXQ0KZW5kb2JqDQp4cmVmDQowIDcNCjAwMDAwMDAwMDAgNjU1MzUgZiANCjAwMDAwMDAwMDkgMDAwMDAgbiANCjAwMDAwMDAwNzQgMDAwMDAgbiANCjAwMDAwMDAxMTkgMDAwMDAgbiANCjAwMDAwMDAxNzYgMDAwMDAgbiANCjAwMDAwMDAyOTUgMDAwMDAgbiANCjAwMDAwMDAzNzYgMDAwMDAgbiANCnRyYWlsZXIgDQo8PCAvU2l6ZSA3IC9Sb290IDEgMCBSID4+DQpzdGFydHhyZWYNCjM5NA0KJSVFT0Y=";
+        $data = "JVBERi0xLjQNCjEgMCBvYmoNCjw8IC9UeXBlIC9DYXRhbG9nIC9PdXRsaW5lcyAyIDAgUiAvUGFnZXMgMyAwI";
+        $data.= "FIgPj4NCmVuZG9iag0KMiAwIG9iag0KPDwgL1R5cGUgT3V0bGluZXMgL0NvdW50IDAgPj4NCmVuZG9iag0KMy";
+        $data.= "AwIG9iag0KPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFs0IDAgUl0gL0NvdW50IDEgPj4NCmVuZG9iag0KNCAwIG9";
+        $data.= "iag0KPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAzIDAgUiAvTWVkaWFCb3ggWzAgMCA2MTIgNzkyXSAvQ29udGVu";
+        $data.= "dHMgNSAwIFIgL1Jlc291cmNlcyA8PCAvUHJvY1NldCA2IDAgUiA+PiA+Pg0KZW5kb2JqDQo1IDAgb2JqDQo8P";
+        $data.= "CAvTGVuZ3RoIDM1ID4+DQpzdHJlYW0NCoUgUGFnZS1tYXJraW5nIG9wZXJhdG9ycyCFDQplbmRzdHJlYW0gDQ";
+        $data.= "plbmRvYmoNCjYgMCBvYmoNClsvUERGXQ0KZW5kb2JqDQp4cmVmDQowIDcNCjAwMDAwMDAwMDAgNjU1MzUgZiA";
+        $data.= "NCjAwMDAwMDAwMDkgMDAwMDAgbiANCjAwMDAwMDAwNzQgMDAwMDAgbiANCjAwMDAwMDAxMTkgMDAwMDAgbiAN";
+        $data.= "CjAwMDAwMDAxNzYgMDAwMDAgbiANCjAwMDAwMDAyOTUgMDAwMDAgbiANCjAwMDAwMDAzNzYgMDAwMDAgbiANC";
+        $data.= "nRyYWlsZXIgDQo8PCAvU2l6ZSA3IC9Sb290IDEgMCBSID4+DQpzdGFydHhyZWYNCjM5NA0KJSVFT0Y=";
         return base64_decode($data);
     }
 
@@ -78,7 +86,7 @@ class FileStorage
      */
     private static function getSQLTable()
     {
-        return self::$config['table'];
+        return self::$filestorage_table;
     }
 
     /**
@@ -182,7 +190,7 @@ class FileStorage
     {
         $file_content = floadfile($fileinfo['tempname']);
 
-        if (self::$config['save_to_disk']) {
+        if (true /*self::$config['save_to_disk']*/) {
             // save to file
             $filename = self::getRealFileName($fileinfo['internal_name']);
             $fh = @fopen($filename, "wb");
@@ -199,13 +207,13 @@ class FileStorage
             usleep(100000);// sleep 0.1 sec
         }
 
-        if (self::$config['save_to_db'])
+        /*if (self::$config['save_to_db'])
         {
             $qc = MakeUpdate(array(
                 'content' => mysqli_real_escape_string(self::$mysqli_link, $file_content)
             ), self::getSQLTable(), " WHERE id = {$fileid} ");
             $return = mysqli_query(self::$mysqli_link, $qc);
-        }
+        }*/
         return $return;
     }
 
@@ -244,11 +252,14 @@ class FileStorage
     public static function getFileContent($id)
     {
         $ret = '';
-        if (self::$config['return_data_from'] == 'table') {
+        /*if (self::$config['return_data_from'] == 'table') {
             $ret = self::__getFileContent_db($id);
         } else if (self::$config['return_data_from'] == 'disk') {
             $ret = self::__getFileContent_disk($id);
-        } else $ret = null;
+        } else $ret = null;*/
+
+        $ret = self::__getFileContent_disk($id);
+
         return $ret;
     }
 
