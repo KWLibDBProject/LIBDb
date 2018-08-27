@@ -35,6 +35,7 @@ if (__ACCESS_MODE__ == 'admin' && !isLogged()) {
 
 $mysqli_link = ConnectDB();
 
+
 kwLogger::init($mysqli_link, Config::get('kwlogger'));
 FileStorage::init($mysqli_link, Config::get('storage'));
 
