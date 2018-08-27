@@ -15,6 +15,8 @@ require_once 'websun.php';
 require_once 'core.php';
 require_once 'core.db.php';
 
+require_once 'class.dbconnection.php';
+
 /*Config::init([
     'config/config.php',
     'config/config.db.php',
@@ -35,6 +37,7 @@ if (__ACCESS_MODE__ == 'admin' && !isLogged()) {
 
 $mysqli_link = ConnectDB();
 
+DB::init(NULL, Config::get('database'));
 
 kwLogger::init($mysqli_link, Config::get('kwlogger'));
 FileStorage::init($mysqli_link, Config::get('storage'));

@@ -23,26 +23,30 @@ require_once '__required.php'; // $mysqli_link
     <link rel="stylesheet" type="text/css" href="core.articles/articles.css">
 
     <script type="text/javascript">
-        var url_extended = "core.articles/articles.action.list.php";
-
-        var url_get_articles_count = ""; // ЗАЧЕМ оно нам? через ajax.php
-
-        var booksList = preloadOptionsList('core.books/books.action.getoptionlist.php');
-
-        var topicsList = preloadOptionsList('core.topics/topics.action.getoptionlist.php');
-
-        var authorsList = preloadOptionsList('core.authors/authors.action.getoptionlist.php');
-
-
-
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            BuildSelectorExtended('with_author',authorsList, '');
-            BuildSelectorExtended('with_book',booksList, '');
-            BuildSelectorExtended('with_topic',topicsList, '');
+
+            var siteLanguage = 'lang=ru'
+
+            var url_extended = "core.articles/articles.action.list.php";
+
+            var url_get_articles_count = ""; // ЗАЧЕМ оно нам? через ajax.php
+
+            var booksList = preloadOptionsList('core.books/books.action.getoptionlist.php');
+
+            var topicsList = preloadOptionsList('core.topics/topics.action.getoptionlist.php');
+
+            var authorsList = preloadOptionsList('core.authors/authors.action.getoptionlist.php');
+
+            var firstLettersList = preloadOptionsList('/ajax.php?actor=get_letters_as_optionlist&' + siteLanguage);
+
+            BuildSelectorExtended('with_author', authorsList, '');
+            BuildSelectorExtended('with_book', booksList, '');
+            BuildSelectorExtended('with_topic', topicsList, '');
+            BuildSelector('with_letter', firstLettersList, 'Выбрать...', 0);
 
             setSelectorsByHash(".search_selector");
-            $(".hash_selectors").on('change', '.search_selector', function(){
+            $(".hash_selectors").on('change', '.search_selector', function () {
                 setHashBySelectors();
             });
 
@@ -50,9 +54,10 @@ require_once '__required.php'; // $mysqli_link
             wlh = (window.location.hash).substr(1);
             if (wlh !== '') {
                 query = "?";
-                query+="author="+$('select[name="with_author"]').val();
-                query+="&topic="+$('select[name="with_topic"]').val();
-                query+="&book="+$('select[name="with_book"]').val();
+                query += "author=" + $('select[name="with_author"]').val();
+                query += "&topic=" + $('select[name="with_topic"]').val();
+                query += "&book=" + $('select[name="with_book"]').val();
+                query += "&firstletter=" + $('select[name="with_letter"]').val();
             } else {
                 query = '';
             }
@@ -60,37 +65,42 @@ require_once '__required.php'; // $mysqli_link
             //??? дергаем базу на предмет количества статей
 
             // загружаем статьи согласно стартовым селекторам
+            // вот тут надо проверить количество статей в БД вообще
+
             $("#articles_list").empty().load(url_extended + query);
 
-            $("#button-newarticle").on('click',function(){
+            $("#button-newarticle").on('click', function () {
                 location.href = 'core.articles/articles.form.add.php';
             });
-            $("#button-exit").on('click',function(){
+            $("#button-exit").on('click', function () {
                 location.href = '/core/';
             });
             $('#articles_list')
-                    .on('click','.action-download-pdf',function(){
-                        window.location.href="get.file.php?id="+$(this).attr('name')
-                    })
-                    .on('click','.action-edit',function(){
-                        location.href = 'core.articles/articles.form.edit.php?id='+$(this).attr('name');
-                    });
+                .on('click', '.action-download-pdf', function () {
+                    window.location.href = "get.file.php?id=" + $(this).attr('name')
+                })
+                .on('click', '.action-edit', function () {
+                    location.href = 'core.articles/articles.form.edit.php?id=' + $(this).attr('name');
+                });
 
-            $("#button-show-withselection").on('click',function(){
+            $("#button-show-withselection").on('click', function () {
                 query = "?";
-                query+="author="+$('select[name="with_author"]').val();
-                query+="&topic="+$('select[name="with_topic"]').val();
-                query+="&book="+$('select[name="with_book"]').val();
-                $("#articles_list").empty().load(url_extended+query);
+                query += "author=" + $('select[name="with_author"]').val();
+                query += "&topic=" + $('select[name="with_topic"]').val();
+                query += "&book=" + $('select[name="with_book"]').val();
+                query += "&firstletter=" + $('select[name="with_letter"]').val();
+
+                $("#articles_list").empty().load(url_extended + query);
             });
 
-            $("#button-reset-selection").on('click',function(){
+            $("#button-reset-selection").on('click', function () {
                 $('select[name="with_author"]').val(0);
                 $('select[name="with_topic"]').val(0);
                 $('select[name="with_book"]').val(0);
+                $('select[name="with_letter"]').val(0);
             });
 
-            $("#button-show-all").on('click',function(){
+            $("#button-show-all").on('click', function () {
                 $("#articles_list").empty().load(url_extended);
             });
 
@@ -100,8 +110,8 @@ require_once '__required.php'; // $mysqli_link
 </head>
 
 <body>
-<button id="button-exit" class="button-large button-bold"><<< НАЗАД </button>
-<button id="button-newarticle" class="button-large">Добавить статью </button>
+<button id="button-exit" class="button-large button-bold"><<< НАЗАД</button>
+<button id="button-newarticle" class="button-large">Добавить статью</button>
 <hr>
 <fieldset class="hash_selectors">
     <legend>Критерии отбора</legend>
@@ -109,10 +119,21 @@ require_once '__required.php'; // $mysqli_link
     <table border="0">
         <tr>
             <td>
-                Автор:
+                Первая буква фамилии:
             </td>
             <td>
-                <select name="with_author" class="search_selector"><option value="0">ЛЮБОЙ</option></option></select>
+                <select name="with_letter"><option value="0">ANY</option></select>
+                (одного из авторов)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Автор (один из):
+            </td>
+            <td>
+                <select name="with_author" class="search_selector">
+                    <option value="0">ЛЮБОЙ</option>
+                    </option></select>
             </td>
         </tr>
         <tr>
@@ -120,7 +141,9 @@ require_once '__required.php'; // $mysqli_link
                 Тематический раздел:&nbsp;&nbsp;&nbsp;
             </td>
             <td>
-                <select name="with_topic" class="search_selector"><option value="0">ЛЮБОЙ</option></select>
+                <select name="with_topic" class="search_selector">
+                    <option value="0">ЛЮБОЙ</option>
+                </select>
             </td>
         </tr>
         <tr>
@@ -128,7 +151,9 @@ require_once '__required.php'; // $mysqli_link
                 Сборник (книга):
             </td>
             <td>
-                <select name="with_book" class="search_selector"><option value="0">ЛЮБОЙ</option></select>
+                <select name="with_book" class="search_selector">
+                    <option value="0">ЛЮБОЙ</option>
+                </select>
             </td>
         </tr>
     </table>

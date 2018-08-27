@@ -6,6 +6,13 @@
 # 2010-2018 (c)
 
 /*
+Find_and_parse_if ERROR: Template length = 941777 , PCRE Error is PREG_JIT_STACKLIMIT_ERROR
+
+@todo: исправить основной репозиторий
+
+ */
+
+/*
 
 0.2.05 - var_value() correctly parses numeric literal values
 
@@ -286,6 +293,16 @@ class websun {
 	public $no_global_vars;
 	private $profiling;
 	private $predecessor; // объект шаблонизатора верхнего уровня, из которого делался вызов текущего
+
+    private $template_filename;
+    private $pcre_error_template = "Method <code>%s()</code> throws error <strong>%s</strong> while parsing `<code>%s</code>` file. Template size = %s.";
+
+    public function pcre_report_error($error, $method, $template_size)
+    {
+        $error = array_flip(get_defined_constants(true)['pcre'])[$error];
+
+        return sprintf($this->pcre_error_template, $method, $error, $this->template_filename, $template_size);
+    }
 
 	/**
 	 * Конструктор класса шаблонизатора
@@ -641,8 +658,7 @@ class websun {
 		 	// пояснения к рег. выражению см. в find_and_parse_cycle
 
         if ($out === NULL) {
-            $out = sprintf("Find_and_parse_if ERROR: Template length = %s , PCRE Error is <strong>%s</strong><br>",
-                strlen($template), array_flip(get_defined_constants(true)['pcre'])[preg_last_error()]);
+            $out = $this->pcre_report_error(preg_last_error(), __METHOD__, strlen($template) );
         }
 		
 		if ($this->profiling) 
@@ -1076,10 +1092,12 @@ class websun {
 	 * @return bool|mixed|string
 	 */
 	function get_template($tpl) {
-		if ($this->profiling) 
+		if ($this->profiling)
 			$start = microtime(1);
 		
 		if (!$tpl) return FALSE;
+
+		$this->template_filename = $tpl; //@KW: 2.02.06
 		
 		$tpl_real_path = $this->template_real_path($tpl);
 		

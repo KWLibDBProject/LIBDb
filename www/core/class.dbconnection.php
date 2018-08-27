@@ -108,9 +108,10 @@ class DB implements DBConnectionInterface {
     {
         $config_key = self::getKey($suffix);
 
-        if (is_null( self::getConfig($suffix) )) {
-            $config = Config::get( $config_key );
-        }
+        $config
+            = is_null( self::getConfig($suffix) )
+            ? Config::get( $config_key )
+            : self::getConfig( $suffix );
 
         $dbhost = $config['hostname'];
         $dbname = $config['database'];
@@ -135,26 +136,29 @@ class DB implements DBConnectionInterface {
 
             self::$_pdo_instances[ $config_key ] = $dbh;
 
-            self::$_connect_states[ $config_key ] = TRUE;
+            $connection_state = TRUE;
 
         } catch (\PDOException $pdo_e) {
             $message = "Unable to connect `{$dsl}`, PDO CONNECTION ERROR: " . $pdo_e->getMessage() . "\r\n" . PHP_EOL;
-            self::$_connect_states[ $config_key ] = [
+
+            $connection_state = [
                 'error' =>  $message,
                 'state' =>  FALSE
             ];
-        } catch (\Exception $e) {
 
-            self::$_connect_states[ $config_key ] = [
+        } catch (\Exception $e) {
+            $connection_state = [
                 'error' =>  $e->getMessage(),
                 'state' =>  FALSE
             ];
+            self::$_configs[ $config_key ] = NULL;
         }
 
-        if (self::$_connect_states[ $config_key ] !== TRUE) {
-            die(self::$_connect_states[ $config_key ]['error']);
+        if ($connection_state !== TRUE) {
+            die($connection_state['error']);
         }
 
+        self::$_connect_states[ $config_key ] = $connection_state;
         self::$_configs[ $config_key ] = $config;
 
         return true;

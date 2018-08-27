@@ -32,7 +32,7 @@ pages,
 topics.title_ru AS ttitle,
 books.title AS btitle
 
-FROM articles, cross_aa, topics, books
+FROM articles, cross_aa, topics, books, authors
 WHERE
 cross_aa.article=articles.id
 AND
@@ -40,9 +40,37 @@ topics.id=articles.topic
 AND
 books.id=articles.book";
 
-$query .= (IsSet($_GET['author'])   && $_GET['author']!=0)  ? " AND cross_aa.author = " . intval($_GET['author'])    : "";
-$query .= (IsSet($_GET['book'])     && $_GET['book']!=0 )   ? " AND articles.book = "   . intval($_GET['book'])      : "";
-$query .= (IsSet($_GET['topic'])    && $_GET['topic'] !=0 ) ? " AND articles.topic = "  . intval($_GET['topic'])     : "";
+$query
+    .= (IsSet($_GET['author'])   && $_GET['author']!=0)
+    ? " AND cross_aa.author = " . intval($_GET['author'])
+    : "";
+
+$query
+    .= (IsSet($_GET['book'])     && $_GET['book']!=0 )
+    ? " AND articles.book = "   . intval($_GET['book'])
+    : "";
+
+$query
+    .= (IsSet($_GET['topic'])    && $_GET['topic'] !=0 )
+    ? " AND articles.topic = "  . intval($_GET['topic'])     :
+    "";
+
+/**
+ * Для реализации отбора по первой букве нам нужно:
+ * - в запрос включить таблицу authors
+ * - чтобы ограничить количество ответов ЕСЛИ буква не указана - связать authors.id & cross_aa.author
+ *
+ */
+if (true){
+    $query .= " AND authors.id = cross_aa.`author` ";
+
+    $query
+        .= (isset($_GET['firstletter']) && $_GET['firstletter'] != '*')
+        ? " AND authors.`firstletter_name_ru` = '".  mb_substr($_GET['firstletter'], 0, 1)  ."' "
+        : "";
+}
+
+
 
 $query .= " ORDER BY articles.id";
 

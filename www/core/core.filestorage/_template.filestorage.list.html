@@ -11,7 +11,6 @@
         <th> <abbr style="font-size: large" title="Сколько раз скачивали"> &dArr; </abbr> </th>
     </tr>
 
-    {?*filestorage_list*}
     {%*filestorage_list*}
     <tr>
         <td class="center">{*filestorage_list:ext*}</td>
@@ -24,6 +23,5 @@
         <td class="center">&nbsp;&nbsp;<small>{*filestorage_list:stat_download_counter*}</small>&nbsp;&nbsp;</td>
     </tr>
     {%}
-    {?}
 
 </table>
