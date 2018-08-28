@@ -238,6 +238,11 @@ class DB implements DBConnectionInterface {
         return self::getConnection($suffix)->query($query)->fetchColumn();
     }
 
+    public static function getLastInsertId($suffix = NULL)
+    {
+        self::getConnection($suffix)->lastInsertId();
+    }
+
 
     public static function makeInsertQuery($tablename, $dataset)
     {
