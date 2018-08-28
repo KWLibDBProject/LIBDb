@@ -2,10 +2,6 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-/*$SID = session_id();
-if(empty($SID)) session_start();*/
-// ifNotLoggedRedirect('/core/');
-
 ?>
 <html>
 <head>

@@ -1,11 +1,6 @@
 <?php
 define('__ACCESS_MODE__', 'admin');
-/*$SID = session_id();
-if(empty($SID)) session_start();*/
-
 require_once '__required.php'; // $mysqli_link
-
-// ifNotLoggedRedirect('/core/');
 
 $articles_count = DB::query("SELECT COUNT(id) FROM `articles`")->fetchColumn() ?? 0;
 

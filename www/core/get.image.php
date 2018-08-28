@@ -9,17 +9,12 @@ $is_downloading = isset($_SERVER['HTTP_REFERER']) ;
 
 if ($id != -1) {
 
-    // FileStorage::init($mysqli_link);
     $file_info = FileStorage::getFileInfo($id); //@todo: а если файла нет? см. ниже getFileContent()
 
-    /* update stat_download_counter
-    but only for really downloaded files, not fetched via control panel */
+    /* update stat_download_counter but only for really downloaded files, not fetched via control panel */
     if (strpos($_SERVER['HTTP_REFERER'], '/core/') == false ) {
         FileStorage::statUpdateDownloadCounter($id);
-        // FileStorage::statLogDownloadEvent($id, 'Image: referer = '.$_SERVER['HTTP_REFERER']);
     }
-
-    // FileStorage::statUpdateDownloadCounter($id);
 
     if ($file_info) {
         header ("HTTP/1.1 200 OK");
@@ -47,8 +42,7 @@ if ($id != -1) {
 
         flush();
     }
-} else
-{
+} else {
     header("Content-type: image/gif");
 
     print(FileStorage::getEmptyFile('image'));

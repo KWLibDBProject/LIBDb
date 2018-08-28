@@ -142,7 +142,7 @@
                             <button data-href="/files/storage/" class="admin-button-small action-is-href-blank">/files/storage/</button>
                         </li>
                         <li>
-                            <button data-href="/core/core.filestorage/filestorage.maintenance.recalc.php" class="admin-button-small action-is-href">Recalc filesizes</button>
+                            <button disabled data-href="/core/core.filestorage/filestorage.maintenance.recalc.php" class="admin-button-small action-is-href">Recalc filesizes</button>
                         </li>
                         <li>
                             <button class="admin-button-small action-is-href" disabled>Rebuld sitemap</button>
@@ -178,6 +178,21 @@
                     <span class="padded">{*stats.books*}</span> сборников
                 </li>
                 <li>
+                    <span class="padded">{*stats.pages*}</span> контентных страниц
+                </li>
+                <li>
+                    <hr width="20%" align="left">
+                </li>
+                <li>
+                    <span class="padded">{*stats.events*}</span> logged content modification events
+                </li>
+                <li>
+                    <span class="padded">{*stats.downloads*}</span> logged PDF download events
+                </li>
+                <li>
+                    <hr width="20%" align="left">
+                </li>
+                <li>
                     <span class="padded">{*stats.files*}</span> файлов в хранилище (pdf-ок, фотографий итд)
                 </li>
                 <li>
@@ -187,10 +202,7 @@
                     <span class="padded">{*resources.max_upload_filesize*}</span> максимальный размер загружаемого файла
                 </li>
                 <li>
-                    <span class="padded">{*stats.events*}</span> logged events
-                </li>
-                <li>
-                    <span class="padded">{*stats.downloads*}</span> PDF's downloaded
+                    <hr width="20%" align="left">
                 </li>
             </ul>
 

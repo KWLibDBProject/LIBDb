@@ -59,36 +59,12 @@ function isLogged()
 }
 
 /**
- * Если мы не залогинены (проверяем функцией isLogged() ) - переход по указанному url.
- * @param $path
- * @return void
- * */
-function ifNotLoggedRedirect($path = "/")
-{
-    return true;
-    if (!isLogged()) { header('Location: '.$path); die(); }
-}
-
-
-/**
  * @param $str
  */
 function printr($str)
 {
     echo '<pre>'.print_r($str,true).'</pre>';
 }
-
-/* Три функции возврата данных в option соотв. селекта */
-/* объявление переехало в frontend_.php */
-
-/*
-sell also:
-http://www.tools4noobs.com/online_php_functions/date_parse/
-http://php.fnlist.com/date_time/mktime
-http://www.php.net/manual/ru/function.mktime.php
-*/
-
-
 
 
 /*

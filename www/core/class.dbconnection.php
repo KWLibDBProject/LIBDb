@@ -217,6 +217,27 @@ class DB implements DBConnectionInterface {
         return self::getConnection($suffix)->query("SELECT COUNT(*) AS cnt FROM {$table}")->fetchColumn();
     }
 
+    /**
+     * Аналог rowcound, только дает возможность выбрать поле выборки и условие
+     *
+     * @param $table
+     * @param string $field
+     * @param string $condition
+     * @param null $suffix
+     * @return mixed|null
+     */
+    public static function getRowCount($table, $field = '*', $condition = '', $suffix = NULL)
+    {
+        if ($table === '') return null;
+
+        $where = ($condition !== '') ? " WHERE {$condition} " : '';
+        $field = ($field !== '*') ? "`{$field}`" : "*";
+
+        $query = "SELECT COUNT({$field}) AS rowcount FROM {$table} {$where}";
+
+        return self::getConnection($suffix)->query($query)->fetchColumn();
+    }
+
 
     public static function makeInsertQuery($tablename, $dataset)
     {

@@ -2,10 +2,6 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-$SID = session_id();
-if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
-
 $result['message'] = '';
 $result['error'] = 0;
 
@@ -75,7 +71,6 @@ if (IsSet($_POST['authors'])) {
 }
 
 kwLogger::logEvent('Add', 'articles', $article_id, "Article added, new id is {$article_id}" );
-
 
 $template_dir = '$/core/_templates';
 $template_file = "ref.all_timed_callback.html";

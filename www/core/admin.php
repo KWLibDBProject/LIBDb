@@ -6,14 +6,10 @@
 define('__ROOT__', '/');
 define('__ACCESS_MODE__', 'admin:main');
 
-$SID = session_id();
-if(empty($SID)) session_start();
+/*$SID = session_id();
+if(empty($SID)) session_start();*/
 
-require_once '__required.php'; // $mysqli_link
-
-/*if (!isLogged()) {
-    Redirect('admin.actions.php');
-}*/
+require_once '__required.php';
 
 // prepare data
 $template_dir = '$/core/_templates';
@@ -21,21 +17,24 @@ $template_file = "admin.html";
 
 $template_data = [
     'stats'     =>  [
-        'articles'  =>  DBGetCount('id', 'articles'),
-        'authors'   =>  DBGetCount('id', 'authors'),
-        'books'     =>  DBGetCount('id', 'books'),
-        'files'     =>  DBGetCount('id', 'filestorage'),
-        'events'    =>  DBGetCount('id', Config::get('kwlogger/log_table_event')),
-        'downloads' =>  DBGetCount('id', Config::get('kwlogger/log_table_download')),
-        'news'      =>  DBGetCount('id', 'news')
+        'articles'  =>  DB::getRowCount('articles'),
+        'authors'   =>  DB::getRowCount('authors'),
+        'books'     =>  DB::getRowCount('books'),
+        'news'      =>  DB::getRowCount('news'),
+        'pages'     =>  DB::getRowCount('staticpages'),
+
+        'files'     =>  DB::getRowCount( Config::get('storage/sql_table')),
+        'events'    =>  DB::getRowCount( Config::get('kwlogger/log_table_event')),
+        'downloads' =>  DB::getRowCount( Config::get('kwlogger/log_table_download')),
+
     ],
     'resources' =>  [
         'disk_space_available'  =>  ConvertToHumanBytes( disk_free_space( FileStorage::getStorageDir() ) , 1),
         'max_upload_filesize'   =>  ini_get('upload_max_filesize')
     ],
     'limits'    =>  [
-        'post_max_size'         => ini_get('post_max_size'),
-        'upload_max_filesize'   => ini_get('upload_max_filesize'),
+        'post_max_size'         =>  ini_get('post_max_size'),
+        'upload_max_filesize'   =>  ini_get('upload_max_filesize'),
         'max_file_uploads'      =>  ini_get('max_file_uploads'),
     ],
 ];

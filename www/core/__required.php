@@ -42,6 +42,7 @@ kwLogger::init(DB::getConnection(), Config::get('kwlogger'));
 /**
  * Check ACL
  */
+
 $storage_folder = FileStorage::getStorageDir();
 $user_php_executor = exec('whoami');
 $user_storage_owner = posix_getpwuid(fileowner( $storage_folder ))['name'];

@@ -2,10 +2,6 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-/*$SID = session_id();
-if(empty($SID)) session_start();*/
-// if (!isLogged()) header('Location: /core/');
-
 if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 }

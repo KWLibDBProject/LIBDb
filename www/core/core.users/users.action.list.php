@@ -2,7 +2,7 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-const ROOT_PERMISSONS = 255;
+const PERMISSIONS_ADMIN = 255;
 
 $ref_prompt = IsSet($_GET["prompt"]) ? ($_GET["prompt"]) : 'Работа с пользователем';
 
@@ -16,7 +16,7 @@ $users_list = [];
 if ($ref_numrows > 0) {
     while ($user_record = mysqli_fetch_assoc($res))
     {
-        $user_record['is_root'] = $user_record['permissions'] == ROOT_PERMISSONS ? true : false;
+        $user_record['is_root'] = $user_record['permissions'] == PERMISSIONS_ADMIN ? true : false;
         $users_list[ $user_record['id'] ] = $user_record;
     }
 } else {

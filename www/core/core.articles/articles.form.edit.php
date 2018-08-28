@@ -2,10 +2,6 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-$SID = session_id();
-if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
-
 if (isset($_GET['id']))
 {
     $id = intval($_GET['id']);
@@ -86,8 +82,6 @@ if ($numarticles == 1)
     <script type="text/javascript" src="../../frontend.options.js"></script>
     <script type="text/javascript" src="articles.js"></script>
     <script type="text/javascript">
-        // загружается старый файл - потому что билдер списка авторов в этом файле не понимает Extended Format
-        // ? InsertAuthorsSelector() ?
         // Здесь, для авторов, legacyformat СТРОГО ОБЯЗАТЕЛЕН
         var authorsList = preloadOptionsList('../core.authors/authors.action.getoptionlist.php?legacyformat');
 

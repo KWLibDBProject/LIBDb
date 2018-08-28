@@ -16,15 +16,6 @@ function ConnectDB()
 }
 
 /**
- * @param $link
- */
-function CloseDB($link)
-{
-    mysqli_close($link);
-}
-
-
-/**
  *
  * @param $array
  * @return array
@@ -157,36 +148,5 @@ function DBLoginCheck($login, $password)
     return $return;
 }
 
-/**
- * @param $table
- * @return bool
- */
-function DBIsTableExists($table)
-{
-    global $mysqli_link;
-    return (mysqli_query($mysqli_link,"SELECT 1 FROM $table WHERE 0")) ? true : false;
-}
 
-/**
- * @param $field
- * @param $table
- * @param string $condition
- * @return null
- */
-function DBGetCount($field, $table, $condition = "")
-{
-    global $mysqli_link;
-    $cond  = ($condition !== "")
-        ? " WHERE {$condition}"
-        : "";
-    $query = "SELECT COUNT({$field}) AS rowcount FROM {$table} {$cond}";
-    $result = mysqli_query($mysqli_link, $query);
 
-    if ($result) {
-        $row = mysqli_fetch_assoc($result);
-        $ret = $row['rowcount'];
-    } else {
-        $ret = NULL;
-    }
-    return $ret;
-}
