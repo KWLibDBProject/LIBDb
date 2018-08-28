@@ -6,7 +6,7 @@ www/yandex_520f6164e898eb85.html
 www/core/config/config*.php
 www/core/config/__config*.php
 www/template.bootstrap24/metrika.*
+www/vendor
 
 node_modules
 package-lock.json
-vendor

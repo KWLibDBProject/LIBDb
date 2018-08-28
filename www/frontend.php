@@ -357,7 +357,7 @@ function LoadLastNews($lang, $count=2)
     DATE_FORMAT(publish_date, '%d.%m.%Y') as publish_date 
     FROM news
     WHERE publish_date < NOW() 
-    ORDER BY publish_date 
+    ORDER BY news.publish_date 
     DESC LIMIT {$count}";
 
     $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
@@ -625,7 +625,7 @@ function LoadNewsListTOC($lang, $limit = 15)
     WHERE 
         publish_date < NOW()
     ORDER BY 
-        publish_date DESC 
+        news.publish_date DESC 
     LIMIT 
         {$limit}";
 
