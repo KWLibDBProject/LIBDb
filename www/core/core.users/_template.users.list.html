@@ -9,7 +9,6 @@
         <th width="10%">Управление</th>
     </tr>
     
-    {?*users_list*}
     {%*users_list*}
     <tr>
         <td>{*users_list:id*}</td>
@@ -18,13 +17,10 @@
         <td>{*users_list:phone*}</td>
         <td>{*users_list:permissions*}</td>
         <td>{*users_list:login*}</td>
-        <td class="centred_cell"><button class="actor-edit button-edit" name="{*users_list:id*}" {?*users_list:is_root*} disabled {?}>Edit</button></td>
+        <td class="centred_cell">
+            {?!*users_list:is_root*} <button class="actor-edit button-edit" name="{*users_list:id*}">Edit</button> {?}
+        </td>
     </tr>
-    
     {%}
-    {?}
-    
-    {?!*users_list*}
-    <tr><td colspan="7">Пока не добавили ни одного пользователя!</td></tr>
-    {?}
+
 </table>

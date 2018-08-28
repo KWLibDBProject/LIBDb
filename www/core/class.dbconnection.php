@@ -201,6 +201,22 @@ class DB implements DBConnectionInterface {
         return $state;
     }
 
+    //@todo: функция setContext($suffix) - которая устанавливает для всех дальнейших действий переданный суффикс значением по умолчанию
+
+    /**
+     *
+     *
+     * @param $table
+     * @param null $suffix
+     * @return mixed|null
+     */
+    public static function rowcount($table, $suffix = NULL) {
+        if ($table == '')
+            return null;
+
+        return self::getConnection($suffix)->query("SELECT COUNT(*) AS cnt FROM {$table}")->fetchColumn();
+    }
+
 
 
 

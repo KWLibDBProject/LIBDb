@@ -2,18 +2,18 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-$ref_name = 'authors';
+$select_letter = mb_substr($_GET['letter'] ?? '0', 0, 1);
 
-$select_letter = $_GET['letter'] ?? '0';
+$where_like = '';
+$sort_order = '';
 
 if ($select_letter != '0') {
-    // $where_like = " WHERE authors.name_ru LIKE '{$select_letter}%'";
     $where_like = " WHERE authors.firstletter_name_ru = '{$select_letter}'";
+    $sort_order = " ORDER BY name_ru ";
 } else {
-    $where_like = '';
+    $where_like = ' ';
+    $sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru " : '';
 }
-
-$sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru " : '';
 
 $authors_list = [];
 
@@ -24,7 +24,6 @@ $authors_count = @mysqli_num_rows($res) ;
 if ($authors_count > 0) {
     while ($author_record = mysqli_fetch_assoc($res)) {
         $author_record['is_photo_present'] = ($author_record['photo_id'] == -1) ? false : true;
-
         $authors_list[$author_record['id']] = $author_record;
     }
 }

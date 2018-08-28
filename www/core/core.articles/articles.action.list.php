@@ -65,12 +65,10 @@ if (true){
     $query .= " AND authors.id = cross_aa.`author` ";
 
     $query
-        .= (isset($_GET['firstletter']) && $_GET['firstletter'] != '*')
-        ? " AND authors.`firstletter_name_ru` = '".  mb_substr($_GET['firstletter'], 0, 1)  ."' "
+        .= (isset($_GET['firstletter']) && $_GET['firstletter'] !== 0)
+        ? " AND authors.firstletter_name_ru = '".  mb_substr($_GET['firstletter'], 0, 1)  ."' "
         : "";
 }
-
-
 
 $query .= " ORDER BY articles.id";
 

@@ -72,7 +72,7 @@ function setSelectorsByHash_NEW(target)
     var sel_value;
     var hashes_obj = parseQuery((window.location.hash).substr(1));
 
-    console.log(hashes_obj);
+    // console.log(hashes_obj);
 
     $.each( $(target), function (id, data) {
         sel_name = $(data).attr('name');

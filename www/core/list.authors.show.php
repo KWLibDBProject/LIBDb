@@ -6,6 +6,8 @@ require_once '__required.php'; // $mysqli_link
 if(empty($SID)) session_start();*/
 // ifNotLoggedRedirect('/core/');
 
+$authors_count = DB::query("SELECT COUNT(*) FROM `authors`")->fetchColumn() ?? 0;
+
 ?>
 <html>
 <head>
@@ -26,7 +28,11 @@ if(empty($SID)) session_start();*/
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
+            var total_authors_count = <?php echo $authors_count; ?>;
+
             var siteLanguage = 'lang=ru'; // required! we load letters with frontend-declared ajax function
+
+            var url_authors_list = 'core.authors/authors.action.list.php?'+siteLanguage;
 
             var lettersList = preloadOptionsList('/ajax.php?actor=get_letters_as_optionlist&'+siteLanguage);
 
@@ -34,14 +40,20 @@ if(empty($SID)) session_start();*/
 
             // bind hash selectors
             setSelectorsByHash_NEW(".search_selector");
+
             $(".hash_selectors").on('change', '.search_selector', function(){
                 setHashBySelectors();
                 // enable or disable button if first letter selected
-                $("#actor-show-withselection").prop('disabled', !($('select[name="letter"]').val() != '0') );
+                $("#actor-show-withselection").prop('disabled', $('select[name="letter"]').val() == 0);
             });
 
             // onload
-            $("#authors_list").empty().load('core.authors/authors.action.list.php?'+siteLanguage+"&"+"letter="+$('select[name="letter"]').val());
+            if ($('select[name="letter"]').val() != 0) {
+                $("#authors_list").empty().load(url_authors_list + "&letter="+$('select[name="letter"]').val());
+                $("#actor-show-withselection").prop('disabled', false);
+            } else if (total_authors_count < 100) {
+                $("#authors_list").empty().load(url_authors_list);
+            }
 
             // bind exit actor
             $("#actor-exit").on('click',function(event){
@@ -63,21 +75,23 @@ if(empty($SID)) session_start();*/
                         });
                         return false;
                     });
+
             // search criteria bindings
             $("#actor-show-withselection").on('click',function(){
                 var query = "&";
                 query+="letter="+$('select[name="letter"]').val();
-                $("#authors_list").empty().load('core.authors/authors.action.list.php?'+siteLanguage+query);
+
+                $("#authors_list").empty().load(url_authors_list + query);
             });
 
             $("#actor-show-all").on('click',function(){
                 // reset search selector
                 $('select[name="letter"]').val(0);
                 setHashBySelectors();
-                $("#authors_list").empty().load('core.authors/authors.action.list.php?'+siteLanguage);
+                $("#authors_list").empty().load(url_authors_list);
             });
             $("#actor-show-abc").on('click', function(){
-                $("#authors_list").empty().load('core.authors/authors.action.list.php?order_by_name=yes&'+siteLanguage);
+                $("#authors_list").empty().load(url_authors_list + '&order_by_name=yes&');
             });
         });
     </script>
@@ -88,17 +102,17 @@ if(empty($SID)) session_start();*/
 <hr>
 <fieldset>
     <legend>Критерии поиска</legend>
-    <button id="actor-show-abc">Отсортировать по фамилии</button>
-    <button id="actor-show-all">Показать всех</button>
     Первая буква имени: <form class="hash_selectors inline_form"><select name="letter" class="search_selector"><option value="0">ANY</option></select></form>
-    <button id="actor-show-withselection" disabled>Показать выбранных</button>
-
-
+    <button id="actor-show-withselection" class="button-large" disabled>Показать выбранных</button>
+    <div style="padding-right:4px; border-left: 6px solid black;display: inline;"></div>
+    <button id="actor-show-all" class="button-large">Показать всех</button>
+    <button id="actor-show-abc" class="button-large">Показать всех (сортировка пофамильно)</button>
 </fieldset>
 
 <fieldset class="result-list table-hl-rows">
     <legend>Результаты поиска</legend>
     <div id="authors_list">
+        В базе больше 100 авторов. Сузьте критерии поиска и нажмите "Показать всех" или "Показать выбранных"
     </div>
 </fieldset>
 

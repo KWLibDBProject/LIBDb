@@ -7,7 +7,7 @@ require_once '__required.php'; // $mysqli_link
 
 // ifNotLoggedRedirect('/core/');
 
-//@todo: не загружать статьи если их больше 100, вместо этого писать сообщение об этом
+$articles_count = DB::query("SELECT COUNT(id) FROM `articles`")->fetchColumn() ?? 0;
 
 ?>
 <!DOCTYPE HTML>
@@ -24,13 +24,13 @@ require_once '__required.php'; // $mysqli_link
 
     <script type="text/javascript">
         $(document).ready(function () {
+            var total_articles_count = <?php echo $articles_count; ?>;
+
             $.ajaxSetup({cache: false});
 
             var siteLanguage = 'lang=ru'
 
             var url_extended = "core.articles/articles.action.list.php";
-
-            var url_get_articles_count = ""; // ЗАЧЕМ оно нам? через ajax.php
 
             var booksList = preloadOptionsList('core.books/books.action.getoptionlist.php');
 
@@ -62,12 +62,12 @@ require_once '__required.php'; // $mysqli_link
                 query = '';
             }
 
-            //??? дергаем базу на предмет количества статей
-
-            // загружаем статьи согласно стартовым селекторам
-            // вот тут надо проверить количество статей в БД вообще
-
-            $("#articles_list").empty().load(url_extended + query);
+            // onLoad
+            if (query.length) {
+                $("#articles_list").empty().load(url_extended + query);
+            } else if (total_articles_count < 100) {
+                $("#articles_list").empty().load(url_extended);
+            }
 
             $("#button-newarticle").on('click', function () {
                 location.href = 'core.articles/articles.form.add.php';
@@ -114,12 +114,12 @@ require_once '__required.php'; // $mysqli_link
 <button id="button-newarticle" class="button-large">Добавить статью</button>
 <hr>
 <fieldset class="hash_selectors">
-    <legend>Критерии отбора</legend>
+    <legend>Критерии отбора статей</legend>
 
     <table border="0">
         <tr>
             <td>
-                Первая буква фамилии:
+                Первая буква фамилии
             </td>
             <td>
                 <select name="with_letter"><option value="0">ANY</option></select>
@@ -133,7 +133,7 @@ require_once '__required.php'; // $mysqli_link
             <td>
                 <select name="with_author" class="search_selector">
                     <option value="0">ЛЮБОЙ</option>
-                    </option></select>
+                </select>
             </td>
         </tr>
         <tr>
@@ -160,11 +160,12 @@ require_once '__required.php'; // $mysqli_link
     <hr/>
     <button id="button-show-withselection" class="button-large">Показать выбранное</button>
     <button id="button-reset-selection" class="button-large">Сбросить критерии</button>
-    <button id="button-show-all" class="button-large hidden">Показать ВСЕ статьи</button>
+    <button id="button-show-all" class="button-large">Показать <strong>ВСЕ</strong> статьи</button>
 </fieldset>
 <fieldset class="result-list table-hl-rows">
     <legend>Результаты поиска</legend>
     <div id="articles_list">
+        В базе больше 100 статей. Сузьте критерии поиска и нажмите "Показать выбранное" или "Показать все статьи"
     </div>
 </fieldset>
 

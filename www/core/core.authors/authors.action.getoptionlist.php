@@ -9,11 +9,13 @@ $lang = getAllowedValue($lang, array(
     'en', 'ru', 'ua'
 ), 'en');
 
-$flag_without_id = isset($_GET['withoutid']) ? 1 : 0;
+$flag_without_id = isset($_GET['without_id']) ? 1 : 0;
 
 $flag_legacy_format = isset($_GET['legacyformat']) ? 1 : 0;
 
-$flag_with_orcid = isset($_GET['withorcid']) ? 1 : 0;
+$flag_with_orcid = isset($_GET['with_orcid']) ? 1 : 0;
+
+$flag_with_title = isset($_GET['with_title']) ? 1 : 0;
 
 $query = "
 SELECT
@@ -32,11 +34,17 @@ if ($result = mysqli_query($mysqli_link, $query)) {
     {
         $data['error'] = 0;
         $data['state'] = 'ok';
+        $data['count'] = $ref_numrows;
 
         while ($row = mysqli_fetch_assoc($result))
         {
             $prefix = (!$flag_without_id ? "[{$row['id']}]" : '');
-            $option_value = "{$prefix} {$row['name']}, {$row['title']}";
+
+            $option_value = "{$prefix} {$row['name']}";
+
+            if ($flag_with_title && ($row['title'] != '')) {
+                $option_value .= ", {$row['title']}";
+            }
 
             if ($flag_with_orcid && ($row['orcid'] != '')) {
                 $option_value .= " ({$row['orcid']})";
