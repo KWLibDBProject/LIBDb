@@ -20,6 +20,12 @@ class kwLogger implements kwLoggerInterface {
      */
     private static $dbc;
 
+    /**
+     * Инициализирует статический класс
+     *
+     * @param PDO $dbc
+     * @param $config
+     */
     public static function init(\PDO $dbc, $config)
     {
         self::$log_datetime_format = $config['log_datetime_format'];
@@ -27,6 +33,12 @@ class kwLogger implements kwLoggerInterface {
         self::$dbc = $dbc;
     }
 
+    /**
+     * Логгирует событие скачивания файла
+     *
+     * @param int $affected_element
+     * @param string $referrer
+     */
     public static function logEventDownload($affected_element = 0, $referrer = '')
     {
         $dataset = [
@@ -35,13 +47,21 @@ class kwLogger implements kwLoggerInterface {
             'ip'            =>  self::getIP(),
         ];
 
-        $query = DB::makeInsertQuery(self::$config['log_table_download'], $dataset);
+        $query = self::makeInsertQuery(self::$config['log_table_download'], $dataset);
 
         if (!self::$dbc->prepare($query)->execute($dataset)) {
             self::logEventToFile($dataset);
         };
     }
 
+    /**
+     * Логгирует произвольное событие
+     *
+     * @param string $action
+     * @param string $affected_table
+     * @param string $affected_element
+     * @param string $comment
+     */
     public static function logEvent($action='?', $affected_table='*', $affected_element='-', $comment='-')
     {
         $dataset = [
@@ -53,21 +73,29 @@ class kwLogger implements kwLoggerInterface {
             'user'          =>  $_COOKIE[ Config::get('auth:cookies/user_id') ] ?? -1
         ];
 
-        $query = DB::makeInsertQuery(self::$config['log_table_event'], $dataset);
+        $query = self::makeInsertQuery(self::$config['log_table_event'], $dataset);
 
         if (!self::$dbc->prepare($query)->execute($dataset)) {
             self::logEventToFile($dataset);
         };
     }
 
+    /**
+     * Записывает логгируемое событие в файл лога. Это происходит, если база недоступна.
+     *
+     * @param $dataset
+     */
     public static function logEventToFile($dataset)
     {
+        $current_time = (new DateTime())->format( self::$log_datetime_format );
+
         if (is_array($dataset)) {
+            $dataset['time'] = $current_time;
             $message = json_encode($dataset);
         } elseif (is_string($dataset)) {
-            $message = $dataset;
+            $message = "'{$current_time}' : {$dataset}";
         } else {
-            $message = (string)$dataset;
+            $message = "'{$current_time}'" . (string)$dataset;
         }
 
         $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . self::$config['log_file'];
@@ -76,12 +104,10 @@ class kwLogger implements kwLoggerInterface {
         fclose($f);
     }
 
-
-    private static function timestampToDate()
-    {
-        return (new DateTime())->format( self::$log_datetime_format );
-    }
-
+    /**
+     * возвращает текущий IPv4
+     * @return array|false|string
+     */
     private static function getIP()
     {
         if (getenv('HTTP_CLIENT_IP')) {
@@ -101,5 +127,32 @@ class kwLogger implements kwLoggerInterface {
         }
 
         return $ipAddress;
+    }
+
+    /**
+     * Копия DB::makeInsertQuery(), добавлена для независимости от класса DB
+     *
+     * @param $tablename
+     * @param $dataset
+     * @return string
+     */
+    private static function makeInsertQuery($tablename, $dataset)
+    {
+        $query = '';
+        $r = [];
+
+        if (empty($dataset)) {
+            $query = "INSERT INTO {$tablename} () VALUES (); ";
+        } else {
+            $query = "INSERT INTO `{$tablename}` SET ";
+
+            foreach ($dataset as $index=>$value) {
+                $r[] = "\r\n `{$index}` = :{$index}";
+            }
+
+            $query .= implode(', ', $r) . ' ;';
+        }
+
+        return $query;
     }
 }

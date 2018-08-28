@@ -31,7 +31,7 @@ UPDATE news SET publish_date = STR_TO_DATE(date_add, '%d.%m.%Y')
 
 # Таблица authors
 
-- Добавляем поле orcid CHAR 16 DEFAULT ''
+- Добавляем поле orcid CHAR 20 DEFAULT ''
 - Удаляем поле `deleted`
 - переименовываем поле `selfhood` в `estaff_role`
 

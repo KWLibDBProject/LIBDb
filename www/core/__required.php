@@ -9,7 +9,6 @@ ini_set('pcre.recursion_limit', 2*1024*1024);
 require_once 'class.config.php';
 require_once 'class.filestorage.php';
 
-// require_once 'class.kwlogger-legacy.php.php';
 require_once 'class.kwlogger.php';
 
 require_once 'websun.php';
@@ -19,13 +18,6 @@ require_once 'core.db.php';
 
 require_once 'class.dbconnection.php';
 
-/*Config::init([
-    'config/config.php',
-    'config/config.db.php',
-
-    'filestorage'   =>  'config/config.filestorage.php',
-    'kwlogger'      =>  'config/config.logging.php'
-]);*/
 Config::init(['config/config.php']);
 
 $SID = session_id();
@@ -39,14 +31,17 @@ if (__ACCESS_MODE__ == 'admin' && !isLogged()) {
 
 $mysqli_link = ConnectDB();
 
+/**
+ * Init singletones and static modules
+ */
+
 DB::init(NULL, Config::get('database'));
-
-// kwLoggerLegacy::init($mysqli_link, Config::get('kwlogger'));
-
 FileStorage::init($mysqli_link, Config::get('storage'));
 kwLogger::init(DB::getConnection(), Config::get('kwlogger'));
 
-// check errors
+/**
+ * Check ACL
+ */
 $storage_folder = FileStorage::getStorageDir();
 $user_php_executor = exec('whoami');
 $user_storage_owner = posix_getpwuid(fileowner( $storage_folder ))['name'];
@@ -58,3 +53,4 @@ For create/write access to this directory you MUST set it's owner to {$user_php_
 OWNERS_ERROR_MESSAGE;
     die;
 }
+
