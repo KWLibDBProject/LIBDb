@@ -218,6 +218,51 @@ class DB implements DBConnectionInterface {
     }
 
 
+    public static function makeInsertQuery($tablename, $dataset)
+    {
+        $query = '';
+        $r = [];
+
+        if (empty($dataset)) {
+            $query = "INSERT INTO {$tablename} () VALUES (); ";
+        } else {
+            $query = "INSERT INTO `{$tablename}` SET ";
+
+            foreach ($dataset as $index=>$value) {
+                $r[] = "\r\n `{$index}` = :{$index}";
+            }
+
+            $query .= implode(', ', $r) . ' ;';
+        }
+
+        return $query;
+    }
+
+    public static function makeUpdateQuery($tablename, $dataset, $where_condition = '')
+    {
+        $query = '';
+        $r = [];
+
+        if (empty($dataset)) {
+            return FALSE;
+        } else {
+            $query = "UPDATE `{$tablename}` SET";
+
+            foreach ($dataset as $index=>$value) {
+                $r[] = "\r\n`{$index}` = :{$index}";
+            }
+
+            $query .= implode(', ', $r);
+
+            $query .= " \r\n" . $where_condition . " ;";
+        }
+
+        return $query;
+    }
+
+
+
+
 
 
 

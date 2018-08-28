@@ -8,6 +8,8 @@ ini_set('pcre.recursion_limit', 2*1024*1024);
 
 require_once 'class.config.php';
 require_once 'class.filestorage.php';
+
+// require_once 'class.kwlogger-legacy.php.php';
 require_once 'class.kwlogger.php';
 
 require_once 'websun.php';
@@ -39,8 +41,10 @@ $mysqli_link = ConnectDB();
 
 DB::init(NULL, Config::get('database'));
 
-kwLogger::init($mysqli_link, Config::get('kwlogger'));
+// kwLoggerLegacy::init($mysqli_link, Config::get('kwlogger'));
+
 FileStorage::init($mysqli_link, Config::get('storage'));
+kwLogger::init(DB::getConnection(), Config::get('kwlogger'));
 
 // check errors
 $storage_folder = FileStorage::getStorageDir();

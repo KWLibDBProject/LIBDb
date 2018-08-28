@@ -1,110 +1,50 @@
 <?php
-/* version 1.2 */
+/**
+ * User: Arris
+ * Date: 28.08.2018, time: 4:38
+ */
 
-class kwLogger
-{
-    private static $mysqli_link;
+interface kwLoggerInterface {
+    public static function init(\PDO $dbc, $config);
+    public static function logEventDownload($affected_element = 0, $referrer = '');
+    public static function logEvent($action='?', $affected_table='*', $affected_element='-', $comment='-');
+    public static function logEventToFile($dataset);
+}
 
-    private static $config = [];
+class kwLogger implements kwLoggerInterface {
+    private static $log_datetime_format;
+    private static $config;
 
-    public static function init($mysqli_link, $config)
+    /**
+     * @var \PDO $dbc
+     */
+    private static $dbc;
+
+    public static function init(\PDO $dbc, $config)
     {
-        self::$mysqli_link = $mysqli_link;
+        self::$log_datetime_format = $config['log_datetime_format'];
         self::$config = $config;
+        self::$dbc = $dbc;
     }
 
-    /**
-     * convert query record to SQL statement
-     *
-     * @param $record
-     * @param string $where
-     * @return string
-     */
-    private static function makeInsertStatement($table, $record, $where="")
-    {
-        $query = "INSERT INTO {$table} ";
-
-        $keys = " ( ";
-        $vals = " ( ";
-        foreach ($record as $key => $val) {
-            $keys .= "`" . $key . "`" . ", ";
-            $vals .= "'".$val."', ";
-        }
-        $query .= trim($keys,", ") . ") VALUES " . trim($vals,", ") . ") ".$where;
-        return $query;
-    }
-
-    /**
-     * prepare event record for export to specific format: db|json|csv
-     *
-     * @return string
-     */
-    private static function ConvertTimestampToDate()
-    {
-        return (new DateTime())->format( self::$config['log_datetime_format'] );
-    }
-
-    private static function prepare( $array, $target = 'db' )
-    {
-        $return = null;
-
-        if ($target == 'db' || $target == 'mysql') {
-
-            foreach( $array as $key => $value )
-                $return [ $key ] = mysqli_real_escape_string(self::$mysqli_link,  $value );
-
-        } elseif ($target == 'json' || $target == 'file') {
-
-            $return = json_encode($array) . "\r\n";
-
-        } elseif ($target == 'csv') {
-
-            // see http://stackoverflow.com/a/16353448
-            $fp = fopen('php://temp', 'r+');
-            fputcsv($fp, $array, ',', '"');
-            rewind($fp);
-            $data = fread($fp, 1048576);
-            fclose($fp);
-            $return = rtrim($data, "\n");
-
-        }
-        return $return;
-    }
-
-    /**
-     *
-     * @param int $affected_element
-     * @param string $referrer
-     * @return int
-     */
     public static function logEventDownload($affected_element = 0, $referrer = '')
     {
-        $entry = [
+        $dataset = [
             'element'       =>  $affected_element,
             'referrer'      =>  $referrer,
             'ip'            =>  self::getIP(),
         ];
 
-        $query = self::makeInsertStatement( self::$config['log_table_download'], $entry);
+        $query = DB::makeInsertQuery(self::$config['log_table_download'], $dataset);
 
-        mysqli_query(self::$mysqli_link, $query )
-            or self::_die('Error addind data to eventlog_download table, query data saved to error.log : ' . $query);
-
-        return mysqli_errno(self::$mysqli_link);
+        if (!self::$dbc->prepare($query)->execute($dataset)) {
+            self::logEventToFile($dataset);
+        };
     }
 
-    /**
-     * Log custom event
-     *
-     * @param string $action
-     * @param string $affected_table
-     * @param string $affected_element
-     * @param string $comment
-     * @return int
-     */
     public static function logEvent($action='?', $affected_table='*', $affected_element='-', $comment='-')
     {
-        $entry = [
+        $dataset = [
             'action'        =>  $action,
             'table'         =>  $affected_table,
             'element'       =>  $affected_element,
@@ -112,46 +52,37 @@ class kwLogger
             'ip'            =>  self::getIP(),
             'user'          =>  $_COOKIE[ Config::get('auth:cookies/user_id') ] ?? -1
         ];
-        $query = self::makeInsertStatement(self::$config['log_table_event'], $entry);
-        mysqli_query(self::$mysqli_link, $query )
-            or self::_die('Error addind data to eventlog table, query data saved to error.log : ' . $query);
-        return mysqli_errno(self::$mysqli_link);
+
+        $query = DB::makeInsertQuery(self::$config['log_table_event'], $dataset);
+
+        if (!self::$dbc->prepare($query)->execute($dataset)) {
+            self::logEventToFile($dataset);
+        };
     }
 
-
-
-    /* override die function */
-    public static function _die($message = '-', $dataset = array())
+    public static function logEventToFile($dataset)
     {
-        $entry = array(
-            'action'        =>  'critical',
-            'table'         =>  '-',
-            'element'       =>  self::prepare( $dataset , 'csv' ),
-            'comment'       =>  $message,
-            'ip'            =>  self::getIP(),
-            'datetime'      =>  self::ConvertTimestampToDate(),
-            'user'          =>  $_SESSION[ Config::get('auth:session/user_id') ] ?? 0
-        );
-        $die_message = '';
-
-        if (!empty($dataset)) {
-            $entry [ 'element' ] = self::prepare( $dataset , 'csv' );
-            $die_message = print_r($dataset, true);
+        if (is_array($dataset)) {
+            $message = json_encode($dataset);
+        } elseif (is_string($dataset)) {
+            $message = $dataset;
+        } else {
+            $message = (string)$dataset;
         }
 
         $filename = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . self::$config['log_file'];
-
         $f = fopen( $filename , 'a+' );
-        fwrite($f, self::prepare( $entry, 'file' ));
+        fwrite($f, $message );
         fclose($f);
-        die( $message . $die_message);
     }
 
-    /**
-     * Returns IP address
-     * @return string $ip
-     */
-    protected static function getIP()
+
+    private static function timestampToDate()
+    {
+        return (new DateTime())->format( self::$log_datetime_format );
+    }
+
+    private static function getIP()
     {
         if (getenv('HTTP_CLIENT_IP')) {
             $ipAddress = getenv('HTTP_CLIENT_IP');
@@ -171,6 +102,4 @@ class kwLogger
 
         return $ipAddress;
     }
-
 }
-
