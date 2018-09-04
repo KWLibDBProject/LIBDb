@@ -51,8 +51,8 @@ WHERE TABLE_NAME = '{$reference}'";
                 'data_comment' => mysqli_real_escape_string($mysqli_link, $_GET['data_comment']),
             );
             $qstr = MakeInsert($q, $reference);
-            $res = mysqli_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
-            $new_id = mysqli_insert_id() or Die("Unable to get last insert id! Last request is [$qstr]");
+            $res = mysqli_query($mysqli_link, $qstr) or Die("Unable to insert data to DB!".$qstr);
+            $new_id = mysqli_insert_id($mysqli_link) or Die("Unable to get last insert id! Last request is [$qstr]");
 
             $result['message'] = $qstr;
             $result['error'] = 0;
@@ -69,7 +69,7 @@ WHERE TABLE_NAME = '{$reference}'";
             );
 
             $qstr = MakeUpdate($q, $reference, "WHERE id=$id");
-            $res = mysqli_query($qstr, $link) or Die("Unable update data : ".$qstr);
+            $res = mysqli_query($mysqli_link, $qstr) or Die("Unable update data : ".$qstr);
 
             $result['message'] = $qstr;
             $result['error'] = 0;

@@ -38,7 +38,7 @@ switch ($actor) {
         //ORDER по названию?
 
         $r = mysqli_query($mysqli_link, $query) or die($query);
-        $n = @mysqli_num_rows($r) ;
+        $n = mysqli_num_rows($r) ;
 
         if ($n > 0)
         {

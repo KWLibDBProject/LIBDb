@@ -1,13 +1,34 @@
 <?php
 /**
- * User: Arris
+ * User: Karel Wintersky
  * Date: 26.08.2018, time: 14:25
  */
 
 interface DBConnectionInterface {
+
+    /**
+     * Возвращает инстанс класса
+     * @param null $suffix
+     * @return mixed
+     */
     public static function getInstance($suffix = NULL);
+
+    /**
+     * Возвращает PDO::Connection
+     *
+     * @param null $suffix
+     * @return PDO
+     */
     public static function getConnection($suffix = NULL):\PDO;
-    public static function init($suffix = NULL, $config);
+
+    /**
+     * Инициализирует подключение
+     *
+     * @param null $suffix
+     * @param $config
+     * @return mixed
+     */
+    public static function init($suffix, $config);
 }
 
 /**
@@ -50,6 +71,10 @@ class DB implements DBConnectionInterface {
         return ( array_key_exists($key, self::$_instances) && self::$_instances[$key] !== NULL  );
     }
 
+    /**
+     * @param null $suffix
+     * @return DB
+     */
     public static function getInstance($suffix = NULL):DB {
 
         $key = self::getKey($suffix);
@@ -83,13 +108,18 @@ class DB implements DBConnectionInterface {
      *
      * @param null $suffix
      */
-    public static function init($suffix = NULL, $config)
+    public static function init($suffix, $config)
     {
         $config_key = self::getKey($suffix);
         self::setConfig($config, $suffix);
         self::$_instances[$config_key] = new self($suffix);
     }
 
+    /**
+     * Сеттер
+     * @param $config
+     * @param null $suffix
+     */
     private static function setConfig($config, $suffix = NULL)
     {
         $config_key = self::getKey($suffix);
@@ -97,6 +127,12 @@ class DB implements DBConnectionInterface {
         self::$_configs[ $config_key ] = $config;
     }
 
+    /**
+     * Геттер
+     *
+     * @param null $suffix
+     * @return mixed|null
+     */
     private static function getConfig($suffix = NULL)
     {
         $config_key = self::getKey($suffix);
@@ -104,6 +140,10 @@ class DB implements DBConnectionInterface {
         return array_key_exists( $config_key, self::$_configs) ? self::$_configs[ $config_key ] : NULL;
     }
 
+    /**
+     * DB constructor.
+     * @param null $suffix
+     */
     public function __construct($suffix = NULL)
     {
         $config_key = self::getKey($suffix);
@@ -238,12 +278,24 @@ class DB implements DBConnectionInterface {
         return self::getConnection($suffix)->query($query)->fetchColumn();
     }
 
+    /**
+     * Хелпер
+     *
+     * @param null $suffix
+     */
     public static function getLastInsertId($suffix = NULL)
     {
         self::getConnection($suffix)->lastInsertId();
     }
 
 
+    /**
+     * Билдер INSERT-выражения
+     *
+     * @param $tablename
+     * @param $dataset
+     * @return string
+     */
     public static function makeInsertQuery($tablename, $dataset)
     {
         $query = '';
@@ -264,6 +316,14 @@ class DB implements DBConnectionInterface {
         return $query;
     }
 
+    /**
+     * Билдер UPDATE-выражения
+     *
+     * @param $tablename
+     * @param $dataset
+     * @param string $where_condition
+     * @return bool|string
+     */
     public static function makeUpdateQuery($tablename, $dataset, $where_condition = '')
     {
         $query = '';
@@ -285,14 +345,6 @@ class DB implements DBConnectionInterface {
 
         return $query;
     }
-
-
-
-
-
-
-
-
 
 
 }

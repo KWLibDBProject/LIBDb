@@ -1,16 +1,43 @@
 <?php
 /**
- * User: Arris
+ * User: Karel Wintersky
  * Date: 28.08.2018, time: 4:38
  */
 
 interface kwLoggerInterface {
+    /**
+     * @param PDO $dbc
+     * @param $config
+     * @return mixed
+     */
     public static function init(\PDO $dbc, $config);
+
+    /**
+     * @param int $affected_element
+     * @param string $referrer
+     * @return mixed
+     */
     public static function logEventDownload($affected_element = 0, $referrer = '');
+
+    /**
+     * @param string $action
+     * @param string $affected_table
+     * @param string $affected_element
+     * @param string $comment
+     * @return mixed
+     */
     public static function logEvent($action='?', $affected_table='*', $affected_element='-', $comment='-');
+
+    /**
+     * @param $dataset
+     * @return mixed
+     */
     public static function logEventToFile($dataset);
 }
 
+/**
+ * Class kwLogger
+ */
 class kwLogger implements kwLoggerInterface {
     private static $log_datetime_format;
     private static $config;
