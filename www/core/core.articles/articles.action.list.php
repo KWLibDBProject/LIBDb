@@ -1,8 +1,6 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 /* файл вызывается черех аякс лоадер
 Варианты аргументов:
@@ -11,13 +9,30 @@ topic - показать статьи в топике
 book - показать статьи в сборнике
 */
 
-$link = ConnectDB();
 /* этот же запрос существует в frontend.php (DB_BuildQuery)*/
+
+/**
+ * Этот вызов логически очень похож LoadArticles_ByQuery($get, $lang) / BuildQuery($get, $lang)
+ * Возможно, имеет смысл использовать метод для извлечения данных - и в админке показывать больше информации о статье,
+ * тем более что в шаблоне _template.articles.list.html все равно используется только title_ru
+ */
+
+// ttitle -> topic_title
+// btitle -> book_title
+// DATE_FORMAT(date_add, '%d.%m.%Y') as date_add
+
 $query = "
-SELECT DISTINCT articles.id, articles.title_en AS title_en, articles.title_ru AS title_ru, articles.title_uk AS title_uk, udc, pdfid, add_date, pages,
+SELECT 
+DISTINCT articles.id, 
+articles.title_ru AS title_ru, 
+udc, 
+pdfid, 
+DATE_FORMAT(date_add, '%d.%m.%Y') as date_add, 
+pages,
 topics.title_ru AS ttitle,
 books.title AS btitle
-from articles, cross_aa,topics,books
+
+FROM articles, cross_aa, topics, books, authors
 WHERE
 cross_aa.article=articles.id
 AND
@@ -25,97 +40,106 @@ topics.id=articles.topic
 AND
 books.id=articles.book";
 
-$query .= (IsSet($_GET['author'])   && $_GET['author']!=0)  ? " AND cross_aa.author = " . intval($_GET['author'])    : "";
-$query .= (IsSet($_GET['book'])     && $_GET['book']!=0 )   ? " AND articles.book = "   . intval($_GET['book'])      : "";
-$query .= (IsSet($_GET['topic'])    && $_GET['topic'] !=0 ) ? " AND articles.topic = "  . intval($_GET['topic'])     : "";
+$query
+    .= (IsSet($_GET['author'])   && $_GET['author']!=0)
+    ? " AND cross_aa.author = " . intval($_GET['author'])
+    : "";
+
+$query
+    .= (IsSet($_GET['book'])     && $_GET['book']!=0 )
+    ? " AND articles.book = "   . intval($_GET['book'])
+    : "";
+
+$query
+    .= (IsSet($_GET['topic'])    && $_GET['topic'] !=0 )
+    ? " AND articles.topic = "  . intval($_GET['topic'])     :
+    "";
+
+/**
+ * Для реализации отбора по первой букве нам нужно:
+ * - в запрос включить таблицу authors
+ * - чтобы ограничить количество ответов ЕСЛИ буква не указана - связать authors.id & cross_aa.author
+ *
+ */
+if (true){
+    $query .= " AND authors.id = cross_aa.`author` ";
+
+    $query
+        .= (isset($_GET['firstletter']) && $_GET['firstletter'] !== 0)
+        ? " AND authors.firstletter_name_ru = '".  mb_substr($_GET['firstletter'], 0, 1)  ."' "
+        : "";
+}
 
 $query .= " ORDER BY articles.id";
 
-$res = mysql_query($query) or die("Death on : $query");
-$articles_count = @mysql_num_rows($res);
+$res = mysqli_query($mysqli_link, $query) or die("Death on : $query");
+$articles_count = mysqli_num_rows($res);
 
-$all_articles = array();
+$articles_list = array();
 if ($articles_count>0) {
-    while ($an_article = mysql_fetch_assoc($res))
+    while ($an_article = mysqli_fetch_assoc($res))
     {
         $id = $an_article['id']; // айди статьи
-        $all_articles[$id] = $an_article; // ВСЯ статья
 
-        // получить информацию о связанной ПДФке
-
-        $all_articles[$id]['pdffile'] = FileStorage::getFileInfo($an_article['pdfid']);
+        $an_article['pdffile'] = FileStorage::getFileInfo($an_article['pdfid']);
 
         // получить информацию об авторах
-        $r_auths = mysql_query("SELECT authors.name_ru, authors.title_ru, authors.id FROM authors, cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
-        $r_auths_count = @mysql_num_rows($r_auths);
+        $r_auths = mysqli_query($mysqli_link, "SELECT authors.name_ru, authors.title_ru, authors.id FROM authors, cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
+        $r_auths_count = @mysqli_num_rows($r_auths);
+
+        $an_article['authors_list'] = [];
 
         if ($r_auths_count>0)
         {
-            // $i=1;
-            while ($an_author = mysql_fetch_assoc($r_auths))
+            $an_article['authors'] = '';
+
+            while ($an_author = mysqli_fetch_assoc($r_auths))
             {
-                $all_articles[$id]['authors'] .= <<<ArticlesAL_AuthorsEach
-<li> <a href="/?fetch=authors&with=info&id={$an_author['id']}&lang=ru" target="_blank">{$an_author['name_ru']}</a> ({$an_author['title_ru']})</li>
-ArticlesAL_AuthorsEach;
-                // $i++;
+                $an_article['authors_list'][ /* $an_author['id']  */ ] = $an_author;
             }
-            // $all_articles[$id]['authors'] = substr($all_articles[$id]['authors'],0,-4);
         }
+
+        $articles_list[$id] = $an_article; // ВСЯ статья
     }
 }
-CloseDB($link);
 
-$return = <<<ArticlesAL_Start
-<table border="1" width="100%">
-ArticlesAL_Start;
+/*
+по идее, следует использовать оптимизированный запрос для построения списка авторов, примерно такой:
 
-$return .= <<<ArticlesAL_TH
-    <tr>
-        <th width="3%">id</th>
-        <th>Тематический<br> раздел</th>
-        <th>Сборник</th>
-        <th width="7%">УДК</th>
-        <th>Авторы</th>
-        <th>Название</th>
-        <th width="7%">Дата</th>
-        <th width="105" colspan="1">Control<br><small>PDF info</small></th>
-    </tr>
-ArticlesAL_TH;
+SELECT
 
-if ($articles_count > 0) {
-    foreach ($all_articles as $a_id => $a_article)
-    {
-        $row = $a_article;
-        $return .= <<<ArticlesAL_Each
-<tr>
-<td>{$row['id']}</td>
-<td>{$row['ttitle']}</td>
-<td><nobr>{$row['btitle']}</nobr></td>
-<td>{$row['udc']}</td>
-<td>
-<ol class="articles-list-table-authors-list">
-{$row['authors']}
-</ol>
-</td>
-<td><small>{$row['title_ru']}</small></td>
-<td class="center_cell"><small>{$row['add_date']}</small></td>
-<td>
-    <button class="action-download-pdf button-download-icon" name="{$row['pdffile']['id']}" data-text="Show PDF"></button>
-    <button class="action-edit button-edit-icon" name="{$row['id']}" data-text="Edit"></button>
-</td>
-</tr>
-ArticlesAL_Each;
-    }
-} else {
-    $return .= <<<ArticlesAL_Nothing
-<tr><td colspan="8">Статей не найдено</td></tr>
+cross_aa.`article` AS article_id,
+authors.name_ru AS author_name_ru,
+authors.title_ru AS author_title_ru,
+authors.id AS author_id
+FROM `authors`, `cross_aa`
+WHERE authors.id=cross_aa.author AND cross_aa.article IN (1, 2, 3) ORDER BY article_id, cross_aa.id
 
-ArticlesAL_Nothing;
-}
+Здесь в IN() перечислены айдишники статей, попавших в выборку
 
-$return .= <<<ArticlesAL_End
-</table>
-ArticlesAL_End;
+Вывод будет примерно такой:
 
-print($return);
-?>
+"article_id","author_name_ru","author_title_ru","author_id"
+"1","Лебедев Владимир Александрович","доктор технических наук, профессор","1"
+"2","Лимонов Леонид Григорьевич","канд. техн. наук","2"
+"3","Акчебаш Наталья Викторовна","","4"
+"3","Бойко Андрей Александрович","доктор технических наук, доцент","3"
+
+Этот массив данных мы можем перебрать, ориентируясь на article_id (выше по коду: $articles_list[$id] ) и в
+
+$an_article['authors_list'] записывать собранный массив из оставшихся трех полей этой множественной выборки
+
+Этот метод будет более оптимален, но... требуется отладка и немного волшебства.
+
+*/
+
+$template_dir = '$/core/core.articles';
+$template_file = "_template.articles.list.html";
+
+$template_file = (!empty($articles_list)) ? "_template.articles.list.html" : "_template.articles.not-found.html";
+
+$template_data = array(
+    'articles_list' =>  $articles_list
+);
+
+echo websun_parse_template_path($template_data, $template_file, $template_dir);

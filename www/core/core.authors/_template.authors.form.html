@@ -1,0 +1,241 @@
+<html>
+<head>
+    <title>{*page_title*}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="text/javascript" src="../_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../_assets/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../_assets/tinymce.config.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../_assets/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="authors.css">
+    <style type="text/css"></style>
+
+    <script type="text/javascript" src="../../frontend.js"></script>
+    <script type="text/javascript" src="../../frontend.options.js"></script>
+    <script type="text/javascript" src="authors.js"></script>
+
+    <script type="text/javascript" src="../_assets/jquery.colorbox.js"></script>
+    <script type="text/javascript" src="../_assets/jquery.inputmask.bundle.min.js"></script>
+    <link rel="stylesheet" href="../_assets/colorbox.css" />
+
+    <script type="text/javascript">
+        // tinyMCE inits
+        var author_id = {*author_id*};
+        $(document).ready(function () {
+            $.ajaxSetup({cache: false, async: false});
+
+            var estaff_roles_list = preloadOptionsList('../ref.abstract.getoptionslist.php?ref=ref_estaff_roles');
+            var current_estaff_role = 0;
+
+            if (author_id != -1) {
+                current_estaff_role = Authors_LoadRecord("#form_edit_author", author_id, 'bio');
+                $(".actor-button-remove").show().on('click',function(event){
+                    window.location.href = 'authors.action.remove.php?id='+author_id;
+                });
+
+                BuildSelector('estaff_role', estaff_roles_list, '', current_estaff_role);
+
+            } else {
+
+                BuildSelector('estaff_role', estaff_roles_list, '', 0);
+                DisableSelectorByName('estaff_role');
+            }
+            /* флажки установим (полностью отвязывая блок с файлами от оверрайда шаблона)
+            для ADD (author_id == -1) - true, EDIT: false */
+            $("button[name='file_current_id_show']").prop('disabled', (author_id == -1) );
+
+            $(".actor-button-exit").on('click',function(event){
+                window.location.href = '/core/list.authors.show.php';
+            });
+
+            $("#is_es").on('change', function(event){
+                $("select[name='estaff_role']").prop('disabled', !this.checked);
+                // Участник редколлегии КАК МИНИМУМ тех-редактор, сменим значение селектора 'estaff_role'
+                //@hint: +this.checked преобразует bool -> int
+                $("select[name='estaff_role'] option[value='"+ this.checked +"']").prop("selected", true);
+            });
+
+            /* photo actors */
+            $(".actor-file-current-remove").on('click', function(){
+                var getting = $.get('../core.filestorage/filestorage.action.remove.php', {
+                    id: $(this).attr('data-fileid'),
+                    caller: 'authors',
+                    subcaller: 'photo_id'
+                });
+                getting.done(function(data){
+                    var result = $.parseJSON(data);
+                    
+                    if (result['error'] == 0)
+                    {
+                        $('#file_new_input').removeProp("disabled");
+                        $('#file_new').show().find("input[name=file_current_changed]").attr("value","1");
+                        $('#file_current').hide();
+                    } else {
+                        // alert('Ошибка удаления файла!');
+                    }
+                }); // getting.done
+            });
+
+            $(".actor-file-current-show").on('click', function(){
+                var link = "../get.image.php?id="+$(this).attr('data-fileid');
+                $.colorbox({
+                    href: link,
+                    photo: true
+                });
+            });
+            // note: don't use
+            tinify(tiny_config['simple'], 'bio_en');
+            tinify(tiny_config['simple'], 'bio_ru');
+            tinify(tiny_config['simple'], 'bio_ua');
+
+            $("#name_en").focus();
+            // проверка заполненности фамилий на всех языках
+            $("#form_edit_author")
+                .submit(function(){
+                    var bValid = true;
+                    if ($('input[name="name_en"]').val() == '') {
+                        alert('Обязательно укажите фамилию автора на английском языке');
+                        bValid = false;
+                    }
+                    if ($('input[name="name_ru"]').val() == '') {
+                        alert('Обязательно укажите фамилию автора на русском языке');
+                        bValid = false;
+                    }
+                    if ($('input[name="name_ua"]').val() == '') {
+                        alert('Обязательно укажите фамилию автора на украинском языке');
+                        bValid = false;
+                    }
+                    return bValid;
+                }).show();
+            bindScrollTopAction("#actor-scroll-top");
+
+            // check input mask
+            $("#orcid").inputmask({ regex: "[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}" } );
+
+        });
+    </script>
+</head>
+<body>
+
+<form action="{*form_call_script*}" method="post" enctype="multipart/form-data" id="form_edit_author" class="hidden">
+    <button type="button" class="button-large actor-button-exit" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ АВТОРОВ</strong></button>
+    <button type="button" class="button-large actor-button-remove" id="button-remove"><strong>УДАЛИТЬ АВТОРА</strong></button>
+    <button type="submit" class="button-large" ><strong>{*submit_button_text*}</strong></button>
+    <hr>
+    <input type="hidden" name="id">
+    <fieldset>
+        <label for="name_en">Name, surname</label><br>
+        <input type="text" name="name_en" id="name_en" size="60" value="" required>
+        <br>
+
+        <label for="name_ru">Ф.И.О. (русский)</label><br>
+        <input type="text" name="name_ru" id="name_ru" size="60" value="" required>
+        <br>
+
+        <label for="name_ua">Ф.И.О. (украинский)</label><br>
+        <input type="text" name="name_ua" id="name_ua" size="60" value="" required>
+        <div class="warning-small">Важно: Не оставляйте эти поля пустыми. Укажите фамилии на всех языках!</div>
+    </fieldset>
+    <fieldset>
+        <label for="title_en">Звание, ученая степень, должность (на английском)</label><br>
+        <input type="text" name="title_en" id="title_en" size="60" value="">
+        <br>
+
+        <label for="title_ru">Звание, ученая степень, должность</label><br>
+        <input type="text" name="title_ru" id="title_ru" size="60" value="">
+        <br>
+
+        <label for="title_ua">Званна, вчена ступiнь, посада</label><br>
+        <input type="text" name="title_ua" id="title_ua" size="60" value="">
+
+    </fieldset>
+    <fieldset>
+        <legend>Контактные данные:</legend>
+
+        <label for="email">E-Mail:</label><br>
+        <input type="email" name="email" id="email" size="60">
+
+        <br />
+
+        <label for="orcid">ORCID:</label><br>
+        <input type="text" name="orcid" id="orcid" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}" size="60">
+
+        <br />
+
+        <label for="phone">Телефон для связи:</label><br>
+        <input type="text" name="phone" id="phone" size="60">
+
+    </fieldset>
+    <fieldset>
+        <legend>Место работы (в именительном падеже): </legend>
+        <label for="workplace_en"><strong>Место работы (на английском)</strong></label><br>
+        <textarea name="workplace_en" id="workplace_en" cols="90" rows="5"></textarea>
+
+        <br>
+
+        <label for="workplace_ru"><strong>Место работы (на русском)</strong></label><br>
+        <textarea name="workplace_ru" id="workplace_ru" cols="90" rows="5"></textarea>
+
+        <br>
+
+        <label for="workplace_ua"><strong>Место работы (на украинском)</strong></label><br>
+        <textarea name="workplace_ua" id="workplace_ua" cols="90" rows="5"></textarea>
+    </fieldset>
+    <hr>
+
+    <fieldset id="es_fieldset">
+        <legend>
+            Расширенные сведения об авторе
+        </legend>
+        <dl class="h-layout">
+            <dt class="w250">Участник редакционной коллегии:</dt>
+            <dd><input type="checkbox" name="is_es" id="is_es" value="on"></dd>
+            <dt class="w250">
+                Роль в редакционной коллегии:
+            </dt>
+            <dd>
+                <select name="estaff_role">
+                    <option value="0">[0] НЕТ</option>
+                </select>
+            </dd>
+        </dl>
+
+        <!-- photo inputs -->
+        <div id="file_current">
+            <label for="file_current_input">
+                <button type="button" class="actor-file-current-show lightboxed" name="file_current_id_show">Показать фотографию</button>
+            </label>
+            <input type="text" size="60" id="file_current_input" name="file_current_input" value="Нажмите *удалить фотографию* и добавьте фотографию автора">
+            <button type="button" name="file_current_id_remove" class="actor-file-current-remove">Удалить фотографию</button>
+        </div>
+
+        <div id="file_new" class="hidden">
+            <label for="file_new_input">Прикрепить НОВЫЙ файл (JPEG/PNG/GIF):</label>
+            <input type="file" name="file_new_input" id="file_new_input" size="60" disabled>
+            <input type="hidden" name="file_current_changed" id="file_current_changed" value="0">
+            <div class="hint"></div>
+        </div>
+        <br>
+        <!-- bio -->
+        <h2>Биография на различных языках</h2>
+        <hr>
+        <h3>Биография на английском языке</h3>
+        <textarea name="bio_en" id="bio_en" cols="90" rows="12"></textarea>
+        <hr>
+
+        <h3>Биография на русском языке</h3>
+        <textarea name="bio_ru" id="bio_ru" cols="90" rows="12"></textarea>
+        <hr>
+
+        <h3>Биография на украинском языке</h3>
+        <textarea name="bio_ua" id="bio_ua" cols="90" rows="12"></textarea>
+
+    </fieldset>
+    <hr>
+    <button type="submit" class="button-large" ><strong>{*submit_button_text*}</strong></button>
+
+    <button type="button" class="button-large float-right" id="actor-scroll-top"><strong>Наверх страницы</strong></button>
+</form>
+
+</body>
+</html>

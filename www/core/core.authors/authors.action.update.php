@@ -1,36 +1,45 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 $id = isset($_POST['id']) ? $_POST['id'] : Die('Unknown ID. ');
 $ref_name = 'authors';
 
-$link = ConnectDB();
+$dataset = array(
+    'name_ru'       => trim($_POST['name_ru'] ?? '', ' '),
+    'name_en'       => trim($_POST['name_en'] ?? '', ' '),
+    'name_ua'       => trim($_POST['name_ua'] ?? '', ' '),
 
-$q = array(
-    'name_ru'       => trim($_POST['name_ru'], ' '),
-    'name_en'       => trim($_POST['name_en'], ' '),
-    'name_uk'       => trim($_POST['name_uk'], ' '),
-    'title_ru'      => $_POST['title_ru'],
-    'title_en'      => $_POST['title_en'],
-    'title_uk'      => $_POST['title_uk'],
-    'email'         => $_POST['email'],
-    'workplace_en'  => strip_tags($_POST['workplace_en']),
-    'workplace_ru'  => strip_tags($_POST['workplace_ru']),
-    'workplace_uk'  => strip_tags($_POST['workplace_uk']),
-    'is_es'         => strtolower(($_POST['is_es']))=='on' ? 1 : 0,
-    'phone'         => $_POST['phone'],
-    'bio_en'        => $_POST['bio_en'],
-    'bio_ru'        => $_POST['bio_ru'],
-    'bio_uk'        => $_POST['bio_uk'],
-    'selfhood'      => $_POST['selfhood'],
-    'stat_date_update' => ConvertTimestampToDate()
+    'title_ru'      => trim($_POST['title_ru'] ?? '', ' '),
+    'title_en'      => trim($_POST['title_en'] ?? '',' '),
+    'title_ua'      => trim($_POST['title_ua'] ?? '', ' '),
+
+    'email'         => trim($_POST['email'] ?? '', ' '),
+    'orcid'         => trim($_POST['orcid'] ?? '', ' '),
+    'phone'         => trim($_POST['phone'] ?? '', ' '),
+
+    'workplace_en'  => strip_tags($_POST['workplace_en'] ?? ''),
+    'workplace_ru'  => strip_tags($_POST['workplace_ru'] ?? ''),
+    'workplace_ua'  => strip_tags($_POST['workplace_ua'] ?? ''),
+
+    'bio_en'        => $_POST['bio_en'] ?? '',
+    'bio_ru'        => $_POST['bio_ru'] ?? '',
+    'bio_ua'        => $_POST['bio_ua'] ?? '',
+
+    /* Участие в редколлегии */
+    'is_es'         => (($_POST['is_es'] ?? 'off') == 'on') ? 1 : 0,
+
+    /* Роль в редколлегии: @todo: доп-проверка, если он не in_es - то 0 ? */
+    'estaff_role'      => $_POST['estaff_role'] ?? 0,
 );
-$qstr = MakeUpdateEscaped($q, $ref_name, "WHERE id=$id");
 
-$res = mysql_query($qstr, $link);
+$dataset['firstletter_name_en'] = mb_substr( $dataset['name_en'], 0, 1 );
+$dataset['firstletter_name_ru'] = mb_substr( $dataset['name_ru'], 0, 1 );
+$dataset['firstletter_name_ua'] = mb_substr( $dataset['name_ua'], 0, 1 );
+
+$query = MakeUpdateEscaped($dataset, $ref_name, "WHERE id=$id");
+
+$res = mysqli_query($mysqli_link, $query);
 
 if (!empty($res)) {
     $new_author_id = $id; // айди автора в базе, он нужен для вставки фото
@@ -41,31 +50,31 @@ if (!empty($res)) {
             FileStorage::addFile($_FILES['file_new_input'], $new_author_id, 'authors', 'photo_id');
         }
     }
-    $result['message'] = $qstr;
+    $result['message'] = $query;
     $result['error'] = 0;
 }
 else {
-    die("Unable to insert data to DB!  ".$qstr);
+    die("Unable to insert data to DB!  ".$query);
 }
 
 kwLogger::logEvent('Update', 'authors', $new_author_id, "Author updated, id is {$new_author_id}" );
 
-CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     if ($result['error'] == 0) {
-        // use template
-        $override = array(
-            'time' => 10,
-            'target' => '/core/ref.authors.show.php',
-            'buttonmessage' => 'Вернуться к списку авторов',
-            'message' => "Информация об авторе c внутренним идентификатором $id обновлена"
+
+        $template_dir = '$/core/_templates';
+        $template_file = "ref.all_timed_callback.html";
+
+        $template_data = array(
+            'time'          => Config::get('callback_timeout') ?? 15,
+            'target'        => '/core/list.authors.show.php',
+            'button_text'   => 'Вернуться к списку авторов',
+            'message'       => "Информация об авторе c внутренним идентификатором {$id} обновлена"
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
+
     }
 }
-?>

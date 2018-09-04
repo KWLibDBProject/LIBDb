@@ -1,57 +1,46 @@
 <?php
-// print_r($_POST);
-
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'staticpages';
 
-
-$link = ConnectDB();
-
-$now = ConvertTimestampToDate();
-$q = array(
-    'alias'         => mysql_real_escape_string($_POST['alias']),
-    'comment'       => mysql_real_escape_string($_POST['comment']),
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'content_en'    => mysql_real_escape_string($_POST['content_en']),
-    'content_ru'    => mysql_real_escape_string($_POST['content_ru']),
-    'content_uk'    => mysql_real_escape_string($_POST['content_uk']),
-    'stat_date_insert'  =>  $now,
-    'stat_date_update'  =>  $now
+$dataset = array(
+    'alias'         => mysqli_real_escape_string($mysqli_link, $_POST['alias'] ?? ''),
+    'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment'] ?? ''),
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en'] ?? ''),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru'] ?? ''),
+    'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua'] ?? ''),
+    'content_en'    => mysqli_real_escape_string($mysqli_link, $_POST['content_en'] ?? ''),
+    'content_ru'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ru'] ?? ''),
+    'content_ua'    => mysqli_real_escape_string($mysqli_link, $_POST['content_ua'] ?? ''),
 );
-$qstr = MakeInsert($q, $ref_name);
+$query = MakeInsert($dataset, 'staticpages');
 
-if ($res = mysql_query($qstr, $link)) {
-    $result['message'] = $qstr;
+if ($res = mysqli_query($mysqli_link, $query)) {
+    $result['message'] = $query;
     $result['error'] = 0;
-    $record_id = mysql_insert_id();
+    $record_id = mysqli_insert_id($mysqli_link);
     kwLogger::logEvent('Add', 'pages', $record_id, "Static page added, id = {$record_id}");
 }
 else {
-    Die("Unable to insert data to DB!  ".$qstr);
+    Die("Unable to insert data to DB!  ".$query);
 }
 
-CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     if ($result['error'] == 0) {
-        // use template
-        $override = array(
-            'time' => 10,
-            'target' => '../ref.pages.show.php',
-            'buttonmessage' => 'Вернуться к списку страниц',
-            'message' => 'Страница добавлена в базу данных'
+
+        $template_dir = '$/core/_templates';
+        $template_file = "ref.all_timed_callback.html";
+
+        $template_data = array(
+            'time'          => Config::get('callback_timeout') ?? 15,
+            'target'        => '../list.pages.show.php',
+            'button_text'   => 'Вернуться к списку страниц',
+            'message'       => 'Статическая страница добавлена'
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }
-?>

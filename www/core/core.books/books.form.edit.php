@@ -1,23 +1,26 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
-
-$SID = session_id();
-if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 $id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($id != -1)
 {
-    $link = ConnectDB();
-    $q = "select * from books where id=$id";
-    $r = mysql_query($q) or die("Death at : $q");
+    $query = "
+SELECT 
+    id, title, published_status, contentpages,
+    DATE_FORMAT(published_date, '%d.%m.%Y') as published_date,
+    file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en
+FROM 
+    books
+WHERE 
+    id = {$id}
+";
 
-    if (@mysql_num_rows($r) > 0) {
-        $book = mysql_fetch_assoc($r);
+    $r = mysqli_query($mysqli_link, $query) or die("Death at : $query");
+
+    if (@mysqli_num_rows($r) > 0) {
+        $book = mysqli_fetch_assoc($r);
 
         // теперь надо загрузить информацию о файлах!
         // file_cover
@@ -87,11 +90,19 @@ if ($id != -1)
             $book['file_toc_en_data']['disabled_flag'] = 'disabled';
         }
         $isBookExists = 1;
+
+        $articles_count = 0;
+
+        //func
+        $qt = "SELECT COUNT(book) as bcount FROM articles WHERE book={$id}";
+        $rt = mysqli_query($mysqli_link, $qt);
+        $articles_count = mysqli_fetch_assoc($rt)['bcount'];
+        //end
+
     } else {
         $isBookExists = 0;
-        $book['published'] = 0;
+        $book['published_status'] = 0;
     }
-    CloseDb($link);
 } else {
     Die('Некорректный вызов! ');
 }
@@ -100,18 +111,18 @@ if ($id != -1)
 <head>
     <title>Сборники -- редактирование</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="../js/jquery.ui.datepicker.rus.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
+    <script type="text/javascript" src="../_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery.ui.datepicker.rus.js"></script>
+    <script type="text/javascript" src="../_assets/jquery.colorbox.js"></script>
 
-    <script src="../js/jquery.colorbox.js"></script>
-    <link rel="stylesheet" href="../css/colorbox.css" />
-
+    <link rel="stylesheet" type="text/css" href="../_assets/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/colorbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_assets/core.admin.css">
     <link rel="stylesheet" type="text/css" href="books.css">
-    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
 
-    <script src="../js/core.js"></script>
+    <script type="text/javascript" src="../../frontend.js"></script>
+    <script type="text/javascript" src="../../frontend.options.js"></script>
 
     <script type="text/javascript">
         var we_can_delete_file = false;
@@ -123,25 +134,21 @@ if ($id != -1)
                 '1' : 'Да (опубликован)'
             }
         };
-        function ShowErrorMessage(message)
-        {
-            alert(message);
-        }
 
         $(document).ready(function () {
             if (0 == isBookExists) {
                 $('#form_book').hide();
                 $('#no_book_warning').show();
             } else {
-                BuildSelector('is_book_ready', is_published, <?php echo $book['published'] ?>);
+                BuildSelector('is_book_ready', is_published, '', <?php echo $book['published_status'] ?>);
             }
 
             $(".button-exit").on('click',function(event){
-                window.location.href = '../ref.books.show.php';
+                window.location.href = '../list.books.show.php';
             });
             $("#button-remove").on('click',function(event){
                 if (confirm("Вы уверены, что хотите удалить сборник?")) {
-                    window.location.href = 'books.action.remove.php?id='+<? echo $id ?>;
+                    window.location.href = 'books.action.remove.php?id='+<?php echo $id ?>;
                 }
 
             });
@@ -176,17 +183,17 @@ if ($id != -1)
                 changeYear: true,
                 dateFormat: 'dd.mm.yy',
                 minDate: '01.01.2003',
-                maxDate: '01.01.2020',
+                maxDate: '01.01.2025',
                 showButtonPanel: true
             });
             $("#book_title").focus();
 
 
             $(".current_file_show").on('click', function(){
-                window.location.href="../getfile.php?id="+$(this).attr('data-fileid');
+                window.location.href="../get.file.php?id="+$(this).attr('data-fileid');
             });
             $(".current_file_lightbox").on('click', function(){
-                var link = "../getimage.php?id="+$(this).attr('data-fileid');
+                var link = "../get.image.php?id="+$(this).attr('data-fileid');
                 $.colorbox({
                     href: link,
                     photo: true
@@ -248,7 +255,7 @@ if ($id != -1)
         </div>
         <div class="field">
             <label for="book_datepicker">Дата (год) выпуска:</label>
-            <input type="text" class="book_datepicker" id="book_datepicker" name="book_date" value="<?php echo $book['date']?>">
+            <input type="text" class="book_datepicker" id="book_datepicker" name="book_publish_date" value="<?php echo $book['published_date']?>">
         </div>
         <div class="field">
             <label for="book_contentpages">Страницы со статьями:</label>
@@ -259,6 +266,12 @@ if ($id != -1)
                 Выпущен ли сборник:
             </label>
             <select name="is_book_ready" id="is_book_ready"></select>
+        </div>
+        <div class="field">
+            <label>
+                Статей в сборнике:
+            </label>
+            <div><?php echo $articles_count; ?></div>
         </div>
     </fieldset>
     <div class="clear"></div>
@@ -343,7 +356,7 @@ if ($id != -1)
     <fieldset class="fields_area rounded">
         <legend>Управление</legend>
         <button type="button" class="button-large button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СБОРНИКОВ</strong></button>
-        <button type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СБОРНИК</strong></button>
+        <button type="button" class="button-large" id="button-remove" <?php echo ($articles_count>0) ? 'disabled' : ''; ?> ><strong>УДАЛИТЬ СБОРНИК</strong></button>
         <button type="submit" class="button-large" ><strong>ОБНОВИТЬ СБОРНИК</strong></button>
     </fieldset>
 </form>

@@ -1,35 +1,36 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
-
-$SID = session_id();
-if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 if (isset($_GET['id']))
 {
     $id = intval($_GET['id']);
 } else {
-    Redirect('/core/ref.articles.show.php');
+    Redirect('/core/list.articles.show.php');
 }
 
-$link = ConnectDB();
-$query = "select * from articles where id= {$id}"; // получаем СТАТЬЮ
+// Технически, ответ уже будет содержать date_add, но этой конструкцией мы добавляем еще одно поле `date_add` в ответ.
+// В результате обычного запроса из консоли (к примеру) в ответе будет два столбца с date_add
+// первый - во внутреннем формате DATE (то есть 2018-08-23), а второй в отформатированном
+//
+// ДАЛЕЕ, когда мы скажем $the_article = mysqli_fetch_assoc($res_article)
+//                                  - в date_add запишется сначала первое значение, а потом второе
 
-$res_article = mysql_query($query) or die("Невозможно получить содержимое статьи! ".$query);
+$query = "SELECT *, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM articles WHERE id= {$id}";
 
-$numarticles = @mysql_num_rows($res_article);
+$res_article = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое статьи! ".$query);
+
+$numarticles = mysqli_num_rows($res_article);
 
 if ($numarticles == 1)
 {
-    $the_article = mysql_fetch_assoc($res_article);
-// получаем авторов
-    $query = "select * from cross_aa where article=$id";
-    $res_authors = mysql_query($query) or die("Невозможно получить кросс-таблицу автор X статья! ".$query);
+    $the_article = mysqli_fetch_assoc($res_article);
 
-    $numauthors = @mysql_num_rows($res_authors);
+    // получаем авторов
+    $query = "select * from cross_aa where article={$id}";
+    $res_authors = mysqli_query($mysqli_link, $query) or die("Невозможно получить кросс-таблицу автор X статья! ".$query);
+
+    $numauthors = @mysqli_num_rows($res_authors);
     $the_loadedAuthorsNum = $numauthors;
 
     $currAuthList = "{ ";
@@ -38,7 +39,7 @@ if ($numarticles == 1)
     {
         for ($i=1;$i<=$numauthors;$i++)
         {
-            $tmp = mysql_fetch_assoc($res_authors);
+            $tmp = mysqli_fetch_assoc($res_authors);
             $currAuthList .= " $i : $tmp[author] ,";
         }
     }
@@ -57,53 +58,41 @@ if ($numarticles == 1)
     $the_loadedAuthorsNum = 0;
     $the_currentBook = -1;
     $the_currentTopic = -1;
+
+    die('<strong style="color:red; font-size: x-large">СТАТЬЯ С УКАЗАННЫМ ИДЕНТИФИКАТОРОМ В БАЗЕ НЕ ОБНАРУЖЕНА!!!</strong>');
 }
 
-
-
-CloseDB($link);
 ?>
 <!DOCTYPE HTML>
 <html>
 <head>
     <title>Редактирование статьи</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.ui.datepicker.rus.js"></script>
-    <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
-    <script type="text/javascript" src="../js/tinymce.config.js"></script>
+    <script type="text/javascript" src="../_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery.ui.datepicker.rus.js"></script>
+    <script type="text/javascript" src="../_assets/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../_assets/tinymce.config.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/core.admin.css">
     <link rel="stylesheet" type="text/css" href="articles.css">
-    <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/jquery-ui-1.10.3.custom.min.css">
 
-    <script type="text/javascript" src="../js/core.js"></script>
-    <script type="text/javascript" src="ref.articles.js"></script>
-
-    <style>
-        .hidden {
-            display: none;
-        }
-        #no_article_warning {
-            font-weight: bold;
-            font-size: 150%;
-            color: red;
-        }
-    </style>
-
+    <script type="text/javascript" src="../../frontend.js"></script>
+    <script type="text/javascript" src="../../frontend.options.js"></script>
+    <script type="text/javascript" src="articles.js"></script>
     <script type="text/javascript">
-        var isArticleExists = <?php echo $numarticles ?>;
-        var authorsList = preloadOptionsList('../core.authors/ref.authors.action.getoptionlist.php');
-        var booksList = preloadOptionsList('../core.books/ref.books.action.getoptionlist.php');
+        // Здесь, для авторов, legacyformat СТРОГО ОБЯЗАТЕЛЕН
+        var authorsList = preloadOptionsList('../core.authors/authors.action.getoptionlist.php?legacyformat');
 
-        // var booksList = preloadOptionsList('../core.books/books.action.getoptionlist.php');
+        var booksListExtended = preloadOptionsList('../core.books/books.action.getoptionlist.php');
 
-        var topicsList = preloadOptionsList('../core.topics/ref.topics.action.getoptionlist.php');
+        // nogroup - без группировки, id - с айди в []
+        var topicsListExtended = preloadOptionsList('../core.topics/topics.action.getoptionlist.php?id');
 
         var mode = 'edit';
         // loaded values for 'EDIT' mode
-        currAuthorsList = <?php echo $the_currAuthList; ?>; // getCurrentAuthorsSelection, используется только для EDIT
+        currAuthorsList = <?php echo $the_currAuthList; ?>;
         var loadedAuthorsNum = <?php echo $the_loadedAuthorsNum; ?>;
         var lastAuthorNumber = <?php echo $the_loadedAuthorsNum+1; ?>;
         var currentBook = <?php echo $the_currentBook; ?>;
@@ -112,18 +101,14 @@ CloseDB($link);
         // tinyMCE inits
         tinify(tiny_config['simple'], 'abstract_en');
         tinify(tiny_config['simple'], 'abstract_ru');
-        tinify(tiny_config['simple'], 'abstract_uk');
+        tinify(tiny_config['simple'], 'abstract_ua');
 
         tinify(tiny_config['simple'], 'refs_en');
         tinify(tiny_config['simple'], 'refs_ru');
 
         $(document).ready(function () {
-            if (0 == isArticleExists) {
-                $('#form_edit_article').hide();
-                $('#no_article_warning').show();
-            }
-
-            // onload, load authors
+            // onload
+            // load authors
             if (mode == 'edit') {
                 for (i=1; i<=loadedAuthorsNum; i++)
                 {
@@ -133,35 +118,75 @@ CloseDB($link);
                     }
                     lastAuthorNumber++;
                 }
-            } else if (mode == 'new') {} // ничего не добавляем, у нас просто работает 1 кнопка "добавить"
+            } else if (mode == 'new') {
 
-            // load books selector
-            BuildSelector('book',booksList,currentBook);
-            // BuildSelector_NoRef('book', booksList,currentBook);
-            BuildSelector('topic',topicsList,currentTopic);
+            }
+
+            // load selectors
+            BuildSelectorExtended('book', booksListExtended, "Выбрать...", currentBook);
+            BuildSelectorExtended('topic', topicsListExtended, "Выбрать...", currentTopic);
 
             // WIDGETS
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd/mm/yy',
-                minDate: '01/01/2003',
-                maxDate: '01/01/2020',
+                dateFormat: 'dd.mm.yy',
+                minDate: '01.01.2003',
+                maxDate: '01.01.2025',
                 showButtonPanel: true,
                 showOn: "both",
                 buttonImageOnly: true,
-                buttonImage: "../css/images/calendar.gif"
+                buttonImage: "../_assets/images/calendar.gif"
             });
             $("#abstract_tabs").tabs();
             $("#keywords_tabs").tabs();
 
             // bindings
-            $("#authors_list").on('click',".al-delete",function(){ $('li[data-li="'+$(this).attr('data-al')+'"]').remove(); });
+            // bind ADD AUTHOR button
             $(".al-add").on('click',function(){ InsertAuthorSelector("#authors_list",lastAuthorNumber); lastAuthorNumber++; });
+            // bind remove 'X' button for each author
+            $("#authors_list").on('click',".al-delete",function(){ $('li[data-li="'+$(this).attr('data-al')+'"]').remove(); });
+
+            $(".button-exit").on('click',function(event){
+                event.preventDefault();
+                window.location.href = '/core/list.articles.show.php';
+                return false;
+            });
+
+            $("#form_edit_article").submit(function(){
+                var bValid = true;
+                var test_authorsList = [];
+                $.each( $(".an_authors") , function(id, data) {
+                    test_authorsList.push($(data).val());
+                });
+
+                if (!($("#authors_list").find('li').size())) {
+                    // проверка количества авторов
+                    alert('Не указаны авторы!');
+                    bValid = false;
+                } else if (!isArrayUnique(test_authorsList)) {
+                    // проверка уникальности авторов в статье
+                    alert('Обнаружены неуникальные авторы! ');
+                    bValid = false;
+                } else if ($("#currfile_changed").val()==1 && !strpos($("input[name=pdffile]").val() , '.pdf')) {
+                    // проверка PDF-файла
+                    alert('Указан неправильный файл для загрузки');
+                    bValid = false;
+                } else if ( $("input[name='add_date']").val().length == 0 ) {
+                    alert('Не указана дата!');
+                    bValid = false;
+                }
+                return bValid;
+            });
+
+            $("#button-delete").on('click',function(){
+                id = $(this).attr('name');
+                window.location.href="articles.action.remove.php?id="+id;
+            });
 
             // логика кнопок
             $("#currfile_show").on('click',function(){ // show current file
-                window.location.href="../getfile.php?id="+$(this).attr('data-fileid');
+                window.location.href="../get.file.php?id="+$(this).attr('data-fileid');
             });
 
             $("#currfile_del").on('click',function(){
@@ -183,49 +208,6 @@ CloseDB($link);
                 });
             });
 
-            $(".button-exit").on('click',function(event){
-                event.preventDefault();
-                window.location.href = '/core/ref.articles.show.php';
-            });
-
-            $("#form_edit_article").submit(function(){
-                var bValid = true;
-                var test_authorsList = [];
-                $.each( $(".an_authors") , function(id, data) {
-                    test_authorsList.push($(data).val());
-                });
-
-                if (!($("#authors_list").find('li').size())) {
-                    // проверка количества авторов
-                    alert('Не указаны авторы!');
-                    bValid = false;
-                } else if (!isArrayUnique(test_authorsList)) {
-                    // проверка уникальности авторов в статье
-                    alert('Обнаружены неуникальные авторы! ');
-                    bValid = false;
-                } else if ($("#currfile_changed").val()==1 && !strpos($("input[name=pdffile]").val() , '.pdf'))
-                {
-                    alert('Указан неправильный файл для загрузки');
-                    bValid = false;
-                } else if ( $("input[name='add_date']").val().length == 0  ) {
-                    alert('Не указана дата!');
-                    bValid = false;
-                }
-                return bValid;
-            });
-
-            $("#button-delete").on('click',function(){
-                id = $(this).attr('name');
-                window.location.href="articles.action.remove.php?id="+id;
-            });
-
-            /*
-            $("#actor-scroll-top").on('click', function(){
-                $("html, body").animate({ scrollTop: 0 }, "slow");
-                return false;
-            });
-            */
-
             bindScrollTopAction("#actor-scroll-top");
 
         });
@@ -233,9 +215,6 @@ CloseDB($link);
 </head>
 
 <body>
-<div id="no_article_warning" class="hidden">
-    СТАТЬЯ С УКАЗАННЫМ ИДЕНТИФИКАТОРОМ В БАЗЕ НЕ ОБНАРУЖЕНА!!!
-</div>
 <form action="articles.action.update.php" method="post" enctype="multipart/form-data" id="form_edit_article">
     <input type="hidden" name="article_id" value="<?php echo $id; ?>">
 
@@ -243,30 +222,29 @@ CloseDB($link);
         <legend>Выпускные данные:</legend>
 
         <label for="the_topic">Тематический раздел (рубрика): </label>
-        <select name="topic" id="the_topic"></select>
+        <select name="topic" id="the_topic" required></select>
 
         <label for="udc">УДК:</label>
         <input type="text" name="udc" id="udc" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['udc']; ?>">
     </fieldset>
+
     <fieldset>
         <legend>Сборник</legend>
 
         <label for="pages">Статья опубликована на страницах
-            <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>">
+            <input type="text" id="pages" name="pages" value="<?php echo $the_article['pages']; ?>" required>
         </label>
-
 
         <label for="the_book">... сборника:
-            <select name="book" id="the_book"></select>
+            <select name="book" id="the_book" required></select>
         </label>
         <br/>
-        <label for="datepicker">Дата:
-            <input type="text" id="datepicker" name="add_date" value="<?php echo $the_article['add_date']; ?>">
+        <label for="datepicker">Дата приема на публикацию:
+            <input type="text" id="datepicker" name="date_add" value="<?php echo $the_article['date_add']; ?>" required>
         </label>
         <label for="doi">DOI:
             <input type="text" id="doi" name="doi" value="<?php echo $the_article['doi']; ?>" size="40">
         </label>
-
     </fieldset>
 
     <fieldset>
@@ -274,23 +252,25 @@ CloseDB($link);
         <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
 
         <span id="pdf-file-old">
-        <button type="button" id="currfile_show" data-fileid="<?php echo $the_file['id'];?>">Посмотреть</button>
-        <label for="currfile_text">Текущий файл:</label>
-        <input type="text" size="60" id="currfile_text" value="<?php echo $the_file['username']?>">
-        <button type="button" id="currfile_del" data-fileid="<?php echo $the_file['id'];?>">Удалить</button>
+            <button type="button" id="currfile_show" data-fileid="<?php echo $the_file['id'];?>">Посмотреть</button>
+            <label for="currfile_text">Текущий файл:</label>
+            <input type="text" size="60" id="currfile_text" value="<?php echo $the_file['username']?>">
+            <button type="button" id="currfile_del" data-fileid="<?php echo $the_file['id'];?>">Удалить</button>
         </span>
+
         <div id="pdf-file-new" class="hidden">
             <label for="newfile_input">Прикрепить НОВЫЙ PDF-файл:</label>
             <input type="file" name="pdffile" id="newfile_input" disabled>
             <input type="hidden" name="currfile_changed" id="currfile_changed" value="0">
         </div>
-
     </fieldset>
+
     <fieldset>
-        <legend>Авторы:</legend>
+        <legend id="authors_legend">Авторы:</legend>
         <ul id="authors_list" class="authors_list_in_form"></ul>
         <input type="button" class="al-add" value="Добавить автора">
     </fieldset>
+
     <fieldset>
         <legend>Название статьи на разных языках</legend>
         <table>
@@ -303,23 +283,23 @@ CloseDB($link);
                 <td><input type="text" name="title_ru" id="title_ru" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_ru'] ;?>"></td>
             </tr>
             <tr>
-                <td><label for="title_uk">Назва статті:</label></td>
-                <td><input type="text" name="title_uk" id="title_uk" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_uk'] ;?>"></td>
+                <td><label for="title_ua">Назва статті:</label></td>
+                <td><input type="text" name="title_ua" id="title_ua" size="80" class="text ui-widget-content ui-corner-all" value="<?php echo $the_article['title_ua'] ;?>"></td>
             </tr>
         </table>
     </fieldset>
 
-    <fieldset class="warning">
+    <fieldset class="hint" id="hint-main">
         <legend>Внимание!</legend>
         Пожалуйста, <strong>НЕ</strong> используйте избыточное форматирование при вводе аннотации, ключевых слов,
         списка литературы и прочего. Используйте только логическое выделение важных слов и понятий.
         Помните, что при выводе данных может возникнуть конфликт основных стилей сайта и ваших.
         <br/>
-        <strong>Очищать форматирование </strong> <u>нужно</u> при помощи кнопки 'clear formatting' в редакторе (самая правая под меню).
+        <strong>Очищать форматирование </strong> <u>нужно</u> при помощи кнопки <span class="tinymce-icon-container"><i class="mce-ico mce-i-removeformat"></i></span> в редакторе (самая правая под меню).
         <br/>
         Если вы копируете переведенный блок текста из google-translate - <strong>обязательно</strong> очищайте форматирование.
         <br/>
-        <strong>При вставке из ворда</strong> используйте кнопку 'paste as text' (самая левая под меню).
+        <strong>При вставке из ворда</strong> используйте кнопку <span class="tinymce-icon-container"><i class="mce-ico mce-i-pastetext"></i></span> (самая левая под меню).
     </fieldset>
 
     <fieldset>
@@ -334,7 +314,7 @@ CloseDB($link);
             <ul>
                 <li><a href="#abstract-en">На английском</a></li>
                 <li><a href="#abstract-ru">На русском</a></li>
-                <li><a href="#abstract-uk">На украинском</a></li>
+                <li><a href="#abstract-ua">На украинском</a></li>
             </ul>
             <div id="abstract-en">
                 <textarea id="abstract_en" name="abstract_en"><?php echo $the_article['abstract_en'] ;?></textarea>
@@ -342,8 +322,8 @@ CloseDB($link);
             <div id="abstract-ru">
                 <textarea id="abstract_ru" name="abstract_ru"><?php echo $the_article['abstract_ru'] ;?></textarea>
             </div>
-            <div id="abstract-uk">
-                <textarea id="abstract_uk" name="abstract_uk"><?php echo $the_article['abstract_uk'] ;?></textarea>
+            <div id="abstract-ua">
+                <textarea id="abstract_ua" name="abstract_ua"><?php echo $the_article['abstract_ua'] ;?></textarea>
             </div>
         </div>
     </fieldset>
@@ -353,7 +333,7 @@ CloseDB($link);
             <ul>
                 <li><a href="#keywords-en">На английском</a></li>
                 <li><a href="#keywords-ru">На русском</a></li>
-                <li><a href="#keywords-uk">На украинском</a></li>
+                <li><a href="#keywords-ua">На украинском</a></li>
             </ul>
             <div id="keywords-en">
                 <textarea id="keywords_en" name="keywords_en" cols="80" rows="6"><?php echo $the_article['keywords_en'] ;?></textarea>
@@ -361,11 +341,18 @@ CloseDB($link);
             <div id="keywords-ru">
                 <textarea id="keywords_ru" name="keywords_ru" cols="80" rows="6"><?php echo $the_article['keywords_ru'] ;?></textarea>
             </div>
-            <div id="keywords-uk">
-                <textarea id="keywords_uk" name="keywords_uk" cols="80" rows="6"><?php echo $the_article['keywords_uk'] ;?></textarea>
+            <div id="keywords-ua">
+                <textarea id="keywords_ua" name="keywords_ua" cols="80" rows="6"><?php echo $the_article['keywords_ua'] ;?></textarea>
             </div>
         </div>
     </fieldset>
+
+    <fieldset class="hint" id="hint-references">
+        <legend>Совет:</legend>
+        Для списка литературы лучше использовать немаркированный (<span class="tinymce-icon-container"><i class="mce-ico mce-i-bullist"></i></span>)
+        или маркированный (<span class="tinymce-icon-container"><i class="mce-ico mce-i-numlist"></i></span>) список.
+    </fieldset>
+
     <fieldset>
         <legend>Источники: </legend>
         <label for="refs_ru"><strong>Список литературы:</strong></label><br>

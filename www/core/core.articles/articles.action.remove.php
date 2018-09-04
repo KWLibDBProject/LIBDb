@@ -1,19 +1,18 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
-$result['message'] = '';
-$result['error'] = 0;
+$result = [
+    'message'   => '',
+    'error'     => 0
+];
+
 $article_id = IsSet($_GET['id']) ? intval($_GET['id']) : Die("No id!");
-
-$link = ConnectDB();
 
 // получить информацию о ПДФке, относящейся к статье
 $q = "SELECT id, pdfid FROM articles WHERE id = {$article_id}";
-$qr = mysql_query($q);
-$qf = mysql_fetch_assoc($qr);
+$qr = mysqli_query($mysqli_link, $q);
+$qf = mysqli_fetch_assoc($qr);
 $pdfid = $qf['pdfid'];
 
 // удалить пдфку из filestorage
@@ -21,32 +20,27 @@ FileStorage::removeFileById($pdfid);
 
 // удалить связи СТАТЬЯ - АВТОРЫ из cross_aa
 $q = "DELETE FROM cross_aa WHERE article = {$article_id}";
-mysql_query($q, $link) or Die("Death at $q");
+mysqli_query($mysqli_link, $q) or Die("Death at $q");
 
 // только теперь удалить саму статью
 $q = "DELETE FROM articles WHERE id = {$article_id}";
-mysql_query($q, $link) or Die("Death at {$q}");
+mysqli_query($mysqli_link, $q) or Die("Death at {$q}");
 
 kwLogger::logEvent('Delete', 'articles', $article_id, "Article removed, id was: {$article_id}" );
 
-CloseDB($link);
+$template_dir = '$/core/_templates';
+$template_file = "ref.all_timed_callback.html";
 
-if ($result['error'] == 0) {
-    $override = array(
-        'time' => 10,
-        'target' => '/core/ref.articles.show.php',
-        'buttonmessage' => 'Вернуться к списку статей',
-        'message' => 'Статья удалена из базы данных'
-    );
-} else {
-    $override = array(
-        'time' => 10,
-        'target' => '/core/ref.articles.show.php',
-        'buttonmessage' => 'Вернуться к списку статей',
-        'message' => $result['message']
-    );
-}
-$tpl = new kwt('../ref.all.timed.callback.tpl');
-$tpl->override($override);
-$tpl->out();
-?>
+$template_data = array(
+    'time'          => Config::get('callback_timeout') ?? 15,
+    'target'        => '../list.articles.show.php',
+    'button_text'   => 'Вернуться к списку статей',
+);
+
+$template_data['message']
+    = ($result['error'] == 0)
+    ? ('Статья удалена из базы данных')
+    : $result['message'];
+
+echo websun_parse_template_path($template_data, $template_file, $template_dir);
+

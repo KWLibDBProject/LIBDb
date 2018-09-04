@@ -1,28 +1,33 @@
 <?php
-// функции работы с базой (@todo: синглтон класс)
 require_once('config/config.php');
 
+/**
+ *
+ * @return mysqli
+ */
 function ConnectDB()
 {
-    global $CONFIG;
-    $link = mysql_connect($CONFIG['hostname'], $CONFIG['username'], $CONFIG['password']);
-    mysql_select_db($CONFIG['database'], $link) or die("Could not select db: " . mysql_error());
-    mysql_query("SET NAMES utf8", $link);
+    $db_config = Config::get('database');
+
+    $link = mysqli_connect($db_config['hostname'], $db_config['username'], $db_config['password'], $db_config['database'], $db_config['port'])
+            or die("Can't establish connection to '{$db_config['hostname']}' for user '{$db_config['username']}' at '{$db_config['database']}' database");
+    mysqli_query($link, "SET NAMES utf8");
     return $link;
 }
 
-function CloseDB($link) // useless
-{
-    mysql_close($link) or Die("Не удается закрыть соединение с базой данных.");
-}
-
+/**
+ *
+ * @param $array
+ * @return array
+ */
 function DB_EscapeArray( $array )
 {
+    global $mysqli_link;
     $result = array();
     foreach ($array as $key => $keyvalue) {
         switch (gettype( $keyvalue )) {
             case 'string': {
-                $result [ $key ] = mysql_real_escape_string( $keyvalue );
+                $result [ $key ] = mysqli_real_escape_string($mysqli_link, $keyvalue );
                 break;
             }
             case 'array': {
@@ -54,6 +59,7 @@ function MakeInsertEscaped($array, $table, $where = "")
 
 function MakeInsert($arr, $table, $where="")
 {
+    global $mysqli_link;
     $query = "INSERT INTO $table ";
 
     $keys = "(";
@@ -68,6 +74,7 @@ function MakeInsert($arr, $table, $where="")
 
 function MakeUpdateEscaped($array, $table, $where = "")
 {
+    global $mysqli_link;
     $arr = DB_EscapeArray( $array );
     $query = "UPDATE $table SET ";
     foreach ($arr as $key=>$val)
@@ -81,6 +88,7 @@ function MakeUpdateEscaped($array, $table, $where = "")
 
 function MakeUpdate($arr, $table, $where="")
 {
+    global $mysqli_link;
     $query = "UPDATE $table SET ";
     foreach ($arr as $key=>$val)
     {
@@ -93,20 +101,23 @@ function MakeUpdate($arr, $table, $where="")
 
 function DBLoginCheck($login, $password)
 {
-    global $CONFIG;
+    global $mysqli_link;
     // возвращает массив с полями "error" и "message"
-    $link = ConnectDB();
+
     // логин мы передали точно совершенно, мы это проверили в скрипте, а пароль может быть и пуст
     // а) логин не существует
     // б) логин существует, пароль неверен
     // в) логин существует, пароль верен
-    $userlogin = mysql_real_escape_string(mb_strtolower($login));
+    $userlogin = mysqli_real_escape_string($mysqli_link, mb_strtolower($login));
     $q_login = "SELECT `md5password`,`permissions`,`id` FROM users WHERE login = '$userlogin'";
-    if (!$r_login = mysql_query($q_login)) { /* error catch */ }
 
-    if (mysql_num_rows($r_login)==1) {
+    $r_login = mysqli_query($mysqli_link, $q_login);
+
+    if (!$r_login) { /* error catch */ }
+
+    if (mysqli_num_rows($r_login)==1) {
         // логин существует
-        $user = mysql_fetch_assoc($r_login);
+        $user = mysqli_fetch_assoc($r_login);
         if ($password === $user['md5password']) {
             // пароль верен
             $return = array(
@@ -114,7 +125,7 @@ function DBLoginCheck($login, $password)
                 'message'       => 'User credentials correct! ',
                 'id'            => $user['id'],
                 'permissions'   => $user['permissions'],
-                'url'           => 'admin.php',
+                'url'           => 'admin.actions.php',
                 'username'      => $userlogin
             );
             kwLogger::logEvent('login', 'userlist', $userlogin, 'User logged!');
@@ -122,7 +133,7 @@ function DBLoginCheck($login, $password)
             // пароль неверен
             $return = array(
                 'error'         => 1,
-                'message'       => 'Пароль не указан или неверен! Проверьте раскладку клавиатуры! ',
+                'message'       => 'Пароль неверен! Проверьте раскладку клавиатуры! ',
             );
             kwLogger::logEvent('login', 'userlist', $userlogin, 'Error: password incorrect');
         }
@@ -137,23 +148,5 @@ function DBLoginCheck($login, $password)
     return $return;
 }
 
-function DBIsTableExists($table)
-{
-    return (mysql_query("SELECT 1 FROM $table WHERE 0")) ? true : false;
-}
 
 
-function DBGetCount($field, $table, $condition = "")
-{
-    $cond  = ($condition !== "")
-        ? " WHERE {$condition}"
-        : "";
-    $query = "SELECT COUNT({$field}) AS rowcount FROM {$table} {$cond}";
-    if ($result = mysql_query($query)) {
-        $row = mysql_fetch_assoc($result);
-        $ret = $row['rowcount'];
-    } else {
-        $ret = NULL;
-    }
-    return $ret;
-}

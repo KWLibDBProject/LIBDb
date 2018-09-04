@@ -1,20 +1,13 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
-
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 $id = intval($_GET["id"]);
 
-$table = 'news';
-$result = array();
+$result = [];
 
-$link = ConnectDB();
-
-
-$q = "DELETE FROM {$table} WHERE (id={$id}) ";
-if ($r = mysql_query($q)) {
+$query = "DELETE FROM news WHERE (id={$id}) ";
+if ($r = mysqli_query($mysqli_link, $query)) {
     // запрос удаление успешен
     $result["error"] = 0;
     $result['message'] = 'Новость удалена.';
@@ -26,20 +19,17 @@ if ($r = mysql_query($q)) {
     $result['message'] = 'Ошибка удаления из базы данных!';
 }
 
-
-CloseDB($link);
-
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
-    $override = array(
-        'time' => 15,
-        'target' => '../ref.news.show.php',
-        'buttonmessage' => 'Вернуться к списку новостей',
-        'message' => $result['message']
+    $template_dir = '$/core/_templates';
+    $template_file = "ref.all_timed_callback.html";
+
+    $template_data = array(
+        'time'          => Config::get('callback_timeout') ?? 15,
+        'target'        => '/core/list.news.show.php',
+        'button_text'   => 'Вернуться к списку новостей',
+        'message'       => $result['message']
     );
-    $tpl = new kwt('../ref.all.timed.callback.tpl');
-    $tpl->override($override);
-    $tpl->out();
+    echo websun_parse_template_path($template_data, $template_file, $template_dir);
 }
-?>

@@ -1,43 +1,74 @@
 <?php
-require_once('core/core.php');
-require_once('core/core.db.php');
-require_once('core/core.kwt.php');
-require_once('frontend.php');
-/*  вызов нужного шаблона и его движка. ВАЖНО: такую же строчку надо поменять в ajax.php
-    путь до каталога шаблонов определяется во включаемом файле движка шаблона */
-require_once('template.bootstrap24.php');
+define('__ROOT__', __DIR__);
+define('__ACCESS_MODE__', 'frontend');
+
+require_once (__ROOT__ . '/core/__required.php');
+require_once 'frontend.php';
 
 $site_language = GetSiteLanguage();
 
-// init
 // defaults fields and variables
 $maincontent_html = '';
 $maincontent_js = '';
 $maincontent_css = '';
-// init template override array
-$override = array();
 
-// load default index file for template, based on language
-$tpl_index = new kwt($tpl_path."/index.{$site_language}.html", '<!--{', '}-->' );
+$main_template_data = array();
 
-$link = ConnectDB();
+$main_theme_name    = Config::get('frontend/theme/frontend_template_name');
+$main_theme_dir     = Config::get('frontend/theme/template_dir');
 
-// init template engine
-$template_engine = new Template($tpl_path, $site_language);
+$main_template_file = "index.{$site_language}.html";
 
-/* Override variables in INDEX.*.HTML template */
-$override['template_path'] = $tpl_path; // template directory name (not a path!), defined in template.xxx.php
-$override['rubrics']    = $template_engine->getTopicsTree();
-$override['books']      = $template_engine->getBooks();
-$override['banners']    = $template_engine->getBanners();
-$override['last_news_shortlist'] = $template_engine->getLastNews(3);
+/**
+ *  Устанавливаем значения для основного шаблона | Override variables in INDEX.*.HTML template
+ *
+ *  ВОЗМОЖНО это надо делать через $main_template = new Template(filename, filepath);
+ *
+ *  а потом
+ *
+ *  $main_template->set('template_name', $main_theme_name);
+ *
+ *  или
+ *
+ *  $main_template->set('inner_html', $subtemplate->render() )
+ *
+*/
+$main_template_data['template_name'] = $main_theme_name; // template name , defined in config
+$main_template_data['template_theme_dir'] = $main_theme_dir;
 
-/* insert menu from template */
-$override['main_menu_content'] = $template_engine->getMenu();
+/** META  */
+$main_template_data['meta'] = Config::get('frontend_meta');
+$main_template_data['meta']['copyright'] = Config::get('meta/copyright', '');
 
-// Main switch
+/**
+ * Main switch
+ */
 $fetch  = at( $_GET, 'fetch', '' );
 $with   = at( $_GET, 'with' , '' );
+
+/**
+ * ВАЖНО !!!
+ *
+ * Так как шаблоны ETKS и AAIT в основном совпадают (различия только в "рамке картины", в некоторых элементах
+ * основного шаблона, а внутренний контент и шаблоны не отличаются, имеет смысл создать шаблон-родитель в папке
+ * `template`, к элементам которого мы будем обращаться, генерируя "суб-контент".
+ *
+ * Таким образом, снижается нагрузка на своевременное обновление обоих шаблонов.
+ *
+ * В будущем, возможно, стоит перейти на класс WebSunTemplater, который должен выяснять существование нужного ему файла
+ * в папке конкретного шаблона и, если его не находит - обращаться к шаблону-родителю.
+ *
+ * В случае же НЕОБХОДИМОСТИ разделения к примеру, страницы /template/page/default на две разных в зависимости от ETKS или AAIT
+ * нам нужно будет
+ *
+ * 1. исправить пути в секции switch/switch
+ * 2. скопировать файлы template/page/default в template.etks/page/default И template.aait/page/default
+ * 3. соответственно изменить эти шаблоны ИНДИВИДУАЛЬНО
+ *
+ * Путь к ТЕМЕ находится в переменной $main_theme_dir
+ *
+ *
+ */
 
 // А теперь надо загрузить контент в основной блок
 switch ($fetch) {
@@ -46,101 +77,129 @@ switch ($fetch) {
         switch ($with) {
             case 'info': {
                 /*расширенная информация по автору + список его статей + фото */
-                $filename = $tpl_path.'/fetch=authors/with=info/f_authors+w_info.'.$site_language;
-                $id = intval($_GET['id']);
+                $id = intval($_GET['id'] ?? 0);
+
+                //@todo: не обрабатывается ситуация "автора с ID нет в БД"
+
+                $subtemplate_dir = "$/template/authors/info/";
+                $subtemplate_filename = "authors__info";
+
                 $author_information = LoadAuthorInformation_ById($id, $site_language);
-                $author_publications = $template_engine->getArticles_ByAuthor($id);
-                /* HTML Template */
-                $inner_html = new kwt($filename.".html");
-                $inner_html->override( array(
+                $author_publications = LoadArticles_ByAuthor($id, $site_language);
+
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
                     'author_publications'   => $author_publications,
-                    'author_publications_display_class' => (empty($author_publications)) ? ' hidden ' : ' ',
-                    'author_name'           => $author_information['author_name'],
-                    'author_title'          => $author_information['author_title'],
-                    'author_email'          => $author_information['author_email'],
-                    'author_workplace'      => $author_information['author_workplace'],
-                    'author_bio'            => $author_information['author_bio'],
-                    'author_bio_display_class' => (empty($author_information['author_bio'])) ? ' hidden ' : ' ',
-                    'author_photo_id'       => $author_information['author_photo_id'],
-                    'author_photo_link'     => ($author_information['author_photo_id'] == -1) ? "/".$tpl_path."/images/no_photo_{$site_language}.png" : "core/getimage.php?id={$author_information['author_photo_id']}"
-                ));
-                $maincontent_html = $inner_html->get();
 
-                /* JS Template */
-                $inner_js = new kwt($filename.".js");
-                $inner_js->override( array(
-                        "author_is_es" => ($author_information['author_is_es'])==1 ? 'block' : 'none' )
-                );
-                $maincontent_js = $inner_js->get();
+                    'author_name'           => $author_information['author_name'] ?? '',
+                    'author_title'          => $author_information['author_title'] ?? '',
 
-                /* CSS Template */
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                    'author_email'          => $author_information['author_email'] ?? '',
+                    'author_orcid'          => $author_information['author_orcid'] ?? '',
+
+                    'author_workplace'      => $author_information['author_workplace'] ?? '',
+                    'author_bio'            => $author_information['author_bio'] ?? '',
+                    'author_photo_id'       => $author_information['author_photo_id'] ?? -1,
+                    'author_photo_link'
+                            => (($author_information['author_photo_id'] ?? -1) == -1)
+                                ?  "/template/_assets/images/no_photo_{$site_language}.png"
+                                :  "core/get.image.php?id={$author_information['author_photo_id']}"
+                ];
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+
+                /** single CSS style file */
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+
                 break;
             }
             case 'all' : {
-                // список ВСЕХ авторов - для поисковых систем
-                // фио, титул, email -> link to author page
-                $filename = $tpl_path.'/fetch=authors/with=all/f_authors+w_all.'.$site_language;
+                // список ВСЕХ авторов - для поисковых систем: фио, титул, email -> link to author page
+                $subtemplate_dir = "$/template/authors/all/";
+                $subtemplate_filename = "authors__all";
 
-                $all_authors_list = $template_engine->getAuthors_PlainList('');
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
+                    'site_language'         =>  $site_language,
+                    'all_authors_list'      =>  LoadAuthors_ByLetter('', $site_language, 'no')
+                ];
 
-                $inner_html = new kwt($filename.".html");
-                $inner_html->override( array (
-                    'all_authors_list' => $all_authors_list
-                ));
-                $maincontent_html = $inner_html->get();
+                // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.
+                // поэтому мы подставляем соотв. файл шаблона в зависимости от - пусты или нет данные?
+                // можно было бы использовать ТРИ файла с разными строками, но я решил чуть усложнить шаблон,
+                // но обойтись одним файлом с проверкой языка сайта - и разными сообщениями
 
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->get();
+                $subtemplate_filename_html
+                    = (! empty($inner_html_data['all_authors_list']) )
+                    ? "{$subtemplate_filename}.{$site_language}.html"
+                    : "authors__all__notfound.html";
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                $maincontent_html = websun_parse_template_path($inner_html_data, $subtemplate_filename_html, $subtemplate_dir);
+
+                /** single CSS style file */
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+
                 break;
             }
             case 'estaff' : {
-                $filename = $tpl_path.'/fetch=authors/with=estaff/f_authors+w_estaff.'.$site_language;
+                $subtemplate_dir = "$/template/authors/estaff/";
+                $subtemplate_filename = "authors__estaff";
 
-                /* HTML Template */
-                $inner_html = new kwt($filename.".html");
-                $inner_html->override( array (
+                /**
+                 * HTML, warning, MAGIC NUMBERS (see table `ref_estaff_roles`)
+                 */
+                $inner_html_data = [
                     // почетный редактор = 7
-                    'estaff_honorary_editor'    => $template_engine->getAuthors_EStaffList(7),
+                    'honorary_editor'               => getAuthors_EStaffList(7, $site_language),
+
                     // главный редактор = 5
-                    'estaff_main_editor'        => $template_engine->getAuthors_EStaffList(5),
+                    'chief_editor'                  => getAuthors_EStaffList(5, $site_language),
+
                     // замглавного редактора = 4
-                    'estaff_main_subeditors'    => $template_engine->getAuthors_EStaffList(4),
+                    'chief_editor_assistants'       => getAuthors_EStaffList(4, $site_language),
+
                     // редакционная коллегия = 3
-                    'estaff_local_editors'      => $template_engine->getAuthors_EStaffList(3),
+                    'editorial_board_local'         => getAuthors_EStaffList(3, $site_language),
+
                     // международная редакционная коллегия = 1
-                    'estaff_remote_editors'     => $template_engine->getAuthors_EStaffList(1),
-                    // редакторы = 6
-                    'estaff_simple_editors'     => $template_engine->getAuthors_EStaffList(6),
+                    'editorial_board_international' => getAuthors_EStaffList(1, $site_language),
+
+                    // редакторы = 6 (в шаблоне таких нет и в базе тоже)
+                    'other_editors'                 => getAuthors_EStaffList(6, $site_language),
+
                     // ответственный секретарь = 8
-                    'estaff_assistant_editor'   =>  $template_engine->getAuthors_EStaffList(8),
-                ));
-                $maincontent_html = $inner_html->getcontent();
+                    'assistant_editor'              => getAuthors_EStaffList(8, $site_language),
+                ];
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                /* JS Template */
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->getcontent();
+                /** single CSS style file */
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
-                /* CSS Template */
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->getcontent();
                 break;
             }
             case 'list' : {
-                $filename = $tpl_path.'/fetch=authors/with=list/f_authors+w_list.'.$site_language;
+                $subtemplate_dir = "$/template/authors/list/";
+                $subtemplate_filename = "authors__list";
 
-                $inner_html = new kwt($filename.".html");
-                $maincontent_html = $inner_html->get();
+                /**
+                 * HTML - used AJAX loaded data
+                 */
+                $inner_html_data = [];
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->get();
+                /**
+                 * Здесь можно использовать единый JS-файл с замещаемым значением, но я оставлю так - в файле используется
+                 * select/option с дефолтным значением
+                 */
+                $inner_js_data = [ 'site_language' =>  $site_language ];
+                $maincontent_js = websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                /** single CSS style file */
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+
                 break;
             }
         } // end $with authors switch
@@ -149,171 +208,184 @@ switch ($fetch) {
     case 'articles' : {
         switch ($with) {
             case 'extended' : {
-                $filename = $tpl_path.'/fetch=articles/with=extended/f_articles+w_extended.'.$site_language;
+                $subtemplate_dir = "$/template/articles/extended/";
+                $subtemplate_filename = "articles__extended";
 
-                $inner_html = new kwt($filename.'.html');
-                $maincontent_html = $inner_html->get();
+                /**
+                 * HTML
+                 */
+                $inner_html_data = []; // результаты поиска загружаются аяксом, а в шаблонах никаких замещаемых переменных нет (ну, кроме языка)
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                $inner_js = new kwt($filename.'.js');
-                $maincontent_js = $inner_js->get();
+                /**
+                 * Здесь можно использовать единый JS-файл с замещаемым значением, но я оставлю так - в файле генерируется
+                 * select/option с дефолтным значением (пока везде на английском, но это, возможно, надо будет изменить)
+                 */
+                $inner_js_data = [ 'site_language' =>  $site_language ];
+                $maincontent_js = websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
                 break;
             }
             case 'topic' : {
-                $filename = $tpl_path.'/fetch=articles/with=topic/f_articles+w_topic.'.$site_language;
-                $id = intval($_GET['id']);
+                $id = intval($_GET['id']) ?? 0;
 
-                $inner_html = new kwt($filename.'.html');
-                $inner_html->override(array(
-                    'topic_title' => $template_engine->getTopicTitle($id)
-                ));
-                $maincontent_html = $inner_html->get();
+                $subtemplate_dir = "$/template/articles/topic/";
+                $subtemplate_filename = "articles__topic";
 
-                $inner_js = new kwt($filename.'.js', '/*' ,'*/');
-                $inner_js->override( array( "plus_topic_id" => "+".$id ) );
-                $maincontent_js = $inner_js->get();
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
+                    'topic_data'    =>  LoadTopicInfo($id, $site_language),
+                    'topic_id'      =>  $id,
+                    'site_language' =>  $site_language
+                ];
+                // результаты поиска загружаются аяксом,
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                /** используются разные JS-файлы
+                 * можно было бы сделать один и передавать ему заменяемую переменную, но это лишний код для её генерации на основе языка
+                 */
+                $maincontent_js = websun_parse_template_path([], "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
+
                 break;
             }
             case 'book' : {
-                $id = intval($_GET['id']);
-                $filename = $tpl_path.'/fetch=articles/with=book/f_articles+w_book.'.$site_language;
+                $id = intval($_GET['id']) ?? 0;
 
-                $inner_html = new kwt($filename.'.html');
-                $book_row = LoadBookInfo($id);
+                $subtemplate_dir = "$/template/articles/book/";
+                $subtemplate_filename = "articles__book";
 
-                $inner_html->override( array (
-                    'file_cover'    => $book_row['file_cover'],
-                    'file_title_ru' => $book_row['file_title_ru'],
-                    'file_title_en' => $book_row['file_title_en'],
-                    'file_toc_ru'   => $book_row['file_toc_ru'],
-                    'file_toc_en'   => $book_row['file_toc_en'],
-                    'book_title'    => $book_row['book_title'],
-                    'book_year'     => $book_row['book_year']
-                ));
-                $maincontent_html = $inner_html->get();
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
+                    'site_language'     =>  $site_language,
+                    'book_id'           =>  $id,
+                    'book_info'         =>  LoadBookInfo($id),
+                    'template_folder'   =>  $main_theme_dir
+                ];
 
-                $inner_js = new kwt($filename.'.js', '/*', '*/');
-                $inner_js->override( array( "plus_book_id" => "+".$id ) );
-                $maincontent_js = $inner_js->get();
+                // результаты поиска загружаются аяксом,
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                /* JS */
+                $maincontent_js = websun_parse_template_path([], "{$subtemplate_filename}.{$site_language}.js", $subtemplate_dir);
+
                 break;
             }
             case 'info' : {
                 $id = intval($_GET['id']);
-                $filename = $tpl_path.'/fetch=articles/with=info/f_articles+w_info.'.$site_language;
 
-                $article_info = LoadArticleInformation_ById($id, $site_language); // EQ $article_info = LoadArticles_ByQuery(array('aid' => $id ) , $site_language);
-                $article_authors = $template_engine->getAuthors_InArticle($article_info['authors'], 'with-email');
-                //@warning: мы вставили в BuildQuery еще несколько полей (article_abstract, article_refs, article_keywords), при поиске по keywords может (!) возникнуть бага -- тесты!
-                $inner_html = new kwt($filename.'.html', '<!--{%', '%}-->');
-                $inner_html->override( array (
-                    'article-title'         => $article_info['article_title'],
-                    'article-abstract'      => $article_info['article_abstract'],
-                    'article-authors-list'  => $article_authors, // список авторов, писавших статью
-                    'article-keywords'      => $article_info['article_keywords'],
-                    'article-book-title'    => $article_info['book_title'],
-                    'article-book-year'     => $article_info['book_year'],
-                    'article-pdfid'         => $article_info['pdfid'],
-                    'article-refs'          => $article_info['article_refs'],
-                    'article-doi'           => $article_info['doi'],
-                    'article-pdf-last-download-date' => $article_info['pdf_last_download_date']
-                ));
-                $override['meta_keywords'] = $article_info['keywords']; // GLOBAL KEYWORDS
-                $maincontent_html = $inner_html->get();
+                $subtemplate_dir = "$/template/articles/info/";
+                $subtemplate_filename = "articles__info";
 
-                $inner_js = new kwt($filename.'.js', '/*', '*/');
-                $inner_js->override( array( "plus_book_id" => "+".$id ) );
-                $maincontent_js = $inner_js->get();
+                /**
+                 * HTML
+                 */
+                $article_info = LoadArticles_ByQuery(array('article_id' => $id ) , $site_language)[ $id ];
 
-                $inner_css = new kwt($filename.".css", '/*', '*/');
-                $inner_css->override( array(
-                    'article-doi-visibility' => ($article_info['doi']=='') ? 'display:none;' : ''
-                ));
-                $maincontent_css = $inner_css->get();
+                // список авторов, писавших статью
+                $article_authors = $article_info['authors'];
+
+                $inner_html_data = [
+                    'article_title'         => $article_info['article_title'] ?? '',
+                    'article_abstract'      => $article_info['article_abstract'] ?? '',
+                    'article_authors_list'  => $article_authors,
+                    'article_keywords'      => $article_info['article_keywords'] ?? '',
+                    'article_book_title'    => $article_info['book_title'] ?? '',
+                    'article_book_year'     => $article_info['book_year'] ?? '',
+                    'article_pdfid'         => $article_info['pdfid'] ?? '',
+                    'article_refs'          => $article_info['article_refs'] ?? '',
+                    'article_doi'           => $article_info['doi'] ?? '',
+                    'article_pdf_last_download_date'
+                                            => $article_info['pdf_last_download_date'],
+
+                    'site_language'         => $site_language
+                ];
+
+                if (isset($article_info['keywords']) && $article_info['keywords'] != '')
+                    $main_template_data['meta']['keywords'] = $article_info['keywords'];
+
+                $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+
+                /** single CSS file */
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
+
                 break;
             }
             case 'all' : {
                 // список ВСЕХ СТАТЕЙ - для поисковых систем -- фио, титул, email -> link to author page
-                $filename = $tpl_path.'/fetch=articles/with=all/f_articles+w_all.'.$site_language;
-                $inner_html = new kwt($filename.".html");
-                $inner_html->override( array (
-                    'all_articles_list' => $template_engine->getArticles_PlainList(array())
-                ));
-                $maincontent_html = $inner_html->get();
 
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->get();
+                $subtemplate_dir = "$/template/articles/all/";
+                $subtemplate_filename = "articles__all";
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->get();
+                /**
+                 * HTML
+                 */
+                $inner_html_data = [
+                    'all_articles_list' => getArticles_PlainList([], $site_language)
+                ];
+
+                // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.
+                // поэтому мы подставляем соотв. файл шаблона в зависимости от - пусты или нет данные?
+                // можно было бы использовать ТРИ файла с разными строками, но я решил чуть усложнить шаблон,
+                // но обойтись одним файлом с проверкой языка сайта - и разными сообщениями
+                $subtemplate_filename_html
+                    = (! empty($inner_html_data['all_articles_list']) )
+                    ? "{$subtemplate_filename}.{$site_language}.html"
+                    : "articles__all__notfound.html";
+
+                $maincontent_html = websun_parse_template_path($inner_html_data, $subtemplate_filename_html, $subtemplate_dir);
+
                 break;
             }
         } // end $with articles switch
         break;
     } // end /articles/* case
-    case 'page' : {
-        /* секция вывода статических или условно-статических страниц */
-        $page_alias = ($with === '') ? 'default' : $with;
-        $maincontent_html = $template_engine->getStaticPage($page_alias);
-
-        /* CSS Template */
-        $filename = $tpl_path.'/fetch=page/page.'.$site_language;
-        $inner_css = new kwt($filename.".css");
-        $maincontent_css = $inner_css->get();
-        break;
-    } // case /page
     case 'news' : {
         /* секция вывода новостей */
         switch ($with) {
             case 'the' : {
-                $id = 0;
+                /* конкретная новость */
+
                 if (isset($_GET['id'])) {
                     $id = intval($_GET['id']);
                 } else {
                     Redirect('?fetch=news&with=list');
                 }
 
-                $filename = $tpl_path.'/fetch=news/with=the/f_news+w_the.'.$site_language;
-                $inner_html = new kwt($filename.".html");
+                $subtemplate_dir = "$/template/news/the/";
+                $subtemplate_filename = "news__the";
 
                 $the_news_item = LoadNewsItem($id, $site_language);
 
-                $inner_html->override( array (
-                    'news_item_title'   => $the_news_item['title'],
-                    'news_item_date'    => $the_news_item['date_add'],
-                    'news_item_text'    => $the_news_item['text']
-                ));
-                $maincontent_html = $inner_html->getcontent();
+                //@todo: Почему не просто 'news_item' => $the_news_item с доступом по news_item.title / publish_date / text?
+                $local_template_data = [
+                    'news_item_title'   => $the_news_item['title'] ?? '',
+                    'news_item_date'    => $the_news_item['publish_date'] ?? '',
+                    'news_item_text'    => $the_news_item['text'] ?? ''
+                ];
+                $maincontent_html = websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                $inner_js = new kwt($filename.".js");
-                $maincontent_js = $inner_js->getcontent();
+                /** single CSS file */
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->getcontent();
                 break;
             }
             case 'list' : {
                 /* список новостей */
-                $filename = $tpl_path.'/fetch=news/with=list/f_news+w_list.'.$site_language;
 
-                $news_list_toc = LoadNewsListTOC($site_language);
-                // $news_list_toc will be used in php-section of template loaded file
+                $subtemplate_dir = "$/template/news/list/";
+                $subtemplate_filename = "news__list";
 
-                $inner_html = new kwt($filename.'.html');
-                $maincontent_html = $inner_html->getcontent();
+                $local_template_data = [
+                    'news_list' => LoadNewsListTOC($site_language)
+                ];
+                $maincontent_html = websun_parse_template_path($local_template_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
 
-                $inner_js = new kwt($filename.'.js');
-                $maincontent_js = $inner_js->getcontent();
-
-                $inner_css = new kwt($filename.".css");
-                $maincontent_css = $inner_css->getcontent();
+                /** single CSS file */
+                $maincontent_css = websun_parse_template_path([], "{$subtemplate_filename}.css", $subtemplate_dir);
 
                 break;
             }
@@ -321,48 +393,95 @@ switch ($fetch) {
         break;
     } // end /news/* case
 
-    default : {
-        // это статическая страница "о журнале" + свидетельство + список статей в последнем выпуске
-        $filename = $tpl_path.'/default/default.'.$site_language;
+    case 'page' : {
+        /* секция вывода статических или условно-статических страниц */
+        $page_alias = ($with === '') ? 'default' : $with;
 
-        $inner_html = new kwt($filename.".html");
-        $inner_html->override( array(
-            'static_page_content'   => $template_engine->GetStaticPage('about')
-        ));
+        $subtemplate_dir = "$/template/page/static/";
+        $subtemplate_filename = "page__static";
+
+        /**
+         * HTML
+         */
+        $inner_html_data = [
+            'site_language' =>  $site_language,
+            'page_alias'    =>  $page_alias,
+            'page_data'     =>  LoadStaticPage($page_alias, $site_language)
+        ];
+
+        $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+
+        break;
+    } // case /page
+
+    default : {
+        // это статическая страница "о журнале" + список статей в последнем выпуске
+        $subtemplate_dir = "$/template/page/default/";
+        $subtemplate_filename = "default";
 
         // load last book
+
         $last_book = LoadLastBookInfo();
+        $last_book_id = $last_book['id'] ?? FALSE;
 
-        if (count($last_book) != 0) {
-            $inner_html->override( array(
-                'last_book_content'     => $template_engine->getArticlesList(
-                    array(
-                        'book'  =>  $last_book['id']
-                    ), 'no'),
-                'last_book_title_string'=> "{$last_book['title']}, {$last_book['year']}",
-                'last_book_cover_id'    => $last_book['file_cover'],
-                'last_book_title_ru_id'    => $last_book['file_title_ru'],
-                'last_book_title_en_id'    => $last_book['file_title_en'],
-                'last_book_toc_ru_id'      => $last_book['file_toc_ru'],
-                'last_book_toc_en_id'   => $last_book['file_toc_en'],
-            ));
-        }
-        $maincontent_html = $inner_html->get();
+        $last_book_articles_list = $last_book_id ? getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, 'no') : [];
 
-        $inner_js = new kwt($filename.".js");
-        $maincontent_js = $inner_js->get();
+        $page_data = LoadStaticPage('about', $site_language);
 
-        /* CSS Template */
-        $inner_css = new kwt($filename.".css");
-        $maincontent_css = $inner_css->get();
+        /**
+         * HTML
+         */
+        $inner_html_data = [
+            'site_language'         =>  $site_language,
+            'page_alias'            =>  'about',
+            'page_data'             =>  $page_data,
+            'articles_list'         =>  $last_book_articles_list,
+            'last_book'             =>  $last_book,
+            'template_folder'       =>  $main_theme_dir
+        ];
+
+        $maincontent_html = websun_parse_template_path($inner_html_data, "{$subtemplate_filename}.{$site_language}.html", $subtemplate_dir);
+
+        /** JS file */
+        $inner_js_data = [ 'site_language' => $site_language ];
+        $maincontent_js = websun_parse_template_path($inner_js_data, "{$subtemplate_filename}.js", $subtemplate_dir);
+
         break;
     } // end default case
 
 } // end global (fetch) switch
 
-$override['content_jquery'] = $maincontent_js;
-$override['content_html'] = $maincontent_html;
-$override['content_css'] = $maincontent_css;
+/**
+ * Заполняем значения для главного шаблона
+ */
 
-$tpl_index->override($override);
-$tpl_index->out();
+/**   * Блок "Тематика" (нужно возвращать ARRAY, который разбирается в шаблоне) */
+$main_template_data['rubrics']    = printTopicsTree($site_language);    //@todo: когда-нибудь это надо отрефакторить
+
+/**  * Блок "выпуски"  */
+$main_template_data['all_books']    = LoadBooks();
+
+/**  * Блок "баннеры" */
+$main_template_data['all_banners']  = LoadBanners();
+
+/* Блок "последние новости" */
+$main_template_data['last_news_list'] = LoadLastNews($site_language, 3);
+
+/** Контент  */
+$main_template_data['content_jquery'] = $maincontent_js;
+$main_template_data['content_html'] = $maincontent_html;
+$main_template_data['content_css'] = $maincontent_css;
+
+/** Тип ассетов */
+$main_template_data['frontend'] = [
+    'assets_mode'           =>  Config::get('frontend_assets/assets_mode', 'development'),
+    'assets_version'        =>  Config::get('frontend_assets/assets_version', ''),
+    'cookie_site_language'  =>  Config::get('cookie_site_language', 'libdb_sitelanguage')
+];
+
+$content = websun_parse_template_path($main_template_data, $main_template_file, "$/{$main_theme_dir}");
+$content = preg_replace('/^\h*\v+/m', '', $content);
+echo $content;
+
+printf("\r\n<!-- Total time: %s sec, Memory Used (current): %s , Memory Used (max): %s -->", round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4), formatBytes(memory_get_usage()), formatBytes(memory_get_peak_usage()));
+

@@ -1,33 +1,49 @@
 <?php
+define('__ACCESS_MODE__', 'frontend');
+
 // отдает JSON объект для селектора "топики"
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
+require_once '../__required.php'; // $mysqli_link
 
-$lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
+$flag_lang = isset($_GET['lang']) ? substr($_GET['lang'],0,2) : 'ru';
 
-$lang = getAllowedValue($lang, array(
-    'ru', 'en', 'uk', 'ua'
-));
+$flag_lang = getAllowedValue($flag_lang, array(
+    'ru', 'en', 'ua'
+), 'en');
 
-$withoutid = isset($_GET['id']) ? 1 : 0;
+/**
+ Новое поведение: теперь можно задать в GET флаги:
+ - id - наличие добавляет к строчкам селекта [id]
+ - nogroup - наличие отключает группировку по супергруппам
 
-$link = ConnectDB();
+ Задавать значения ключей не обязательно!
+ */
 
-$query = "
+$flag_with_id = isset($_GET['id']) ? 1 : 0;
+$flag_nogroup = isset($_GET['nogroup']) ? 1 : 0;
+
+$query_with_groups = "
 SELECT
 topics.id,
-topics.title_{$lang} AS title_topic,
-topicgroups.title_{$lang}  AS title_group
+topics.title_{$flag_lang} AS title_topic,
+topicgroups.title_{$flag_lang}  AS title_group
 FROM topics
 LEFT JOIN topicgroups ON topicgroups.id = topics.rel_group
-ORDER BY topicgroups.title_{$lang}, topics.title_{$lang}
+ORDER BY topicgroups.title_{$flag_lang}, topics.title_{$flag_lang}
 ";
 
+$query_no_groups = "
+SELECT 
+topics.id,
+topics.title_{$flag_lang} AS title_topic,
+'' AS title_group
+FROM topics
+";
 
-$result = mysql_query($query) or die($query);
+$query = $flag_nogroup ? $query_no_groups : $query_with_groups;
 
-$ref_numrows = @mysql_num_rows($result) ;
+$result = mysqli_query($mysqli_link, $query) or die($query);
+
+$ref_numrows = @mysqli_num_rows($result);
 
 if ($ref_numrows>0)
 {
@@ -35,8 +51,9 @@ if ($ref_numrows>0)
     $data['error'] = 0;
     $data['count'] = $ref_numrows;
     $i = 1;
-    $group = '';
-    while ($row = mysql_fetch_assoc($result))
+    $group = ''; // no optiongroup
+
+    while ($row = mysqli_fetch_assoc($result))
     {
         if ($group != $row['title_group']) {
             // send new optiongroup
@@ -53,7 +70,7 @@ if ($ref_numrows>0)
         $data['data'][ $i ] = array(
             'type'      => 'option',
             'value'     => $row['id'],
-            'text'      => $row['title_topic']
+            'text'      =>  ($flag_with_id ? "[{$row['id']}] " : '') . $row['title_topic']
         );
         $i++;
     }
@@ -63,8 +80,4 @@ if ($ref_numrows>0)
     $data['count'] = 0;
 }
 
-CloseDB($link);
-
 print(json_encode($data));
-//print('<pre>'.print_r($data, true).'</pre>');
-?>

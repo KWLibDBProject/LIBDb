@@ -1,36 +1,26 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
-
-$SID = session_id();
-if(empty($SID)) session_start();
-if (!isLogged()) header('Location: /core/');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 }
 
-$link = ConnectDB();
-
-$q = array(
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'display_order' => mysql_real_escape_string($_POST['display_order']),
+$dataset = array(
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
+    'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua']),
+    'display_order' => mysqli_real_escape_string($mysqli_link, $_POST['display_order']),
 );
 $table = 'topicgroups';
 
-$qstr = MakeInsert($q, $table);
-$res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
-$new_id = mysql_insert_id() or Die("Unable to get last insert id!");
+$query = MakeInsert($dataset, $table);
+$res = mysqli_query($mysqli_link, $query) or die("Unable to insert data to DB! ".$query);
+$new_id = mysqli_insert_id($mysqli_link) or die("Unable to get last insert id!");
 
 kwLogger::logEvent('Add', $table, $new_id, "Group of topics added, id = {$new_id}");
 
-$result['message'] = $qstr;
+$result['message'] = $query;
 $result['error'] = 0;
 
 print(json_encode($result));
-CloseDB($link);
-?>

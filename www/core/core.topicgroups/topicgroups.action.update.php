@@ -1,12 +1,6 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
-
-$SID = session_id();
-if(empty($SID)) session_start();
-if (!isLogged()) header('Location: /core/');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
@@ -15,23 +9,19 @@ if (!IsSet($_POST['ref_name'])) {
 $table = 'topicgroups';
 $id = $_POST['id'];
 
-$link = ConnectDB();
-
-$q = array(
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'display_order' => mysql_real_escape_string($_POST['display_order']),
+$dataset = array(
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
+    'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua']),
+    'display_order' => mysqli_real_escape_string($mysqli_link, $_POST['display_order']),
 );
 
-$qstr = MakeUpdate($q, $table, "WHERE id=$id");
-$res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
+$query = MakeUpdate($dataset, $table, "WHERE id={$id}");
+$res = mysqli_query($mysqli_link, $query) or Die("Unable update data : ".$query);
 
 kwLogger::logEvent('Update', $table, $id, "Group of topics updated, id = {$id}");
 
-$result['message'] = $qstr;
+$result['message'] = $query;
 $result['error'] = 0;
 
 print(json_encode($result));
-CloseDB($link);
-?>

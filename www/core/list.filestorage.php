@@ -1,33 +1,28 @@
 <?php
-require_once('core.php');
-
-$SID = session_id();
-if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
+define('__ACCESS_MODE__', 'admin');
+require_once '__required.php'; // $mysqli_link
 
 ?>
-
-
+<!DOCTYPE html>
 <html>
 <head>
     <title>FileStorage::List</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="js/jquery.colorbox.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/colorbox.css" />
+    <script src="_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="_assets/jquery.colorbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="_assets/colorbox.css" />
 
-    <link rel="stylesheet" type="text/css" href="css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="_assets/core.admin.css">
 
-    <script type="text/javascript" src="js/core.js"></script>
-    <script type="text/javascript" src="js/core.excel.js"></script>
-    <script type="text/javascript" src="/frontend.js"></script>
+    <script type="text/javascript" src="_assets/core.excel.js"></script>
+    <script type="text/javascript" src="../frontend.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $.ajaxSetup({cache: false});
+            var url_files_list = "core.filestorage/filestorage.action.list.php";
 
-            // setSelectorsByHash(".search-selector"); // not required!
+            $.ajaxSetup({cache: false});
 
             // on change search selectors SET new window-hash
             $(".hash-selectors").on('change', '.search-selector', function(){
@@ -40,7 +35,7 @@ ifNotLoggedRedirect('/core/');
             });
 
             // onload full list
-            $("#files_list").load("core.filestorage/filestorage.action.list.php");
+            $("#files_list").load(url_files_list);
 
             // bind exit actor
             $("#actor-exit").on('click',function(event){
@@ -62,7 +57,7 @@ ifNotLoggedRedirect('/core/');
                     query+= "&sort-type="  + $('select[name="sort-type"]').val();
                     query+= "&sort-order=" + $('select[name="sort-order"]').val();
                 clearHash();
-                $("#files_list").empty().load('core.filestorage/filestorage.action.list.php?'+query);
+                $("#files_list").empty().load(url_files_list + '?' + query);
             });
 
             $("#actor-show-all").on('click' , function() {
@@ -70,7 +65,7 @@ ifNotLoggedRedirect('/core/');
                 $('select[name="sort-type"]').val('id');
                 $('select[name="sort-order"]').val('ASC');
                 clearHash();
-                $("#files_list").empty().load('core.filestorage/filestorage.action.list.php');
+                $("#files_list").empty().load(url_files_list);
             });
             $("#actor-export-excel").on('click', function(){
                 tableToExcel('exportable', 'export');

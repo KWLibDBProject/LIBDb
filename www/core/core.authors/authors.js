@@ -2,7 +2,7 @@ var ref_name = 'authors';
 /* возвращает текущее значение "самости" для нужного автора */
 function Authors_LoadRecord(destination, id, tinyarea_target) // номер записи, целевая форма
 {
-    var innerSelfhood = 0;
+    var innerEstaffRole = 0;
     var url = 'authors.action.getitem.php';
     var getting = $.get(url, {
         id: id,
@@ -12,24 +12,25 @@ function Authors_LoadRecord(destination, id, tinyarea_target) // номер за
     getting.done(function(data){
         var result = $.parseJSON(data);
         if (result['error'] == 0) {
-            innerSelfhood = result['data']['selfhood'];
+            innerEstaffRole = result['data']['estaff_role'];
             // загружаем данные в поля формы
             $form.find("input[name='id']").val( result['data']['id'] );
             $form.find("input[name='name_ru']").val( result['data']['name_ru'] );
             $form.find("input[name='name_en']").val( result['data']['name_en'] );
-            $form.find("input[name='name_uk']").val( result['data']['name_uk'] );
+            $form.find("input[name='name_ua']").val( result['data']['name_ua'] );
             $form.find("input[name='title_ru']").val( result['data']['title_ru'] );
             $form.find("input[name='title_en']").val( result['data']['title_en'] );
-            $form.find("input[name='title_uk']").val( result['data']['title_uk'] );
+            $form.find("input[name='title_ua']").val( result['data']['title_ua'] );
             $form.find("input[name='email']").val( result['data']['email'] );
+            $form.find("input[name='orcid']").val( result['data']['orcid'] );
             $form.find("input[name='phone']").val( result['data']['phone'] );
             $form.find("textarea[name='workplace_en']").val(result['data']['workplace_en']);
             $form.find("textarea[name='workplace_ru']").val(result['data']['workplace_ru']);
-            $form.find("textarea[name='workplace_uk']").val(result['data']['workplace_uk']);
-            // Если is_es установлен - надо селекту selfhood задать prop(disabled, false),т.е. задать инвертированное значение чекбокса!
+            $form.find("textarea[name='workplace_ua']").val(result['data']['workplace_ua']);
+            // Если is_es установлен - надо селекту estaff_role задать prop(disabled, false),т.е. задать инвертированное значение чекбокса!
             $form.find("input[name='is_es']").prop("checked", !!parseInt(result['data']['is_es']));
-            // установить значение атрибута "selfhood'
-            $form.find("select[name='selfhood']").attr('disabled', !parseInt(result['data']['is_es']));
+            // установить значение атрибута "estaff_role"
+            $form.find("select[name='estaff_role']").attr('disabled', !parseInt(result['data']['is_es']));
 
             /* photo */
             $form.find("input[name='file_current_input']").val( result['data']['photo_username'] ); // ===  value="{%file_current_username%}"
@@ -47,11 +48,11 @@ function Authors_LoadRecord(destination, id, tinyarea_target) // номер за
             }
             if (result['data']['bio'] != '')
             {
-                $form.find("textarea[name='bio_uk']").val(result['data']['bio_uk']);
+                $form.find("textarea[name='bio_ua']").val(result['data']['bio_ua']);
             }
         } else {
             // ошибка загрузки
         }
     });
-    return innerSelfhood;
+    return innerEstaffRole;
 }

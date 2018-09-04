@@ -1,32 +1,28 @@
 <?php
-require_once('../core.php');
-$SID = session_id();
-if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
+
 ?>
 <html>
 <head>
     <title>Сборники -- добавление</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="../js/jquery.ui.datepicker.rus.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.10.3.custom.min.css">
+    <script type="text/javascript" src="../_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../_assets/jquery.ui.datepicker.rus.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/core/css/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/core.admin.css">
     <link rel="stylesheet" type="text/css" href="books.css">
 
-    <script src="../js/core.js"></script>
+    <script type="text/javascript" src="../../frontend.js"></script>
+    <script type="text/javascript" src="../../frontend.options.js"></script>
+
 
     <script type="text/javascript">
-        function ShowErrorMessage(message)
-        {
-            alert(message);
-        }
-
         $(document).ready(function () {
         $("#actor-exit").on('click',function(event){
-            window.location.href = '../ref.books.show.php';
+            window.location.href = '../list.books.show.php';
         });
         $("#actor-remove").on('click',function(event){
             // window.location.href = 'books.action.remove.php?id='+author_id;
@@ -62,7 +58,7 @@ ifNotLoggedRedirect('/core/');
             changeYear: true,
             dateFormat: 'dd.mm.yy',
             minDate: '01.01.2003',
-            maxDate: '01.01.2020',
+            maxDate: '01.01.2025',
             showButtonPanel: true
         });
         $("#book_title").focus();
@@ -81,8 +77,8 @@ ifNotLoggedRedirect('/core/');
             <input type="text" name="book_title" id="book_title">
         </div>
         <div class="field">
-            <label for="book_datepicker">Дата (год) выпуска:</label>
-            <input type="text" class="book_datepicker" id="book_datepicker" name="book_date">
+            <label for="book_datepicker">Дата выпуска:</label>
+            <input type="text" class="book_datepicker" id="book_datepicker" name="book_publish_date">
         </div>
         <div class="field">
             <label for="book_contentpages">Страницы со статьями:</label>
@@ -100,27 +96,27 @@ ifNotLoggedRedirect('/core/');
         <legend>Файлы</legend>
         <div class="field">
             <label for="file_cover">Обложка (изображение)</label>
-            <input type="file" name="file_cover" id="file_cover" size="80">
+            <input type="file" name="file_cover" id="file_cover" size="80" required>
             <button class="file-unlink" name="file_cover" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_title_ru">Титульный лист, кириллический (PDF-file)</label>
-            <input type="file" name="file_title_ru" id="file_title_ru" size="80">
+            <input type="file" name="file_title_ru" id="file_title_ru" size="80" required>
             <button class="file-unlink" name="file_title_ru" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_title_en">Титульный лист, английский (PDF-file)</label>
-            <input type="file" name="file_title_en" id="file_title_en" size="80">
+            <input type="file" name="file_title_en" id="file_title_en" size="80" required>
             <button class="file-unlink" name="file_title_en" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_toc_ru">Оглавление (PDF-file)</label>
-            <input type="file" name="file_toc_ru" id="file_toc_ru" size="80">
+            <input type="file" name="file_toc_ru" id="file_toc_ru" size="80" required>
             <button class="file-unlink" name="file_toc_ru" disabled>X</button>
         </div>
         <div class="field">
             <label for="file_toc_en">Table of contents (PDF-file)</label>
-            <input type="file" name="file_toc_en" id="file_toc_en" size="80">
+            <input type="file" name="file_toc_en" id="file_toc_en" size="80" required>
             <button class="file-unlink" name="file_toc_en" disabled>X</button>
         </div>
     </fieldset>

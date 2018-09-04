@@ -1,4 +1,10 @@
-function preloadOptionsList(url) // Загружает данные (кэширование в переменную)
+/**
+ * Загружает данные
+ *
+ * @param url
+ * @returns {boolean}
+ */
+function preloadOptionsList(url)
 {
     var ret = false;
     $.ajax({
@@ -14,25 +20,30 @@ function preloadOptionsList(url) // Загружает данные (кэшир�
     return ret;
 }
 
-/* формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
- data format:
- {
-    state: ok, error: 0,
-    data:   {
-            n:  {
-                type:   group       | option
-                value:  (useless)   | item id in reference
-                text:   group title | option text
-                comment:        comment
-                }
-            }
- }
- calling params: (target, data, [default_option, [selected_value]] )
- * target            =       name нужного селекта
- * data              =       json-объект со значениями
- * default_option    =       строка с текстом стартовой опции (в самом верху списка)
- * selected_value    = [0]   значение (value) у опции, которую мы выбираем после загрузки списка
- * */
+/**
+ * формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
+ * data format:
+ * {
+ *    state: ok, error: 0,
+ *    data:  {
+ *      n:  {
+ *             type:   group       | option
+ *             value:  (useless)   | item id in reference
+ *             text:   group title | option text
+ *             comment:        comment
+ *          }
+ *    }
+ * }
+ *
+ * calling params: (target, data, [default_option, [selected_value]] )
+ *
+ *
+ * @param target_name = name нужного селекта
+ * @param data                  = json-объект со значениями
+ * @param default_option_string = строка с текстом стартовой опции (в самом верху списка)
+ * @param value_of_selected_option = [0]   значение (value) у опции, которую мы выбираем после загрузки списка
+ * @constructor
+ */
 function BuildSelectorExtended(target_name, data, default_option_string, value_of_selected_option)
 {
     var not_a_first_option_group = 0;
@@ -43,8 +54,23 @@ function BuildSelectorExtended(target_name, data, default_option_string, value_o
 
     if (data['error'] == 0) {
         ret = '<option value="0" data-group="*">'+ dos +'</option>';
+        console.log(dos);
 
         $.each(data['data'] , function(id, value){
+            /*
+            upgrade (идея от 2018-08-08, раннее утро):
+            if (typeof value == 'object') {
+                блок ниже с проверкой типов
+            } elseif (typeof value == 'string' {
+                ret+= '<option value="'+value['value']+'" data-group="'+ last_group +'">'+value['text']+'</option>';
+
+                // В общем, аналогично этому блоку в BuildSelectorLegacy
+
+            }
+             */
+
+            // insert:
+
             if (value['type'] == 'group') {
                 // add optiongroup
                 if (last_group != value['text']) {
@@ -71,6 +97,9 @@ function BuildSelectorExtended(target_name, data, default_option_string, value_o
     }
 }
 
+/**
+ *
+ */
 function BuildSelectorEmpty(target_name, default_value_string, default_value)
 {
     var _target = "select[name='" + target_name + "']";
@@ -80,17 +109,29 @@ function BuildSelectorEmpty(target_name, default_value_string, default_value)
     $(_target).empty().append ( ret );
 }
 
-/* @todo: добавить параметр "форма" в которой ищем значение  */
+/*
+
+/**
+ *
+ * @todo: 2014 год: добавить параметр "форма" в которой ищем значение
+ * @param name
+ * @param option_value
+ * @constructor
+ */
 function Selector_SetOption(name, option_value)
 {
     var cid = option_value || 0;
     $("select[name="+name+"] option[value="+ cid +"]").prop("selected",true);
 }
 
-/*
- target         : target form (value of ID attr or jquery object)
- select_name    : имя селекта
- * */
+/**
+ *
+ *
+ * @param target          target form (value of ID attr or jquery object)
+ * @param selector_name   имя селекта
+ * @param value_for_undefined
+ * @returns {*}
+ */
 function getSelectedOptionValue(target, selector_name, value_for_undefined)
 {
     var t;
@@ -109,6 +150,12 @@ function getSelectedOptionValue(target, selector_name, value_for_undefined)
     return v;
 }
 
+/**
+ *
+ * @param target
+ * @param selector_name
+ * @returns {*}
+ */
 function getSelectedOptionText(target, selector_name)
 {
     var t;
@@ -122,10 +169,16 @@ function getSelectedOptionText(target, selector_name)
     return t.find("select[name='"+selector_name+"'] option:selected").html();
 }
 
-
-// формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
-// target - ИМЯ селектора
-// СТАРАЯ версия (для абстрактного справочника)
+/**
+ * формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
+ *
+ *
+ * @param target_name - ИМЯ селектора
+ * @param data
+ * @param default_option_string
+ * @param value_of_selected_option
+ * @constructor
+ */
 function BuildSelector(target_name, data, default_option_string, value_of_selected_option) //
 {
     var dos = (default_option_string == '') ? 'Выбрать!' : default_option_string;
@@ -146,5 +199,51 @@ function BuildSelector(target_name, data, default_option_string, value_of_select
         }
     } else {
     }
+
     $("select[name="+target_name+"]").prop('disabled',!(data['error']==0));
 }
+
+/**
+ *
+ * @param target_name
+ * @constructor
+ */
+function DisableSelectorByName(target_name) {
+    $("select[name="+target_name+"]").prop('disabled', true);
+}
+
+/**
+ *
+ * @param target_name
+ * @constructor
+ */
+function EnableSelectorByName(target_name) {
+    $("select[name="+target_name+"]").prop('disabled', false);
+}
+
+
+/**
+ * формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
+ * target - ИМЯ селектора
+ *
+ * USELESS
+ *
+ * @param target
+ * @param data
+ * @param currentid
+ * @constructor
+ */
+function BuildSelector__OLD(target, data, currentid) // currentid is 1 for NEW
+{
+    if (data['error'] == 0) {
+        var _target = "select[name='"+target+"']";
+        $.each(data['data'], function(id, value){
+            $(_target).append('<option value="'+id+'">'+value+'</option>');
+        });
+        var _currentid = (typeof currentid != 'undefined') ? currentid : 1;
+        $("select[name="+target+"] option[value="+ _currentid +"]").prop("selected",true);
+    } else {
+        $("select[name="+target+"]").prop('disabled',true);
+    }
+}
+

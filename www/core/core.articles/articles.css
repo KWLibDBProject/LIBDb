@@ -37,3 +37,33 @@ dd {
 .articles-list-table-authors-list li:before{
     content: '› ';
 }
+
+/**
+Контейнер иконок кнопок форматирования для tinyMCE (из кегля tinyMCE)
+ */
+.tinymce-icon-container {
+    /* border: 1px dotted #dedede; */
+    padding: 4px 6px;
+    color: black;
+    line-height: 20px;
+    font-size: 14px;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+/*
+Fieldset hint + legend
+ */
+
+fieldset.hint {
+
+}
+
+fieldset.hint > legend {
+    color: #d32520;
+}
+
+fieldset.hint > strong {
+    color: #5463e0;
+
+}

@@ -1,53 +1,48 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
-$ref_name = 'news';
+$dataset = array(
+    'publish_date'      => DateTime::createFromFormat('d.m.Y', $_POST['publish_date'])->format('Y-m-d'),
 
-$link = ConnectDB();
-$q = array(
-    'date_add'      => mysql_real_escape_string($_POST['date_add']),
-    'comment'       => mysql_real_escape_string($_POST['comment']),
-    'title_en'      => mysql_real_escape_string($_POST['title_en']),
-    'title_ru'      => mysql_real_escape_string($_POST['title_ru']),
-    'title_uk'      => mysql_real_escape_string($_POST['title_uk']),
-    'text_en'       => mysql_real_escape_string($_POST['text_en']),
-    'text_ru'       => mysql_real_escape_string($_POST['text_ru']),
-    'text_uk'       => mysql_real_escape_string($_POST['text_uk']),
-    'date_year'     => substr(mysql_real_escape_string($_POST['date_add']),6,4),
+    'comment'       => mysqli_real_escape_string($mysqli_link, $_POST['comment']),
+
+    'title_en'      => mysqli_real_escape_string($mysqli_link, $_POST['title_en']),
+    'title_ru'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ru']),
+    'title_ua'      => mysqli_real_escape_string($mysqli_link, $_POST['title_ua']),
+
+    'text_en'       => mysqli_real_escape_string($mysqli_link, $_POST['text_en']),
+    'text_ru'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ru']),
+    'text_ua'       => mysqli_real_escape_string($mysqli_link, $_POST['text_ua']),
 );
-$q['timestamp'] = ConvertDateToTimestamp($q['date_add']);
 
-$qstr = MakeInsert($q, $ref_name);
+$query = MakeInsert($dataset, 'news');
 
-if ($res = mysql_query($qstr, $link)) {
-    $result['message'] = $qstr;
+if ($res = mysqli_query($mysqli_link, $query)) {
+    $result['message'] = 'Новость добавлена';
     $result['error'] = 0;
-    $record_id = mysql_insert_id();
+    $record_id = mysqli_insert_id($mysqli_link);
+
     kwLogger::logEvent('Add', 'news', $record_id, "News record added, id = {$record_id}");
 }
 else {
-    Die("Unable to insert data to DB!  ".$qstr);
+    Die("Unable to insert data to DB!  ".$query);
 }
-
-CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
     if ($result['error'] == 0) {
-        // use template
-        $override = array(
-            'time' => 10,
-            'target' => '../ref.news.show.php',
-            'buttonmessage' => 'Вернуться к списку страниц',
-            'message' => 'Новость добавлена в базу данных'
+
+        $template_dir = '$/core/_templates';
+        $template_file = "ref.all_timed_callback.html";
+
+        $template_data = array(
+            'time'          => Config::get('callback_timeout') ?? 15,
+            'target'        => '../list.news.show.php',
+            'button_text'   => 'Вернуться к списку новостей',
+            'message'       => 'Новость добавлена'
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }
-?>

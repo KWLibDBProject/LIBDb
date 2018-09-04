@@ -1,39 +1,41 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 // а) удалить автора, если у него есть статьи НЕЛЬЗЯ
 $author_id = intval($_GET["id"]);
 
 $table = 'authors';
-$result = array();
+$result = [];
 
-$link = ConnectDB();
+$query_articles_count = "SELECT COUNT(article) AS articles_count FROM cross_aa WHERE author = {$author_id}";
 
-$qt = "SELECT COUNT(article) AS aha FROM cross_aa WHERE author = {$author_id}";
+$response_articles_count = mysqli_query($mysqli_link, $query_articles_count);
 
-if ($rt = mysql_query($qt)) {
-    $aha = mysql_fetch_assoc($rt);
-    if ($aha['aha'] > 0) {
+if (mysqli_num_rows($response_articles_count) > 0) {
+
+    $result_articles_count = mysqli_fetch_assoc($response_articles_count);
+
+    if ($result_articles_count['articles_count'] > 0) {
         // у автора есть статьи, удалять низя
         $result["error"] = 4;
         $result['message'] = 'Нельзя удалять автора, если у него есть статьи!';
     } else {
         // статей нет, можно удалять автора
-        // нужно получить информацию об авторе, в частности id его фотографии
 
-        $q = "SELECT id, photo_id FROM {$table} WHERE id = {$author_id}";
-        $qr = mysql_query($q);
-        $qf = mysql_fetch_assoc($qr);
-        $photo_id = $qf['photo_id'];
+        // нужно получить информацию об авторе, в частности id его фотографии
+        $query_author_info = "SELECT `id`, `photo_id` FROM authors WHERE id = {$author_id}";
+        $response_author_info = mysqli_query($mysqli_link, $query_author_info);
+        $author_info = mysqli_fetch_assoc($response_author_info);
+        $photo_id = $author_info['photo_id'];
 
         FileStorage::removeFileById($photo_id);
 
         // удалить запись об авторе из таблицы AUTHORS
-        $q = "DELETE FROM {$table} WHERE (id = {$author_id})";
-        if ($r = mysql_query($q)) {
+        $query_author_delete = "DELETE FROM authors WHERE (id = {$author_id})";
+        $responce_author_delete = mysqli_query($mysqli_link, $query_author_delete);
+
+        if ($responce_author_delete) {
             // запрос удаление успешен
             $result["error"] = 0;
             $result['message'] = 'Автор удален из базы данных.';
@@ -52,19 +54,19 @@ if ($rt = mysql_query($qt)) {
 };
 
 
-CloseDB($link);
 
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
-    $override = array(
-        'time' => 15,
-        'target' => '/core/ref.authors.show.php',
-        'buttonmessage' => 'Вернуться к списку авторов',
-        'message' => $result['message']
+    $template_dir = '$/core/_templates';
+    $template_file = "ref.all_timed_callback.html";
+
+    $template_data = array(
+        'time'          => Config::get('callback_timeout') ?? 15,
+        'target'        => '/core/list.authors.show.php',
+        'button_text'   => 'Вернуться к списку авторов',
+        'message'       => $result['message']
     );
-    $tpl = new kwt('../ref.all.timed.callback.tpl');
-    $tpl->override($override);
-    $tpl->out();
+    echo websun_parse_template_path($template_data, $template_file, $template_dir);
+
 }
-?>

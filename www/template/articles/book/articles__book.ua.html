@@ -1,0 +1,49 @@
+{?*book_info*}
+<fieldset class="books-extended-info">
+    <legend>{*book_info.book_title*}, {*book_info.book_year*}.</legend>
+    <ul>
+        <li>
+            <a href="core/get.image.php?id={*book_info.file_cover*}" class="icon-jpg icon lightbox-image">
+                <img src="/{*template_folder*}/_assets/images/books_file_cover.jpg"><br>Обгортка</a>
+        </li>
+
+        <li>
+            <a href="core/get.file.php?id={*book_info.file_title_ru*}" class="icon-pdf icon">
+                <img src="/{*template_folder*}/_assets/images/books_file_title.jpg"><br>Назва</a>
+        </li>
+
+        <li>
+            <a href="core/get.file.php?id={*book_info.file_toc_ru*}" class="icon-pdf icon">
+                <img src="/{*template_folder*}/_assets/images/books_file_toc.jpg"><br>Змiст</a>
+        </li>
+    </ul>
+</fieldset>
+<fieldset>
+    <legend>Критерiï пошуку</legend>
+    <form  class="hash_selectors">
+        <input type="hidden" id="articles__book__book_id" value="{*book_id*}" />
+        <input type="hidden" id="articles__book__site_language" value="{*site_language*}" />
+        <table>
+            <tr>
+                <td>Topic: </td>
+                <td>
+                    <select name="topics" class="search_selector">
+                        <option value="0">ANY</option>
+                    </select>
+                    <button type="button" id="button-show-withselection">Показати вибране</button>
+                    <button type="button" id="button-reset-selection">Скинути параметри пошуку</button>
+                    <button type="button" id="button-show-all">Показати всi статтi</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</fieldset>
+<fieldset>
+    <legend>Результати пошуку:</legend>
+    <div id="articles_list">
+    </div>
+</fieldset>
+{?!}
+Book not found!
+{?}

@@ -1,12 +1,8 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.filestorage.php');
-require_once('../core.kwt.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 // удалить сборник, если в нем есть статьи НЕЛЬЗЯ
-
-// @todo: проверка прав на удаление (в сессии ли мы и кто мы?)
 
 $table = 'books';
 
@@ -15,13 +11,12 @@ if (!IsSet($_GET['id'])) {
     $result['error'] = 5; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 } else {
     $table = 'books';
-    $link = ConnectDB();
     $id = intval($_GET["id"]); // айди удаляемой книжки
 
     $qt = "SELECT COUNT(book) as bcount FROM articles WHERE book=$id";
 
-    if ($rt = mysql_query($qt)) {
-        $bcount = mysql_fetch_assoc($rt);
+    if ($rt = mysqli_query($mysqli_link, $qt)) {
+        $bcount = mysqli_fetch_assoc($rt);
         if ($bcount['bcount'] > 0) {
             // в книжке есть статьи, удалять нельзя
             $result["error"] = 4;
@@ -29,16 +24,16 @@ if (!IsSet($_GET['id'])) {
         } else {
             // статей нет, можно удалить
             /* вот тут нужно удалить 5 файлов из таблицы STORAGE!!! */
-            $book_files = mysql_fetch_assoc(mysql_query("SELECT file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en FROM books WHERE id=$id"));
+            $book_files = mysqli_fetch_assoc(mysqli_query($mysqli_link, "SELECT file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en FROM books WHERE id={$id}"));
             FileStorage::removeFileById($book_files['file_cover']);
             FileStorage::removeFileById($book_files['file_title_ru']);
             FileStorage::removeFileById($book_files['file_title_en']);
             FileStorage::removeFileById($book_files['file_toc_ru']);
             FileStorage::removeFileById($book_files['file_toc_en']);
 
-            $q = "DELETE FROM $table WHERE (id=$id)";
+            $q = "DELETE FROM $table WHERE (id = {$id})";
 
-            if ($r = mysql_query($q)) {
+            if ($r = mysqli_query($mysqli_link, $q)) {
                 // запрос удаление успешен
                 $result["error"] = 0;
                 $result['message'] = 'Сборник удален из базы данных.';
@@ -59,15 +54,16 @@ if (!IsSet($_GET['id'])) {
     if (isAjaxCall()) {
         print(json_encode($result));
     } else {
-        $override = array(
-            'time' => 15,
-            'target' => '/core/ref.books.show.php',
-            'buttonmessage' => 'Вернуться к списку сборников',
-            'message' => $result['message']
+
+        $template_dir = '$/core/_templates';
+        $template_file = "ref.all_timed_callback.html";
+
+        $template_data = array(
+            'time'          => Config::get('callback_timeout') ?? 15,
+            'target'        => '../list.books.show.php',
+            'button_text'   => 'Вернуться к списку сборников',
+            'message'       => $result['message']
         );
-        $tpl = new kwt('../ref.all.timed.callback.tpl');
-        $tpl->override($override);
-        $tpl->out();
+        echo websun_parse_template_path($template_data, $template_file, $template_dir);
     }
 }
-?>

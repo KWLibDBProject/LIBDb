@@ -1,0 +1,24 @@
+{
+  "name": "libdb",
+  "version": "1.66",
+  "description": "KW LibDB -- Движок сайта онлайн-журнала «Электротехнические и компьютерные системы» Одесского политехнического университета.",
+  "author": "Karel Wintersky <karel.wintersky@gmail.com>",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-cssmin": "^0.12.2",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-uncss": "^0.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KarelWintersky/LIBDb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KarelWintersky/LIBDb/issues"
+  },
+  "keywords": [
+    "Научно-технический журнал ЭЛЕКТРОТЕХНИЧЕСКИЕ И КОМПЬЮТЕРНЫЕ СИСТЕМЫ"
+  ],
+  "private": true
+}

@@ -1,0 +1,30 @@
+{?*topic_data*}
+<fieldset>
+    <legend>{*topic_data.title*}</legend>
+    <form class="hash_selectors">
+        <input type="hidden" id="articles__topic__topic_id" value="{*topic_id*}" />
+        <input type="hidden" id="articles__topic__site_language" value="{*site_language*}" />
+        <table>
+            <tr>
+                <td>Book: </td>
+                <td>
+                    <select name="books" class="search_selector">
+                        <option value="0">ANY</option>
+                    </select>
+                    <button type="button" id="button-show-withselection">Показать выбранное</button>
+                    <button type="button" id="button-reset-selection">Сбросить параметры</button>
+                    <button type="button" id="button-show-all">Показать все статьи</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</fieldset>
+<fieldset>
+    <legend>Результаты поиска:</legend>
+    <div id="articles_list">
+    </div>
+</fieldset>
+{?!}
+Topic not found
+{?}

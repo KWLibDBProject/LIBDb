@@ -1,0 +1,31 @@
+<table border="1" width="100%">
+    <tr>
+        <th width="5%">№</th>
+        <th>Thematic section</th>
+        <th>Тематический раздел</th>
+        <th>Тематичний розділ</th>
+        <th>Group</th>
+        <th width="7%">Управление</th>
+    </tr>
+
+    {?*topics_list*}
+    {%*topics_list*}
+    <tr>
+        <td class="centred_cell">{*topics_list:id*}</td>
+        <td>{*topics_list:title_en*}</td>
+        <td>{*topics_list:title_ru*}</td>
+        <td>{*topics_list:title_ua*}</td>
+        <td class="centred_cell">{*topics_list:rel_group*}</td>
+        <td class="centred_cell"><button class="actor-edit button-edit" name="{*topics_list:id*}">Edit</button></td>
+    </tr>
+    {%}
+    {?}
+
+    {?!*topics_list*}
+    <tr>
+        <td colspan="6">Пока не добавили ни один тематический раздел.</td>
+    </tr>
+    {?}
+
+
+</table>

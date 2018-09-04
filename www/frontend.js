@@ -9,16 +9,28 @@ String.prototype.fulltrim = String.prototype.fulltrim || function(){return this.
 
 /* Разделить строку по параметрам © http://a2x.ru/?p=140 */
 /* возвращает массив вида 'valuename' => 'valuedata' */
-function getQuery( queryString , limiter)
+function getQuery( queryString , limiter )
 {
     var vars = queryString.split((limiter || '&')); //делим строку по & - parama1=1
+
     var arr = [];
     for (var i=0 , vl = vars.length; i < vl; i++)
     {
-        var pair = vars[i].split("="); //делим параметр со значением по =, и пишем в ассоциативный массив arr['param1'] = 1
+        var pair = vars[i].split("=");
         arr[pair[0]] = pair[1];
     }
+
     return arr;
+}
+
+function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split('=');
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
 }
 
 function setHashBySelectors(search_selector)
@@ -54,6 +66,37 @@ function setHashBySelectors(search_selector)
     }
 }
 
+function setSelectorsByHash_NEW(target)
+{
+    var sel_name;
+    var sel_value;
+    var hashes_obj = parseQuery((window.location.hash).substr(1));
+
+    // console.log(hashes_obj);
+
+    $.each( $(target), function (id, data) {
+        sel_name = $(data).attr('name');
+        sel_value = hashes_obj[sel_name] != '' ? hashes_obj[sel_name] : 0;
+
+        $(target+"[name="+sel_name+"] option[value="+sel_value+"]").prop("selected",true);
+    });
+}
+
+function setSelectorsByHash(target)
+{
+    var sel_name;
+    var sel_value;
+    var hashes_arr = getQuery((window.location.hash).substr(1));
+
+    var hashes_obj = parseQuery((window.location.hash).substr(1));
+
+    $.each( $(target), function(id, data) {
+        sel_name = $(data).attr('name'); // selector's name attribute
+        sel_value = hashes_arr[sel_name] != 'undefined' ? hashes_arr[sel_name] : 0;
+        $(target+"[name="+sel_name+"] option[value="+sel_value+"]").prop("selected",true);
+    } );
+}
+
 function clearHash()
 {
     if ('pushState' in history) { window.
@@ -63,20 +106,6 @@ function clearHash()
     }
 }
 
-function setSelectorsByHash(target)
-{
-    var sel_name;
-    var sel_value;
-    var hashes_arr = getQuery((window.location.hash).substr(1));
-
-    $.each( $(target), function(id, data) {
-        sel_name = $(data).attr('name'); // selector's name attribute
-        sel_value = hashes_arr[sel_name] != 'undefined' ? hashes_arr[sel_name] : 0;
-        $(target+"[name="+sel_name+"] option[value="+sel_value+"]").prop("selected",true);
-    } );
-}
-
-/* IDE считает, что функции не используются. Врёт. Они дёргаются в шаблонах :) */
 function getCookie(name){
     var pattern = RegExp(name + "=.[^;]*");
     matched = document.cookie.match(pattern);
@@ -87,44 +116,12 @@ function getCookie(name){
     return false
 }
 
-/* IDE считает, что функции не используются. Врёт. Они дёргаются в шаблонах :) */
 function setCookie (name, value, expires, path, domain, secure) {
     document.cookie = name + "=" + escape(value) +
         ((expires) ? "; expires=" + expires : "") +
         ((path) ? "; path=" + path : "") +
         ((domain) ? "; domain=" + domain : "") +
         ((secure) ? "; secure" : "");
-}
-
-function preloadOptionsList(url) // Загружает данные (кэширование)
-{
-    var ret;
-    $.ajax({
-        url: url,
-        async: false,
-        cache: false,
-        type: 'GET',
-        success: function(data){
-            ret = $.parseJSON(data);
-        }
-    });
-    return ret;
-}
-
-// формирует SELECTOR/OPTIONS list с текущим элементом равным [currentid]
-// target - ИМЯ селектора
-function BuildSelector__OLD(target, data, currentid) // currentid is 1 for NEW
-{
-    if (data['error'] == 0) {
-        var _target = "select[name='"+target+"']";
-        $.each(data['data'], function(id, value){
-            $(_target).append('<option value="'+id+'">'+value+'</option>');
-        });
-        var _currentid = (typeof currentid != 'undefined') ? currentid : 1;
-        $("select[name="+target+"] option[value="+ _currentid +"]").prop("selected",true);
-    } else {
-        $("select[name="+target+"]").prop('disabled',true);
-    }
 }
 
 function strpos (haystack, needle, offset) {
@@ -137,6 +134,16 @@ function calledOnSwitchLanguage() {
     // redefined in some JS-files in templates for correct clearing global browser
     // values, such as URL-hash.
     // var current_hash = window.location.hash;
-    // window.location.hash = current_hash.replace(/\&lang=[en|ru|uk]/g, '');
+    // window.location.hash = current_hash.replace(/\&lang=[en|ru|ua]/g, '');
     // return null;
+}
+
+/* Привязывает стили и действия к элементу "scroll to top" */
+function bindScrollTopAction(target)
+{
+    $(target).css('float','right').attr('title', 'Наверх').on('click', function(){
+        // window.scroll(0,0);
+        $('html, body').animate({scrollTop:0}, 'slow');
+        return false;
+    });
 }

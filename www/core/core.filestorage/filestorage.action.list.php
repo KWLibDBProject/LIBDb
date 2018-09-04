@@ -1,20 +1,15 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
-
-$link = ConnectDB();
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 /* @todo: оптимизировать блок. его как-то можно сократить, ведь неустановенность коллекции === all !*/
+
 // коллекция
-$collection =
-    (isset($_GET['collection']))
-    ? $_GET['collection']
-    : "all";
+$collection = at($_GET, 'collection', 'all');
 $collection = getAllowedValue( $collection , array(
     'all', 'articles', 'authors', 'books'
-));
+), 'all');
+
 $where =
     ($collection != "all")
     ? " WHERE collection = '{$collection}'"
@@ -27,91 +22,81 @@ $sortorder  =
     : " ASC ";
 
 // критерий сортировки
-$sort_type = $_GET['sort-type'];
+$sort_type = $_GET['sort-type'] ?? 'id';
 $sort_type = getAllowedValue( $sort_type, array(
     'id', 'username', 'stat_date_insert', 'filesize', 'relation', 'stat_download_counter'
-));
+), '');
 
 $sortby =
     (!empty($sort_type) && $sort_type != 'id')
     ? " ORDER BY {$sort_type} {$sortorder} "
     : ' ';
 
-$fs_table = FileStorageConfig::$config['table'];
+$fs_table = FileStorage::getStorageTable();
 
+/* move to method */
 $q = "
-SELECT id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter, stat_date_insert
-FROM {$fs_table} {$where} {$sortby}";
+SELECT 
+    id, username, internal_name, filesize, relation, collection, filetype, stat_download_counter, stat_date_insert
+FROM 
+    {$fs_table} 
+{$where} 
+{$sortby}
+";
 
-$r = @mysql_query($q);
+$r = @mysqli_query($mysqli_link, $q);
+/**/
 
-$fs = array();
+$filestorage_list = [];
 if ($r) {
-    while ($f = mysql_fetch_assoc($r)) {
-        $ext_a = explode('/',$f['filetype']);
+    while ($filestorage_item = mysqli_fetch_assoc($r)) {
+        $ext_a = explode('/',$filestorage_item['filetype']);
 
-        switch ($f['collection']) {
+        switch ($filestorage_item['collection']) {
             case 'books': {
-                $qr = mysql_fetch_assoc(mysql_query("SELECT title FROM books WHERE id = {$f['relation']}"));
+                $qr = mysqli_fetch_assoc(mysqli_query($mysqli_link, "SELECT title FROM books WHERE id = {$filestorage_item['relation']}"));
                 $qt = $qr['title'];
-                $f['external_link'] = "{$qt}";
-                $f['external_link'] = '→ <a href="/?fetch=articles&with=book&id='.$f['relation'].'" target="_blank"> '.$qt.'</a>';
+                $filestorage_item['external_link'] = "{$qt}";
+                $filestorage_item['external_link'] = '→ <a href="/?fetch=articles&with=book&id='.$filestorage_item['relation'].'" target="_blank"> '.$qt.'</a>';
                 break;
             }
             case 'articles': {
-                $f['external_link'] = '<a href="/?fetch=articles&with=info&id='.$f['relation'].'" target="_blank"> ==> </a>';
+                $filestorage_item['external_link'] = '<a href="/?fetch=articles&with=info&id='.$filestorage_item['relation'].'" target="_blank"> ==> </a>';
                 break;
             }
             case 'authors': {
-                $f['external_link'] = '<a href="/?fetch=authors&with=info&id='.$f['relation'].'" target="_blank"> ==> </a>';
+                $filestorage_item['external_link'] = '<a href="/?fetch=authors&with=info&id='.$filestorage_item['relation'].'" target="_blank"> ==> </a>';
                 break;
             }
         }
-        $f['size'] = ConvertToHumanBytes($f['filesize'], 2);
-        $f['ext'] = $ext_a[1];
-        switch ($f['ext']) {
+        $filestorage_item['size'] = ConvertToHumanBytes($filestorage_item['filesize'], 2);
+        $filestorage_item['ext'] = $ext_a[1];
+        switch ($filestorage_item['ext']) {
             case 'pdf' : {
-                $f['filelink'] = '<a href="/core/getfile.php?id='.$f['id'].'">'.$f['username'].'</a>';
+                $filestorage_item['filelink'] = '<a href="/core/get.file.php?id='.$filestorage_item['id'].'">'.$filestorage_item['username'].'</a>';
                 break;
             }
             default: { // image
-                $f['filelink'] = '<a class="lightbox" target="_blank" href="/core/getimage.php?id='.$f['id'].'">'.$f['username'].'</a>';
+                $filestorage_item['filelink'] = '<a href="/core/get.image.php?id='.$filestorage_item['id'].'" class="lightbox" target="_blank">'.$filestorage_item['username'].'</a>';
                 break;
             }
 
         }
-        $f['internal_name_link'] = '<a href="/files/storage/'.$f['internal_name'].'" target="_blank">'.$f['internal_name'].'</a>';
-        $f['stat_date_insert'] = date('d/m/Y', strtotime($f['stat_date_insert']));
+        $filestorage_item['internal_name_link'] = '<a href="/files/storage/'.$filestorage_item['internal_name'].'" target="_blank">'.$filestorage_item['internal_name'].'</a>';
+        $filestorage_item['stat_date_insert'] = date('d/m/Y', strtotime($filestorage_item['stat_date_insert'])); //@todo: проверить формат
 
-        $fs[ $f['id'] ] = $f;
+        $filestorage_list[ $filestorage_item['id'] ] = $filestorage_item;
     }
 }
-CloseDB($link);
-?>
 
-<table class="" border="1" width="100%" id="exportable">
-    <caption></caption>
-    <tr>
-        <th>icon</th>
-        <th>User filename</th>
-        <th>Internal filename</th>
-        <th>Date upload</th>
-        <th>Size</th>
-        <th>Collection</th>
-        <th> <img title="Сколько раз скачивали" alt="↓" src="/core/core.filestorage/download.png" /> </th>
-        <th>Link</th>
-    </tr>
+// template
 
-    <?php foreach($fs as $i => $file) {?>
-    <tr>
-        <td class="center"><?=$file['ext']?></td>
-        <td><?=$file['filelink']?></td>
-        <td><?=$file['internal_name_link']?></td>
-        <td class="center"><?=$file['stat_date_insert']?></td>
-        <td class="center"><?=$file['size']?></td>
-        <td class="center"><?=$file['collection']?></td>
-        <td class="center"><small> <?=$file['stat_download_counter'] ?> </small></td>
-        <td class="center"><?=$file['external_link']?></td>
-    </tr>
-    <?php } ?>
-</table>
+$template_dir = '$/core/core.filestorage';
+$template_file = "_template.filestorage.list.html";
+
+$template_data = array(
+    'filestorage_list' =>  $filestorage_list
+);
+
+echo websun_parse_template_path($template_data, $template_file, $template_dir);
+

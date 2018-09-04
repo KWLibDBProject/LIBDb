@@ -1,0 +1,30 @@
+<table border="1" width="100%">
+    <tr>
+        <th width="5%">№</th>
+        <th>Английское название</th>
+        <th>Русское название</th>
+        <th>Украинское название</th>
+        <th>Порядок отображения<br><small>(чем меньше - тем раньше)</small></th>
+        <th width="7%">Управление</th>
+    </tr>
+
+    {?*topicgroups_list*}
+    {%*topicgroups_list*}
+    <tr>
+        <td class="centred_cell">{*topicgroups_list:id*}</td>
+        <td>{*topicgroups_list:title_en*}</td>
+        <td>{*topicgroups_list:title_ru*}</td>
+        <td>{*topicgroups_list:title_ua*}</td>
+        <td>{*topicgroups_list:display_order*}</td>
+        <td class="centred_cell"><button class="action-edit button-edit" name="{*topicgroups_list:id*}">Edit</button></td>
+    </tr>
+    {%}
+    {?}
+
+    {?!*topicgroups_list*}
+    <tr>
+        <td colspan="6">Пока не добавили ни одну группу тематических разделов.</td>
+    </tr>
+    {?}
+
+</table>

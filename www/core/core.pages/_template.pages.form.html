@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{*page_title*}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="text/javascript" src="../_assets/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../_assets/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../_assets/tinymce.config.js"></script>
+    <script type="text/javascript" src="../../frontend.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../_assets/core.admin.css">
+    <link rel="stylesheet" type="text/css" href="pages.css">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /* onload */
+            tinify(tiny_config['full'], 'content_en');
+            tinify(tiny_config['full'], 'content_ru');
+            tinify(tiny_config['full'], 'content_ua');
+
+            page_id = {*page_id*};
+
+            if (page_id != -1) {
+                $("#button-remove").show();
+            }
+
+            $("#button-exit").on('click',function(event){
+                window.location.href = '../list.pages.show.php';
+            });
+            $("#button-remove").on('click',function(event){
+                window.location.href = 'pages.action.remove.php?id='+page_id;
+            });
+
+            bindScrollTopAction("#actor-scroll-top");
+        });
+    </script>
+</head>
+<body>
+
+<form action="{*form_call_script*}" method="post" enctype="multipart/form-data" id="form_edit_page">
+    <button type="button" class="button-large" id="button-exit"><strong>ВЕРНУТЬСЯ К СПИСКУ СТРАНИЦ</strong></button>
+    <button type="button" class="button-large" id="button-remove"><strong>УДАЛИТЬ СТРАНИЦУ</strong></button>
+    <button type="submit" class="button-large" ><strong>{*submit_button_text*}</strong></button>
+    <hr>
+    <input type="hidden" name="id" value="{*page_id*}">
+    <fieldset>
+        <legend>Техническая информация</legend>
+        <label>Алиас (служебное имя страницы, не уверен - не меняй!)</label><br>
+        <input type="text" name="alias" id="alias" size=40 value="{*alias*}"><br>
+        <br>
+
+        <label>Комментарий (не обязательно)</label><br>
+        <input type="text" name="comment" id="comment" size=40 value="{*comment*}">
+    </fieldset>
+    <fieldset>
+        <legend>Страница на английском языке</legend>
+        <input type="text" name="title_en" id="title_en" size=60 value="{*title_en*}" disabled><br>
+        <textarea name="content_en" id="content_en" cols="90" rows="7" class="tinymce_editable">{*content_en*}</textarea>
+    </fieldset>
+    <fieldset>
+        <legend>Страница на русском языке</legend>
+        <input type="text" name="title_ru" id="title_ru" size=60 value="{*title_ru*}" disabled><br>
+        <textarea name="content_ru" id="content_ru" cols="90" rows="7" class="tinymce_editable">{*content_ru*}</textarea>
+    </fieldset>
+    <fieldset>
+        <legend>Страница на украинском языке</legend>
+        <input type="text" name="title_ua" id="title_ua" size=60 value="{*title_ua*}" disabled><br>
+        <textarea name="content_ua" id="content_ua" cols="90" rows="7" class="tinymce_editable">{*content_ua*}</textarea>
+    </fieldset>
+
+    <button type="submit" class="button-large" id="button-submit"><strong>СОХРАНИТЬ ИЗМЕНЕНИЯ</strong></button>
+    <button type="button" class="button-large float-right" id="actor-scroll-top"><strong>Наверх страницы</strong></button>
+</form>
+
+</body>
+</html>

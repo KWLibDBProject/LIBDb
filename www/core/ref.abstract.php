@@ -1,10 +1,6 @@
 <?php
-require_once('core.php');
-require_once('core.db.php');
-
-$SID = session_id();
-if(empty($SID)) session_start();
-ifNotLoggedRedirect('/core/');
+define('__ACCESS_MODE__', 'admin');
+require_once '__required.php'; // $mysqli_link
 
 /*
 Abstract reference module
@@ -17,28 +13,16 @@ data_comment varchar 64
 }
 
 */
-require_once('core.db.php');
 
 $reference = isset($_GET['ref']) ? $_GET['ref'] : ''; // вообще то если ref не задано - работать не с чем
 
-$reference = getAllowedRef( $reference , $CONFIG['allowed_abstract_refs']);
-
-
+$reference = getAllowedRef( $reference , Config::get('allowed_abstract_refs'));
 
 $return = '';
 
 if (isset($_GET['ref'])) {
 
     $action = isset($_GET['action']) ? $_GET['action'] : 'no-action';
-    /*
-    эта проверка бессмысленна - у нас и так switch/case по действиям
-    $action = getAllowedValue($action, array(
-        'get-comments', 'insert', 'update', 'remove', 'load', 'advlist', 'list', 'no-action'
-    ));
-    */
-
-
-    $link = ConnectDB();
 
     switch ($action) {
         case 'get-comments': // get comments
@@ -46,10 +30,10 @@ if (isset($_GET['ref'])) {
             $result = array();
             $q = "SELECT column_name, column_comment FROM information_schema.COLUMNS
 WHERE TABLE_NAME = '{$reference}'";
-            $r = mysql_query($q);
-            $rn = @mysql_num_rows($r);
+            $r = mysqli_query($mysqli_link, $q);
+            $rn = @mysqli_num_rows($r);
             if ($rn > 0) {
-                while ($row = mysql_fetch_assoc($r)) {
+                while ($row = mysqli_fetch_assoc($r)) {
                     $result['data'][ $row['column_name'] ] = $row['column_comment'];
                 }
                 $result['state'] = 'ok';
@@ -62,13 +46,13 @@ WHERE TABLE_NAME = '{$reference}'";
         case 'insert':
         {
             $q = array(
-                'data_int' => mysql_real_escape_string($_GET['data_int']),
-                'data_str' => mysql_real_escape_string($_GET['data_str']),
-                'data_comment' => mysql_real_escape_string($_GET['data_comment']),
+                'data_int' => mysqli_real_escape_string($mysqli_link, $_GET['data_int']),
+                'data_str' => mysqli_real_escape_string($mysqli_link, $_GET['data_str']),
+                'data_comment' => mysqli_real_escape_string($mysqli_link, $_GET['data_comment']),
             );
             $qstr = MakeInsert($q, $reference);
-            $res = mysql_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
-            $new_id = mysql_insert_id() or Die("Unable to get last insert id! Last request is [$qstr]");
+            $res = mysqli_query($qstr, $link) or Die("Unable to insert data to DB!".$qstr);
+            $new_id = mysqli_insert_id() or Die("Unable to get last insert id! Last request is [$qstr]");
 
             $result['message'] = $qstr;
             $result['error'] = 0;
@@ -79,13 +63,13 @@ WHERE TABLE_NAME = '{$reference}'";
         {
             $id = intval($_GET['id']);
             $q = array(
-                'data_int' => mysql_real_escape_string($_GET['data_int']),
-                'data_str' => mysql_real_escape_string($_GET['data_str']),
-                'data_comment' => mysql_real_escape_string($_GET['data_comment']),
+                'data_int' => mysqli_real_escape_string($mysqli_link, $_GET['data_int']),
+                'data_str' => mysqli_real_escape_string($mysqli_link, $_GET['data_str']),
+                'data_comment' => mysqli_real_escape_string($mysqli_link, $_GET['data_comment']),
             );
 
             $qstr = MakeUpdate($q, $reference, "WHERE id=$id");
-            $res = mysql_query($qstr, $link) or Die("Unable update data : ".$qstr);
+            $res = mysqli_query($qstr, $link) or Die("Unable update data : ".$qstr);
 
             $result['message'] = $qstr;
             $result['error'] = 0;
@@ -96,7 +80,7 @@ WHERE TABLE_NAME = '{$reference}'";
         {
             $id = intval($_GET['id']);
             $q = "DELETE FROM $reference WHERE (id=$id)";
-            if ($r = mysql_query($q)) {
+            if ($r = mysqli_query($mysqli_link, $q)) {
                 // запрос удаление успешен
                 $result["error"] = 0;
                 $result['message'] = 'Удаление успешно';
@@ -113,11 +97,11 @@ WHERE TABLE_NAME = '{$reference}'";
         {
             $id = intval($_GET['id']);
             $query = "SELECT * FROM $reference WHERE id=$id";
-            $res = mysql_query($query) or die("Невозможно получить содержимое справочника! ".$query);
-            $ref_numrows = mysql_num_rows($res);
+            $res = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое справочника! ".$query);
+            $ref_numrows = mysqli_num_rows($res);
 
             if ($ref_numrows != 0) {
-                $result['data'] = mysql_fetch_assoc($res);
+                $result['data'] = mysqli_fetch_assoc($res);
                 $result['error'] = 0;
                 $result['message'] = '';
             } else {
@@ -131,8 +115,8 @@ WHERE TABLE_NAME = '{$reference}'";
         {
             $fields = array();
             $rows = array();
-            $r_fields = mysql_query("SELECT column_name, column_comment FROM information_schema.COLUMNS WHERE TABLE_NAME = '{$reference}'");
-            while ($a_field = mysql_fetch_assoc($r_fields)) {
+            $r_fields = mysqli_query($mysqli_link, "SELECT column_name, column_comment FROM information_schema.COLUMNS WHERE TABLE_NAME = '{$reference}'");
+            while ($a_field = mysqli_fetch_assoc($r_fields)) {
                 $fields [ $a_field['column_name'] ] = $a_field['column_comment'];
             }
             $fields['control'] = 'control';
@@ -141,12 +125,12 @@ WHERE TABLE_NAME = '{$reference}'";
             }
 
             $return = '';
-            $r_data = mysql_query("SELECT * FROM $reference");
+            $r_data = mysqli_query($mysqli_link, "SELECT * FROM $reference");
 
 
-            if (@mysql_num_rows($r_data) > 0)
+            if (@mysqli_num_rows($r_data) > 0)
             {
-                while ($ref_record = mysql_fetch_assoc($r_data))
+                while ($ref_record = mysqli_fetch_assoc($r_data))
                 {
                     $ref_record['control'] = <<<xxx
 <button class="action-edit button-edit" name="{$ref_record['id']}">Edit</button>
@@ -184,9 +168,9 @@ ADV_TABLE_TR;
         case 'list':
         {
             $query = "SELECT * FROM $reference";
-            $res = mysql_query($query) or die("mysql_query_error: ".$query);
+            $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
 
-            $ref_numrows = @mysql_num_rows($res) ;
+            $ref_numrows = @mysqli_num_rows($res) ;
             $return = <<<TABLE_START
 <table border="1" width="100%">
     <tr>
@@ -198,7 +182,7 @@ ADV_TABLE_TR;
     </tr>
 TABLE_START;
             if ($ref_numrows > 0) {
-                while ($ref_record = mysql_fetch_assoc($res))
+                while ($ref_record = mysqli_fetch_assoc($res))
                 {
                     $return.= <<<TABLE_EACHROW
 <tr>
@@ -224,9 +208,9 @@ TABLE_IS_EMPTY;
         <title>Работа с абстрактным справочником [<?php echo $reference ?>]</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-        <script src="js/jquery-1.10.2.min.js"></script>
-        <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.min.css">
+        <script src="_assets/jquery-1.10.2.min.js"></script>
+        <script src="_assets/jquery-ui-1.10.3.custom.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="_assets/jquery-ui-1.10.3.custom.min.css">
 
         <style type="text/css">
             body {
@@ -524,10 +508,7 @@ TABLE_IS_EMPTY;
             break;
         }
     } //switch
-    CloseDB($link);
-
     print($return);
 } else {
     Die('При вызове не указан идентификатор справочника! Работать не с чем! ');
 }
-?>

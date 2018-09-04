@@ -1,28 +1,19 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.filestorage.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 $ref_name = 'books';
 
-$link = ConnectDB();
-
-$now = ConvertTimestampToDate();
-$q = array(
-    'title'         => mysql_real_escape_string($_POST['book_title']),
-    'date'          => mysql_real_escape_string($_POST['book_date']),
-    'contentpages'  => mysql_real_escape_string($_POST['book_contentpages']),
-    'published'     => mysql_real_escape_string($_POST['is_book_ready']),
-    'year'          => substr(mysql_real_escape_string($_POST['book_date']), 6, 4),
-    'timestamp'     => ConvertDateToTimestamp(mysql_real_escape_string($_POST['book_date'])),
-    'stat_date_insert'  =>  $now,
-    'stat_date_update'  =>  $now
+$dataset = array(
+    'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
+    'contentpages'  => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
+    'published_status'  => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
+    'published_date'    => DateTime::createFromFormat('d.m.Y', $_POST['book_publish_date'])->format('Y-m-d'),
 );
 
-$qstr = MakeInsert($q, $ref_name);
-$res = mysql_query($qstr, $link) or Die("Невозможно вставить данные в базу  ".$qstr);
-$book_id = mysql_insert_id() or Die("Не удалось получить id последней добавленной записи!");
+$query = MakeInsert($dataset, $ref_name);
+$sql_result = mysqli_query($mysqli_link, $query) or die("Невозможно вставить данные в базу  ".$query);
+$book_id = mysqli_insert_id($mysqli_link) or die("Не удалось получить id последней добавленной записи!");
 
 
 if (count($_FILES)>0) {
@@ -34,38 +25,28 @@ if (count($_FILES)>0) {
     }
 
     $result['error'] = 0;
-    $result['message'] .= "Данные обновлены!";
+    $result['message'] = "Данные обновлены!";
 
  } else {
     $result['error'] = 1;
-    $result['message'] .= "Не выбраны файлы для загрузки или ошибка передачи данных! <br>\r\n";
+    $result['message'] = "Не выбраны файлы для загрузки или ошибка передачи данных! <br>\r\n";
 }
 
 kwLogger::logEvent('Add', 'books', $book_id, "Added book, new id = {$book_id}");
 
-CloseDB($link);
-
 if (isAjaxCall()) {
     print(json_encode($result));
 } else {
-    if ($result['error'] == 0) {
-        $override = array(
-            'time' => 10,
-            'target' => '/core/ref.books.show.php',
-            'buttonmessage' => 'Вернуться к списку сборников',
-            'message' => 'Сборник добавлен'
-        );
-    } else {
-        $override = array(
-            'time' => 10,
-            'target' => '/core/ref.books.show.php',
-            'buttonmessage' => 'Вернуться к списку сборников',
-            'message' => $result['message']
-        );
-    }
-    $tpl = new kwt('../ref.all.timed.callback.tpl');
-    $tpl->override($override);
-    $tpl->out();
-}
+    $template_dir = '$/core/_templates';
+    $template_file = "ref.all_timed_callback.html";
 
-?>
+    $template_data = array(
+        'time'          => Config::get('callback_timeout') ?? 15,
+        'target'        => '../list.books.show.php',
+        'button_text'   => 'Вернуться к списку сборников',
+    );
+
+    $template_data['message'] = ($result['error'] == 0) ? 'Сборник добавлен' : $result['message'];
+
+    echo websun_parse_template_path($template_data, $template_file, $template_dir);
+}

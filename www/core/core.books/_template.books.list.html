@@ -1,0 +1,61 @@
+<table border="1" width="100%">
+    <tr>
+        <th width="5%">(id)</th>
+        <th width="20%">Название или номер сборника</th>
+        <th width="10%">Дата/год выпуска</th>
+        <th width="10%">Страницы со статьями</th>
+        <th width="15%">Сборник готов? </th>
+        <th width="10%">Кол-во статей</th>
+        <th width="15%">Файлы</th>
+        <th width="7%">Управление</th>
+    </tr>
+
+    {?*books_list*}
+    {%*books_list*}
+    <tr>
+        <td class="centred_cell">
+            {*books_list:book_id*}
+        </td>
+        <td>
+            {*books_list:title*}
+        </td>
+        <td class="centred_cell">
+            {*books_list:date*}
+        </td>
+        <td class="centred_cell">
+            {*books_list:contentpages*}
+        </td>
+        <td class="centred_cell">
+            /* websun legacy if */
+            {?*books_list:published*}Да<br><small>(опубликован)</small>{?}
+            {?!*books_list:published*}Нет<br><small>(в работе)</small>{?}
+        </td>
+        <td class="centred_cell">
+            <a href="/core/list.articles.show.php#with_book={*books_list:book_id*}" target="_blank">
+                {*books_list:book_articles_count*}
+            </a>
+        </td>
+        <td>
+            <a href="get.image.php?id={*books_list:file_cover*}" class="icon-jpg icon lightbox-image">Обложка</a>
+            <br>
+            <a href="get.file.php?id={*books_list:file_title_ru*}" class="icon-pdf icon">Титульник (рус)</a>
+            <br>
+            <a href="get.file.php?id={*books_list:file_title_en*}" class="icon-pdf icon">Титульник (англ)</a>
+            <br>
+            <a href="get.file.php?id={*books_list:file_toc_ru*}" class="icon-pdf icon">Оглавление (рус)</a>
+            <br>
+            <a href="get.file.php?id={*books_list:file_toc_en*}" class="icon-pdf icon">Английское оглавление</a>
+        </td>
+        <td class="centred_cell">
+            <button class="action-edit button-edit" name="{*books_list:book_id*}">Edit</button>
+        </td>
+    </tr>
+    {%}
+    {?}
+
+    {?!*books_list*}
+    <tr>
+        <td colspan="8">Пока не добавили ни один сборник!</td>
+    </tr>
+    {?}
+</table>

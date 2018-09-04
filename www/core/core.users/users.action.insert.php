@@ -1,8 +1,6 @@
 <?php
-require_once('../core.php');
-require_once('../core.db.php');
-require_once('../core.kwt.php');
-require_once('../core.kwlogger.php');
+define('__ACCESS_MODE__', 'admin');
+require_once '../__required.php'; // $mysqli_link
 
 if (!isAjaxCall()) Die('Некорректный вызов скрипта!');
 
@@ -11,54 +9,42 @@ if (!IsSet($_POST['ref_name'])) {
 }
 $table = 'users';
 
-$link = ConnectDB();
-
-$now = ConvertTimestampToDate();
 $post = array(
-    'name'          => mysql_real_escape_string($_POST['name']),
-    'email'         => mysql_real_escape_string($_POST['email']),
-    'permissions'   => mysql_real_escape_string($_POST['permissions']),
-    'login'         => mysql_real_escape_string($_POST['login']),
-    'password'      => mysql_real_escape_string($_POST['password']),
-    'phone'         => mysql_real_escape_string($_POST['phone']),
-    'md5password'   => md5(mysql_real_escape_string($_POST['password'])),
-    'stat_date_insert'  =>  $now,
-    'stat_date_update'  =>  $now
+    'name'          => mysqli_real_escape_string($mysqli_link, $_POST['name']),
+    'email'         => mysqli_real_escape_string($mysqli_link, $_POST['email']),
+    'permissions'   => mysqli_real_escape_string($mysqli_link, $_POST['permissions']),
+    'login'         => mysqli_real_escape_string($mysqli_link, $_POST['login']),
+    'phone'         => mysqli_real_escape_string($mysqli_link, $_POST['phone']),
+    'md5password'   => md5(mysqli_real_escape_string($mysqli_link, $_POST['password'])),
 );
-// повысить до админа нельзя, по крайней мере отсюда
-$post['permissions'] =
-    ($post['permissions'] > 254)
-        ? 254
-        : $post['permissions'];
+// получить права админа (255) нельзя
+$post['permissions'] = min($post['permissions'], 254);
 
-$q = "SELECT `id` FROM $table WHERE `login` LIKE '$post[login]'";
-$r = mysql_query($q,$link);
+$query_find_user = "SELECT `id` FROM users WHERE `login` LIKE '{$post['login']}'";
+$r = mysqli_query($mysqli_link, $query_find_user);
 
-if (mysql_errno($link)==0)
+if (mysqli_errno($mysqli_link)==0)
 {
-    // что-то нашли т.е. mysql_num_rows()>1
-    if (mysql_num_rows($r)==0) {
+    if (mysqli_num_rows($r)==0) {
         // пользователь уникален
-        $q = MakeInsert($post,$table);
-        $r = mysql_query($q,$link) or Die("Unable to insert data to DB!".$qstr);
-        $new_id = mysql_insert_id() or Die("Unable to get last insert id!");
-        $result['query'] = $q;
-        $result['message'] = 'Adding complete: '.$q;
+        $query_insert = MakeInsert($post, $table);
+        $r = mysqli_query($mysqli_link, $query_insert) or Die("Unable to insert data to DB!".$query);
+        $new_id = mysqli_insert_id($mysqli_link) or Die("Unable to get last insert id!");
+        $result['query'] = $query_insert;
+        $result['message'] = 'Adding complete: '.$query_insert;
         $result['error'] = 0;
 
         kwLogger::logEvent('Add', 'users', $new_id, "User added, id = {$new_id}");
 
     } else {
-        $result['message'] = 'Trying to duplicate user! : '.$q;
+        $result['message'] = 'Trying to duplicate user! : '.$query_find_user;
         kwLogger::logEvent('Error', 'users', $post['login'], "Trying duplicate user");
         $result['error'] = 1;
     }
 } else {
     // ошибка запроса
-    $result['message'] = 'Trying to duplicate user! : '.$q;
+    $result['message'] = 'Trying to duplicate user! : '.$query_find_user;
     $result['error'] = 1;
 }
 
 print(json_encode($result));
-CloseDB($link);
-?>
