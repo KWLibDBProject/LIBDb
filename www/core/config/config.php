@@ -16,7 +16,7 @@ $DB_CONNECTION = 'blacktower_etks';
 
 $VERSION = [
     'copyright' =>  'KW LIBDb Engine',
-    'version'   =>  '1.126 (2018-09-24)'
+    'version'   =>  '1.127 (2018-09-04)'
 ];
 
 // "database:{$x}" => 'x', // $x = 'x';
