@@ -66,6 +66,28 @@ function printr($str)
     echo '<pre>'.print_r($str,true).'</pre>';
 }
 
+/**
+ * dump
+ *
+ * @param $data
+ */
+function d($data)
+{
+    echo '<pre>';
+    var_dump($data);
+}
+
+/**
+ * dump and die
+ *
+ * @param $data
+ */
+function dd($data)
+{
+    d($data);
+    die;
+}
+
 
 /*
 Converts value (filesize) to human-friendly view like '5.251 M', 339.645 K or 4.216 K

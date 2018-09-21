@@ -1,6 +1,5 @@
 {
   "name": "libdb",
-  "version": "1.66",
   "description": "KW LibDB -- Движок сайта онлайн-журнала «Электротехнические и компьютерные системы» Одесского политехнического университета.",
   "author": "Karel Wintersky <karel.wintersky@gmail.com>",
   "devDependencies": {

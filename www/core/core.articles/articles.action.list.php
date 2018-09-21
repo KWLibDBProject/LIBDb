@@ -41,12 +41,12 @@ AND
 books.id=articles.book";
 
 $query
-    .= (IsSet($_GET['author'])   && $_GET['author']!=0)
+    .= (IsSet($_GET['author'])   && $_GET['author'] != 0)
     ? " AND cross_aa.author = " . intval($_GET['author'])
     : "";
 
 $query
-    .= (IsSet($_GET['book'])     && $_GET['book']!=0 )
+    .= (IsSet($_GET['book'])     && $_GET['book'] != 0 )
     ? " AND articles.book = "   . intval($_GET['book'])
     : "";
 
@@ -64,8 +64,9 @@ $query
 if (true){
     $query .= " AND authors.id = cross_aa.`author` ";
 
+    // was incorrect condition ($_GET['firstletter'] !== 0)
     $query
-        .= (isset($_GET['firstletter']) && $_GET['firstletter'] !== 0)
+        .= ( isset($_GET['firstletter']) && ( $_GET['firstletter'] !== "0") )
         ? " AND authors.firstletter_name_ru = '".  mb_substr($_GET['firstletter'], 0, 1)  ."' "
         : "";
 }
