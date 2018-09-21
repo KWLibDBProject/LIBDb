@@ -54,7 +54,6 @@ function BuildSelectorExtended(target_name, data, default_option_string, value_o
 
     if (data['error'] == 0) {
         ret = '<option value="0" data-group="*">'+ dos +'</option>';
-        console.log(dos);
 
         $.each(data['data'] , function(id, value){
             /*
@@ -91,6 +90,8 @@ function BuildSelectorExtended(target_name, data, default_option_string, value_o
         }
         $(_target).empty().append ( ret );
         Selector_SetOption(target_name, curr_id);
+
+        EnableSelectorByName(target_name);  // 2018-09-22 Patch
     }
     else {
         $("select[name="+target_name+"]").prop('disabled',true);
@@ -197,6 +198,9 @@ function BuildSelector(target_name, data, default_option_string, value_of_select
         if (typeof value_of_selected_option != 'undefined') {
             Selector_SetOption(target_name, curr_id);
         }
+
+        EnableSelectorByName(target_name);  // 2018-09-22 Patch
+
     } else {
     }
 
@@ -218,6 +222,7 @@ function DisableSelectorByName(target_name) {
  * @constructor
  */
 function EnableSelectorByName(target_name) {
+    // $(_target).prop('enable', true);
     $("select[name="+target_name+"]").prop('disabled', false);
 }
 

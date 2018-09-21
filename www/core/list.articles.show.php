@@ -121,7 +121,7 @@ $articles_limit = 50;
                 Первая буква фамилии
             </td>
             <td>
-                <select name="with_letter"><option value="0">ANY</option></select>
+                <select name="with_letter" disabled><option value="0">ANY</option></select>
                 (одного из авторов)
             </td>
         </tr>
@@ -130,7 +130,7 @@ $articles_limit = 50;
                 Автор (один из):
             </td>
             <td>
-                <select name="with_author" class="search_selector">
+                <select name="with_author" class="search_selector" disabled>
                     <option value="0">ЛЮБОЙ</option>
                 </select>
             </td>
@@ -140,7 +140,7 @@ $articles_limit = 50;
                 Тематический раздел:&nbsp;&nbsp;&nbsp;
             </td>
             <td>
-                <select name="with_topic" class="search_selector">
+                <select name="with_topic" class="search_selector" disabled>
                     <option value="0">ЛЮБОЙ</option>
                 </select>
             </td>
@@ -150,7 +150,7 @@ $articles_limit = 50;
                 Сборник (книга):
             </td>
             <td>
-                <select name="with_book" class="search_selector">
+                <select name="with_book" class="search_selector" disabled>
                     <option value="0">ЛЮБОЙ</option>
                 </select>
             </td>

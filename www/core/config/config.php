@@ -16,7 +16,7 @@ $DB_CONNECTION = 'blacktower_etks';
 
 $VERSION = [
     'copyright' =>  'KW LIBDb Engine',
-    'version'   =>  '1.127 (2018-09-04)'
+    'version'   =>  '1.130 (2018-09-22)',
 ];
 
 // "database:{$x}" => 'x', // $x = 'x';
@@ -42,11 +42,8 @@ $CONFIG = [
     ],
 
     'frontend_assets'   =>  [
-        // тип ассетов
-        'assets_mode'   =>  'development' , // development | production
-
-        // git rev-parse --short HEAD
-        'assets_version'=>  crc32( $VERSION['version'] )
+        'assets_mode'   =>  'development' ,                 // тип ассетов : development | production
+        'assets_version'=>  crc32( $VERSION['version'] ),   // git rev-parse --short HEAD
     ],
 
     // Задает конфигурацию модуля kwLogger

@@ -102,7 +102,7 @@ $max_authors = 51;
 <hr>
 <fieldset>
     <legend>Критерии поиска</legend>
-    Первая буква имени: <form class="hash_selectors inline_form"><select name="letter" class="search_selector"><option value="0">ANY</option></select></form>
+    Первая буква имени: <form class="hash_selectors inline_form"><select name="letter" class="search_selector" disabled><option value="0">Выбрать...</option></select></form>
     <button id="actor-show-withselection" class="button-large" disabled>Показать выбранных</button>
     <div style="padding-right:4px; border-left: 6px solid black;display: inline;"></div>
     <button id="actor-show-all" class="button-large">Показать всех</button>
