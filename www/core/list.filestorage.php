@@ -2,6 +2,11 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '__required.php'; // $mysqli_link
 
+$files_count = DB::getRowCount(FileStorage::getStorageTable());
+$files_limit = 100;
+
+$files_message = pluralForm($files_count, 'файл|файла|файлов');
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,6 +26,8 @@ require_once '__required.php'; // $mysqli_link
     <script type="text/javascript">
         $(document).ready(function () {
             var url_files_list = "core.filestorage/filestorage.action.list.php";
+            var total_files_count = <?php echo $files_count; ?>;
+            var limit_files_count = <?php echo $files_limit; ?>;
 
             $.ajaxSetup({cache: false});
 
@@ -35,7 +42,9 @@ require_once '__required.php'; // $mysqli_link
             });
 
             // onload full list
-            $("#files_list").load(url_files_list);
+            if (total_files_count < limit_files_count) {
+                $("#files_list").empty().load(url_files_list);
+            }
 
             // bind exit actor
             $("#actor-exit").on('click',function(event){
@@ -121,6 +130,7 @@ require_once '__required.php'; // $mysqli_link
 <fieldset class="result-list table-hl-rows">
     <legend>Результаты поиска</legend>
     <div id="files_list">
+        В базе <?php echo "{$files_count} {$files_message}"; ?>. Укажите критерии поиска и нажмите "Показать выбранное" или "Показать всё".
     </div>
 </fieldset>
 

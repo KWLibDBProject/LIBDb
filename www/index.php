@@ -1,5 +1,8 @@
 <?php
-define('__ROOT__', __DIR__);
+$LIBDB_ROOT = getenv( 'LIBDB_INSTALL_PATH' );
+if ($LIBDB_ROOT === false) $LIBDB_ROOT = __DIR__ ;
+
+define('__ROOT__', $LIBDB_ROOT);
 define('__ACCESS_MODE__', 'frontend');
 
 require_once (__ROOT__ . '/core/__required.php');

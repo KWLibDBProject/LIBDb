@@ -2,7 +2,10 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '__required.php'; // $mysqli_link
 
-$authors_count = DB::query("SELECT COUNT(*) FROM `authors`")->fetchColumn() ?? 0;
+$authors_count = DB::getRowCount('authors') ?? 0;
+$authors_message = pluralForm($authors_count, 'автор|автора|авторов');
+
+$max_authors = 51;
 
 ?>
 <html>
@@ -24,7 +27,8 @@ $authors_count = DB::query("SELECT COUNT(*) FROM `authors`")->fetchColumn() ?? 0
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajaxSetup({cache: false});
-            var total_authors_count = <?php echo $authors_count; ?>;
+            var total_authors_count = +<?php echo $authors_count; ?>;
+            var limit_authors_count = +<?php echo $max_authors; ?>
 
             var siteLanguage = 'lang=ru'; // required! we load letters with frontend-declared ajax function
 
@@ -47,7 +51,7 @@ $authors_count = DB::query("SELECT COUNT(*) FROM `authors`")->fetchColumn() ?? 0
             if ($('select[name="letter"]').val() != 0) {
                 $("#authors_list").empty().load(url_authors_list + "&letter="+$('select[name="letter"]').val());
                 $("#actor-show-withselection").prop('disabled', false);
-            } else if (total_authors_count < 100) {
+            } else if (total_authors_count < limit_authors_count) {
                 $("#authors_list").empty().load(url_authors_list);
             }
 
@@ -108,7 +112,7 @@ $authors_count = DB::query("SELECT COUNT(*) FROM `authors`")->fetchColumn() ?? 0
 <fieldset class="result-list table-hl-rows">
     <legend>Результаты поиска</legend>
     <div id="authors_list">
-        В базе больше 100 авторов. Сузьте критерии поиска и нажмите "Показать всех" или "Показать выбранных"
+        В базе <?php echo "{$authors_count} {$authors_message}"; ?>. Сузьте критерии поиска и нажмите "Показать всех" или "Показать выбранных"
     </div>
 </fieldset>
 

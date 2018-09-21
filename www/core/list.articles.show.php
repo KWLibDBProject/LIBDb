@@ -2,7 +2,10 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '__required.php'; // $mysqli_link
 
-$articles_count = DB::query("SELECT COUNT(id) FROM `articles`")->fetchColumn() ?? 0;
+$articles_count = DB::getRowCount('articles') ?? 0;
+$articles_message = pluralForm($articles_count, 'статья|статьи|статей');
+
+$articles_limit = 50;
 
 ?>
 <!DOCTYPE HTML>
@@ -20,6 +23,7 @@ $articles_count = DB::query("SELECT COUNT(id) FROM `articles`")->fetchColumn() ?
     <script type="text/javascript">
         $(document).ready(function () {
             var total_articles_count = <?php echo $articles_count; ?>;
+            var limit_articles_count = <?php echo $articles_limit; ?>;
 
             $.ajaxSetup({cache: false});
 
@@ -60,7 +64,7 @@ $articles_count = DB::query("SELECT COUNT(id) FROM `articles`")->fetchColumn() ?
             // onLoad
             if (query.length) {
                 $("#articles_list").empty().load(url_extended + query);
-            } else if (total_articles_count < 100) {
+            } else if (total_articles_count < limit_articles_count+1) {
                 $("#articles_list").empty().load(url_extended);
             }
 
@@ -160,7 +164,7 @@ $articles_count = DB::query("SELECT COUNT(id) FROM `articles`")->fetchColumn() ?
 <fieldset class="result-list table-hl-rows">
     <legend>Результаты поиска</legend>
     <div id="articles_list">
-        В базе больше 100 статей. Сузьте критерии поиска и нажмите "Показать выбранное" или "Показать все статьи"
+        В базе <?php echo "{$articles_count} {$articles_message}"; ?>. Сузьте критерии поиска и нажмите "Показать выбранное" или "Показать все статьи".
     </div>
 </fieldset>
 

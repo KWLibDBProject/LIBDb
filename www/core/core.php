@@ -15,6 +15,21 @@ function floadfile($filename)
 }
 
 
+function pluralForm($number, $forms, $glue = '|')
+{
+    if (is_string($forms)) {
+        $forms = explode($glue, $forms);
+    } elseif (!is_array($forms)) {
+        return null;
+    }
+
+    if (count($forms) != 3) {
+        return null;
+    }
+
+    return $number % 10 == 1 && $number % 100 != 11 ? $forms[0] : ($number % 10 >= 2 && $number % 10 <= 4 && ($number % 100 < 10 || $number % 100 >= 20) ? $forms[1] : $forms[2]);
+}
+
 
 /**
  * @param bool $debugmode

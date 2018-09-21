@@ -10,11 +10,13 @@ SELECT
 FROM 
     news 
 WHERE 
-    1=1 ";
-
-$res = mysqli_query($mysqli_link, $query) or die($query);
+    1=1
+ORDER BY news.publish_date DESC  
+";
 
 $news_list = [];
+
+$res = mysqli_query($mysqli_link, $query) or die($query);
 
 if (mysqli_num_rows($res) > 0) {
     while ($news_record = mysqli_fetch_assoc($res)) {
