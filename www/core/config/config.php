@@ -1,41 +1,49 @@
 <?php
 /**
  * User: Karel Wintersky
- * Date: 25.08.2018, time: 4:06
  */
-
-$INCLUDE_DB         = include 'config.db.php';
-$INCLUDE_THEME      = include 'config.theme.etks.php';
-$INCLUDE_STORAGE    = include 'config.storage.etks.php';
-$INCLUDE_KWLOGGER   = include 'config.kwlogger.php';
-
-/**
- * Ключ выбора окружения (подключения к БД)
- */
-$DB_CONNECTION = 'blacktower_etks';
-
 $VERSION = [
     'copyright' =>  'KW LIBDb Engine',
-    'version'   =>  '1.130 (2018-09-22)',
+    'version'   =>  '1.131 (2018-09-22)',
 ];
 
-// "database:{$x}" => 'x', // $x = 'x';
+/**  Ключ выбора окружения (подключения к БД)  */
+$DB_CONNECTION = 'blacktower_etks';
 
+/* Подключение частей конфигов */
+$INCLUDE_DB         = include '_.db.php';
+$INCLUDE_KWLOGGER   = include '_.kwlogger.php';
+
+$INCLUDE_THEME      = include '_.theme.etks.php';
+$INCLUDE_STORAGE    = include '_.storage.etks.php';
+$INCLUDE_AUTH       = include '_.auth.etks.php';
+
+/* Определение главного блока конфигурации */
 $CONFIG = [
     'database_connection'   =>  $DB_CONNECTION,
-
     'database'              =>  $INCLUDE_DB[ $DB_CONNECTION ],
-
-    // 'database:docker57'  =>  $INCLUDE_DB['docker57'],
 
     // Storage configuration
     'storage'               =>  $INCLUDE_STORAGE,
 
+    // Задает конфигурацию модуля kwLogger
+    'kwlogger'              =>  $INCLUDE_KWLOGGER,
+
     // Theme (путь к шаблонам и так далее)
     'frontend'  =>  [
-        'theme'         =>  $INCLUDE_THEME,
+        'theme'     =>  $INCLUDE_THEME,
     ],
 
+    // Кука для определения языка сайта
+    'cookie_site_language'  =>  $INCLUDE_AUTH['cookie:site_language'],
+
+    // Авторизация: Кука для проверки логина
+    'auth:cookies'          =>  $INCLUDE_AUTH['auth:cookies'],
+
+    // Авторизация: Переменные в сессии
+    'auth:session'          =>  $INCLUDE_AUTH['auth:session'],
+
+    // Мета-данные в шаблонах
     'frontend_meta' =>  [
         'copyright'     =>  $VERSION['copyright'],
         'version'       =>  $VERSION['version']
@@ -44,26 +52,6 @@ $CONFIG = [
     'frontend_assets'   =>  [
         'assets_mode'   =>  'development' ,                 // тип ассетов : development | production
         'assets_version'=>  crc32( $VERSION['version'] ),   // git rev-parse --short HEAD
-    ],
-
-    // Задает конфигурацию модуля kwLogger
-    'kwlogger'              =>  $INCLUDE_KWLOGGER,
-
-    // Кука для определения языка сайта
-    'cookie_site_language'  => 'libdb_sitelanguage',
-
-    // Авторизация: Кука для проверки логина
-    'auth:cookies' => [
-        'user_is_logged'    =>  'u_libdb_is_logged',
-        'user_permissions'  =>  'u_libdb_permissions',
-        'user_id'           =>  'u_libdb_userid'
-    ],
-
-    // Авторизация: Переменные в сессии
-    'auth:session'   =>  [
-        'user_is_logged'    =>  'u_libdb_is_logged',
-        'user_permissions'  =>  'u_libdb_permissions',
-        'user_id'           =>  'u_libdb_userid'
     ],
 
     // Разрешенные справочники для редактора абстрактного справочника
