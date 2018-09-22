@@ -4,11 +4,11 @@
  */
 $VERSION = [
     'copyright' =>  'KW LIBDb Engine',
-    'version'   =>  '1.131 (2018-09-22)',
+    'version'   =>  '1.132 (2018-09-22)',
 ];
 
 /**  Ключ выбора окружения (подключения к БД)  */
-$DB_CONNECTION = 'blacktower_etks';
+$DB_CONNECTION = 'blacktower:etks';
 
 /* Подключение частей конфигов */
 $INCLUDE_DB         = include '_.db.php';
