@@ -12,7 +12,7 @@ if ($id != -1) {
     $file_info = FileStorage::getFileInfo($id); //@todo: а если файла нет? см. ниже getFileContent()
 
     /* update stat_download_counter but only for really downloaded files, not fetched via control panel */
-    if (strpos($_SERVER['HTTP_REFERER'], '/core/') == false ) {
+    if (array_key_exists('HTTP_REFERER', $_SERVER) && (false === strpos($_SERVER['HTTP_REFERER'], '/core/'))) {
         FileStorage::statUpdateDownloadCounter($id);
     }
 
@@ -25,8 +25,8 @@ if ($id != -1) {
         header ("Accept-Ranges: bytes");
         header ("Content-Disposition: inline; filename=\"" . $file_info['username'] . "\"");
 
-        $ct = ($is_downloading) ? "Content-Type: application/octet-stream" : "Content-Type: {$file_info['filetype']}";
-        header($ct);
+        $header_content_type = ($is_downloading) ? "Content-Type: application/octet-stream" : "Content-Type: {$file_info['filetype']}";
+        header($header_content_type);
 
         header ("Content-Length: " . $file_info['filesize']);
         header ("Age: 0");
