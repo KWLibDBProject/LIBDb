@@ -10,6 +10,8 @@ require_once 'frontend.php';
 
 $site_language = GetSiteLanguage();
 
+Localizer::setLocale($site_language);
+
 // defaults fields and variables
 $maincontent_html = '';
 $maincontent_js = '';
@@ -34,6 +36,9 @@ $main_template_file = "index.{$site_language}.html";
  *  или
  *
  *  $main_template->set('inner_html', $subtemplate->render() )
+ *
+ *  2018-10-27 : это действительно надо делать через ArrisFramework\Template , потому что он позволит (должен позволять!)
+ *  устанавливать HTTP-header (например 404 для несуществующего автора или страницы)
  *
 */
 $main_template_data['template_name'] = $main_theme_name; // template name , defined in config
@@ -82,12 +87,16 @@ switch ($fetch) {
                 /*расширенная информация по автору + список его статей + фото */
                 $id = intval($_GET['id'] ?? 0);
 
-                //@todo: не обрабатывается ситуация "автора с ID нет в БД"
-
                 $subtemplate_dir = "$/template/authors/info/";
                 $subtemplate_filename = "authors__info";
 
                 $author_information = LoadAuthorInformation_ById($id, $site_language);
+
+                if (!$author_information['exists']) {
+                    $maincontent_html = Localizer::get('author_not_exists');
+                    break;
+                }
+
                 $author_publications = LoadArticles_ByAuthor($id, $site_language);
 
                 /**
@@ -239,7 +248,7 @@ switch ($fetch) {
                  * HTML
                  */
                 $inner_html_data = [
-                    'topic_data'    =>  LoadTopicInfo($id, $site_language),
+                    'topic_data'    =>  LoadTopicInfo($id, $site_language), // если топика нет - это обрабатывается в шаблоне
                     'topic_id'      =>  $id,
                     'site_language' =>  $site_language
                 ];
@@ -265,7 +274,7 @@ switch ($fetch) {
                 $inner_html_data = [
                     'site_language'     =>  $site_language,
                     'book_id'           =>  $id,
-                    'book_info'         =>  LoadBookInfo($id),
+                    'book_info'         =>  LoadBookInfo($id), // если сборника нет - это обрабатывает шаблон
                     'template_folder'   =>  $main_theme_dir
                 ];
 
@@ -286,10 +295,18 @@ switch ($fetch) {
                 /**
                  * HTML
                  */
-                $article_info = LoadArticles_ByQuery(array('article_id' => $id ) , $site_language)[ $id ];
+
+                $articles = LoadArticles_ByQuery(array('article_id' => $id ) , $site_language);
+
+                if (empty($articles)) {
+                    $maincontent_html = Localizer::get('article_not_exists');
+                    break;
+                }
+
+                $article_info = $articles[ $id ];
 
                 // список авторов, писавших статью
-                $article_authors = $article_info['authors'];
+                $article_authors = $article_info['authors'] ?? [];
 
                 $inner_html_data = [
                     'article_title'         => $article_info['article_title'] ?? '',

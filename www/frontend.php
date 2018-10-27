@@ -100,7 +100,7 @@ function LoadFirstLettersForSelector($lang)
 
     $query = "SELECT DISTINCT firstletter_name_{$lang} AS letter FROM authors ORDER BY firstletter_name_{$lang}";
 
-    $query_response = mysqli_query($mysqli_link, $query);
+    $query_response = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
 
     if ($query_response)
     {
@@ -136,7 +136,7 @@ function LoadStaticPage($alias, $lang = 'en')
     $alias = mysqli_real_escape_string($mysqli_link, $alias);
 
     $query = "SELECT content_{$lang} AS pagecontent FROM staticpages WHERE alias LIKE '{$alias}'";
-    $res = mysqli_query($mysqli_link, $query);
+    $res = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     $numrows = mysqli_num_rows($res);
 
     if ($numrows == 1) {
@@ -166,7 +166,7 @@ function LoadTopicInfo($id, $lang)
     if ($id == 0) return $topic_info;
 
     $query = "SELECT id, title_{$lang} AS title FROM topics WHERE id={$id}";
-    $topic_result = mysqli_query($mysqli_link, $query);
+    $topic_result = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
 
     if (@mysqli_num_rows($topic_result) == 1)
     {
@@ -185,7 +185,7 @@ function LoadTopics($lang)
 {
     global $mysqli_link;
     $q = "SELECT id, title_{$lang} AS title FROM topics ORDER BY title_{$lang}";
-    $r = mysqli_query($mysqli_link, $q);
+    $r = mysqli_query($mysqli_link, $q) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     $ret = array();
     $num_rows = mysqli_num_rows($r);
 
@@ -220,7 +220,7 @@ LEFT JOIN topicgroups ON topicgroups.id = topics.rel_group
 ORDER BY topicgroups.display_order, topics.title_{$lang}
 ";
 
-    $r = mysqli_query($mysqli_link, $query);
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     $data = array();
     $num_rows = mysqli_num_rows($r);
 
@@ -290,7 +290,7 @@ ORDER BY
     YEAR(books.published_date) DESC, 
     books.title ASC";
 
-    $br = mysqli_query($mysqli_link, $bq);
+    $br = mysqli_query($mysqli_link, $bq) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     $is_active = 1;
 
     $all_books = [];
@@ -327,7 +327,7 @@ function LoadBanners()
     global $mysqli_link;
     $ret = array();
     $query = "SELECT * FROM banners WHERE data_is_visible=true";
-    $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
+    $res = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     $res_numrows = @mysqli_num_rows($res);
     if ($res_numrows > 0)
     {
@@ -360,7 +360,7 @@ function LoadLastNews($lang, $count=2)
     ORDER BY news.publish_date 
     DESC LIMIT {$count}";
 
-    $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query);
+    $res = mysqli_query($mysqli_link, $query) or die("mysqli_query_error: ".$query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     $res_numrows = @mysqli_num_rows($res);
     $i = 1;
     if ($res_numrows > 0)
@@ -399,7 +399,7 @@ function LoadBookInfo($id)
     FROM books 
     WHERE id={$id}";
 
-    $r = mysqli_query($mysqli_link, $query) or die($query);
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
 
     if (@mysqli_num_rows($r)==1) {
         $book_info = mysqli_fetch_assoc($r);
@@ -424,7 +424,7 @@ function LoadLastBookInfo()
     ORDER BY published_date DESC 
     LIMIT 1";
 
-    $r = mysqli_query($mysqli_link, $query);
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
 
     $book_info = [];
     if (@mysqli_num_rows($r)==1) {
@@ -629,7 +629,7 @@ function LoadNewsListTOC($lang, $limit = 15)
     LIMIT 
         {$limit}";
 
-    $r = @mysqli_query($mysqli_link, $query);
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     if ($r) {
         while ($row = mysqli_fetch_assoc($r)) {
             $list[ $row['id'] ] = $row;
@@ -664,7 +664,7 @@ function LoadNewsItem($id, $lang)
     WHERE 
         id={$id}";
 
-    $r = @mysqli_query($mysqli_link, $query);
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     if ($r) {
         if (@mysqli_num_rows($r) > 0) {
             $news_item = mysqli_fetch_assoc($r);
@@ -683,16 +683,19 @@ function LoadNewsItem($id, $lang)
 function LoadAuthorInformation_ById($id, $lang)
 {
     global $mysqli_link;
-    $author = [];
+    $author = [
+        'exists' => false
+    ];
 
     if ($id == 0) return $author;
 
     $q = "SELECT * FROM `authors` WHERE id={$id}";
-    $r = mysqli_query($mysqli_link, $q);
+    $r = mysqli_query($mysqli_link, $q) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     if (@mysqli_num_rows($r)>0) {
         $result = mysqli_fetch_assoc($r);
 
         $author = [
+            'exists'        =>  true,
             'author_name'   =>  $result["name_{$lang}"],
             'author_title'  =>  $result["title_{$lang}"],
             'author_workplace'  =>  $result["workplace_{$lang}"],
@@ -744,7 +747,7 @@ AND books.published_status = {$query_published}
 AND cross_aa.author = $id
 ORDER BY date_add
 ";
-    $r = mysqli_query($mysqli_link, $query);
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
     if (@mysqli_num_rows($r) > 0) {
         while ($article = mysqli_fetch_assoc($r)) {
             $list [ $article['aid'] ] = $article;
@@ -780,7 +783,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     }
 
     // $query_where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
-    $query_where_like = ($letter != '0') ? " AND authors.authors.firstletter_name_{$lang} = '{$letter}'" : " ";
+    $query_where_like = ($letter != '0') ? " AND authors.firstletter_name_{$lang} = '{$letter}'" : " ";
 
     // check for 'is author in editorial stuff', default is 'no'
     $query_where_es = ($is_es != 'no') ? ' AND is_es = 1 ' : '';
@@ -798,21 +801,22 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     title_{$lang} AS title,
     workplace_{$lang} AS workplace
     FROM authors
-    WHERE 1=1
+    WHERE 1=1 
     {$query_where_es}
     {$query_where_estaff_role}
     {$query_where_like}
     {$query_order}
     
     ";
+
     // '1=1' - нужно как условие, которое всегда истина. Следом могут идти другие условия с союзами AND.
     // Это лишнее условие нужно, чтобы не сломалсь SQL-выражение и не нужно было морочиться с добавлением AND по условию.
     // Технически, было бы правильно записать все условия в массив, а потом применить array_map или implode для сборки WHERE-блока
 
-    $r = mysqli_query($mysqli_link, $query) or Die(0); //@todo: error report/throw ?
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
 
-    if ( @mysqli_num_rows($r) > 0 ) {
-        while ($i = mysqli_fetch_assoc($r)) {
+    if ( mysqli_num_rows($r) > 0 ) {
+        while ($i = mysqli_fetch_assoc($r) ) {
             $authors[ $i['id'] ] = $i;
         }
     }
@@ -860,7 +864,9 @@ function LoadAuthors_ByArticle($id, $lang)
     ORDER BY name_{$lang}";
 
     $ret = array();
-    if ($r = mysqli_query($mysqli_link, $query)) {
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
+
+    if ($r) {
         while ($row = @mysqli_fetch_assoc($r)) {
             $ret[ $row['author_id'] ] = $row;
         }

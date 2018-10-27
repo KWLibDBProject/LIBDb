@@ -297,6 +297,14 @@ class websun {
     private $template_filename;
     private $pcre_error_template = "Method <code>%s()</code> throws error <strong>%s</strong> while parsing `<code>%s</code>` file. Template size = %s.";
 
+    /**
+     * Формирует сообщение об ошибке, произошедшей при парсинге шаблона
+     *
+     * @param $error
+     * @param $method
+     * @param $template_size
+     * @return string
+     */
     public function pcre_report_error($error, $method, $template_size)
     {
         $error = array_flip(get_defined_constants(true)['pcre'])[$error];
@@ -404,6 +412,8 @@ class websun {
 				array($this, 'parse_vars_templates_functions'), 
 				$template
 			);
+
+		
 		
 		$template = str_replace("\x01", '\\\\', $template); // возвращаем двойные слэши обратно
 		$template = str_replace("\x02", '*', $template); // а звездочки - уже без экранирования 
@@ -562,7 +572,11 @@ class websun {
 			$template 
 			);
 			// инвертный класс - [^{]* - для быстрого совпадения
-			// непрерывных цепочек статистически наиболее часто встречающихся символов 
+			// непрерывных цепочек статистически наиболее часто встречающихся символов
+
+        if ($out === NULL) {
+            $out = $this->pcre_report_error(preg_last_error(), __METHOD__, strlen($template) );
+        }
 		
 		if ($this->profiling) 
 			$this->write_time(__FUNCTION__, $start, microtime(1));

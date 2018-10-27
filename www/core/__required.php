@@ -11,6 +11,8 @@ require_once 'class.filestorage.php';
 
 require_once 'class.kwlogger.php';
 
+require_once 'class.localizer.php'; // локализация сообщений
+
 require_once 'websun.php';
 
 require_once 'core.php';
@@ -38,6 +40,11 @@ $mysqli_link = ConnectDB();
 DB::init(NULL, Config::get('database'));
 FileStorage::init($mysqli_link, Config::get('storage'));
 kwLogger::init(DB::getConnection(), Config::get('kwlogger'));
+
+/**
+ * Lazy load localized
+ */
+Localizer::init('$/template/_locale/');
 
 /**
  * Check ACL
