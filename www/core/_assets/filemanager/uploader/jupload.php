@@ -59,7 +59,7 @@ class JUpload
     var $classparams;
     var $files;
 
-    public function JUpload($appletparams = array(), $classparams = array())
+    public function __construct($appletparams = array(), $classparams = array())
     {
         if (gettype($classparams) != 'array')
             $this->abort('Invalid type of parameter classparams: Expecting an array');
@@ -618,7 +618,7 @@ class JUpload
             $files_data['mimetype'] = $mimetypes[$cnt];
 
             if (!move_uploaded_file($files_data['tmp_name'], $tmpname)) {
-                if ($classparams['verbose_errors']) {
+                if ($this->classparams['verbose_errors']) {
                     $this->abort("Unable to move uploaded file (from ${files_data['tmp_name']} to $tmpname)");
                 } else {
                     trigger_error("Unable to move uploaded file (from ${files_data['tmp_name']} to $tmpname)", E_USER_WARNING);

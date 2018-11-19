@@ -20,7 +20,8 @@ switch ($action) {
     case 'try:login': {
         $result = DBLoginCheck($_POST['login'], $_POST['md5password']);
 
-        if ($result['error']==0) {
+        if ($result['error']==0)
+        {
             $_SESSION[ Config::get('auth:session/user_id') ] = $result['id'];
             $_SESSION[ Config::get('auth:session/user_permissions')] = $result['permissions'];
 
@@ -29,12 +30,10 @@ switch ($action) {
 
             Redirect('/core/admin.php');
         } else {
-
             die(<<<ERRORMESSAGE
 Error: {$result['message']} <br>
 <a href="/core/admin.actions.php">Return to login form</a>
 ERRORMESSAGE
-
             );
         }
 
@@ -42,8 +41,6 @@ ERRORMESSAGE
     }
 
     case 'try:logout': {
-        kwLogger::logEvent('login', 'userlist', $_SESSION['u_username'], 'User logged out');
-
         $key_cookie_is_logged = Config::get('auth:cookies/user_is_logged');
         $key_session_is_logged = Config::get('auth:session/user_is_logged');
 
@@ -52,6 +49,8 @@ ERRORMESSAGE
 
         $key_cookie_u_id = Config::get('auth:cookies/user_id');
         $key_session_u_id = Config::get('auth:session/user_id');
+
+        kwLogger::logEvent('login', 'userlist', $_SESSION[ $key_session_is_logged ] ?? 0, 'User logged out');
 
         setcookie( $key_cookie_is_logged, FALSE, -1, '/');
         unset($_COOKIE[ $key_cookie_is_logged ]);
