@@ -2,9 +2,17 @@
 session_start();
 mb_internal_encoding('UTF-8');
 
-// relative path from filemanager folder (not from THIS folder!)
+// 
+/*
+ * relative path from filemanager folder (то есть с папки /www/core/_assets/filemanager/) 
+ * а не с папки /www/core/_assets/filemanager/config/
+ * 
+ * ВАЖНО: В IDE это вызывает ошибку резолва файла, на это не следует обращать внимание!
+ */
 
-$filestorage_config = include '../../config/config.php';
+// $filestorage_config = include '../../config/config.php';
+
+$filestorage_config = include '../../../config/config.php';
 
 $filestorage_config = $filestorage_config['storage'];
 

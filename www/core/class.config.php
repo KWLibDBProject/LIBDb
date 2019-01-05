@@ -5,32 +5,41 @@
  */
 
 /**
- * Простейший Config-класс для упрощения доступа к конфигу.
- * Базируется на ArrisFramework/App class
+ * Simple config-class.
+ * Простой Config-класс для упрощения доступа к конфигу.
+ * Базируется на ArrisFramework/Config class
  *
- * Предполагает инициализацию вида
+ * Required initialization like:
  *
- * Config::init( include  'config/config.php' );
+ *      Config::init( include  'config/config.php' );
+ * or
+ *      Config::init(['../config/config.php']);
+ * or
+ *      Config::init(['../config/config.php', '../config2/config2.php']);
  *
- * Class Config
  */
 class Config {
+    const VERSION = '1.4/ArrisFramework';
+    
     const GLUE = '/';
     private static $config = [];
-
 
     public static function init_once($data)
     {
         self::$config = $data;
     }
 
+    /**
+     * @param $configs_set
+     */
     public static function init($configs_set)
     {
         if (is_array($configs_set)) {
             foreach ($configs_set as $config_key => $config_file) {
                 $config_subpath = (is_int($config_key) || ($config_key == '/') || ($config_key == '')) ? '' : $config_key;
 
-                self::config_append( $config_file , $config_subpath );
+                // здесь в версии 1.4 я добавляю к пути __DIR__ (что эквивалентно dirname(__FILE__) ). 
+                self::config_append( __DIR__ . DIRECTORY_SEPARATOR . $config_file , $config_subpath );
             }
         } elseif (is_string($configs_set)) {
             self::config_append( $configs_set );
@@ -38,6 +47,11 @@ class Config {
 
     }
 
+    /**
+     * @param $parents
+     * @param null $default_value
+     * @return array|mixed|null
+     */
     public static function get($parents, $default_value = null)
     {
         if ($parents === '') {
@@ -61,6 +75,11 @@ class Config {
 
     }
 
+    /**
+     * @param $parents
+     * @param $value
+     * @return bool
+     */
     public static function set($parents, $value)
     {
         if (!is_array($parents)) {
@@ -95,12 +114,11 @@ class Config {
         die;
     }
 
-
-
     /**
      *
+     * @param $file
+     * @param string $subpath
      */
-
     public static function config_append($file, $subpath = '')
     {
         $new_config = include $file;

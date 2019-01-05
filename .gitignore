@@ -1,11 +1,12 @@
 configs
 www/scripts.min.js
 www/styles.min.css
-www/yandex_520f6164e898eb85.html
-www/template.bootstrap24/metrika.*
+www/yandex_*.html
+www/template*/metrika.*
 www/vendor
 
 www/core/config/_.db.php
+www/config/_.db.php
 
 node_modules
 package-lock.json

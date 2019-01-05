@@ -20,7 +20,7 @@ require_once 'core.db.php';
 
 require_once 'class.dbconnection.php';
 
-Config::init(['config/config.php']);
+Config::init(['../config/config.php']);
 
 $SID = session_id();
 if(empty($SID)) session_start();
