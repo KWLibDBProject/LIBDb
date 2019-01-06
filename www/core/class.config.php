@@ -19,7 +19,7 @@
  *
  */
 class Config {
-    const VERSION = '1.4/ArrisFramework';
+    const VERSION = '1.5/ArrisFramework';
     
     const GLUE = '/';
     private static $config = [];
@@ -44,7 +44,12 @@ class Config {
         } elseif (is_string($configs_set)) {
             self::config_append( $configs_set );
         }
-
+        
+        if (empty(self::$config)) {
+            die('Config is empty or files not found. Check every file from set [ <code> ' . implode(' ', $configs_set) . ' </code> ]');
+            // хотя правильно тут кидать эксепшен
+        }
+        
     }
 
     /**

@@ -2,21 +2,26 @@
 /**
  * User: Karel Wintersky
  */
+
+/**
+ * На сервере этот файл надо скопировать в config.php и задать настройки (темы, хранилища, кук) согласно выбранному сайту.
+ * Для настройки БД смотри файл _.db.php (его нет в гите) 
+ */
 $VERSION = [
     'copyright' =>  'KW LIBDb Engine',
-    'version'   =>  '1.132 (2018-09-22)',
+    'version'   =>  '1.132 (2018-09-22)',   
 ];
 
-/**  Ключ выбора окружения (подключения к БД)  */
-$DB_CONNECTION = 'blacktower:etks';
+/**  Ключ выбора окружения (подключения к БД), см _.db.php  */
+$DB_CONNECTION = '????';
 
 /* Подключение частей конфигов */
 $INCLUDE_DB         = include '_.db.php';
 $INCLUDE_KWLOGGER   = include '_.kwlogger.php';
 
-$INCLUDE_THEME      = include '_.theme.etks.php';
-$INCLUDE_STORAGE    = include '_.storage.etks.php';
-$INCLUDE_AUTH       = include '_.auth.etks.php';
+$INCLUDE_THEME      = include '_.theme.????.php';
+$INCLUDE_STORAGE    = include '_.storage.????.php';
+$INCLUDE_AUTH       = include '_.auth.????.php';
 
 /* Определение главного блока конфигурации */
 $CONFIG = [
@@ -51,7 +56,7 @@ $CONFIG = [
 
     'frontend_assets'   =>  [
         'assets_mode'   =>  'development' ,                 // тип ассетов : development | production
-        'assets_version'=>  crc32( $VERSION['version'] ),   // git rev-parse --short HEAD
+        'assets_version'=>  false, // crc32( $VERSION['version'] ),   // git rev-parse --short HEAD > .version
     ],
 
     // Разрешенные справочники для редактора абстрактного справочника
@@ -59,11 +64,11 @@ $CONFIG = [
         'ref_estaff_roles'
     ],
 
-    // Таймаут для коллбэка в админке
+    // Таймаут для коллбэка в админке в секундах
     'callback_timeout'      =>  3600,
 
     'openssl'   =>  [
-        'OPENSSL_ENCRYPTION_KEY'    =>  'ab86d144e3f080b61c7c2e43'
+        'OPENSSL_ENCRYPTION_KEY'    =>  '????'
     ]
 ];
 

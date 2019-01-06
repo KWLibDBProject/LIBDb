@@ -3,6 +3,13 @@ require_once('core.php');
 require_once('class.kwlogger.php');
 
 /**
+ * Interface FileStorageInterface
+ */
+interface FileStorageInterface {
+    public static function init($mysqli_link, $config);
+}
+
+/**
  *
  */
 class FileStorage
@@ -17,6 +24,12 @@ class FileStorage
     private static $filestorage_table = '';
 
     /**
+     * Абсолютный путь к каталогу хранилища файлов (storage) БЕЗ конечного слэша
+     * @var string 
+     */
+    private static $filestorage_storage_directory = '';
+
+    /**
      * @param $mysqli_link
      */
     public static function init($mysqli_link, $config)
@@ -24,6 +37,11 @@ class FileStorage
         self::$mysqli_link = $mysqli_link;
         self::$config = $config;
         self::$filestorage_table = $config['sql_table'];
+        
+        self::$filestorage_storage_directory =
+            rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR) 
+            . DIRECTORY_SEPARATOR 
+            . trim(self::$config['path_storage'], DIRECTORY_SEPARATOR);
     }
 
     /* возвращает blob-строку пустого PDF-файла */
@@ -583,6 +601,70 @@ class FileStorage
     {
         return self::$filestorage_table;
     }
+    
+    /* ============================ ACL and integrity checks methods ================================ */
+
+    /**
+     * Получает абсолютный путь к каталогу, указанному в конфиге хранилища по соотв. ключу включая финальный слэш
+     * @param $config_key
+     * @return string
+     */
+    private static function getAbsolutePathDirectory($config_key)
+    {
+        return rtrim($_SERVER['DOCUMENT_ROOT'], '/') . DIRECTORY_SEPARATOR . trim(self::$config[$config_key], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Проверяет права доступа к каталогу хранилища и создает подкаталоги при необходимости 
+     */
+    public static function checkStorageDirectoryACL()
+    {
+        $message_owner_folder_is_incorrect = <<<OWNERS_ERROR_MESSAGE
+Owner of directory `<code style="color:blue;background-color:#eeeeee;border:1px solid #cccccc;">%s</code>` is <code style="color:red;background-color:#eeeeee;border:1px solid #cccccc;">%s</code>. <br />
+For create/write access to this directory you MUST set it's owner to <code style="color:red;background-color:#eeeeee;border:1px solid #cccccc;">%s</code> (Apache/Nginx/PHP-FPM User).
+OWNERS_ERROR_MESSAGE;
+        
+        $message_folder_not_exists = <<<FOLDER_NOT_EXISTS
+Directory <code style="color:blue;background-color:#eeeeee;border:1px solid #cccccc;">%s</code> not exists!
+FOLDER_NOT_EXISTS;
+        
+        $script_executor = exec('whoami'); // пользователь-исполнитель скрипта (php-fpm / apache/ nginx user)
+        
+        $_path_storage_root = self::getAbsolutePathDirectory('path_root');
+        $_path_storage_files = self::getAbsolutePathDirectory('path_storage');
+        $_path_storage_images = self::getAbsolutePathDirectory('path_fm_upload');
+        $_path_storage_thumbs = self::getAbsolutePathDirectory('path_fm_thumb');
+        
+        // проверяем, существует ли корень хранилища вообще
+        if (!is_dir($_path_storage_root)) {
+            printf($message_folder_not_exists, $_path_storage_root);
+            die;
+        }
+
+        // проверяем права на корень хранилища
+        $storage_owner = posix_getpwuid(fileowner( $_path_storage_root ))['name'];
+        
+        // если владелец корня хранилища и пользователь, исполняющий скрипт, не совпадают... то это ошибка настройки сервера.
+        if ($script_executor != $storage_owner) {
+            printf($message_owner_folder_is_incorrect, $_path_storage_root, $storage_owner, $script_executor);
+            die;
+        }
+        
+        // потом проверяем существование каталогов и создаем их при необходимости
+        if (!is_dir($_path_storage_files)) {
+            mkdir($_path_storage_files, 0777, true);
+        }
+
+        if (!is_dir($_path_storage_images)) {
+            mkdir($_path_storage_images, 0777, true);
+        }
+
+        if (!is_dir($_path_storage_thumbs)) {
+            mkdir($_path_storage_thumbs, 0777, true);
+        }
+
+    }
+    
 
 
 } // class

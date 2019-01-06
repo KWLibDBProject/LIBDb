@@ -36,7 +36,6 @@ $mysqli_link = ConnectDB();
 /**
  * Init singletones and static modules
  */
-
 DB::init(NULL, Config::get('database'));
 FileStorage::init($mysqli_link, Config::get('storage'));
 kwLogger::init(DB::getConnection(), Config::get('kwlogger'));
@@ -47,18 +46,7 @@ kwLogger::init(DB::getConnection(), Config::get('kwlogger'));
 Localizer::init('$/template/_locale/');
 
 /**
- * Check ACL
+ * Check access rights for STORAGE directory
  */
-
-$storage_folder = FileStorage::getStorageDir();
-$user_php_executor = exec('whoami');
-$user_storage_owner = posix_getpwuid(fileowner( $storage_folder ))['name'];
-
-if ($user_php_executor != $user_storage_owner) {
-    echo <<<OWNERS_ERROR_MESSAGE
-Owner of directory `<strong>{$storage_folder}</strong>` is `{$user_storage_owner}`. <br />
-For create/write access to this directory you MUST set it's owner to {$user_php_executor} (Apache User).
-OWNERS_ERROR_MESSAGE;
-    die;
-}
+FileStorage::checkStorageDirectoryACL();
 
