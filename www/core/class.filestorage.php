@@ -3,13 +3,6 @@ require_once('core.php');
 require_once('class.kwlogger.php');
 
 /**
- * Interface FileStorageInterface
- */
-interface FileStorageInterface {
-    public static function init($mysqli_link, $config);
-}
-
-/**
  *
  */
 class FileStorage
@@ -31,6 +24,7 @@ class FileStorage
 
     /**
      * @param $mysqli_link
+     * @param $config
      */
     public static function init($mysqli_link, $config)
     {
@@ -247,7 +241,6 @@ class FileStorage
      */
     public static function getEmptyFile($type)
     {
-        $ret = '';
         switch ($type) {
             case 'pdf' : {
                 $ret = self::__getEmptyPDF();
@@ -255,6 +248,10 @@ class FileStorage
             }
             case 'image': {
                 $ret = self::__getEmptyIMG();
+                break;
+            }
+            default: {
+                return $ret = '';
                 break;
             }
         }
@@ -269,7 +266,6 @@ class FileStorage
      */
     public static function getFileContent($id)
     {
-        $ret = '';
         /*if (self::$config['return_data_from'] == 'table') {
             $ret = self::__getFileContent_db($id);
         } else if (self::$config['return_data_from'] == 'disk') {
@@ -389,6 +385,7 @@ class FileStorage
                 'tempname'      => ($_SERVER['REMOTE_ADDR']==="127.0.0.1")
                                     ? str_replace('\\','\\\\', ($file_array['tmp_name']))
                                     : ($file_array['tmp_name']),
+                
                 'filesize'      => $file_array['size'],
                 'relation'      => $related_id,
                 'filetype'      => $file_array['type'],
@@ -498,11 +495,10 @@ class FileStorage
     public static function statUpdateDownloadCounter($id)
     {
         $table = self::getSQLTable();
-        $query = "update {$table}
-                  set stat_download_counter = stat_download_counter + 1
-                  ,
+        $query = "UPDATE {$table}
+                  SET stat_download_counter = stat_download_counter + 1 ,
                   stat_date_download = now()
-                  where id = {$id}";
+                  WHERE id = {$id}";
         @mysqli_query(self::$mysqli_link, $query);
     }
 
