@@ -1,0 +1,18 @@
+{%*all_books*}
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{*all_books:^KEY*}">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle">{*all_books:^KEY*}</a>
+                        </h4>
+                    </div>
+                    <div id="collapse{*all_books:^KEY*}" class="panel-collapse collapse {?*all_books:is_active*}in{?} books">
+                        <div class="panel-body">
+                            <ul class="etks-books-list">
+                                {%*all_books:yearly_books*}
+                                <li><a href="?fetch=articles&with=book&id={*all_books:yearly_books:^KEY*}"> {*all_books:yearly_books:title*} </a>({*all_books:yearly_books:count*})</li>
+                                {%}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+{%}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Karel Wintersky, karel.wintersky@gmail.com">
+    <meta name="copyright" content="{*meta.copyright*}, ver. {*meta.version*}">
+
+    <title>Herald of advanced information technology.
+        Odessa national polytechnic university</title>
+
+    <link rel="icon" href="/template.hait/_assets/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/template.hait/_assets/favicon.ico" type="image/x-icon" />
+
+    {?*frontend.assets_mode="development"*}
+    <!-- Development -->
+    <link rel="stylesheet" href="/template/_assets/colorbox.css" />
+    <link rel="stylesheet" href="/template/_assets/bootstrap/bootstrap.css">
+
+    <link rel="stylesheet" href="/template.hait/_assets/bootstrap/bootstrap-theme.css">
+    <link rel="stylesheet" href="/template.hait/theme.css">
+
+    <script type="text/javascript" src="/template/_assets/jquery/jquery-1.11.0.js"></script>
+    <script type="text/javascript" src="/template/_assets/bootstrap/bootstrap.js"></script>
+    <script type="text/javascript" src="/template/_assets/jquery/jquery.colorbox.min.js"></script>
+    <script type="text/javascript" src="/template/_assets/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/frontend.js"></script>
+    <script type="text/javascript" src="/frontend.options.js"></script>
+    <!-- /Development -->
+    {?}
+
+    {?*frontend.assets_mode="production"*}
+    <link rel="stylesheet" href="/styles.min.css{?*frontend.assets_version*}?ver={*frontend.assets_version*}{?}">
+    <script type="text/javascript" src="/scripts.min.js{?*frontend.assets_version*}?ver={*frontend.assets_version*}{?}"></script>
+    {?}
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajaxSetup({cache: false});
+
+            // get site language from cookies, if language not defined - set "EN"
+            // {*frontend.cookie_site_language*}
+            if (!getCookie('{*frontend.cookie_site_language*}')) { setCookie('{*frontend.cookie_site_language*}', 'en', 3600*24*30) }
+
+            {*content_jquery*}
+
+            // set Selectors state
+            setSelectorsByHash_NEW(".search_selector");
+            $(".hash_selectors").on('change', '.search_selector', function(){
+                setHashBySelectors();
+            });
+
+            // Language switch
+            $(".action-switch-language").on('click', function(){
+                if (!$(this).hasClass('lang-active')) {
+                    setCookie('{*frontend.cookie_site_language*}', $(this).attr('data-lang'), 3600*24*30 );
+                    calledOnSwitchLanguage();
+                    location.reload();
+                }
+                return false;
+            });
+
+            // load active accordion state
+            var lastbook = $.cookie('activeBookGroup');
+            if (lastbook != null) {
+                //remove default collapse settings
+                $("#accordion .panel-collapse").removeClass('in');
+                // show last visible group
+                $("#" + lastbook).addClass("in");
+            }
+            // save accordion state
+            $("#accordion").on('show.bs.collapse', function(e) {
+                $.cookie('activeBookGroup', $(e.target).attr('id'));
+            });
+
+            var lasttopic = $.cookie('activeTopicGroup');
+            if (lasttopic != null) {
+                //remove default collapse settings
+                $("#taccordion .panel-collapse").removeClass('in');
+                // show last visible group
+                $("#" + lasttopic).addClass("in");
+            }
+            // save accordion state
+            $("#taccordion").on('show.bs.collapse', function(e) {
+                $.cookie('activeTopicGroup', $(e.target).attr('id'));
+            });
+
+            $('.action-download-pdf').on('click',function(){
+                window.location.href = $(this).attr('data-href');
+            });
+
+        });
+
+    </script>
+    <style type="text/css">
+        {*content_css*}
+    </style>
+
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    {* + _main_navigation/menu.en.html *}
+</div>
+
+<div class="container">
+    <div class="jumbotron etks-header">
+        <div class="row">
+            <div class="col-md-4 left etks-header-logo">
+                <img src="/template.hait/_assets/images/logo_hait_586x541.png" id="actor-etks-logo" style="height:75px;padding-left:30px">
+            </div>
+            <div class="col-md-16">
+                <h3 class="etks-header-title">HERALD OF ADVANCED</h3>
+                <h3 class="etks-header-title">INFORMATION TECHNOLOGY</h3>
+            </div>
+            <!--
+                        <div class="col-md-4 right etks-header-issn">
+                            <h6 class="etks-issn">ISSN Print - - -</h6>
+                            <h6 class="etks-issn">ISSN Online - - -</h6>
+                        </div>
+            -->
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- right block - сборники -->
+        <div class="col-md-4">
+            <div class="panel-group">
+                <div class="panel panel-default panel-books-header">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a href="?fetch=authors&with=list">Search by article</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-group etks-panel-books" id="accordion">
+                <div class="panel panel-default panel-books-header">
+                    <div class="panel-heading">
+                        <h3 class="panel-title panel-header-title">
+                            Issues
+                        </h3>
+                    </div>
+                </div>
+
+                {* + _main_subtemplates/frontpage_books_section.html *}
+
+            </div>
+
+            <hr>
+            <!-- last news -->
+            <div class="panel panel-default etks-lastnews-list">
+                <div class="panel-heading panel-header-title">Last news</div>
+                <ul class="list-group etks-lastnews-ul">
+                    {* + _main_subtemplates/frontpage_news_section.html *}
+                </ul>
+            </div>
+        </div>
+
+        <!-- CONTENT::START -->
+        <div class="col-md-16 maincontent">
+            {*content_html*}
+        </div>
+        <!-- CONTENT::END -->
+
+        <div class="col-md-4">
+            <div class="panel-group">
+                <div class="panel panel-default panel-books-header">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a href="?fetch=authors&with=list">Search by author</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-group etks-panel-topics" id="taccordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title panel-header-title">Subject</h3>
+                    </div>
+                </div>
+                <!-- topics list -->
+                {*rubrics*}
+                <!-- /topics list -->
+            </div>
+
+            <div class="panel panel-default">
+                <!--
+                                <link async href="http://fonts.googleapis.com/css?family=Open%20Sans" data-generated="http://enjoycss.com" rel="stylesheet" type="text/css"/>
+                                <div class="facebook-button">facebook</div>
+                -->
+
+                <div class="panel-heading">
+                    <h3 class="panel-title panel-header-title">Contacts</h3>
+                </div>
+
+                <div class="panel-body etks-assist-editor">
+                    <!--
+                                        <span> Olga Borisovna Babiychuk </span>
+                                        <br><br>
+                                        <abbr title="phone">+38 (097) 134-73-86</abbr><br><br>
+                                        <abbr title="fax">+38 (048) 722-33-69</abbr><br><br>
+                                        <abbr title="E-Mail"><a href="mailto:aait@opu.ua">aait@opu.ua</a></abbr>
+                    -->
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="container">
+    <div class="panel panel-default etks-banners">
+        <div class="panel-body text-center">
+            <ul class="list-inline">
+                {* + _main_subtemplates/frontpage_banners_section.html *}
+            </ul>
+        </div>
+        <div class="panel-body text-left">
+            [ <a href="/core/" class="copyleft">©</a> KarelWintersky ]
+            [ <a href="?fetch=articles&with=all">All articles</a> ]
+            [ <a href="?fetch=authors&with=all">All authors</a> ]
+            <br>
+            [ © Odessa National Polytechnic University, 2018.]
+        </div>
+    </div>
+
+</div>
+
+{?*frontend.assets_mode="production"*}
+{* + metrika.aait.yandex.html *}
+{?}
+</body>
+</html>

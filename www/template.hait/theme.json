@@ -1,0 +1,12 @@
+{
+  "site": {
+    "title": "HAIT.OPU.UA"
+  },
+  "menu": {
+  },
+  "metrics": [
+    "metrika.aait.google-analytics.html", "metrika.aait.yandex.html"
+  ],
+  "dictionary": {
+  }
+}
