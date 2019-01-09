@@ -7,9 +7,17 @@
  * На сервере этот файл надо скопировать в config.php и задать настройки (темы, хранилища, кук) согласно выбранному сайту.
  * Для настройки БД смотри файл _.db.php (его нет в гите) 
  */
+
+/*
+ * Getting version
+ * 
+ * git log --oneline --format=%B -n 1 HEAD | head -n 1                              # получаем первую строчку (версия)          0
+ * git log --oneline --format="%at" -n 1 HEAD | xargs -I{} date -d @{} +%Y-%m-%d    # дата последнего коммита                   1
+ * git rev-parse --short HEAD                                                       # получаем sha1-хэш последнего коммита      2
+ * 
+ */
 $VERSION = [
     'copyright' =>  'KW LIBDb Engine',
-    'version'   =>  '1.132 (2018-09-22)',   
 ];
 
 /**  Ключ выбора окружения (подключения к БД), см _.db.php  */
@@ -25,6 +33,7 @@ $INCLUDE_AUTH       = include '_.auth.????.php';
 
 /* Определение главного блока конфигурации */
 $CONFIG = [
+    // Database configuration 
     'database_connection'   =>  $DB_CONNECTION,
     'database'              =>  $INCLUDE_DB[ $DB_CONNECTION ],
 
@@ -34,7 +43,7 @@ $CONFIG = [
     // Задает конфигурацию модуля kwLogger
     'kwlogger'              =>  $INCLUDE_KWLOGGER,
 
-    // Theme (путь к шаблонам и так далее)
+    // Theme - путь к шаблонам, тип сборки ассетов, режим вывода отладочной информации
     'frontend'  =>  [
         'theme'         =>  $INCLUDE_THEME,
         'assets_mode'   =>  'development',  // development | production

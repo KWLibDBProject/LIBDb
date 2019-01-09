@@ -1,6 +1,6 @@
 {
   "name": "libdb",
-  "description": "KW LibDB -- Движок сайта онлайн-журнала «Электротехнические и компьютерные системы» Одесского политехнического университета.",
+  "description": "KW LibDB -- Движок сайтов онлайн-журналов, разработанный для ОПУ (Одесского политехнического университета)",
   "author": "Karel Wintersky <karel.wintersky@gmail.com>",
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -17,7 +17,7 @@
     "url": "https://github.com/KarelWintersky/LIBDb/issues"
   },
   "keywords": [
-    "Научно-технический журнал ЭЛЕКТРОТЕХНИЧЕСКИЕ И КОМПЬЮТЕРНЫЕ СИСТЕМЫ"
+    "Научно-технический журнал"
   ],
   "private": true
 }
