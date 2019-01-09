@@ -2,7 +2,7 @@
 
 body {
     background: #EAF2E6;
-    background: url(_assets/images/bg_default.jpg) scroll repeat;
+    background: url(/template.etks/_assets/images/bg_default.jpg) scroll repeat;
 }
 
 a {
@@ -340,7 +340,7 @@ legend {
 .icon-pdf {}
 
 #download-pdf { /* useless */
-    background-image:url('../template/_assets/images/pdf-icon-128x128.png');
+    background-image:url('/template/_assets/images/pdf-icon-128x128.png');
     width:128px;
     height:132px;
     background-color: transparent;
@@ -350,5 +350,5 @@ legend {
     display: inline-block;
     margin-right: 5px;
     vertical-align: -50%;
-    content: url('../template/_assets/images/pdf16x16.png')
+    content: url('/template/_assets/images/pdf16x16.png')
 }
