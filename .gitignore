@@ -2,11 +2,10 @@
 configs
 www/scripts.min.js
 www/styles.min.css
-www/yandex_*.html
+
 www/template*/metrika.*
 www/vendor
 
-www/core/config/_.db.php
 www/config/_.db.php
 www/config/config.php
 www/.version

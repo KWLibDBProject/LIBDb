@@ -7,6 +7,7 @@
     "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-cssmin": "^0.12.2",
     "grunt-contrib-uglify": "^0.9.1",
+    "grunt-image-embed": "^0.3.3",
     "grunt-uncss": "^0.4.2"
   },
   "repository": {
@@ -19,5 +20,6 @@
   "keywords": [
     "Научно-технический журнал"
   ],
-  "private": true
+  "private": true,
+  "dependencies": {}
 }
