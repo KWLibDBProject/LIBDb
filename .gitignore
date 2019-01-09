@@ -9,6 +9,7 @@ www/vendor
 www/core/config/_.db.php
 www/config/_.db.php
 www/config/config.php
+www/.version
 
 node_modules
 package-lock.json

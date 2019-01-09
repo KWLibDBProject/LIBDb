@@ -21,6 +21,7 @@ require_once 'core.db.php';
 require_once 'class.dbconnection.php';
 
 Config::init(['../config/config.php']);
+Config::set('version', get_engine_version());   // установка мета-данных и версий ассетов
 
 $SID = session_id();
 if(empty($SID)) session_start();

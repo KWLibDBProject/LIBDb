@@ -45,8 +45,8 @@ $main_template_data['template_name'] = $main_theme_name; // template name , defi
 $main_template_data['template_theme_dir'] = $main_theme_dir;
 
 /** META  */
-$main_template_data['meta'] = Config::get('frontend_meta');
-$main_template_data['meta']['copyright'] = Config::get('meta/copyright', '');
+$main_template_data['meta']['copyright'] = Config::get('version/copyright', '');
+$main_template_data['meta']['version'] = Config::get('version/meta_version', '');
 
 /**
  * Main switch
@@ -494,8 +494,8 @@ $main_template_data['content_css'] = $maincontent_css;
 
 /** Тип ассетов */
 $main_template_data['frontend'] = [
-    'assets_mode'           =>  Config::get('frontend_assets/assets_mode', 'development'),
-    'assets_version'        =>  Config::get('frontend_assets/assets_version', ''),
+    'assets_mode'           =>  Config::get('frontend/assets_mode', 'development'),
+    'assets_version'        =>  Config::get('version/assets_version'),
     'cookie_site_language'  =>  Config::get('cookie_site_language', 'libdb_sitelanguage')
 ];
 
@@ -503,5 +503,8 @@ $content = websun_parse_template_path($main_template_data, $main_template_file, 
 $content = preg_replace('/^\h*\v+/m', '', $content);
 echo $content;
 
-printf("\r\n<!-- Total time: %s sec, Memory Used (current): %s , Memory Used (max): %s -->", round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4), formatBytes(memory_get_usage()), formatBytes(memory_get_peak_usage()));
+if (Config::get('frontend/debug_mode')) {
+    printf("\r\n<!-- Total time: %s sec, Memory Used (current): %s , Memory Used (max): %s -->", round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4), formatBytes(memory_get_usage()), formatBytes(memory_get_peak_usage()));
+}
+
 

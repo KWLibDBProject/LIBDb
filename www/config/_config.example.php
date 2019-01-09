@@ -36,7 +36,9 @@ $CONFIG = [
 
     // Theme (путь к шаблонам и так далее)
     'frontend'  =>  [
-        'theme'     =>  $INCLUDE_THEME,
+        'theme'         =>  $INCLUDE_THEME,
+        'assets_mode'   =>  'development',  // development | production
+        'debug_mode'    =>  true            // выводить или нет информацию об использовании памяти?
     ],
 
     // Кука для определения языка сайта
@@ -47,18 +49,7 @@ $CONFIG = [
 
     // Авторизация: Переменные в сессии
     'auth:session'          =>  $INCLUDE_AUTH['auth:session'],
-
-    // Мета-данные в шаблонах
-    'frontend_meta' =>  [
-        'copyright'     =>  $VERSION['copyright'],
-        'version'       =>  $VERSION['version']
-    ],
-
-    'frontend_assets'   =>  [
-        'assets_mode'   =>  'development' ,                 // тип ассетов : development | production
-        'assets_version'=>  false, // crc32( $VERSION['version'] ),   // git rev-parse --short HEAD > .version
-    ],
-
+    
     // Разрешенные справочники для редактора абстрактного справочника
     'allowed_abstract_refs' =>  [
         'ref_estaff_roles'

@@ -232,3 +232,27 @@ function pcre_jit_disable(){
 function pcre_jit_enable(){
     ini_set('pcre.jit', 1);
 }
+
+/**
+ * Возвращает версию движка и ассетов из файла .version в корне
+ * Генерация этого файла делается так:
+ *
+ * git log --oneline --format=%B -n 1 HEAD | head -n 1 > ./www/.version
+ * git log --oneline --format="%at" -n 1 HEAD | xargs -I{} date -d @{} +%Y-%m-%d >> ./www/.version
+ * git rev-parse --short HEAD >> ./www/.version 
+ *
+ * 
+ * 
+ * @param string $file
+ * @return array
+ */
+function get_engine_version($file = __DIR__ . DIRECTORY_SEPARATOR . '../.version') {
+    $versions = ['KW LIBDb Engine'];
+    $versions = array_merge($versions, is_file($file) ? file($file) : [ '2.0alpha', date('Y-m-d'), '0' ]);
+
+    return [
+        'copyright'         =>  'KW LIBDb Engine',
+        'meta_version'      =>  trim($versions[1]) . " (" . trim($versions[2]) . ")",
+        'assets_version'    =>  $versions[3]
+    ];
+}
