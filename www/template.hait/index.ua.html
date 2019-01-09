@@ -41,7 +41,7 @@
 
             // get site language from cookies, if language not defined - set "EN"
             // {*frontend.cookie_site_language*}
-            if (!getCookie('{*frontend.cookie_site_language*}')) { setCookie('{*frontend.cookie_site_language*}', 'en', 3600*24*30) }
+            if (!getCookie('{*frontend.cookie_site_language*}')) { setCookie('{*frontend.cookie_site_language*}', 'ua', 3600*24*30) }
 
             {*content_jquery*}
 
@@ -143,7 +143,7 @@
                 <div class="panel panel-default panel-books-header">
                     <div class="panel-heading">
                         <h3 class="panel-title panel-header-title">
-                            Issues
+                            Випуски
                         </h3>
                     </div>
                 </div>
@@ -240,8 +240,9 @@
 
 </div>
 
-{?*frontend.assets_mode="production"*}
-{* + metrika.aait.yandex.html *}
+metrika.yandex.hait.html
+<!-- {?*frontend.assets_mode="production"*}
+{* + metrika.aait.yandex.html *} -->
 {?}
 </body>
 </html>
