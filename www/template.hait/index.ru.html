@@ -7,8 +7,8 @@
     <meta name="author" content="Karel Wintersky, karel.wintersky@gmail.com">
     <meta name="copyright" content="{*meta.copyright*}, ver. {*meta.version*}">
 
-    <title>Herald of advanced information technology.
-        Odessa national polytechnic university</title>
+    <title>Прикладные аспекты информационных технологий.
+        Одесский национальный политехнический университет</title>
 
     <link rel="icon" href="/template.hait/_assets/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="/template.hait/_assets/favicon.ico" type="image/x-icon" />
@@ -16,7 +16,7 @@
     {?*frontend.assets_mode="development"*}
     <!-- Development -->
     <link rel="stylesheet" href="/template/_assets/colorbox.css" />
-    <link rel="stylesheet" href="/template/_assets/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="/template.hait/_assets/bootstrap/bootstrap.css">
 
     <link rel="stylesheet" href="/template.hait/_assets/bootstrap/bootstrap-theme.css">
     <link rel="stylesheet" href="/template.hait/theme.css">
@@ -41,7 +41,7 @@
 
             // get site language from cookies, if language not defined - set "EN"
             // {*frontend.cookie_site_language*}
-            if (!getCookie('{*frontend.cookie_site_language*}')) { setCookie('{*frontend.cookie_site_language*}', 'en', 3600*24*30) }
+            if (!getCookie('{*frontend.cookie_site_language*}')) { setCookie('{*frontend.cookie_site_language*}', 'ru', 3600*24*30) }
 
             {*content_jquery*}
 
@@ -103,7 +103,7 @@
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    {* + _main_navigation/menu.en.html *}
+    {* + _main_navigation/menu.ru.html *}
 </div>
 
 <div class="container">
@@ -113,8 +113,8 @@
                 <img src="/template.hait/_assets/images/logo_hait_586x541.png" id="actor-etks-logo" style="height:75px;padding-left:30px">
             </div>
             <div class="col-md-16">
-                <h3 class="etks-header-title">HERALD OF ADVANCED</h3>
-                <h3 class="etks-header-title">INFORMATION TECHNOLOGY</h3>
+                <h3 class="etks-header-title">Научно-технический журнал </h3>
+                <h3 class="etks-header-title">Вестник современных информационных технологий</h3>
             </div>
             <!--
                         <div class="col-md-4 right etks-header-issn">
@@ -132,7 +132,7 @@
                 <div class="panel panel-default panel-books-header">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <a href="?fetch=authors&with=list">Search by article</a>
+                            <a href="?fetch=authors&with=list">Поиск по статье</a>
                         </h3>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                 <div class="panel panel-default panel-books-header">
                     <div class="panel-heading">
                         <h3 class="panel-title panel-header-title">
-                            Issues
+                            Выпуски
                         </h3>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
             <hr>
             <!-- last news -->
             <div class="panel panel-default etks-lastnews-list">
-                <div class="panel-heading panel-header-title">Last news</div>
+                <div class="panel-heading panel-header-title">Последние новости</div>
                 <ul class="list-group etks-lastnews-ul">
                     {* + _main_subtemplates/frontpage_news_section.html *}
                 </ul>
@@ -174,7 +174,7 @@
                 <div class="panel panel-default panel-books-header">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <a href="?fetch=authors&with=list">Search by author</a>
+                            <a href="?fetch=authors&with=list">Поиск по автору</a>
                         </h3>
                     </div>
                 </div>
@@ -183,7 +183,7 @@
             <div class="panel-group etks-panel-topics" id="taccordion">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title panel-header-title">Subject</h3>
+                        <h3 class="panel-title panel-header-title">Тематика</h3>
                     </div>
                 </div>
                 <!-- topics list -->
@@ -198,17 +198,17 @@
                 -->
 
                 <div class="panel-heading">
-                    <h3 class="panel-title panel-header-title">Contacts</h3>
+                    <h3 class="panel-title panel-header-title">Контакты</h3>
                 </div>
 
                 <div class="panel-body etks-assist-editor">
-                    <!--
-                                        <span> Olga Borisovna Babiychuk </span>
+                   
+                                        <span> Ольга Борисовна Бабийчук </span>
                                         <br><br>
                                         <abbr title="phone">+38 (097) 134-73-86</abbr><br><br>
                                         <abbr title="fax">+38 (048) 722-33-69</abbr><br><br>
                                         <abbr title="E-Mail"><a href="mailto:aait@opu.ua">aait@opu.ua</a></abbr>
-                    -->
+                    
                 </div>
 
             </div>
@@ -239,8 +239,9 @@
 
 </div>
 
-{?*frontend.assets_mode="production"*}
-{* + metrika.aait.yandex.html *}
+metrika.yandex.hait.html    
+<!--{?*frontend.assets_mode="production"*}
+{* + metrika.aait.yandex.html *} -->
 {?}
 </body>
 </html>
