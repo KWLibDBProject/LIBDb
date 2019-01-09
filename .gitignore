@@ -10,6 +10,7 @@ www/core/config/_.db.php
 www/config/_.db.php
 www/config/config.php
 www/.version
+www/files.*
 
 node_modules
 package-lock.json
