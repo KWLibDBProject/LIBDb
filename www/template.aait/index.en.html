@@ -124,8 +124,64 @@
     </div>
 
     <div class="row">
+        <!-- BOOKS::START -->
+        <div class="col-md-4">
+            <div class="panel-group">
+                <div class="panel panel-default panel-books-header">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a href="?fetch=authors&with=list">Search by article</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-group etks-panel-books" id="accordion">
+                <div class="panel panel-default panel-books-header">
+                    <div class="panel-heading">
+                        <h3 class="panel-title panel-header-title">
+                            Issues
+                        </h3>
+                    </div>
+                </div>
+
+                {* + _main_subtemplates/frontpage_books_section.html *}
+
+            </div>
+
+            <hr>
+            <!-- last news -->
+            <div class="panel panel-default etks-lastnews-list">
+                <div class="panel-heading panel-header-title">Last news</div>
+                <ul class="list-group etks-lastnews-ul">
+                    {* + _main_subtemplates/frontpage_news_section.html *}
+                </ul>
+            </div>
+        </div>
+        <!-- BOOKS::END -->
+
+        <!-- CONTENT::START -->
+        <div class="col-md-16 maincontent">
+
+
+            {*content_html*}
+
+
+        </div>
+        <!-- CONTENT::END -->
+
         <!-- TOPICS::START -->
         <div class="col-md-4">
+            <div class="panel-group">
+                <div class="panel panel-default panel-books-header">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a href="?fetch=authors&with=list">Search by author</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            
             <div class="panel-group etks-panel-topics" id="taccordion">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -153,43 +209,7 @@
 
         </div>
         <!-- TOPICS::END -->
-        
-        <!-- CONTENT::START -->
-        <div class="col-md-16 maincontent">
 
-
-            {*content_html*}
-
-
-        </div>
-        <!-- CONTENT::END -->
-
-        <!-- BOOKS::START -->
-        <div class="col-md-4">
-            <div class="panel-group etks-panel-books" id="accordion">
-                <div class="panel panel-default panel-books-header">
-                    <div class="panel-heading">
-                        <h3 class="panel-title panel-header-title">
-                            Issues
-                        </h3>
-                    </div>
-                </div>
-
-                {* + _main_subtemplates/frontpage_books_section.html *}
-
-            </div>
-
-            <hr>
-            <!-- last news -->
-            <div class="panel panel-default etks-lastnews-list">
-                <div class="panel-heading panel-header-title">Last news</div>
-                <ul class="list-group etks-lastnews-ul">
-                    {* + _main_subtemplates/frontpage_news_section.html *}
-                </ul>
-            </div>
-        </div>
-        <!-- BOOKS::END -->
-        
     </div>
 </div>
 
