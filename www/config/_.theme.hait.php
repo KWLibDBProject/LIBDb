@@ -7,7 +7,9 @@
 return [
     'template_name'     => 'template.hait',
     'template_dir'      => 'template.hait',
-    'root_page_title'   => 'HAIT.OPU.UA'
+    'root_page_title'   => 'HAIT.OPU.UA',
+    
+    'default_page:include_last_book'    =>  false,
 ];
  
  

@@ -440,12 +440,20 @@ switch ($fetch) {
         $subtemplate_filename = "default";
 
         // load last book
-
-        $last_book = LoadLastBookInfo();
-        $last_book_id = $last_book['id'] ?? FALSE;
-
-        $last_book_articles_list = $last_book_id ? getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, 'no') : [];
-
+        // set default values for empty last_book
+        $last_book = [];
+        $last_book_id = FALSE;
+        $last_book_articles_list = [];
+        
+        // в файле темы можно указать загружать ли на дефолтную страницу последний сборник.
+        // По умолчанию - загружать (а переменная не объявляется).
+        // Такой механизм предпочтительнее индивидуальной правки шаблона (с учетом того, что default_page шаблон сейчас лежит в папке общих шаблонов) 
+        if ( Config::get('frontend/theme/default_page:include_last_book', true) ) {
+            $last_book = LoadLastBookInfo();
+            $last_book_id = $last_book['id'] ?? FALSE;
+            $last_book_articles_list = $last_book_id ? getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, 'no') : [];
+        }
+        
         $page_data = LoadStaticPage('about', $site_language);
 
         /**
@@ -455,8 +463,9 @@ switch ($fetch) {
             'site_language'         =>  $site_language,
             'page_alias'            =>  'about',
             'page_data'             =>  $page_data,
-            'articles_list'         =>  $last_book_articles_list,
+            
             'last_book'             =>  $last_book,
+            'articles_list'         =>  $last_book_articles_list,
             'template_folder'       =>  $main_theme_dir
         ];
 
