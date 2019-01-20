@@ -16,6 +16,9 @@ $template_dir = '$/core/_templates';
 $template_file = "admin.html";
 
 $template_data = [
+    'main'      =>  [
+        'title'     =>  Config::get('frontend/theme/root_page_title')
+    ],
     'stats'     =>  [
         'articles'  =>  DB::getRowCount('articles'),
         'authors'   =>  DB::getRowCount('authors'),
@@ -30,7 +33,8 @@ $template_data = [
     ],
     'resources' =>  [
         'disk_space_available'  =>  ConvertToHumanBytes( disk_free_space( FileStorage::getStorageDir() ) , 1),
-        'max_upload_filesize'   =>  ini_get('upload_max_filesize')
+        'max_upload_filesize_system'    =>  FileStorage::getRealMaxUploadFileSize(),
+        'max_upload_filesize_config'    =>  Config::get('storage/max_upload_size')
     ],
     'limits'    =>  [
         'post_max_size'         =>  ini_get('post_max_size'),
@@ -38,7 +42,6 @@ $template_data = [
         'max_file_uploads'      =>  ini_get('max_file_uploads'),
     ],
 ];
-
 
 echo websun_parse_template_path($template_data, $template_file, $template_dir);
 

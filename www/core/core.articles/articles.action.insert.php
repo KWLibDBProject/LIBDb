@@ -38,13 +38,15 @@ $res = mysqli_query($mysqli_link, $query) or Die("Невозможно вста�
 $article_id = mysqli_insert_id($mysqli_link) or Die("Не удалось получить id последней добавленной записи!");
 
 if (IsSet($_FILES)) {
+
+    /* @todo: вставить эту проверку в остальные случаи загрузки данных через $_FILES ! */
     switch ($_FILES['pdffile']['error']) {
         case UPLOAD_ERR_INI_SIZE: {
-            $result['error_message'] = " Возникла ошибка. Размер загружаемого файла больше ".ini_get('upload_max_filesize')." байт!";
+            $result['error_message'] = " Ошибка: Размер загружаемого файла больше ".ini_get('upload_max_filesize')." байт!";
             break;
         }
         case UPLOAD_ERR_FORM_SIZE : {
-            $result['error_message'] = " Возникла ошибка. Размер загружаемого файла больше ".$_POST['MAX_FILE_SIZE']." байт!";
+            $result['error_message'] = " Ошибка: Размер загружаемого файла больше ".$_POST['MAX_FILE_SIZE']." байт!";
             break;
         }
         case UPLOAD_ERR_OK: {

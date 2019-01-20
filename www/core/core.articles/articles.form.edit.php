@@ -9,6 +9,8 @@ if (isset($_GET['id']))
     Redirect('/core/list.articles.show.php');
 }
 
+$max_upload_filesize = FileStorage::getRealMaxUploadFileSize();
+
 // Технически, ответ уже будет содержать date_add, но этой конструкцией мы добавляем еще одно поле `date_add` в ответ.
 // В результате обычного запроса из консоли (к примеру) в ответе будет два столбца с date_add
 // первый - во внутреннем формате DATE (то есть 2018-08-23), а второй в отформатированном
@@ -16,9 +18,9 @@ if (isset($_GET['id']))
 // ДАЛЕЕ, когда мы скажем $the_article = mysqli_fetch_assoc($res_article)
 //                                  - в date_add запишется сначала первое значение, а потом второе
 
-$query = "SELECT *, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM articles WHERE id= {$id}";
+$query = "SELECT *, DATE_FORMAT(date_add, '%d.%m.%Y') as date_add FROM articles WHERE id = {$id}";
 
-$res_article = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое статьи! ".$query);
+$res_article = mysqli_query($mysqli_link, $query) or die("Невозможно получить содержимое статьи! [{$query}]");
 
 $numarticles = mysqli_num_rows($res_article);
 
@@ -28,7 +30,7 @@ if ($numarticles == 1)
 
     // получаем авторов
     $query = "select * from cross_aa where article={$id}";
-    $res_authors = mysqli_query($mysqli_link, $query) or die("Невозможно получить кросс-таблицу автор X статья! ".$query);
+    $res_authors = mysqli_query($mysqli_link, $query) or die("Невозможно получить кросс-таблицу автор X статья! [{$query}]");
 
     $numauthors = @mysqli_num_rows($res_authors);
     $the_loadedAuthorsNum = $numauthors;
@@ -44,7 +46,7 @@ if ($numarticles == 1)
         }
     }
 
-    $the_currAuthList = substr($currAuthList,0,-1);
+    $the_currAuthList = substr($currAuthList,0,-1); // отрезаем финальную запятую
     $the_currAuthList.= '}'; // значение для currAuthorsList
 
     $the_mode = 'edit';
@@ -249,7 +251,7 @@ if ($numarticles == 1)
 
     <fieldset>
         <legend>PDF-file</legend>
-        <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_upload_filesize; ?>">
 
         <span id="pdf-file-old">
             <button type="button" id="currfile_show" data-fileid="<?php echo $the_file['id'];?>">Посмотреть</button>

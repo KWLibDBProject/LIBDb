@@ -245,8 +245,8 @@ WHERE
 </div>
 
 <form action="books.action.update.php" method="post" enctype="multipart/form-data" id="form_book">
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('storage/max_upload_size', 1024*1024); ?>">
     <input type="hidden" name="book_id" value="<?php echo $book['id']; ?>">
-    <input type="hidden" name="MAX_FILE_SIZE" value="30000000">
     <fieldset class="fields_area rounded">
         <legend>Данные о сборнике</legend>
         <div class="field">

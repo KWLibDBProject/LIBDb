@@ -660,6 +660,22 @@ FOLDER_NOT_EXISTS;
         }
 
     }
+
+    /**
+     * Возвращает реальный максимальный размер файла, который можно загрузить в storage.
+     * 
+     * Это значение зависит от настроек сервера по приёму файлов
+     * 
+     * @return integer
+     */
+    public static function getRealMaxUploadFileSize() {
+        return min(
+            ini_get('upload_max_filesize'),     // макс. размер закачиваемого файла (меняется только в .ini)
+            ini_get('post_max_size'),           // макс. размер данных, отправляемых через POST (меняется только в .ini)
+            Config::get('storage/max_upload_size', 4 * 1024*1024)
+        );    
+        
+    }
     
 
 

@@ -67,9 +67,8 @@ require_once '../__required.php'; // $mysqli_link
     </script>
 </head>
 <body>
-
 <form action="books.action.insert.php" method="post" enctype="multipart/form-data" id="form_book">
-    <input type="hidden" name="MAX_FILE_SIZE" value="30000000">
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('storage/max_upload_size', 1024*1024); ?>">
     <fieldset class="fields_area rounded">
         <legend>Данные о сборнике</legend>
         <div class="field">

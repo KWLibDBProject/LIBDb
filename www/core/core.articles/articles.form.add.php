@@ -2,6 +2,8 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
+$max_upload_filesize = FileStorage::getRealMaxUploadFileSize();
+
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -179,7 +181,7 @@ require_once '../__required.php'; // $mysqli_link
 
     <fieldset>
         <legend>PDF-file</legend>
-        <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_upload_filesize ?>">
 
         <label for="pdf">Прикрепить PDF-файл:</label>
         <input type="file" name="pdffile" id="pdf">

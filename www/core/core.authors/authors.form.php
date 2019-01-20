@@ -15,6 +15,7 @@ if (isset($_GET['id'])) {
         'author_estaff_role'       => 0,
         'file_current_flag_show' => '',
         'file_current_flag_delete' => '',
+        'max_upload_filesize'   => FileStorage::getRealMaxUploadFileSize(),
     ];
 } else {
     // ADD
@@ -26,6 +27,7 @@ if (isset($_GET['id'])) {
         'author_estaff_role'       => 0,
         'file_current_flag_show' => 'disabled',
         'file_current_flag_delete' => '',
+        'max_upload_filesize'   => FileStorage::getRealMaxUploadFileSize(),
     ];
 }
 

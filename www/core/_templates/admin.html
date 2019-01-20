@@ -86,15 +86,27 @@
             display: inline-block;
             width: 3em;
             text-align: right;
-            padding-right: 0.5em;
+            padding-right: 1.5em;
             font-weight: bold;
             color: #264BBD;
+        }
+        
+        span.padded-warning {
+            color: red;
+        }
+        span.padded-notice {
+            color: navy;
+        }
+        
+        span.title-blue {
+            color: blue; font-weight: bold;
         }
 
     </style>
 </head>
 <body>
-<div id="header">
+<div id="header" style="height: 1.7em">
+    <div style="float: left; margin-left: 1em;"><span class="title-blue">{*main.title*}</span></div>
     <div style="float:right; margin-right: 1em"><a href="/" target="_blank">Сайт библиотеки</a></div>
 </div>
 <table width="100%">
@@ -199,8 +211,14 @@
                     <span class="padded">{*resources.disk_space_available*}</span> свободно в файловом хранилище
                 </li>
                 <li>
-                    <span class="padded">{*resources.max_upload_filesize*}</span> максимальный размер загружаемого файла
+                    <span class="padded">{*resources.max_upload_filesize_system*}</span> максимальный размер загружаемого файла согласно настройкам сервера
                 </li>
+                {?* resources.max_upload_filesize_config > resources.max_upload_filesize_system *}
+                <li>
+                    <span class="padded padded-warning">Warning</span> В конфигурации сайта установлен бо&#x301;льший размер загружаемого файла,
+                    чем можно загружать согласно системным настройкам сервера. 
+                </li>
+                {?}
                 <li>
                     <hr width="20%" align="left">
                 </li>
@@ -212,14 +230,7 @@
             Если это фотография автора - она все равно будет принудительно уменьшена до размера 150*200<br>
             Если это фотография заглавной страницы сборника - её будет очень неудобно смотреть во всплывающем окне.<br>
             Но, все же, если вы не знаете, как уменьшить размер изображения - загружайте как умеете. Только сообщите разработчику.<br>
-
-            <hr>
-            Часто бывает так, что от автора приходит PDF-ка астрономического размера - на несколько
-            мегабайт. <br>
-            Откуда вообще берется такой размер файла? Чаще всего автор не желает выставлять нормальные настройки сжатия изображений в файле -
-            опасаясь потери данных при сжатии. Но что делать <strong>нам</strong> с файлом на 8 мегабайт? <br/>
-            Для уменьшения размера файла можно воспользоваться сервисом <a href="http://smallpdf.com/ru/compress-pdf">http://smallpdf.com/ru/compress-pdf</a><br>
-            <u>После загрузки исправленного файла</u> крайне желательно открыть подменю "Maintenance" и нажать кнопочку "Recalc filesizes"<br>
+            
         </td>
     </tr>
 </table>

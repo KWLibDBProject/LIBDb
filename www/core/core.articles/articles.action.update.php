@@ -43,15 +43,15 @@ $is_newfile = $_POST['currfile_changed'];
 if ($is_newfile == 1) {
     // пдфку обновляли
     if (isset($_FILES)) {
-
+        
         /* @todo: вставить эту проверку в остальные случаи загрузки данных через $_FILES ! */
         switch ($_FILES['pdffile']['error']) {
             case UPLOAD_ERR_INI_SIZE: {
-                $result['error_message'] = " Возникла ошибка: размер загружаемого файла больше ".ini_get('upload_max_filesize')." байт!";
+                $result['error_message'] = " Ошибка: размер загружаемого файла больше ".ini_get('upload_max_filesize')." байт!";
                 break;
             }
             case UPLOAD_ERR_FORM_SIZE : {
-                $result['error_message'] = " Возникла ошибка: размер загружаемого файла больше ".$_POST['MAX_FILE_SIZE']." байт!";
+                $result['error_message'] = " Ошибка: размер загружаемого файла больше ".$_POST['MAX_FILE_SIZE']." байт!";
                 break;
             }
             case UPLOAD_ERR_OK: {
