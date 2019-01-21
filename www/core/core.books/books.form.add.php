@@ -2,6 +2,8 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
+$max_upload_filesize = FileStorage::getRealMaxUploadFileSize();
+
 ?>
 <html>
 <head>
@@ -68,7 +70,7 @@ require_once '../__required.php'; // $mysqli_link
 </head>
 <body>
 <form action="books.action.insert.php" method="post" enctype="multipart/form-data" id="form_book">
-    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('storage/max_upload_size', 1024*1024); ?>">
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_upload_filesize; ?>">
     <fieldset class="fields_area rounded">
         <legend>Данные о сборнике</legend>
         <div class="field">

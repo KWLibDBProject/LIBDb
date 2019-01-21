@@ -2,6 +2,8 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
+$max_upload_filesize = FileStorage::getRealMaxUploadFileSize();
+
 $id = IsSet($_GET['id']) ? intval($_GET['id']) : -1;
 
 if ($id != -1)
@@ -245,7 +247,7 @@ WHERE
 </div>
 
 <form action="books.action.update.php" method="post" enctype="multipart/form-data" id="form_book">
-    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('storage/max_upload_size', 1024*1024); ?>">
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_upload_filesize; ?>">
     <input type="hidden" name="book_id" value="<?php echo $book['id']; ?>">
     <fieldset class="fields_area rounded">
         <legend>Данные о сборнике</legend>

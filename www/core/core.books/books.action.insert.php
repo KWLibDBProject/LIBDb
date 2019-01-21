@@ -21,6 +21,9 @@ if (count($_FILES)>0) {
     // И, что самое главное, в EDIT - их "разлинковывали" и добавляли новые! См логику как в article.form.edit
     // неважно сколько файлов пришло из формы - обработаем массив с ними в цикле
     foreach ($_FILES as $a_file => $a_data) {
+        
+        //@todo: switch ($a_data['error'] {}) 
+        
         FileStorage::addFile($a_data, $book_id, 'books', $a_file);
     }
 

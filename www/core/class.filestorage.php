@@ -7,6 +7,8 @@ require_once('class.kwlogger.php');
  */
 class FileStorage
 {
+    const VERSION = "2.0/LIBDB";
+    
     /**
      * @var mysqli
      */
@@ -662,7 +664,8 @@ FOLDER_NOT_EXISTS;
     }
 
     /**
-     * Возвращает реальный максимальный размер файла, который можно загрузить в storage.
+     * Возвращает АКТУАЛЬНЫЙ максимальный размер файла, который можно загрузить в storage.
+     * Это минимальное значение от системных возможностей и установки в конфиге
      * 
      * Это значение зависит от настроек сервера по приёму файлов
      * 
@@ -670,11 +673,39 @@ FOLDER_NOT_EXISTS;
      */
     public static function getRealMaxUploadFileSize() {
         return min(
-            ini_get('upload_max_filesize'),     // макс. размер закачиваемого файла (меняется только в .ini)
-            ini_get('post_max_size'),           // макс. размер данных, отправляемых через POST (меняется только в .ini)
+            self::ini_get_as_bytes('upload_max_filesize'),     // макс. размер закачиваемого файла (меняется только в .ini)
+            self::ini_get_as_bytes('post_max_size'),           // макс. размер данных, отправляемых через POST (меняется только в .ini)
             Config::get('storage/max_upload_size', 4 * 1024*1024)
         );    
-        
+    }
+
+    /**
+     * Возвращает системный максимальный размер загружаемого файла
+     * @return mixed
+     */
+    public static function getSystemMaxUploadFileSize(){
+        return min(
+            self::ini_get_as_bytes('upload_max_filesize'),
+            self::ini_get_as_bytes('post_max_size')         
+        );
+    }
+
+    /**
+     * Конвертирует ini-значение в любой форме в строго integer-значение.   
+     * 
+     * @param $key
+     * @return int
+     */
+    public static function ini_get_as_bytes($key) {
+        $val = trim( ini_get($key) );
+        $last = strtolower($val[strlen($val)-1]);
+            
+        switch ($last) {
+            case 'g': $val = $val << 10;
+            case 'm': $val = $val << 10;
+            case 'k': $val = $val << 10;
+        }
+        return $val;
     }
     
 

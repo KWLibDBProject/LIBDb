@@ -33,7 +33,7 @@ $template_data = [
     ],
     'resources' =>  [
         'disk_space_available'  =>  ConvertToHumanBytes( disk_free_space( FileStorage::getStorageDir() ) , 1),
-        'max_upload_filesize_system'    =>  FileStorage::getRealMaxUploadFileSize(),
+        'max_upload_filesize_system'    =>  FileStorage::getSystemMaxUploadFileSize(),
         'max_upload_filesize_config'    =>  Config::get('storage/max_upload_size')
     ],
     'limits'    =>  [

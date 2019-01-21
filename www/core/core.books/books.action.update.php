@@ -22,8 +22,12 @@ if (count($_FILES)>0) {
     // неважно сколько файлов пришло из формы - обработаем массив с ними в цикле
 
     foreach ($_FILES as $a_file => $a_data) {
+
+        //@todo: switch ($a_data['error'] {})
+        
         FileStorage::addFile($a_data, $book_id, 'books', $a_file);
     }
+    
     $result['error'] = 0;
     $result['message'] = "Данные обновлены, новые файлы в базу добавлены!";
 } else {

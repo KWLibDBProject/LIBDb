@@ -17,7 +17,7 @@ return [
     // path to storage folder for all PDF/JPG files WITHOUT FINAL '/'
     'path_storage'      =>  'files.hait/storage',
 
-    'max_upload_size'   =>  1024 * 1024 * 1024,
+    'max_upload_size'   =>  3 * 1024 * 1024,
 
     // store driver
     // 'db', 'disk', 'cloud'
