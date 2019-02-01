@@ -27,7 +27,7 @@ switch ($actor) {
         // BETTER: request to /core/core.books/books.action.getoptionlist.php
 
         $i = 1;
-        isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
+        $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
         $query = "
         
         SELECT * 
