@@ -4,7 +4,7 @@ require_once '../__required.php'; // $mysqli_link
 
 // в $id может быть -1 - это значит, что пытаться удалять ничего не надо, а просто вернуть "ОК"
 
-$id = intval($_GET['id'] ?? -1);
+$id = empty($_GET['id']) ? -1 : intval($_GET['id']);
 
 // таблица, в которой ОБНОВЛЯЕМ релейшен объекта - собственно кто владелец файла?
 $owner = isset($_GET['caller']) ? $_GET['caller'] : Die();

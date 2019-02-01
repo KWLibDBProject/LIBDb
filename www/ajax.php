@@ -27,7 +27,7 @@ switch ($actor) {
         // BETTER: request to /core/core.books/books.action.getoptionlist.php
 
         $i = 1;
-        $withoutid = intval($_GET['withoutid'] ?? 1); // isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
+        isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
         $query = "
         
         SELECT * 
@@ -70,7 +70,7 @@ switch ($actor) {
 
         /* загрузить категории и отдать JSON-объект для построения селекта c группировкой */
 
-        $withoutid = intval( $_GET['withoutid'] ?? 1);  // $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
+        $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
 
         $data = LoadTopicsTree($lang, $withoutid);
         if ($data['data'][1]['value'] != -1 ) {

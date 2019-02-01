@@ -5,8 +5,7 @@ require_once '../__required.php'; // $mysqli_link
 if (!IsSet($_POST['ref_name'])) {
     $result['error'] = 1; $result['message'] = 'Unknown caller!'; print(json_encode($result)); exit();
 }
-
-$id = intval($_POST['id'] ?? 0);
+$id = empty($_POST['id']) ? 0 : intval($_POST['id']); // НЕ ЭКВИВАЛЕНТНО $id = intval($_POST['id'] ?? 0);
 
 if ($id == 0)
     die('Unknow caller');

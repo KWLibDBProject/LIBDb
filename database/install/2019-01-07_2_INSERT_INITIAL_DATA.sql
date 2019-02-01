@@ -1,7 +1,7 @@
 LOCK TABLES `ref_estaff_roles` WRITE;
 
 INSERT INTO `ref_estaff_roles` (`id`, `data_str`, `data_int`, `data_comment`)
-VALUES (1, 'Международная редакционная коллегия', 5, ''),
+VALUES (1, 'Международная редакционная коллегия', 5, 'editorial_board_international'),
        (2, 'Ответственный секретарь', 6, ''),
        (3, 'Редакционная коллегия', 4, ''),
        (4, 'Заместитель главного редактора', 3, ''),

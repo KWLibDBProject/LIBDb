@@ -85,7 +85,7 @@ switch ($fetch) {
         switch ($with) {
             case 'info': {
                 /*расширенная информация по автору + список его статей + фото */
-                $id = intval($_GET['id'] ?? 0);
+                $id = empty($_GET['id']) ? 0 : intval($_GET['id']); //                $id = intval($_GET['id'] ?? 0); 
 
                 $subtemplate_dir = "$/template/authors/info/";
                 $subtemplate_filename = "authors__info";
@@ -267,7 +267,7 @@ switch ($fetch) {
                 break;
             }
             case 'topic' : {
-                $id = intval($_GET['id']) ?? 0;
+                $id = empty($_GET['id']) ? 0 : intval($_GET['id']); // $id = intval($_GET['id']) ?? 0;
 
                 $subtemplate_dir = "$/template/articles/topic/";
                 $subtemplate_filename = "articles__topic";
@@ -291,7 +291,7 @@ switch ($fetch) {
                 break;
             }
             case 'book' : {
-                $id = intval($_GET['id']) ?? 0;
+                $id = empty($_GET['id']) ? 0 : intval($_GET['id']); // $id = intval($_GET['id']) ?? 0;
 
                 $subtemplate_dir = "$/template/articles/book/";
                 $subtemplate_filename = "articles__book";
