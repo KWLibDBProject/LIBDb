@@ -1017,7 +1017,7 @@ function getAuthors_EStaffList($estaff_role, $site_language)
  * @param string $with_email
  * @return array
  */
-function getArticlesList($request, $language = 'en', $with_email = 'no')
+function getArticlesList($request, $language = 'en', $with_email = false) //+
 {
     global $mysqli_link;
     $articles = LoadArticles_ByQuery($request, $language);
@@ -1052,3 +1052,35 @@ function getPagesPrefix_forArticles($lang)
 }
 
 
+/**
+ * Сортирует массив статей по ключу "страницы" с указанным порядком сортировки  
+ * 
+ * @param $articles_list
+ * @param string $sort_order
+ * @param $key
+ * @return mixed
+ */
+function sortArticlesListByPages($articles_list, $sort_order = 'ASC', $key = 'article_pages' )
+{
+    $sort_order = getAllowedValue($sort_order, ['ASC', 'DESC']);
+    if (is_null($sort_order)) return $articles_list;
+    
+    $sort_order = ($sort_order == 'ASC') ? +1 : -1;
+    
+    usort($articles_list, function ($i, $j) use ($key, $sort_order) {
+        preg_match('/(\d+)[\s-]+(\d+)/', $i[ $key ], $preg_i);
+        preg_match('/(\d+)[\s-]+(\d+)/', $j[ $key ], $preg_j);
+
+        $order
+            = ($preg_i[1] != $preg_j[1])        // если начальные страницы двух статей не равны
+            ? ($preg_i[1] <=> $preg_j[1])       // сравним их "корабликом"
+            : $preg_i[2] <=> $preg_j[2];        // в противном случае сравним корабликом конечные страницы
+
+        return  
+              ($sort_order == -1)   // если порядок сортировки DESC 
+            ? 0-$order              // инвертируем результат сравнения 
+            : $order;               // иначе оставляем такой же
+    });
+    
+    return $articles_list;
+}

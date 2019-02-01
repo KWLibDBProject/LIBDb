@@ -479,8 +479,10 @@ switch ($fetch) {
         if ( Config::get('frontend/theme/default_page:include_last_book', true) ) {
             $last_book = LoadLastBookInfo();
             $last_book_id = $last_book['id'] ?? FALSE;
-            $last_book_articles_list = $last_book_id ? getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, 'no') : [];
+            $last_book_articles_list = $last_book_id ? getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, false) : [];
         }
+
+        $last_book_articles_list = sortArticlesListByPages($last_book_articles_list);
         
         $page_data = LoadStaticPage('about', $site_language);
 

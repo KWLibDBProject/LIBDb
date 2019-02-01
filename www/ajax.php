@@ -121,7 +121,7 @@ switch ($actor) {
         //      articles/book
 
         $inner_html_data = [
-            'articles_list' =>  getArticlesList($_GET, $lang),
+            'articles_list' =>  sortArticlesListByPages( getArticlesList($_GET, $lang) ),
             'with_email'    =>  'no',
             'site_language' =>  $lang
         ];

@@ -7,7 +7,7 @@
 return [
     'template_name'     => 'template.etks',
     'template_dir'      => 'template.etks',
-    'root_page_title'   => 'ETKS.OPU.UA'
+    'root_page_title'   => 'ETKS.OPU.UA',
 ];
  
  
