@@ -418,7 +418,7 @@ function LoadLastBookInfo()
     global $mysqli_link;
 
     $query = "
-    SELECT * 
+    SELECT *, YEAR(published_date) AS published_year 
     FROM books 
     WHERE published_status = 1 
     ORDER BY published_date DESC 
