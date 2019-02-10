@@ -39,8 +39,8 @@ module.exports = function(grunt) {
 
         imageEmbed: {
             dist: {
-                src: [ "www/styles.min.css" ],
-                dest: "www/styles.min.css",
+                src: [ "www/styles.etks.min.css" ],
+                dest: "www/styles.etks.min.css",
                 options: {
                     deleteAfterEncoding : false,
                     preEncodeCallback: function (filename) { return true; },

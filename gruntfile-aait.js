@@ -14,20 +14,20 @@ module.exports = function(grunt) {
                     'www/frontend.js',
                     'www/frontend.options.js ',
                 ],
-                dest: 'www/scripts.min.js',
+                dest: 'www/scripts.aait.min.js',
             }
         },
         uglify: {
             js: {
-                src: 'www/scripts.min.js',
-                dest: 'www/scripts.min.js'
+                src: 'www/scripts.aait.min.js',
+                dest: 'www/scripts.aait.min.js'
             }
         },
 
         cssmin: {
             target: {
                 files: {
-                    'www/styles.min.css': [
+                    'www/styles.aait.min.css': [
                         'www/template/_assets/bootstrap/bootstrap.css',
                         'www/template/_assets/bootstrap/bootstrap-theme.css',
                         'www/template/_assets/colorbox.css',

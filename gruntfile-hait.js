@@ -14,13 +14,13 @@ module.exports = function(grunt) {
                     'www/frontend.js',
                     'www/frontend.options.js ',
                 ],
-                dest: 'www/scripts.min.js',
+                dest: 'www/scripts.hait.min.js',
             }
         },
         uglify: {
             js: {
-                src: 'www/scripts.min.js',
-                dest: 'www/scripts.min.js'
+                src: 'www/scripts.hait.min.js',
+                dest: 'www/scripts.hait.min.js'
             }
         },
 
@@ -28,7 +28,7 @@ module.exports = function(grunt) {
             target: {
                 files: {
                     'www/styles.min.css': [
-                        'www/template/_assets/bootstrap/bootstrap.css',
+                        'www/template.hait/_assets/bootstrap/bootstrap.css',
                         'www/template.hait/_assets/bootstrap/bootstrap-theme.css',
                         'www/template/_assets/colorbox.css',
                         'www/template.hait/theme.css'
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    // grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
     // 4. Указываем, какие задачи выполняются, когда мы вводим «grunt» в терминале
     grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
