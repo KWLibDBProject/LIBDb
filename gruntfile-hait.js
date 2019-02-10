@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         cssmin: {
             target: {
                 files: {
-                    'www/styles.min.css': [
+                    'www/styles.hait.min.css': [
                         'www/template.hait/_assets/bootstrap/bootstrap.css',
                         'www/template.hait/_assets/bootstrap/bootstrap-theme.css',
                         'www/template/_assets/colorbox.css',
