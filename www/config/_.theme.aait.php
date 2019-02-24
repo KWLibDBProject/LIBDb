@@ -7,7 +7,9 @@
 return [
     'template_name'     => 'template.aait',
     'template_dir'      => 'template.aait',
-    'root_page_title'   => 'AAIT.OPU.UA'
+    'root_page_title'   => 'AAIT.OPU.UA',
+
+    'default_page:include_last_book'    =>  false,
 ];
  
  
