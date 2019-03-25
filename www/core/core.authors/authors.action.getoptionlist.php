@@ -23,9 +23,7 @@ SELECT
     name_{$lang} as name,
     title_{$lang} as title,
     orcid 
-FROM 
-    authors
-COLLATE utf8_unicode_ci
+FROM authors
 ";
 
 if ($result = mysqli_query($mysqli_link, $query)) {
