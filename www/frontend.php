@@ -98,7 +98,7 @@ function LoadFirstLettersForSelector($lang)
     global $mysqli_link;
     // $query = "SELECT DISTINCT SUBSTRING(name_{$lang},1,1) AS letter FROM authors ORDER BY name_{$lang}"; // was "where deleted=0, but is ALWAYS = 0
 
-    $query = "SELECT DISTINCT firstletter_name_{$lang} AS letter FROM authors ORDER BY firstletter_name_{$lang}";
+    $query = "SELECT DISTINCT firstletter_name_{$lang} AS letter FROM authors ORDER BY firstletter_name_{$lang} COLLATE  utf8_unicode_ci ";
 
     $query_response = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
 
@@ -793,7 +793,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
         ? " AND estaff_role = " . intval($estaff_role)
         : " ";
 
-    $query_order = " ORDER BY authors.name_{$lang}";
+    $query_order = " ORDER BY authors.name_{$lang} COLLATE utf8_unicode_ci ";
     // $query_order = " ORDER BY id";
 
     $query = "SELECT id, email, orcid, phone, 
@@ -806,7 +806,6 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     {$query_where_estaff_role}
     {$query_where_like}
     {$query_order}
-    
     ";
 
     // '1=1' - нужно как условие, которое всегда истина. Следом могут идти другие условия с союзами AND.
@@ -861,7 +860,8 @@ function LoadAuthors_ByArticle($id, $lang)
     WHERE 
         cross_aa.author = authors.id AND 
         cross_aa.article={$id} 
-    ORDER BY name_{$lang}";
+    ORDER BY name_{$lang} COLLATE utf8_unicode_ci
+    ";
 
     $ret = array();
     $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);

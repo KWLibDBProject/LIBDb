@@ -12,12 +12,12 @@ if ($select_letter != '0') {
     $sort_order = " ORDER BY name_ru ";
 } else {
     $where_like = ' ';
-    $sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru " : '';
+    $sort_order = isset($_GET['order_by_name']) ? " ORDER BY name_ru COLLATE utf8_unicode_ci " : '';
 }
 
 $authors_list = [];
 
-$query = "SELECT * FROM authors {$where_like} {$sort_order}";
+$query = "SELECT * FROM authors {$where_like} {$sort_order}  ";
 $res = mysqli_query($mysqli_link, $query) or die($query);
 $authors_count = @mysqli_num_rows($res) ;
 

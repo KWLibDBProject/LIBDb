@@ -25,6 +25,7 @@ SELECT
     orcid 
 FROM 
     authors
+COLLATE utf8_unicode_ci
 ";
 
 if ($result = mysqli_query($mysqli_link, $query)) {
