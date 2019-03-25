@@ -57,7 +57,7 @@ CREATE TABLE `authors` (
   `stat_date_insert` datetime DEFAULT CURRENT_TIMESTAMP,
   `stat_date_update` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 
 /*Table structure for table `banners` */
 
