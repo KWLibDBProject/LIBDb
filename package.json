@@ -1,5 +1,6 @@
 {
   "name": "libdb",
+  "version": "1.187",
   "description": "KW LibDB -- Движок сайтов онлайн-журналов, разработанный для ОПУ (Одесского политехнического университета)",
   "author": "Karel Wintersky <karel.wintersky@gmail.com>",
   "devDependencies": {
