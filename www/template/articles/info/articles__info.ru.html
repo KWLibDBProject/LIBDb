@@ -18,15 +18,15 @@
     {?*article_authors_list*}
     <fieldset>
         <legend>Авторы:</legend>
-        <ol class="article-authors-list">
+        <ul class="article-authors-list">
             {%*article_authors_list*}
             <li>
                 <a href="?fetch=authors&with=info&id={*article_authors_list:author_id*}&lang={*site_language*}">
-                    {*article_authors_list:author_name*}</a> {*article_authors_list:author_title*}
+                    {*article_authors_list:author_name*}</a>, {*article_authors_list:author_title*}
                 {?*article_authors_list:author_email*}<em>( {*article_authors_list:author_email*} )</em>{?}
             </li>
             {%}
-        </ol>
+        </ul>
     </fieldset>
     {?}
     {?*article_keywords*}
@@ -62,7 +62,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>Последняя раз скачивали:</legend>
+        <legend>Последняя загрузка:</legend>
         <div class="article-last-download">
             {*article_pdf_last_download_date*}
         </div>
