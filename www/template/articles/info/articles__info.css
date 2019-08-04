@@ -14,9 +14,7 @@
 }
 .article-authors-list {
     margin-top: 0;
-}
-ul.article-authors-list {
-    list-style-type: decimal;
+    list-style-type: disc; 
 }
 legend {
     font-weight: bold;
