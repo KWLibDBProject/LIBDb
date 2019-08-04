@@ -15,7 +15,7 @@
 .article-authors-list {
     margin-top: 0;
 }
-ul.article-authors-list {
+ol.article-authors-list {
     list-style-type: decimal;
 }
 legend {
