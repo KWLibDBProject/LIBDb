@@ -7,7 +7,7 @@ require_once('class.kwlogger.php');
  */
 class FileStorage
 {
-    const VERSION = "2.0/LIBDB";
+    const VERSION = "2.1/LIBDB";
     
     /**
      * @var mysqli
@@ -691,14 +691,20 @@ FOLDER_NOT_EXISTS;
     }
 
     /**
-     * Конвертирует ini-значение в любой форме в строго integer-значение.   
+     * Конвертирует ini-значение в любой форме в строго integer-значение.
+     *
+     * https://stackoverflow.com/questions/6846445/get-byte-value-from-shorthand-byte-notation-in-php-ini   
      * 
      * @param $key
      * @return int
      */
-    public static function ini_get_as_bytes($key) {
+    public static function ini_get_as_bytes($key) 
+    {
         $val = trim( ini_get($key) );
+        if (is_numeric($val)) return $val;
+
         $last = strtolower($val[strlen($val)-1]);
+        $val  = substr($val, 0, -1);
             
         switch ($last) {
             case 'g': $val = $val << 10;

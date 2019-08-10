@@ -4,6 +4,7 @@ www/styles.min.css
 
 www/template*/metrika.*
 www/vendor
+www/composer.lock
 
 www/config/_.db.php
 www/config/config.php

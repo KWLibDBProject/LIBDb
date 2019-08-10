@@ -163,7 +163,7 @@ EACH_BANNER;
     } // case 'row-list'
     case 'no-action': {
         ?>
-    <html>
+    <html lang="ru">
     <head>
     <title>Работа со справочником баннеров</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -220,7 +220,7 @@ EACH_BANNER;
         function Banner_CallAddItem(source, id)
         {
             var $form = $(source).find('form');
-            url = $form.attr("action");
+            var url = $form.attr("action");
             var getting = $.get(url, {
                 data_url_image: $form.find("input[name='add_data_url_image']").val(),
                 data_url_href: $form.find("input[name='add_data_url_href']").val(),
@@ -229,8 +229,8 @@ EACH_BANNER;
                 //@todo
                 data_is_visible : ($form.find("input[name='add_data_is_visible']").attr("checked") ? 1 : 0)
             } );
-            getting.done(function(data){
-                result = $.parseJSON(data);
+            getting.done(function(data) {
+                var result = $.parseJSON(data);
                 if (result['error']==0) {
                     $("#ref_list").empty().load("?action=list");
                     $( source ).dialog( "close" );
@@ -252,7 +252,7 @@ EACH_BANNER;
                 id: id
             } );
             getting.done(function(data){
-                result = $.parseJSON(data);
+                var result = $.parseJSON(data);
                 if (result['error']==0) {
                     $("#ref_list").empty().load("?action=list");
                     $( source ).dialog( "close" );
@@ -267,7 +267,7 @@ EACH_BANNER;
         {
             var getting = $.get('?action=remove', { id: id });
             getting.done(function(data){
-                result = $.parseJSON(data);
+                var result = $.parseJSON(data);
                 if (result['error'] == 0) {
                     $('#ref_list').empty().load("?action=list");
                     $( target ).dialog( "close" );
@@ -348,10 +348,11 @@ EACH_BANNER;
             /* вызов и обработчик диалога редактирования */
 
             $('#ref_list').on('click', '.actor-edit', function() {
-                button_id = $(this).attr('name');
+                var button_id = $(this).attr('name');
                 Banner_CallLoadItem("#edit_form", button_id);
                 $('#edit_form').dialog('open');
             });
+            
             $( "#edit_form" ).dialog({
                 autoOpen: false,
                 height: 400,

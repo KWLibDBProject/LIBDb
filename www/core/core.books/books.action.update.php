@@ -2,21 +2,28 @@
 define('__ACCESS_MODE__', 'admin');
 require_once '../__required.php'; // $mysqli_link
 
-$ref_name = 'books';
+$sql_table = 'books';
 
 $book_id = $_POST['book_id'];
 
 $dataset = array(
-    'title'         => mysqli_real_escape_string($mysqli_link, $_POST['book_title']),
-    'contentpages'  => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
-    'published_status'  => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
-    'published_date'    => DateTime::createFromFormat('d.m.Y', $_POST['book_publish_date'])->format('Y-m-d'),
+    'title_en' => mysqli_real_escape_string($mysqli_link, $_POST['book_title_en']),
+    'contentpages' => mysqli_real_escape_string($mysqli_link, $_POST['book_contentpages']),
+    'published_status' => mysqli_real_escape_string($mysqli_link, $_POST['is_book_ready']),
+    'published_date' => DateTime::createFromFormat('d.m.Y', $_POST['book_publish_date'])->format('Y-m-d'),
 );
 
-$query = MakeUpdate($dataset, $ref_name, " WHERE id = {$book_id}");
-$res = mysqli_query($mysqli_link, $query) or Die("Невозможно обновить данные в базе  ".$query);
+if (Config::get('frontend/theme/book:use_lang_depended_title', false)) {
+    $dataset['title_ru'] = mysqli_real_escape_string($mysqli_link, $_POST['book_title_ru']);
+    $dataset['title_ua'] = mysqli_real_escape_string($mysqli_link, $_POST['book_title_ua']);
+} else {
+    $dataset['title_ru'] = $dataset['title_ua'] = $dataset['title_en'];
+}
 
-if (count($_FILES)>0) {
+$query = MakeUpdate($dataset, $sql_table, " WHERE id = {$book_id}");
+$res = mysqli_query($mysqli_link, $query) or Die("Невозможно обновить данные в базе  " . $query);
+
+if (count($_FILES) > 0) {
     // Если массив $_FILES не пуст - это означает, что файлы присоединили.
     // И, что самое главное, в EDIT - их "разлинковывали" и добавляли новые!
     // неважно сколько файлов пришло из формы - обработаем массив с ними в цикле
@@ -24,10 +31,10 @@ if (count($_FILES)>0) {
     foreach ($_FILES as $a_file => $a_data) {
 
         //@todo: switch ($a_data['error'] {})
-        
+
         FileStorage::addFile($a_data, $book_id, 'books', $a_file);
     }
-    
+
     $result['error'] = 0;
     $result['message'] = "Данные обновлены, новые файлы в базу добавлены!";
 } else {
@@ -46,9 +53,9 @@ if (isAjaxCall()) {
     $template_file = "ref.all_timed_callback.html";
 
     $template_data = array(
-        'time'          => Config::get('callback_timeout') ?? 15,
-        'target'        => '../list.books.show.php',
-        'button_text'   => 'Вернуться к списку сборников',
+        'time' => Config::get('callback_timeout') ?? 15,
+        'target' => '../list.books.show.php',
+        'button_text' => 'Вернуться к списку сборников',
     );
 
     $template_data['message'] = ($result['error'] == 0) ? 'Сборник обновлен' : $result['message'];

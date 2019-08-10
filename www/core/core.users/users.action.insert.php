@@ -28,7 +28,7 @@ if (mysqli_errno($mysqli_link)==0)
     if (mysqli_num_rows($r)==0) {
         // пользователь уникален
         $query_insert = MakeInsert($post, $table);
-        $r = mysqli_query($mysqli_link, $query_insert) or Die("Unable to insert data to DB!".$query);
+        $r = mysqli_query($mysqli_link, $query_insert) or Die("Unable to insert data to DB!".$sql_query);
         $new_id = mysqli_insert_id($mysqli_link) or Die("Unable to get last insert id!");
         $result['query'] = $query_insert;
         $result['message'] = 'Adding complete: '.$query_insert;

@@ -5,7 +5,7 @@ require_once '../__required.php'; // $mysqli_link
 $max_upload_filesize = FileStorage::getRealMaxUploadFileSize();
 
 ?>
-<html>
+<html lang="ru">
 <head>
     <title>Сборники -- добавление</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -74,9 +74,20 @@ $max_upload_filesize = FileStorage::getRealMaxUploadFileSize();
     <fieldset class="fields_area rounded">
         <legend>Данные о сборнике</legend>
         <div class="field">
-            <label for="book_title">Название:</label>
-            <input type="text" name="book_title" id="book_title">
+            <label for="book_title_en">Title:</label>
+            <input type="text" name="book_title_en" id="book_title_en">
         </div>
+<?php if (Config::get('frontend/theme/book:use_lang_depended_title', false)) { ?>
+        <div class="field">
+            <label for="book_title_ru">Название (RU):</label>
+            <input type="text" name="book_title_ru" id="book_title_ru">
+        </div>
+        <div class="field">
+            <label for="book_title_ua">Название (UA):</label>
+            <input type="text" name="book_title_ua" id="book_title_ua">
+        </div>
+        <hr>
+<?php } ?>        
         <div class="field">
             <label for="book_datepicker">Дата выпуска:</label>
             <input type="text" class="book_datepicker" id="book_datepicker" name="book_publish_date">

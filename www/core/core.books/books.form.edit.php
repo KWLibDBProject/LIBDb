@@ -10,7 +10,8 @@ if ($id != -1)
 {
     $query = "
 SELECT 
-    id, title, published_status, contentpages,
+    id, title_en, title_ru, title_ua, 
+    published_status, contentpages,
     DATE_FORMAT(published_date, '%d.%m.%Y') as published_date,
     file_cover, file_title_ru, file_title_en, file_toc_ru, file_toc_en
 FROM 
@@ -252,9 +253,20 @@ WHERE
     <fieldset class="fields_area rounded">
         <legend>Данные о сборнике</legend>
         <div class="field">
-            <label for="book_title">Название:</label>
-            <input type="text" name="book_title" id="book_title" value="<?php echo $book['title']?>">
+            <label for="book_title_en">Title:</label>
+            <input type="text" name="book_title_en" id="book_title_en" value="<?php echo $book['title_en']?>">
         </div>
+<?php if (Config::get('frontend/theme/book:use_lang_depended_title', false)) { ?>
+        <div class="field">
+            <label for="book_title_ru">Название (RU):</label>
+            <input type="text" name="book_title_ru" id="book_title_ru" value="<?php echo $book['title_ru']?>">
+        </div>
+        <div class="field">
+            <label for="book_title_ua">Название (UA):</label>
+            <input type="text" name="book_title_ua" id="book_title_ua" value="<?php echo $book['title_ua']?>">
+        </div>
+        <hr>
+<?php } ?>
         <div class="field">
             <label for="book_datepicker">Дата (год) выпуска:</label>
             <input type="text" class="book_datepicker" id="book_datepicker" name="book_publish_date" value="<?php echo $book['published_date']?>">

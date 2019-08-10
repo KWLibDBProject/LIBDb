@@ -302,7 +302,7 @@ switch ($fetch) {
                 $inner_html_data = [
                     'site_language'     =>  $site_language,
                     'book_id'           =>  $id,
-                    'book_info'         =>  LoadBookInfo($id), // если сборника нет - это обрабатывает шаблон
+                    'book_info'         =>  LoadBookInfo($id, $site_language), // если сборника нет - это обрабатывает шаблон
                     'template_folder'   =>  $main_theme_dir
                 ];
 
@@ -477,7 +477,7 @@ switch ($fetch) {
         // По умолчанию - загружать (а переменная не объявляется).
         // Такой механизм предпочтительнее индивидуальной правки шаблона (с учетом того, что default_page шаблон сейчас лежит в папке общих шаблонов) 
         if ( Config::get('frontend/theme/default_page:include_last_book', true) ) {
-            $last_book = LoadLastBookInfo();
+            $last_book = LoadLastBookInfo($site_language);
             $last_book_id = $last_book['id'] ?? FALSE;
             $last_book_articles_list = $last_book_id ? getArticlesList([ 'book'  =>  $last_book['id'] ], $site_language, false) : [];
         }
@@ -518,7 +518,7 @@ switch ($fetch) {
 $main_template_data['rubrics']    = printTopicsTree($site_language);    //@todo: когда-нибудь это надо отрефакторить
 
 /**  * Блок "выпуски"  */
-$main_template_data['all_books']    = LoadBooks();
+$main_template_data['all_books']    = LoadBooks($site_language);
 
 /**  * Блок "баннеры" */
 $main_template_data['all_banners']  = LoadBanners();

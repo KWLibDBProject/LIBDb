@@ -3,7 +3,7 @@ define('__ACCESS_MODE__', 'admin');
 require_once '__required.php'; // $mysqli_link
 
 ?>
-<html>
+<html lang="ru">
 <head>
     <title>Справочник: Список пользователей</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

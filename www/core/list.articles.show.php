@@ -27,11 +27,11 @@ $articles_limit = 50;
 
             $.ajaxSetup({cache: false});
 
-            var siteLanguage = 'lang=ru'
+            var siteLanguage = 'lang=ru'; // почему он всегда RU ? А, это же админка!
 
             var url_extended = "core.articles/articles.action.list.php";
 
-            var booksList = preloadOptionsList('core.books/books.action.getoptionlist.php');
+            var booksList = preloadOptionsList('core.books/books.action.getoptionlist.php' + '?lang=en' );
 
             var topicsList = preloadOptionsList('core.topics/topics.action.getoptionlist.php');
 

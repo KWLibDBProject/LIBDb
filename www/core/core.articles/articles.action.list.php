@@ -24,21 +24,22 @@ book - показать статьи в сборнике
 $query = "
 SELECT 
 DISTINCT articles.id, 
-articles.title_ru AS title_ru, 
-udc, 
-pdfid, 
-DATE_FORMAT(date_add, '%d.%m.%Y') as date_add, 
-pages,
-topics.title_ru AS ttitle,
-books.title AS btitle
-
+    articles.title_ru AS title_ru, 
+    udc, 
+    pdfid, 
+    DATE_FORMAT(date_add, '%d.%m.%Y') as date_add, 
+    pages,
+    topics.title_ru AS ttitle,
+    books.title_en AS btitle_en,
+    books.title_ru AS btitle_ru,
+    books.title_ua AS btitle_ua
 FROM articles, cross_aa, topics, books, authors
 WHERE
-cross_aa.article=articles.id
+    cross_aa.article = articles.id
 AND
-topics.id=articles.topic
+    topics.id = articles.topic
 AND
-books.id=articles.book";
+    books.id = articles.book";
 
 $query
     .= (IsSet($_GET['author'])   && $_GET['author'] != 0)
@@ -85,7 +86,7 @@ if ($articles_count>0) {
         $an_article['pdffile'] = FileStorage::getFileInfo($an_article['pdfid']);
 
         // получить информацию об авторах
-        $r_auths = mysqli_query($mysqli_link, "SELECT authors.name_ru, authors.title_ru, authors.id FROM authors, cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article=$id ORDER BY cross_aa.id");
+        $r_auths = mysqli_query($mysqli_link, "SELECT authors.name_ru, authors.title_ru, authors.id FROM authors, cross_aa WHERE authors.id=cross_aa.author AND cross_aa.article={$id} ORDER BY cross_aa.id");
         $r_auths_count = @mysqli_num_rows($r_auths);
 
         $an_article['authors_list'] = [];

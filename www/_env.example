@@ -1,0 +1,50 @@
+# Project
+
+ENGINE_USE_LANG_DEPENDED_BOOK_TITLE = 0
+
+# Cookies & session
+COOKIE_SITE_LANGUAGE = 'aait_sitelanguage'
+COOKIE_PREFIX = 'u_aait'
+
+# Database
+
+DB_DRIVER = 'mysql'
+DB_HOST = 'localhost'
+DB_USER = ''
+DB_PASS = ''
+DB_PORT = 3306
+DB_NAME = ''
+
+# KW Logger
+LOG_TABLE_EVENT = 'eventlog'
+LOG_TABLE_DOWNLOAD = 'eventlog_download'
+LOG_FILE = '$/core/config/errors.log'
+
+# Theme
+TEMPLATE_NAME = 'template.aait'
+TEMPLATE_DIR = 'template.aait'
+TEMPLATE_ROOT_PAGE_TITLE = 'AAIT.OPU.UA'
+TEMPLATE_DEFAULT_INCLUDE_LAST_BOOK = 0
+
+# Storage
+SQL_TABLE = 'filestorage'
+STORAGE_ROOT = 'files.aait'
+STORAGE_FILEMANAGER_UPLOAD = 'files.aait/upload'
+STORAGE_FILEMANAGER_THUMBS = 'files.aait/thumbs'
+STORAGE_CONTAINER = 'files.aait/storage'
+STORAGE_MAX_UPLOAD_SIZE = '3M'
+STORAGE_DRIVER = 'disk'
+
+# Backend
+
+ADMIN_CALLBACK_TIMEOUT = 3600
+
+# Frontend
+
+ASSETS_MODE = 'development'
+
+# DEBUG
+
+IS_REPORT_PROCESS_STATS = 0
+
+

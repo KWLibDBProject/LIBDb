@@ -28,16 +28,15 @@ switch ($actor) {
 
         $i = 1;
         $withoutid = isset($_GET['withoutid']) ? intval($_GET['withoutid']) : 1;
-        $query = "
-        
+        $sql_query = "
         SELECT * 
         FROM books 
         WHERE published_status = 1 
-        ORDER BY YEAR(published_date) DESC, title ASC";
+        ORDER BY YEAR(published_date) DESC, title_{$lang} ASC";
 
         //ORDER по названию?
 
-        $r = mysqli_query($mysqli_link, $query) or die($query);
+        $r = mysqli_query($mysqli_link, $sql_query) or die($sql_query);
         $n = mysqli_num_rows($r) ;
 
         if ($n > 0)
@@ -46,7 +45,10 @@ switch ($actor) {
             while ($row = mysqli_fetch_assoc($r))
             {
                 $ov_id = ($withoutid == 1) ? '' : "[{$row['id']}]" ;
-                $option_value = "{$ov_id} {$row['title']}";
+                $title_field_key = "title_{$lang}";
+                $title_field_value = $row[ $title_field_key ];
+                
+                $option_value = "{$ov_id} {$title_field_value}";
 
                 $data['data'][ $i ] = array(
                     'type'      => 'option',

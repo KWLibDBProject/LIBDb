@@ -18,7 +18,7 @@ update:		##@build Update project from GIT and build version file
 	@chown www-data:www-data -R *
 	@echo Updated.
 	
-build:  ##@build Build minified version
+build_min:  ##@build Build minified version
 	grunt --gruntfile gruntfile-aait.js
 	grunt --gruntfile gruntfile-etks.js
 	grunt --gruntfile gruntfile-hait.js

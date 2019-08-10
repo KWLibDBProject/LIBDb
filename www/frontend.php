@@ -39,6 +39,20 @@ function GetSiteLanguage()
     return $lang;
 }
 
+/**
+ * @param $unverified_data
+ * @param string $default_value
+ * @return mixed|null
+ */
+function validateAllowedLanguage($unverified_data, $default_value = 'en')
+{
+    $unverified_data = !empty($unverified_data) ? $unverified_data : $default_value;
+
+    return getAllowedValue($unverified_data, array(
+        'ru', 'en', 'ua'
+    ), $default_value);
+}
+
 /*
  * Массив с переводами месяцев на разные языки.
  *
@@ -263,16 +277,19 @@ ORDER BY topicgroups.display_order, topics.title_{$lang}
 
 /**
  * загружает список сборников (книг) из базы, года в обратном порядке, сборники в прямом
- *
+ * 
+ * @param $lang
  * @return array
  */
-function LoadBooks()
+function LoadBooks($lang)
 {
     global $mysqli_link;
+    
+    $lang = validateAllowedLanguage($lang);
 
-    $bq = "
+    $sql_query = "
 SELECT
-    books.title AS title,
+    books.title_{$lang} AS title,
     YEAR(books.published_date) AS year,
     books.id    AS bid,
     COUNT(books.id) AS articles_count
@@ -285,12 +302,12 @@ WHERE
     books.published_status = 1
 
 GROUP BY 
-    books.title
+    books.title_{$lang}
 ORDER BY
     YEAR(books.published_date) DESC, 
-    books.title ASC";
+    books.title_{$lang} ASC";
 
-    $br = mysqli_query($mysqli_link, $bq) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
+    $br = mysqli_query($mysqli_link, $sql_query) or die(__FUNCTION__ . ' throws error at ' . __LINE__ . ' with query: ' . $sql_query);
     $is_active = 1;
 
     $all_books = [];
@@ -378,18 +395,22 @@ function LoadLastNews($lang, $count=2)
 /**
  * возвращает массив с информацией об указанном сборнике
  * @param $id
+ * @param $lang
  * @return array
  */
-function LoadBookInfo($id)
+function LoadBookInfo($id, $lang)
 {
     global $mysqli_link;
+
+    $lang = validateAllowedLanguage($lang);
+
     $book_info = [];
 
     if ($id == 0) return $book_info;
 
     $query = "
     SELECT 
-        books.title AS book_title, 
+        books.title_{$lang} AS book_title, 
         YEAR(published_date) AS book_year, 
         file_cover, 
         file_title_ru, 
@@ -413,16 +434,26 @@ function LoadBookInfo($id)
  *
  * @return array
  */
-function LoadLastBookInfo()
+function LoadLastBookInfo($lang)
 {
     global $mysqli_link;
+    
+    $lang = validateAllowedLanguage($lang);
 
     $query = "
-    SELECT *, YEAR(published_date) AS published_year 
-    FROM books 
-    WHERE published_status = 1 
-    ORDER BY published_date DESC 
-    LIMIT 1";
+    SELECT 
+        *,
+        title_{$lang} AS title, 
+        YEAR(published_date) AS published_year 
+    FROM 
+        books 
+    WHERE 
+        published_status = 1 
+    ORDER BY 
+        published_date DESC 
+    LIMIT 
+        1
+        ";
 
     $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__);
 
@@ -444,6 +475,8 @@ function BuildQuery($get, $lang)
 {
     global $mysqli_link;
 
+    $lang = validateAllowedLanguage($lang);
+
     // DATE_FORMAT(date_add, '%d.%m.%Y') as date_add,
 
     $q_select = "
@@ -454,7 +487,7 @@ SELECT DISTINCT
 , articles.title_{$lang} AS article_title
 , articles.book
 , articles.topic
-, books.title AS book_title
+, books.title_{$lang} AS book_title
 , topics.title_{$lang} AS topic_title
 , YEAR(books.published_date) AS book_year
 , articles.pages AS article_pages
@@ -736,7 +769,7 @@ function LoadArticles_ByAuthor($id, $lang, $is_published = true)
 articles.id AS aid,
 articles.title_{$lang} AS atitle,
 articles.pdfid,
-books.title AS btitle,
+books.title_{$lang} AS btitle,
 YEAR(books.published_date) AS bdate
 
 FROM articles, cross_aa, books
@@ -1019,7 +1052,6 @@ function getAuthors_EStaffList($estaff_role, $site_language)
  */
 function getArticlesList($request, $language = 'en', $with_email = false) //+
 {
-    global $mysqli_link;
     $articles = LoadArticles_ByQuery($request, $language);
 
     foreach ($articles as $an_article_id => &$an_article) {

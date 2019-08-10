@@ -153,3 +153,7 @@ dl.h-layout dd {
     -moz-border-radius:     6px;
     border-radius:          6px;
 }
+
+.nobr {
+    white-space: nowrap;
+}

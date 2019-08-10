@@ -9,7 +9,7 @@ $files_message = pluralForm($files_count, 'файл|файла|файлов');
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <title>FileStorage::List</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

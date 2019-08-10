@@ -1,15 +1,20 @@
 <table border="1" width="100%">
     <tr>
-        <th width="5%">(id)</th>
-        <th width="20%">Название или номер сборника</th>
-        <th width="10%">Дата/год выпуска</th>
-        <th width="10%">Страницы со статьями</th>
-        <th width="15%">Сборник готов? </th>
-        <th width="10%">Кол-во статей</th>
-        <th width="15%">Файлы</th>
-        <th width="7%">Управление</th>
+        <th rowspan="2">(id)</th>
+        <th colspan="3" width="30%">Название или номер сборника</th>
+        <th rowspan="2">Дата/год выпуска</th>
+        <th rowspan="2" rowspan="2">Страницы со статьями</th>
+        <th rowspan="2">Сборник готов? </th>
+        <th rowspan="2">Кол-во статей</th>
+        <th rowspan="2" width="15%">Файлы</th>
+        <th rowspan="2" width="7%">Управление</th>
     </tr>
-
+    <tr>
+        <th width="10%">EN</th>
+        <th width="10%">RU</th>
+        <th width="10%">UA</th>
+        
+    </tr>
     {?*books_list*}
     {%*books_list*}
     <tr>
@@ -17,7 +22,13 @@
             {*books_list:book_id*}
         </td>
         <td>
-            {*books_list:title*}
+            {*books_list:title_en*}
+        </td>
+        <td>
+            {*books_list:title_ru*}
+        </td>
+        <td>
+            {*books_list:title_ua*}
         </td>
         <td class="centred_cell">
             {*books_list:date*}
