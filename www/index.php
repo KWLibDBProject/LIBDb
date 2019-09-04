@@ -136,7 +136,9 @@ switch ($fetch) {
                  */
                 $inner_html_data = [
                     'site_language'         =>  $site_language,
-                    'all_authors_list'      =>  LoadAuthors_ByLetter('', $site_language, 'no')
+                    'all_authors_list'      =>  LoadAllAuthors(
+                                                    $site_language, 
+                                                    Config::get('frontend/theme/authors_all:show_without_articles', false) ),
                 ];
 
                 // Зачем так? WebSun имеет проблему с тяжелой проверкой {?**} {?} на больших данных. Ломается прекомпиляция PCRE-выражения.

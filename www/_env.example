@@ -1,6 +1,8 @@
 # Project
 
+VERSION = ''
 ENGINE_USE_LANG_DEPENDED_BOOK_TITLE = 0
+INSTALL_PATH = ''
 
 # Cookies & session
 COOKIE_SITE_LANGUAGE = 'aait_sitelanguage'
@@ -18,21 +20,21 @@ DB_NAME = ''
 # KW Logger
 LOG_TABLE_EVENT = 'eventlog'
 LOG_TABLE_DOWNLOAD = 'eventlog_download'
-LOG_FILE = '$/core/config/errors.log'
+LOG_ERRFILE = '$/core/config/errors.log'
 
 # Theme
 TEMPLATE_NAME = 'template.aait'
 TEMPLATE_DIR = 'template.aait'
-TEMPLATE_ROOT_PAGE_TITLE = 'AAIT.OPU.UA'
-TEMPLATE_DEFAULT_INCLUDE_LAST_BOOK = 0
+TEMPLATE_FRONTPAGE_PAGE_TITLE = 'AAIT.OPU.UA'
+TEMPLATE_FRONTPAGE_HAVE_LAST_BOOK = 0
 
 # Storage
 SQL_TABLE = 'filestorage'
 STORAGE_ROOT = 'files.aait'
-STORAGE_FILEMANAGER_UPLOAD = 'files.aait/upload'
-STORAGE_FILEMANAGER_THUMBS = 'files.aait/thumbs'
-STORAGE_CONTAINER = 'files.aait/storage'
-STORAGE_MAX_UPLOAD_SIZE = '3M'
+STORAGE_EDITOR_UPLOAD = '${STORAGE_ROOT}/upload'
+STORAGE_EDITOR_THUMBS = '${STORAGE_ROOT}/thumbs'
+STORAGE_FILES = '${STORAGE_ROOT}/storage'
+STORAGE_MAX_UPLOAD_SIZE = '4M'
 STORAGE_DRIVER = 'disk'
 
 # Backend

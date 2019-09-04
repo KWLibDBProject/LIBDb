@@ -815,7 +815,6 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
         $letter = mysqli_real_escape_string($mysqli_link, $letter);
     }
 
-    // $query_where_like = ($letter != '0') ? " AND authors.name_{$lang} LIKE '{$letter}%'" : " ";
     $query_where_like = ($letter != '0') ? " AND authors.firstletter_name_{$lang} = '{$letter}'" : " ";
 
     // check for 'is author in editorial stuff', default is 'no'
@@ -856,6 +855,39 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     return $authors;
 }
 
+/**
+ * @param $lang
+ * @param  boolean $show_without_articles
+ * @param int $limit
+ * @return array
+ */
+function LoadAllAuthors($lang, $show_without_articles = false, $limit = 0)
+{
+    global $mysqli_link;
+    
+    $authors = [];
+
+    $where_clause = $show_without_articles ? '' : 'WHERE id IN (SELECT DISTINCT cross_aa.author FROM cross_aa)';
+
+    $query = "
+SELECT  authors.id AS id, email, orcid, phone, name_{$lang} as name, title_{$lang} as title, workplace_{$lang} as workplace
+FROM    `authors`
+{$where_clause}
+ORDER BY authors.name_{$lang} COLLATE utf8_unicode_ci         
+    ";
+
+    if ($limit > 0) $query .= " LIMIT {$limit} ;";
+
+    $r = mysqli_query($mysqli_link, $query) or die(__FUNCTION__ . ' throws error at ' . __LINE__ . ' -> ' . mysqli_error($mysqli_link));
+
+    if ( mysqli_num_rows($r) > 0 ) {
+        while ($i = mysqli_fetch_assoc($r) ) {
+            $authors[ $i['id'] ] = $i;
+        }
+    }
+
+    return $authors;
+}
 
 /**
  * возвращает базовую информацию о статье как асс.массив (single-версия LoadArticlesByQuery() )

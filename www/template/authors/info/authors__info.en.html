@@ -14,12 +14,12 @@
 
 {?*author_bio*}
 <fieldset class="author_bio">
-    <legend>Additional Information</legend>
+    <legend>Biography</legend>
     <span class="author_bio">{*author_bio*}</span>
 </fieldset>
 {?}
 
-/* {?*articles_list*} */
+{?*author_publications*}
 <fieldset class="author-publications">
     <legend>Publications</legend>
     <div id="articles_list">
@@ -42,9 +42,9 @@
             </tr>
             {%}
 
-            {?!*author_publications*}<tr><td colspan="3">The person has no publications on record.</td></tr> {?}
+            {?!*author_publications*}<tr><td colspan="3">У автора нет статей</td></tr> {?}
         </table>
 
     </div>
 </fieldset>
-/* {?} */
+{?}

@@ -1,5 +1,5 @@
 <fieldset class="author-about">
-    <legend>Персональная информация</legend>
+    <legend>Информация об авторе</legend>
     <div class="photo_div">
         <img src="{*author_photo_link*}" width="150" height="200" class="photo">
     </div>
@@ -14,12 +14,12 @@
 
 {?*author_bio*}
 <fieldset class="author_bio">
-    <legend>Дополнительная информация</legend>
+    <legend>Биография</legend>
     <span class="author_bio">{*author_bio*}</span>
 </fieldset>
 {?}
 
-/* {?*articles_list*} */
+{?*author_publications*}
 <fieldset class="author-publications">
     <legend>Публикации</legend>
     <div id="articles_list">
@@ -45,4 +45,4 @@
         </table>
     </div>
 </fieldset>
-/* {?} */
+{?}
