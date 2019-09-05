@@ -818,7 +818,7 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     $query_where_like = ($letter != '0') ? " AND authors.firstletter_name_{$lang} = '{$letter}'" : " ";
 
     // check for 'is author in editorial stuff', default is 'no'
-    $query_where_es = ($is_es != 'no') ? ' AND is_es = 1 ' : '';
+    $query_where_is_es = ($is_es != 'no') ? ' AND is_es = 1 ' : '';
 
     // optional parameter estaff_role (for extended estuff)
     $query_where_estaff_role = ($estaff_role != -1 )
@@ -828,13 +828,22 @@ function LoadAuthors_ByLetter($letter, $lang, $is_es='no', $estaff_role=-1, $lim
     $query_order = " ORDER BY authors.name_{$lang} COLLATE utf8_unicode_ci ";
     // $query_order = " ORDER BY id";
 
+    /**
+     * @todo: "Хардкод", это должно передаваться аргументом в функцию!!!  
+     */
+    $query_where_show_without_articles 
+        = Config::get('frontend/theme/authors_all:show_without_articles', false) 
+        ? ' ' 
+        : ' AND id IN (SELECT DISTINCT cross_aa.author FROM cross_aa) ';
+    
     $query = "SELECT id, email, orcid, phone, 
     name_{$lang} AS name,
     title_{$lang} AS title,
     workplace_{$lang} AS workplace
     FROM authors
-    WHERE 1=1 
-    {$query_where_es}
+    WHERE 1=1
+    {$query_where_show_without_articles} 
+    {$query_where_is_es}
     {$query_where_estaff_role}
     {$query_where_like}
     {$query_order}

@@ -86,7 +86,6 @@ switch ($actor) {
 
     case 'load_authors_selected_by_letter': {
         // called js from /authors/list
-        // АНАЛОГ /authors/all !!!
 
         // $get_limit = $_GET['limit'] ?? 0;
         // LIMIT added for DEBUG purposes
