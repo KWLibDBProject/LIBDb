@@ -17,7 +17,7 @@ $template_file = "admin.html";
 
 $template_data = [
     'main'      =>  [
-        'title'     =>  Config::get('frontend/theme/root_page_title')
+        'title'     =>  Config::get('frontend/theme/root_page_title', '')
     ],
     'stats'     =>  [
         'articles'  =>  DB::getRowCount('articles'),
