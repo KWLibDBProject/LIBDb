@@ -1,49 +1,49 @@
 # Project
 
 VERSION = ''
-ENGINE_USE_LANG_DEPENDED_BOOK_TITLE = 0
-INSTALL_PATH = ''
+ENGINE.USE_LANG_DEPENDED_BOOK_TITLE = 0
+PATH.INSTALL = ''
 
 # Cookies & session
-COOKIE_SITE_LANGUAGE = 'aait_sitelanguage'
-COOKIE_PREFIX = 'u_aait'
+COOKIE.SITE_LANGUAGE = 'aait_sitelanguage'
+COOKIE.PREFIX = 'u_aait'
 
 # Database
 
-DB_DRIVER = 'mysql'
-DB_HOST = 'localhost'
-DB_USER = ''
-DB_PASS = ''
-DB_PORT = 3306
-DB_NAME = ''
+DB.DRIVER = 'mysql'
+DB.HOST = 'localhost'
+DB.PORT = 3306
+DB.USERNAME = ''
+DB.PASSWORD = ''
+DB.NAME = ''
 
 # KW Logger
-LOG_TABLE_EVENT = 'eventlog'
-LOG_TABLE_DOWNLOAD = 'eventlog_download'
-LOG_ERRFILE = '$/core/config/errors.log'
+LOG.TABLE_EVENT = 'eventlog'
+LOG.TABLE_DOWNLOAD = 'eventlog_download'
+LOG.ERRFILE = '$/core/config/errors.log'
 
 # Theme
-TEMPLATE_NAME = 'template.aait'
-TEMPLATE_DIR = 'template.aait'
-TEMPLATE_FRONTPAGE_PAGE_TITLE = 'AAIT.OPU.UA'
-TEMPLATE_FRONTPAGE_HAVE_LAST_BOOK = 0
+TEMPLATE.NAME = 'template.aait'
+TEMPLATE.DIR = 'template.aait'
+TEMPLATE.FRONTPAGE_PAGE_TITLE = 'AAIT.OPU.UA'
+TEMPLATE.FRONTPAGE_HAVE_LAST_BOOK = 0
 
 # Storage
-SQL_TABLE = 'filestorage'
-STORAGE_ROOT = 'files.aait'
-STORAGE_EDITOR_UPLOAD = '${STORAGE_ROOT}/upload'
-STORAGE_EDITOR_THUMBS = '${STORAGE_ROOT}/thumbs'
-STORAGE_FILES = '${STORAGE_ROOT}/storage'
-STORAGE_MAX_UPLOAD_SIZE = '4M'
-STORAGE_DRIVER = 'disk'
+STORAGE.SQL_TABLE = 'filestorage'
+STORAGE.ROOT = 'files.aait'
+STORAGE.EDITOR_UPLOAD = '${STORAGE_ROOT}/upload'
+STORAGE.EDITOR_THUMBS = '${STORAGE_ROOT}/thumbs'
+STORAGE.FILES = '${STORAGE_ROOT}/storage'
+STORAGE.MAX_UPLOAD_SIZE = '4M'
+STORAGE.DRIVER = 'disk'
 
 # Backend
 
-ADMIN_CALLBACK_TIMEOUT = 3600
+ADMIN.CALLBACK_TIMEOUT = 3600
 
 # Frontend
 
-ASSETS_MODE = 'development'
+ASSETS.MODE = 'development'
 
 # DEBUG
 

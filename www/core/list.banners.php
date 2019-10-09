@@ -369,7 +369,7 @@ EACH_BANNER;
                         }
                     },
                     {
-                        text: "Удалить значение из базы",
+                        text: "Удалить баннер из базы",
                         click: function() {
                             Banner_CallRemoveItem(this, button_id);
                             $(this).find('form').trigger('reset');
