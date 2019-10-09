@@ -1,6 +1,7 @@
 #!/usr/bin/env make
 
 SHELL = /bin/bash
+VERSION = '1.203'
 
 help:       ##@help Help
 	@perl -e '$(HELP_ACTION)' $(MAKEFILE_LIST)
