@@ -15,14 +15,13 @@ data_comment varchar 64
 }
 
 */
-$reference = 'banners'; // вообще то если ref не задано - работать не с чем
+$reference = 'banners'; 
 $return = '';
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'no-action';
 $action = getAllowedValue($action, array(
     'insert', 'update', 'remove', 'load', 'list', 'row-list', 'no-action'
 ), 'no-action');
-
 
 switch ($action) {
     case 'insert':
@@ -300,6 +299,7 @@ EACH_BANNER;
 
         $(document).ready(function () {
             $.ajaxSetup({cache: false, async: false });
+            var button_id;
 
             $("#ref_list").load("?action=list");
 
@@ -348,7 +348,7 @@ EACH_BANNER;
             /* вызов и обработчик диалога редактирования */
 
             $('#ref_list').on('click', '.actor-edit', function() {
-                var button_id = $(this).attr('name');
+                button_id = $(this).attr('name');
                 Banner_CallLoadItem("#edit_form", button_id);
                 $('#edit_form').dialog('open');
             });

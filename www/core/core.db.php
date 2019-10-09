@@ -60,16 +60,34 @@ function MakeInsert($arr, $table, $where="")
 {
     global $mysqli_link;
     $query = "INSERT INTO $table ";
-
+    
     $keys = "(";
     $vals = "(";
     foreach ($arr as $key => $val) {
-        $keys .= "`" . $key . "`" . ",";
-        $vals .= "'".$val."',";
+        $keys .= "`{$key}`" . ",";
+        $vals .= "'{$val}',";
     }
     $query .= trim($keys,",") . ") VALUES " . trim($vals,",") . ") ".$where;
     return $query;
 }
+
+function MakeInsert2($dataset, $table, $where = "")
+{
+    if (empty($table)) return '';
+    
+    $keys = [];
+    $values = [];
+    foreach ($dataset as $key => $val) {
+        $keys[] = "`{$key}`";
+        $values[] = "'{$val}'";
+    }
+    $keys = implode(', ', $keys);
+    $values = implode(', ', $values);
+    
+    return "INSERT INTO {$table} ({$keys}) VALUES ({$values}) {$where}";
+}
+
+
 
 function MakeUpdateEscaped($array, $table, $where = "")
 {
